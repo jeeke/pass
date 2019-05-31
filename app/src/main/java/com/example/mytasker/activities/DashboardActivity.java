@@ -1,31 +1,37 @@
 package com.example.mytasker.activities;
 
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.drawable.AnimatedVectorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
-import android.widget.ImageView;
-import java.util.ArrayList;
-
+import com.example.mytasker.retrofit.IndividualTask;
+import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.R;
+import com.example.mytasker.retrofit.TaskDetail;
 import com.example.mytasker.adapters.TaskListAdapter;
 import com.example.mytasker.models.Task;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DashboardActivity extends AppCompatActivity implements TaskListAdapter.RecyclerViewClickListener{
 
@@ -34,6 +40,7 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
     AnimatedVectorDrawable bottomAppBar;
     FloatingActionButton fab;
     ShimmerFrameLayout shimmerContainer;
+    ArrayList<Task> list = new ArrayList();
 
     @Override
     public void onClick(View view, int position) {
@@ -78,11 +85,45 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
         ConstraintLayout layout = findViewById(R.id.root);
 //        TODO
 //        layout.setBackgroundColor(SettingActivity.toolbar);
-        ArrayList<Task> list = new ArrayList();
-        for (int i = 0; i < 2000; i++) {
-            Task data1 = new Task("Want my House cleaned", "$500", "Jalandhar", "0.4 kms", "28 jan", R.drawable.fbsmall);
-            list.add(data1);
-        }
+        
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://nkliobv7w5.execute-api.ap-south-1.amazonaws.com/dev/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
+        Call<TaskDetail> call = jsonPlaceHolder.getDetail(
+                new Integer[]{25,25},
+                100,
+                new String[]{"tech","null"}
+        );
+
+        call.enqueue(new Callback<TaskDetail>() {
+            @Override
+            public void onResponse(Call<TaskDetail> call, Response<TaskDetail> response) {
+                if (!response.isSuccessful()) {
+                    Log.v("Code: " , String.valueOf(response.code()));
+                    return;
+                }
+
+                TaskDetail details = response.body();
+                for (IndividualTask task : details.getTasks()) {
+                    Task data1 = new Task(task.getTitle(), task.getCost(), task.getC_date(), task.getDis(), task.getTasker_id(), R.drawable.fbsmall);
+                    Log.v("data",data1.toString());
+                    list.add(data1);
+                    Log.v("ListNow",list.toString());
+                }
+
+                TaskListAdapter adapter = new TaskListAdapter(DashboardActivity.this,list);
+                listView.setAdapter(adapter);
+                listView.setLayoutManager(new LinearLayoutManager(DashboardActivity.this));
+            }
+
+            @Override
+            public void onFailure(Call<TaskDetail> call, Throwable t) {
+                Log.v("error ",t.getMessage());
+            }
+        });
 
 //        CustomListAdapter adapter = new CustomListAdapter(list, getApplicationContext());
 
