@@ -1,8 +1,10 @@
-package com.example.mytasker;
+package com.example.mytasker.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.mytasker.R;
 
 public class MainActivity extends AppCompatActivity {
 

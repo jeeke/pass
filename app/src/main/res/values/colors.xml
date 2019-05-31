@@ -2,9 +2,10 @@
 <resources>
     <color name="colorPrimary">#28a5f6</color>
     <color name="colorPrimaryLight">#000000</color>
+    <color name="colorAppbarBUnselected">#A5A5A7</color>
     <color name="colorGrey">#e6e6e6</color>
     <color name="colorPrimaryDark">#ffffff</color>
-    <color name="colorAccent">#fa8639</color>
+    <color name="colorAccent">#F3914F</color>
 
     <color name="color_1">#EF9A9A</color>
     <color name="color_2">#E53935</color>

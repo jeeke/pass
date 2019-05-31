@@ -23,7 +23,7 @@
             android:background="#00ffffff"
             app:elevation="5dp">
 
-            <com.example.mytasker.CollapsibleToolbar
+            <com.example.mytasker.util.CollapsibleToolbar
                 android:id="@+id/motionLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -123,7 +123,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/esselion" />
 
-            </com.example.mytasker.CollapsibleToolbar>
+            </com.example.mytasker.util.CollapsibleToolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
 
@@ -132,7 +132,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:background="@drawable/curved_list_container"
+            android:background="@drawable/list_and_header_container"
             android:nestedScrollingEnabled="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -146,20 +146,18 @@
                 app:layout_constraintTop_toTopOf="@+id/ListView_dashboard" />
 
             <View
-                android:background="#cccbcb"
                 android:id="@+id/divider7"
                 android:layout_width="1dp"
                 android:layout_height="0dp"
+                android:background="#cccbcb"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/ListView_dashboard" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/list_head"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@drawable/curved_list_container"
                 android:elevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -214,25 +212,22 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/imageView9"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView9"
                         app:layout_constraintTop_toTopOf="@+id/imageView9"
                         app:layout_constraintVertical_bias="0.0"
-                        app:srcCompat="@drawable/earth_icon" />
+                        app:srcCompat="@drawable/ic_location" />
 
                     <ImageView
                         android:id="@+id/imageView9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/imageView10"
-                        app:layout_constraintStart_toStartOf="@+id/constraintLayout"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/location_icon" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -312,7 +307,6 @@
                 android:layout_marginTop="48dp"
                 android:layout_marginEnd="1dp"
                 android:alpha="0.0"
-                android:background="@drawable/grad_color1"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 app:layout_constraintEnd_toStartOf="@+id/divider7"
                 app:layout_constraintStart_toEndOf="@+id/divider6"
@@ -320,100 +314,104 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/bottom_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@drawable/dashboard_anim_bapbar"
+            android:layout_gravity="bottom"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom">
+
+            <ImageView
+                android:padding="16dp"
+                android:id="@+id/textView9"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:gravity="center"
+                android:onClick="bselected"
+                android:src="@mipmap/ic_home"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textView10"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:padding="16dp"
+                android:id="@+id/textView10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="44dp"
+                android:gravity="center"
+                android:onClick="bselected"
+                android:src="@mipmap/ic_directions"
+                app:layout_constraintBottom_toBottomOf="@+id/textView9"
+                app:layout_constraintEnd_toStartOf="@+id/textView34"
+                app:layout_constraintStart_toEndOf="@+id/textView9"
+                app:layout_constraintTop_toTopOf="@+id/textView9" />
+
+            <ImageView
+                android:padding="16dp"
+                android:id="@+id/textView11"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="44dp"
+                android:layout_marginEnd="8dp"
+                android:gravity="center"
+                android:onClick="bselected"
+                android:src="@mipmap/ic_tap"
+                app:layout_constraintBottom_toBottomOf="@+id/textView10"
+                app:layout_constraintEnd_toStartOf="@+id/textView12"
+                app:layout_constraintStart_toEndOf="@+id/textView34"
+                app:layout_constraintTop_toTopOf="@+id/textView10" />
+
+            <TextView
+                android:id="@+id/textView34"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="POST"
+                android:textColor="@color/colorAccent"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="POST" />
+
+            <ImageView
+                android:padding="16dp"
+                android:id="@+id/textView12"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:gravity="center"
+                android:onClick="bselected"
+                android:src="@drawable/ic_profile"
+                app:layout_constraintBottom_toBottomOf="@+id/textView11"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView11"
+                app:layout_constraintTop_toTopOf="@+id/textView11" />
+
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:onClick="post"
+                android:src="@drawable/ic_add_black_24dp"
+                app:borderWidth="0dp"
+                app:fabSize="normal"
+                app:layout_constraintBottom_toTopOf="@+id/textView34"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/bottom_app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:background="@drawable/anim_bapbar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:onClick="post"
-        android:src="@drawable/ic_add_black_24dp"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toTopOf="@+id/textView34"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:drawableTop="@mipmap/ic_home_black_24dp"
-        android:gravity="center"
-        android:onClick="homeselected"
-        android:text="Home"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView10"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/bottom_app_bar" />
-
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="44dp"
-        android:drawableTop="@mipmap/ic_directions_run_before_24dp"
-        android:gravity="center"
-        android:onClick="runselected"
-        android:text="Tasks"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView34"
-        app:layout_constraintStart_toEndOf="@+id/textView9"
-        app:layout_constraintTop_toTopOf="@+id/bottom_app_bar" />
-
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginEnd="8dp"
-        android:drawableTop="@mipmap/ic_tap_and_play_before_24dp"
-        android:gravity="center"
-        android:onClick="tabbselected"
-        android:text="Tapp!"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView12"
-        app:layout_constraintStart_toEndOf="@+id/textView34"
-        app:layout_constraintTop_toTopOf="@+id/bottom_app_bar" />
-
-    <TextView
-        android:id="@+id/textView34"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:text="POST"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="POST" />
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:drawableTop="@mipmap/ic_chat_before_24dp"
-        android:gravity="center"
-        android:onClick="msgselected"
-        android:text="Chats"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView11"
-        app:layout_constraintTop_toTopOf="@+id/bottom_app_bar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@drawable/anim_auth_back"
+    android:background="@drawable/auth_anim_back"
     android:orientation="vertical">
 
     <FrameLayout

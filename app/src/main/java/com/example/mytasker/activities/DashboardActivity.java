@@ -1,21 +1,27 @@
-package com.example.mytasker;
+package com.example.mytasker.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ImageView;
 import java.util.ArrayList;
 
+import com.example.mytasker.R;
 import com.example.mytasker.adapters.TaskListAdapter;
 import com.example.mytasker.models.Task;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -23,7 +29,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class DashboardActivity extends AppCompatActivity implements TaskListAdapter.RecyclerViewClickListener{
 
-    TextView bhome, brun, btab, bmsg;
+    ImageView bhome, brun, btab, bmsg;
+    ImageView prevbselection;
     AnimatedVectorDrawable bottomAppBar;
     FloatingActionButton fab;
     ShimmerFrameLayout shimmerContainer;
@@ -71,7 +78,6 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
         ConstraintLayout layout = findViewById(R.id.root);
 //        TODO
 //        layout.setBackgroundColor(SettingActivity.toolbar);
-        Drawable drawable = getDrawable(R.drawable.list_header);
         ArrayList<Task> list = new ArrayList();
         for (int i = 0; i < 2000; i++) {
             Task data1 = new Task("Want my House cleaned", "$500", "Jalandhar", "0.4 kms", "28 jan", R.drawable.fbsmall);
@@ -85,19 +91,16 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
         brun = findViewById(R.id.textView10);
         btab = findViewById(R.id.textView11);
         bmsg = findViewById(R.id.textView12);
-        bottomAppBar = (AnimatedVectorDrawable) findViewById(R.id.bottom_app_bar).getBackground();
-//        bottomAppBar.setBackgroundTintList(ColorStateList.valueOf(SettingActivity.bottombar));
-//        listView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(this,R.anim.slide_in_bottom));
+        prevbselection = bhome;
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(this));
 //        listView.setBackgroundColor(SettingActivity.list);
         fab = findViewById(R.id.fab);
-//        fab.setBackgroundTintList(ColorStateList.valueOf(SettingActivity.fab));
         ConstraintLayout listHead = findViewById(R.id.list_head);
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setCornerRadii(new float[]{320, 320, 320, 320, 64, 64, 64, 64});
-//        shape.setColor(SettingActivity.listHead);
+        shape.setColor(getResources().getColor(R.color.colorPrimary));
         listHead.setBackground(shape);
 
     }
@@ -124,54 +127,32 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
 
     public void post(View v) {
 //        fab.setEnabled(false);
-        ViewCompat.animate(fab).yBy(-120).setDuration(330).start();
-        bottomAppBar.start();
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ViewCompat.animate(fab).yBy(120).setDuration(330).start();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+//        ViewCompat.animate(fab).yBy(-120).setDuration(330).start();
+//        bottomAppBar.start();
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                ViewCompat.animate(fab).yBy(120).setDuration(330).start();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
 //                        Intent intent = new Intent(DashboardActivity.this, CreateTask.class);
 //                        startActivityForResult(intent, 100);
-                        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-                    }
-                }, 350);
-            }
-        }, 350);
-    }
-    public void homeselected(View v) {
-        bhome.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_home_black_24dp, 0, 0);
-        brun.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_directions_run_before_24dp, 0, 0);
-        bmsg.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_chat_before_24dp, 0, 0);
-        btab.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_tap_and_play_before_24dp, 0, 0);
+//                        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+//                    }
+//                }, 350);
+//            }
+//        }, 350);
     }
 
-    public void msgselected(View v) {
-        bhome.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_home_before_24dp, 0, 0);
-        brun.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_directions_run_before_24dp, 0, 0);
-        bmsg.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_chat_black_24dp, 0, 0);
-        btab.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_tap_and_play_before_24dp, 0, 0);
+    public void bselected(View v) {
+        ImageView current = (ImageView) v ;
+        DrawableCompat.setTint(prevbselection.getDrawable(), ContextCompat.getColor(this, R.color.colorAppbarBUnselected));
+        DrawableCompat.setTint(current.getDrawable(), ContextCompat.getColor(this, R.color.colorPrimary));
+        prevbselection = current;
     }
-
-    public void runselected(View v) {
-        bhome.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_home_before_24dp, 0, 0);
-        brun.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_directions_run_black_24dp, 0, 0);
-        bmsg.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_chat_before_24dp, 0, 0);
-        btab.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_tap_and_play_before_24dp, 0, 0);
-    }
-
-    public void tabbselected(View v) {
-        bhome.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_home_before_24dp, 0, 0);
-        brun.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_directions_run_before_24dp, 0, 0);
-        bmsg.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_chat_before_24dp, 0, 0);
-        btab.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_tap_and_play_black_24dp, 0, 0);
-//        Intent intent = new Intent(this, TappActivity.class);
-//        startActivity(intent);
-        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-    }
+//        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
 
 
 }

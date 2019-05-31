@@ -2,11 +2,11 @@
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/anim_auth_color2"
+        android:drawable="@drawable/auth_anim_color2"
         android:duration="4000"/>
 
     <item
-        android:drawable="@drawable/anim_auth_color1"
+        android:drawable="@drawable/auth_anim_color1"
         android:duration="4000"/>
 
 

@@ -79,7 +79,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder
         }
         public void setupLocation(String string)
         {
-            TextView textView = mView.findViewById(R.id.task_loc);
+            TextView textView = mView.findViewById(R.id.task_dist);
             textView.setText(string);
         }
         public void setupDistance(String string)

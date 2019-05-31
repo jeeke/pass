@@ -1,71 +1,59 @@
-package com.example.mytasker;
+package com.example.mytasker.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.util.Random;
+import com.example.mytasker.R;
 
 public class AuthActivity extends AppCompatActivity {
-    View login_selector,signup_selector;
-    ConstraintLayout login_tab,signup_tab;
+    private View login_selector,signup_selector;
+    private ConstraintLayout login_tab,signup_tab;
     private EditText usernameView;
     private EditText passwordView;
-    Button btn;
-    Button l,s;
+    private Button btn;
+    private Button l,s;
+    private ConstraintLayout linearLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-//    TODO
-//        SettingActivity.toolbar = getColor(R.color.colorPrimaryDark);
-//        SettingActivity.bottombar = getColor(R.color.colorPrimaryDark);
-//        SettingActivity.fab = getColor(R.color.colorAccent);
-//        SettingActivity.list = getColor(R.color.colorPrimaryDark);
-//        SettingActivity.listHead = getColor(R.color.colorPrimary);
         setContentView(R.layout.activity_auth);
-        btn = findViewById(R.id.bt);
-//        ParseInstallation.getCurrentInstallation().saveInBackground();
-//        ParseUser currentUser = ParseUser.getCurrentUser();
-//        if (currentUser != null) {
-//            startActivity(new Intent(this,MainActivity.class));
-//        }
-
-        ConstraintLayout linearLayout =  findViewById(R.id.login2cl);
-
-        AnimationDrawable animationDrawable = (AnimationDrawable) linearLayout.getBackground();
-
-        animationDrawable.setEnterFadeDuration(2000);
-        animationDrawable.setExitFadeDuration(2000);
-        animationDrawable.start();
-
-        login_selector = findViewById(R.id.view);
-        signup_selector = findViewById(R.id.view5);
-        login_tab = findViewById(R.id.constraintLayout3);
-        signup_tab = findViewById(R.id.constraintLayout3_1);
-        s= findViewById(R.id.button_1);
-
-        usernameView = findViewById(R.id.editText_email);
-        passwordView = findViewById(R.id.editText_pass);
+        init();
+        setAnimation();
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//              mview.show(getSupportFragmentManager(), "");
                 login();
             }
         });
 
+    }
+
+    private void setAnimation(){
+        AnimationDrawable animationDrawable = (AnimationDrawable) linearLayout.getBackground();
+        animationDrawable.setEnterFadeDuration(2000);
+        animationDrawable.setExitFadeDuration(2000);
+        animationDrawable.start();
+    }
+
+
+    private void init(){
+        btn = findViewById(R.id.bt);
+        login_selector = findViewById(R.id.view);
+        signup_selector = findViewById(R.id.view5);
+        login_tab = findViewById(R.id.constraintLayout3);
+        signup_tab = findViewById(R.id.constraintLayout3_1);
+        s = findViewById(R.id.button_1);
+        usernameView = findViewById(R.id.editText_email);
+        passwordView = findViewById(R.id.editText_pass);
+        linearLayout =  findViewById(R.id.login2cl);
     }
 
     public void logintab(View v)
@@ -88,6 +76,15 @@ public class AuthActivity extends AppCompatActivity {
         login_tab.setVisibility(View.GONE);
         btn.setVisibility(View.GONE);
 
+    }
+
+    private boolean isPasswordValid(String password) {
+        //TODO: Replace this with your own logic
+        return password.length() > 4;
+    }
+
+    private boolean isEmpty(EditText text) {
+        return (text.getText().toString().trim().length() <= 0);
     }
 
     private void login() {
@@ -115,19 +112,10 @@ public class AuthActivity extends AppCompatActivity {
         }
 
         //Setting up a progress dialog
-
         passwordView.setError(null);
         Intent intent = new Intent(AuthActivity.this, DashboardActivity.class);
         startActivity(intent);
     }
 
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
-
-    private boolean isEmpty(EditText text) {
-            return (text.getText().toString().trim().length() <= 0);
-    }
 
 }

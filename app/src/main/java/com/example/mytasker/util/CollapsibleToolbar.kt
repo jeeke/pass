@@ -1,4 +1,4 @@
-package com.example.mytasker
+package com.example.mytasker.util
 
 import android.content.Context
 import android.util.AttributeSet
