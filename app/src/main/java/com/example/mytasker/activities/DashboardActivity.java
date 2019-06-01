@@ -1,5 +1,6 @@
 package com.example.mytasker.activities;
 
+import android.content.Intent;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.example.mytasker.adapters.TaskListAdapter;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.TaskDetail;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import retrofit2.Call;
@@ -35,6 +37,13 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
     AnimatedVectorDrawable bottomAppBar;
     FloatingActionButton fab;
     ShimmerFrameLayout shimmerContainer;
+    AppBarLayout appBarLayout;
+    boolean appBarExpanded;
+
+    public void toogleExpansion(View v){
+        appBarExpanded = !appBarExpanded;
+        appBarLayout.setExpanded(appBarExpanded);
+    }
 
     @Override
     public void onClick(View view, int position) {
@@ -122,6 +131,8 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
         brun = findViewById(R.id.textView10);
         btab = findViewById(R.id.textView11);
         bmsg = findViewById(R.id.textView12);
+        appBarExpanded = false;
+        appBarLayout = findViewById(R.id.app_bar);
         prevbselection = bhome;
 //        listView.setBackgroundColor(SettingActivity.list);
         fab = findViewById(R.id.fab);
@@ -173,6 +184,9 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
 //                }, 350);
 //            }
 //        }, 350);
+
+                        Intent intent = new Intent(DashboardActivity.this, PostActivity.class);
+                        startActivity(intent);
     }
 
     public void bselected(View v) {

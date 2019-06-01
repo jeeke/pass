@@ -18,6 +18,7 @@
 
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:background="#00ffffff"
@@ -30,8 +31,8 @@
                 android:elevation="4dp"
                 android:fitsSystemWindows="false"
                 android:minHeight="56dp"
-                app:layoutDescription="@xml/dashboard_motion"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+                app:layoutDescription="@xml/dashboard_motion">
 
                 <ImageView
                     android:id="@+id/menu_icon"
@@ -401,7 +402,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:backgroundTint="@color/colorPrimary"
-                android:onClick="post"
+                android:onClick="toogleExpansion"
                 android:src="@drawable/ic_add_black_24dp"
                 app:borderWidth="0dp"
                 app:fabSize="normal"
