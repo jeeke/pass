@@ -354,14 +354,13 @@
                 app:layout_constraintTop_toTopOf="@+id/textView9" />
 
             <ImageView
-                android:padding="16dp"
                 android:id="@+id/textView11"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="44dp"
-                android:layout_marginEnd="8dp"
                 android:gravity="center"
                 android:onClick="bselected"
+                android:padding="16dp"
                 android:src="@mipmap/ic_tap"
                 app:layout_constraintBottom_toBottomOf="@+id/textView10"
                 app:layout_constraintEnd_toStartOf="@+id/textView12"

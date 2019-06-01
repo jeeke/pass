@@ -1,5 +1,6 @@
 package com.example.mytasker.retrofit;
 
+import com.example.mytasker.models.IndividualTask;
 import com.google.gson.annotations.SerializedName;
 
 public class TaskDetail {

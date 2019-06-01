@@ -1,4 +1,4 @@
-package com.example.mytasker.retrofit;
+package com.example.mytasker.models;
 
 import com.google.gson.annotations.SerializedName;
 

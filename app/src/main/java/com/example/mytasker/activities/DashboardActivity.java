@@ -3,7 +3,6 @@ package com.example.mytasker.activities;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,16 +15,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mytasker.retrofit.IndividualTask;
-import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.R;
-import com.example.mytasker.retrofit.TaskDetail;
 import com.example.mytasker.adapters.TaskListAdapter;
-import com.example.mytasker.models.Task;
+import com.example.mytasker.retrofit.JsonPlaceHolder;
+import com.example.mytasker.retrofit.TaskDetail;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,7 +35,6 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
     AnimatedVectorDrawable bottomAppBar;
     FloatingActionButton fab;
     ShimmerFrameLayout shimmerContainer;
-    ArrayList<Task> list = new ArrayList();
 
     @Override
     public void onClick(View view, int position) {
@@ -72,16 +66,16 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
         shimmerContainer.startShimmer();
         final RecyclerView listView = findViewById(R.id.ListView_dashboard);
 
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                shimmerContainer.stopShimmer();
-                shimmerContainer.animate().alpha(0.0f).setDuration(500).start();
-                listView.animate().alpha(1.0f).setDuration(1000).start();
-                listView.scrollToPosition(0);
-            }
-        }, 2000);
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                shimmerContainer.stopShimmer();
+//                shimmerContainer.animate().alpha(0.0f).setDuration(500).start();
+//                listView.animate().alpha(1.0f).setDuration(1000).start();
+//                listView.scrollToPosition(0);
+//            }
+//        }, 2000);
         ConstraintLayout layout = findViewById(R.id.root);
 //        TODO
 //        layout.setBackgroundColor(SettingActivity.toolbar);
@@ -107,16 +101,13 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
                 }
 
                 TaskDetail details = response.body();
-                for (IndividualTask task : details.getTasks()) {
-                    Task data1 = new Task(task.getTitle(), task.getCost(), task.getC_date(), task.getDis(), task.getTasker_id(), R.drawable.fbsmall);
-                    Log.v("data",data1.toString());
-                    list.add(data1);
-                    Log.v("ListNow",list.toString());
-                }
-
-                TaskListAdapter adapter = new TaskListAdapter(DashboardActivity.this,list);
+                TaskListAdapter adapter = new TaskListAdapter(DashboardActivity.this,details.getTasks());
+                shimmerContainer.stopShimmer();
+                shimmerContainer.animate().alpha(0.0f).setDuration(500).start();
                 listView.setAdapter(adapter);
                 listView.setLayoutManager(new LinearLayoutManager(DashboardActivity.this));
+                listView.scrollToPosition(0);
+                listView.animate().alpha(1.0f).setDuration(1000).start();
             }
 
             @Override
@@ -127,14 +118,11 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
 
 //        CustomListAdapter adapter = new CustomListAdapter(list, getApplicationContext());
 
-        TaskListAdapter adapter = new TaskListAdapter(this,list);
         bhome = findViewById(R.id.textView9);
         brun = findViewById(R.id.textView10);
         btab = findViewById(R.id.textView11);
         bmsg = findViewById(R.id.textView12);
         prevbselection = bhome;
-        listView.setAdapter(adapter);
-        listView.setLayoutManager(new LinearLayoutManager(this));
 //        listView.setBackgroundColor(SettingActivity.list);
         fab = findViewById(R.id.fab);
         ConstraintLayout listHead = findViewById(R.id.list_head);

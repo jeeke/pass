@@ -11,13 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mytasker.R;
-import com.example.mytasker.models.Task;
-
-import java.util.ArrayList;
+import com.example.mytasker.models.IndividualTask;
 
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder> {
 
-    private ArrayList<Task> list;
+    private IndividualTask[] list;
     private View mView;
     private RecyclerViewClickListener mListener;
 
@@ -26,7 +24,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder
         void onClick(View view, int position);
     }
 
-    public TaskListAdapter(Context context, ArrayList<Task> list)
+    public TaskListAdapter(Context context, IndividualTask[] list)
     {
         this.list = list;
         this.mListener = (RecyclerViewClickListener) context;
@@ -42,18 +40,18 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder
     @Override
     public void onBindViewHolder(@NonNull holder holder, int position) {
 
-        String desciption = list.get(position).getDescription();
+        String desciption = list[position].getTitle();
         holder.setupDescription(desciption);
-        String distance = list.get(position).getDistance();
+        String distance = list[position].getDis();
         holder.setupDistance(distance);
-        String date = list.get(position).getDate();
+        String date = list[position].getC_date();
         holder.setupDate(date);
-        String price = list.get(position).getPrice();
+        String price = list[position].getCost();
         holder.setupPrice(price);
-        String location = list.get(position).getLocation();
+        String location = list[position].getJob_des();
         holder.setupLocation(location);
 
-        int imageid = list.get(position).getImage();
+        int imageid = R.drawable.google;
         holder.setupimage(imageid);
 
         setAnimation(holder.itemView, position);
@@ -61,7 +59,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return list.length;
     }
 
     public class holder extends RecyclerView.ViewHolder implements View.OnClickListener
