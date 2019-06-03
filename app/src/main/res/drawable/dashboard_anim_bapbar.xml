@@ -11,9 +11,9 @@
             <path
                 android:name="path"
                 android:pathData="M 0.025 3.975 L 0.025 0.025 L 6 0.025 C 9 0.025 10 2.75 12 2.75 C 14 2.75 15 0.025 18 0.025 L 23.975 0.025 L 23.975 3.975 Z"
-                android:strokeColor="#F0F3F5"
-                android:fillColor="#ffffff"
-                android:strokeWidth="0.1"
+                android:strokeColor="?attr/colorBackgroundFloating"
+                android:fillColor="?attr/colorPrimary"
+                android:strokeWidth="0.15"
                 android:strokeLineCap="round"
                 android:strokeLineJoin="round"/>
         </vector>

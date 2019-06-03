@@ -48,7 +48,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder
         holder.setupDate(date);
         String price = list[position].getCost();
         holder.setupPrice(price);
-        String location = list[position].getJob_des();
+        String location = list[position].getDis();
         holder.setupLocation(location);
 
         int imageid = R.drawable.google;
