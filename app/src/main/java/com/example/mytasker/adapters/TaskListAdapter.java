@@ -1,5 +1,6 @@
 package com.example.mytasker.adapters;
 
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,13 +43,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder
 
         String desciption = list[position].getTitle();
         holder.setupDescription(desciption);
-        String distance = list[position].getDis();
+        String distance = list[position].getDistance();
         holder.setupDistance(distance);
-        String date = list[position].getC_date();
+        String date = list[position].getCategory();
         holder.setupDate(date);
-        String price = list[position].getCost();
+        String price = String.valueOf(list[position].getCost());
         holder.setupPrice(price);
-        String location = list[position].getDis();
+        String location = list[position].getAddress();
         holder.setupLocation(location);
 
         int imageid = R.drawable.google;
