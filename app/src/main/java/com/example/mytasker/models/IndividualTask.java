@@ -2,47 +2,75 @@ package com.example.mytasker.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class IndividualTask {
     @SerializedName("c_date")
-    String c_date;
-    @SerializedName("poster_id")
-    String poster_id;
+    long c_date;
     @SerializedName("job_des")
     String job_des;
     @SerializedName("dis")
-    String dis;
-    @SerializedName("tasker_id")
-    String tasker_id;
+    String distance;
     @SerializedName("title")
     String title;
     @SerializedName("cost")
-    String cost;
+    Integer cost;
+    @SerializedName("address")
+    String address;
+    @SerializedName("poster_id")
+    String poster_id;
+    @SerializedName("category")
+    String category;
+    @SerializedName("attachments")
+    String attachment;
+    @SerializedName("deadline")
+    String deadline;
+    @SerializedName("loc")
+    Integer[] location;
+    @SerializedName("tags")
+    String[] tags;
+    @SerializedName("must_haves")
+    ArrayList<String> musthaves;
 
-    public String getCost() {
+
+    // For query Thing that will be returned use getter !!
+    public Integer getCost() {
         return cost;
     }
-
     public String getTitle() {
         return title;
     }
-
-    public String getTasker_id() {
-        return tasker_id;
-    }
-
-    public String getDis() {
-        return dis;
+    public String getDistance() {
+        return distance;
     }
     public String getJob_des() {
         return job_des;
     }
+    public String getAddress() { return address; }
 
-    public String getC_date() {
+    public String getCategory() {
+        return category;
+    }
 
+    public long getC_date() {
         return c_date;
     }
 
-    public String getPoster_id() {
-        return poster_id;
+    // For Post use constructor that shoud be send to server !!
+    public IndividualTask(long c_date, String job_des, String title, Integer cost, String address, String poster_id, String category, String attachment, String deadline, Integer[] location, String[] tags, ArrayList<String> musthaves) {
+        this.c_date = c_date;
+        this.job_des = job_des;
+        this.title = title;
+        this.cost = cost;
+        this.address = address;
+        this.poster_id = poster_id;
+        this.category = category;
+        this.attachment = attachment;
+        this.deadline = deadline;
+        this.location = location;
+        this.tags = tags;
+        this.musthaves = musthaves;
     }
+
+
 }

@@ -38,34 +38,34 @@ public class PostFrag3 extends Fragment {
         imageView2 = layout.findViewById(R.id.imageView15);
         imageView3 = layout.findViewById(R.id.imageView16);
         imageView4 = layout.findViewById(R.id.imageView17);
-        clock = layout.findViewById(R.id.clock);
-
-
-        imageView1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clock.setRotation(0);
-            }
-        });
-        imageView2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clock.setRotation(90);
-            }
-        });
-
-        imageView4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clock.setRotation(180);
-            }
-        });
-        imageView3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clock.setRotation(270);
-            }
-        });
+//        //clock = layout.findViewById(R.id.clock);
+//
+//
+//        imageView1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                clock.setRotation(0);
+//            }
+//        });
+//        imageView2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                clock.setRotation(90);
+//            }
+//        });
+//
+//        imageView4.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                clock.setRotation(180);
+//            }
+//        });
+//        imageView3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                clock.setRotation(270);
+//            }
+//        });
         return layout;
     }
 
