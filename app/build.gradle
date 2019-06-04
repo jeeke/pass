@@ -21,6 +21,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -39,6 +43,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
 
     implementation 'com.github.badoualy:stepper-indicator:1.0.7'
+
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.0'
 
 
 //    testImplementation 'junit:junit:4.12'

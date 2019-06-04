@@ -8,16 +8,15 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.OvershootInterpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.constraintlayout.motion.widget.MotionScene;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
@@ -54,7 +53,6 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
     int CODE_SETTINGS_ACTIVITY = 100;
     Intent starterIntent;
     private int themeId;
-    private FrameLayout listHeadMenu;
 
     int centerX;
     int centerY;
@@ -63,7 +61,8 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
     View fabExpanded;
 
 
-    public void initFab(){
+    private void initFab(){
+        fabActivated = false;
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -75,17 +74,102 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
     }
 
 
-    int listHeadOpen;
+    MotionLayout catMenu,filterMenu;
+    private void initListHead(){
+        catOpen = false;
+        filterOpen = false;
+        catMenu = findViewById(R.id.list_head_cat_menu);
+        filterMenu = findViewById(R.id.list_head_filter_menu);
+    }
+
+    private void setMotionListener(final MotionLayout firstLayout, final MotionLayout secondLayout){
+
+
+        firstLayout.setTransitionListener( new MotionLayout.TransitionListener() {
+            @Override
+            public void onTransitionStarted(MotionLayout motionLayout, int i, int i1) {
+
+            }
+
+            @Override
+            public void onTransitionChange(MotionLayout motionLayout, int i, int i1, float v) {
+
+            }
+
+            @Override
+            public void onTransitionCompleted(MotionLayout motionLayout, int i) {
+                secondLayout.transitionToEnd();
+            }
+
+            @Override
+            public void onTransitionTrigger(MotionLayout motionLayout, int i, boolean b, float v) {
+
+            }
+
+            @Override
+            public boolean allowsTransition(MotionScene.Transition transition) {
+                return false;
+            }
+        });
+
+        secondLayout.setTransitionListener(new MotionLayout.TransitionListener() {
+            @Override
+            public void onTransitionStarted(MotionLayout motionLayout, int i, int i1) {
+
+            }
+
+            @Override
+            public void onTransitionChange(MotionLayout motionLayout, int i, int i1, float v) {
+
+            }
+
+            @Override
+            public void onTransitionCompleted(MotionLayout motionLayout, int i) {
+                firstLayout.setTransitionListener(null);
+                secondLayout.setTransitionListener(null);
+            }
+
+            @Override
+            public void onTransitionTrigger(MotionLayout motionLayout, int i, boolean b, float v) {
+
+            }
+
+            @Override
+            public boolean allowsTransition(MotionScene.Transition transition) {
+                return false;
+            }
+        });
+        firstLayout.transitionToStart();
+    }
+    boolean catOpen;
     public void categories(View v){
-        if(listHeadOpen==0){
-            LayoutInflater.from(this).inflate(R.layout.card_categories,listHeadMenu,true);
-            ((MotionLayout)findViewById(R.id.scrollable)).transitionToEnd();
-        }else if(listHeadOpen%2==0){
-            ((MotionLayout)findViewById(R.id.scrollable)).transitionToEnd();
+        if(catOpen){
+            catMenu.transitionToStart();
         }else {
-            ((MotionLayout)findViewById(R.id.scrollable)).transitionToStart();
+            if(filterOpen){
+                filterOpen = false;
+                setMotionListener(filterMenu, catMenu);
+            }else {
+                catMenu.transitionToEnd();
+            }
         }
-        listHeadOpen++;
+        catOpen = !catOpen;
+    }
+
+
+    boolean filterOpen;
+    public void filters(View v){
+        if(filterOpen){
+            filterMenu.transitionToStart();
+        }else {
+            if(catOpen){
+                catOpen = false;
+                setMotionListener(catMenu,filterMenu);
+            }else {
+                filterMenu.transitionToEnd();
+            }
+        }
+        filterOpen = !filterOpen;
     }
 
     public void circularReveal(View v){
@@ -198,11 +282,7 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
         shimmerContainer.startShimmer();
         final RecyclerView listView = findViewById(R.id.ListView_dashboard);
 
-        listHeadMenu = findViewById(R.id.list_head_menu);
-
-        fabActivated = false;
-
-        listHeadOpen = 0;
+        initListHead();
 
 //        final Handler handler = new Handler();
 //        handler.postDelayed(new Runnable() {

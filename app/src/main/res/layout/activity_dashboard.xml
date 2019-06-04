@@ -109,14 +109,13 @@
         </com.google.android.material.appbar.AppBarLayout>
 
 
-        <androidx.constraintlayout.motion.widget.MotionLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/scrollable"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:background="@drawable/list_and_header_container"
-            app:layoutDescription="@xml/header_motion"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <View
@@ -165,6 +164,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-1dp"
                     android:layout_marginEnd="24dp"
+                    android:onClick="filters"
                     android:tint="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/textView15"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -221,8 +221,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:tint="@color/white"
                     android:onClick="categories"
+                    android:tint="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
                     app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
                     app:layout_constraintStart_toEndOf="@+id/textView14"
@@ -297,11 +297,52 @@
                 app:layout_constraintStart_toEndOf="@+id/divider6"
                 app:layout_constraintTop_toBottomOf="@+id/list_head" />
 
-            <include
-                android:id="@+id/list_head_menu"
-                layout="@layout/dashboard_categories_layout"/>
+            <androidx.constraintlayout.motion.widget.MotionLayout
+                android:id="@+id/list_head_cat_menu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutDescription="@xml/categories_motion">
 
-        </androidx.constraintlayout.motion.widget.MotionLayout>
+                <FrameLayout
+                    android:id="@id/cat_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="48dp"
+                        android:background="@color/transparentGrey" />
+
+                    <include layout="@layout/cat_expanded" />
+
+                </FrameLayout>
+            </androidx.constraintlayout.motion.widget.MotionLayout>
+
+            <androidx.constraintlayout.motion.widget.MotionLayout
+                android:id="@+id/list_head_filter_menu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutDescription="@xml/filter_motion">
+
+                <FrameLayout
+                    android:id="@+id/filter_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="48dp"
+                        android:background="@color/transparentGrey" />
+
+                    <include layout="@layout/filter_expanded" />
+
+                </FrameLayout>
+            </androidx.constraintlayout.motion.widget.MotionLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
             android:id="@+id/fab_expanded"

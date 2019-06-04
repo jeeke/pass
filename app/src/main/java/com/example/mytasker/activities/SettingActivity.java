@@ -15,11 +15,12 @@ import com.example.mytasker.R;
 
 public class SettingActivity extends AppCompatActivity {
 
-    static boolean darkMode = true;
+    static boolean darkMode = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_sectioned);
+        ((SwitchCompat)findViewById(R.id.theme)).setChecked(darkMode);
         initToolbar();
     }
 

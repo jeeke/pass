@@ -14,9 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/LightMode">
-        <activity android:name=".activities.PostActivity"></activity>
+        <activity android:name=".activities.TaskDetailActivity"></activity>
+        <activity android:name=".activities.PostActivity" />
         <activity android:name=".activities.dummy.TempPostActivity" />
-        <activity android:name=".activities.DashboardActivity" >
+        <activity android:name=".activities.DashboardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,15 +25,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.AuthActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
 
-        <activity android:name=".activities.SettingActivity">
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
+        <activity android:name=".activities.SettingActivity"></activity>
         <activity android:name=".activities.MainActivity">
 
             <!-- <intent-filter> -->
