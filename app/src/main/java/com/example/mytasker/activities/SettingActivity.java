@@ -1,5 +1,6 @@
 package com.example.mytasker.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,12 @@ import com.example.mytasker.R;
 
 
 public class SettingActivity extends AppCompatActivity {
+
+
+    public void theme(View v){
+        Intent intent = new Intent(this,ThemeSetting.class);
+        startActivity(intent);
+    }
 
     static boolean darkMode = false;
     @Override

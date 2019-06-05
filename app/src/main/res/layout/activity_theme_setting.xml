@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/bottomNavBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:ems="10"
+            android:hint="BottomNavBar"
+            app:layout_constraintBottom_toTopOf="@+id/fabColor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarBack" />
+
+        <EditText
+            android:id="@+id/fabColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:ems="10"
+            android:hint="Fab Color"
+            app:layout_constraintBottom_toTopOf="@+id/listHead"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bottomNavBar" />
+
+        <EditText
+            android:id="@+id/listHead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:ems="10"
+            android:hint="List Head"
+            app:layout_constraintBottom_toTopOf="@+id/listBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fabColor" />
+
+        <EditText
+            android:id="@+id/listBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="48dp"
+            android:ems="10"
+            android:hint="List Background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/listHead" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="40dp"
+            android:onClick="done"
+            android:backgroundTint="#ffffff"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_done_black_24dp" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="32dp"
+            android:background="#000000"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbarBack"
+            app:layout_constraintStart_toEndOf="@+id/toolbarBack"
+            app:layout_constraintTop_toTopOf="@+id/toolbarBack" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="32dp"
+            android:background="#000000"
+            app:layout_constraintBottom_toBottomOf="@+id/bottomNavBar"
+            app:layout_constraintStart_toEndOf="@+id/bottomNavBar"
+            app:layout_constraintTop_toTopOf="@+id/bottomNavBar" />
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="32dp"
+            android:background="#000000"
+            app:layout_constraintBottom_toBottomOf="@+id/fabColor"
+            app:layout_constraintStart_toEndOf="@+id/fabColor"
+            app:layout_constraintTop_toTopOf="@+id/fabColor" />
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="32dp"
+            android:background="#000000"
+            app:layout_constraintBottom_toBottomOf="@+id/listHead"
+            app:layout_constraintStart_toEndOf="@+id/listHead"
+            app:layout_constraintTop_toTopOf="@+id/listHead" />
+
+        <View
+            android:id="@+id/view5"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="32dp"
+            android:background="#000000"
+            app:layout_constraintBottom_toBottomOf="@+id/listBackground"
+            app:layout_constraintStart_toEndOf="@+id/listBackground"
+            app:layout_constraintTop_toTopOf="@+id/listBackground" />
+
+        <EditText
+            android:id="@+id/toolbarBack"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="24dp"
+            android:ems="10"
+            android:hint="Background"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:onClick="preview"
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginBottom="40dp"
+            android:text="Preview"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

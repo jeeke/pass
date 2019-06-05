@@ -2,6 +2,7 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lyt_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -16,7 +17,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="16dp"
         android:scaleType="fitXY"
-        android:src="@drawable/shifting"
+        tools:src="@drawable/shifting"
         app:layout_constraintBottom_toBottomOf="@+id/task_time"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -40,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:text="Want my house cleaned"
+        tools:text="Want my house cleaned"
         android:textColor="#212121"
         app:layout_constraintStart_toEndOf="@+id/task_cat_image"
         android:textSize="14sp"
@@ -52,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="$500"
+        tools:text="$500"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/task_dist"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +63,7 @@
         android:id="@+id/task_dist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0.4 kms"
+        tools:text="0.4 kms"
         android:textColor="@color/color_12"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/task_time"
@@ -75,7 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:text="Jalandhar"
+        tools:text="Jalandhar"
         android:textColor="#212121"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/task_cat_image"
@@ -87,7 +88,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="4dp"
-        android:text="28 Jan 6 pm"
+        tools:text="28 Jan 6 pm"
         android:textColor="#212121"
         android:textSize="10sp"
         app:layout_constraintStart_toEndOf="@+id/task_cat_image"
@@ -101,7 +102,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/task_dist"
         app:layout_constraintEnd_toStartOf="@+id/task_dist"
         app:layout_constraintTop_toTopOf="@+id/task_dist"
-        android:src="@drawable/ic_location" />
+        tools:src="@drawable/ic_location" />
 
     <View
         android:id="@+id/divider8"

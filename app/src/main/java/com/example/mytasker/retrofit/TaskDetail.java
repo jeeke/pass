@@ -3,15 +3,17 @@ package com.example.mytasker.retrofit;
 import com.example.mytasker.models.IndividualTask;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class TaskDetail {
-    public TaskDetail(IndividualTask[] tasks) {
+    public TaskDetail(ArrayList<IndividualTask> tasks) {
         this.tasks = tasks;
     }
 
     @SerializedName("tasks")
-    IndividualTask[] tasks;
+    ArrayList<IndividualTask> tasks;
 
-    public IndividualTask[] getTasks() {
+    public ArrayList<IndividualTask> getTasks() {
         return tasks;
     }
 }

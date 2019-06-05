@@ -1,15 +1,16 @@
 package com.example.mytasker.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.mytasker.R;
 
@@ -21,9 +22,11 @@ public class AuthActivity extends AppCompatActivity {
     private Button btn;
     private Button l,s;
     private ConstraintLayout linearLayout;
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkLogin();
         setContentView(R.layout.activity_auth);
         init();
         setAnimation();
@@ -34,6 +37,15 @@ public class AuthActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void checkLogin(){
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        boolean logged = prefs.getBoolean("logged", false);
+        if (logged) {
+            Intent intent = new Intent(AuthActivity.this, DashboardActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void setAnimation(){
@@ -113,6 +125,10 @@ public class AuthActivity extends AppCompatActivity {
 
         //Setting up a progress dialog
         passwordView.setError(null);
+
+        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putBoolean("logged", true);
+        editor.apply();
         Intent intent = new Intent(AuthActivity.this, DashboardActivity.class);
         startActivity(intent);
     }
