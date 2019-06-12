@@ -68,7 +68,7 @@
                             android:layout_height="@dimen/spacing_xmlarge"
                             android:background="@android:color/transparent"
                             android:tint="@color/grey_40"
-                            app:srcCompat="@mipmap/profile" />
+                            app:srcCompat="@drawable/ic_theme" />
 
                         <View
                             android:layout_width="@dimen/spacing_small"

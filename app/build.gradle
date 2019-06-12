@@ -29,29 +29,36 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha05'
+    implementation 'androidx.appcompat:appcompat:1.1.0-beta01'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
-    implementation 'com.google.android.material:material:1.1.0-alpha06'
+    implementation 'com.google.android.material:material:1.1.0-alpha07'
 
     implementation 'com.github.crosswall:Android-Coverflow:release-v1.0.5'
     // ripple effect
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
+
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.github.pchmn:MaterialChipsInput:1.0.5'         // material chip
-    implementation 'com.hootsuite.android:nachos:1.1.1'                //material chip
+
     implementation 'com.balysv:material-ripple:1.0.2'
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.core:core-ktx:1.0.2"
 
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
 
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
 
-
     implementation 'com.github.badoualy:stepper-indicator:1.0.7'
 
     implementation 'com.wdullaer:materialdatetimepicker:4.2.0'
+
+    implementation 'com.appyvet:materialrangebar:1.4.6'
+
+
+    implementation 'com.github.pchmn:MaterialChipsInput:1.0.5'         // material chip
+
+    implementation 'com.hootsuite.android:nachos:1.1.1'                //material chip
 
 
 //    testImplementation 'junit:junit:4.12'

@@ -51,7 +51,9 @@ public class IndividualTask {
     public String getCategory() {
         return category;
     }
-
+    public String[] getTags(){
+        return tags;
+    }
     public long getC_date() {
         return c_date;
     }

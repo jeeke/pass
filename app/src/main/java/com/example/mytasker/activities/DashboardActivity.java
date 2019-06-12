@@ -2,11 +2,11 @@ package com.example.mytasker.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +23,6 @@ import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.constraintlayout.motion.widget.MotionScene;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -33,8 +32,11 @@ import com.example.mytasker.adapters.TaskListAdapter;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.TaskDetail;
 import com.example.mytasker.util.CollapsibleToolbar;
+import com.example.mytasker.util.TaskListHolder;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -96,13 +98,36 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
         shape.setCornerRadii(new float[]{320, 320, 320, 320, 64, 64, 64, 64});
         shape.setColor(listHead);
 
-        Drawable drawable = getDrawable(R.drawable.dashboard_anim_bapbar);
-        drawable.setTint(bottombar);
-        bottomAppBar.setBackground(drawable);
+//        Drawable drawable = getDrawable(R.drawable.dashboard_anim_bapbar);
+//        drawable.setTint(bottombar);
+//        bottomAppBar.setBackground(drawable);
 
         listHeadView.setBackground(shape);
     }
 
+    private Chip createChip(Context context,String title){
+        Chip chip = new Chip(context);
+        chip.setText(title);
+        chip.setCheckable(true);
+        chip.setClickable(true);
+        return chip;
+    }
+
+    ChipGroup chipGroup1,chipGroup2;
+    private void initCatChips(){
+        chipGroup1 = findViewById(R.id.chipGroup1);
+        chipGroup2 = findViewById(R.id.chipGroup2);
+        String[] chipTitle = {"one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"};
+        for (int i=0;i<chipTitle.length;i++) {
+            if(i%2==0){
+                View view;
+                chipGroup1.addView(createChip(chipGroup1.getContext(),chipTitle[i]));
+            }else{
+                chipGroup2.addView(createChip(chipGroup2.getContext(),chipTitle[i]));
+            }
+
+        }
+    }
     private void initFab() {
         fabActivated = false;
         Display display = getWindowManager().getDefaultDisplay();
@@ -287,13 +312,16 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
 
     @Override
     public void onClick(View view, int position) {
-        FragmentManager fm = getSupportFragmentManager();
-        androidx.fragment.app.FragmentTransaction ft = fm.beginTransaction();
-        androidx.fragment.app.Fragment prev = fm.findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
+//        FragmentManager fm = getSupportFragmentManager();
+//        androidx.fragment.app.FragmentTransaction ft = fm.beginTransaction();
+//        androidx.fragment.app.Fragment prev = fm.findFragmentByTag("dialog");
+//        if (prev != null) {
+//            ft.remove(prev);
+//        }
+//        ft.addToBackStack(null);
+        Intent intent = new Intent(this,TaskDetailActivity.class);
+        intent.putExtra("position",position);
+        startActivity(intent);
     }
 
 
@@ -306,6 +334,7 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
     private void callRetrofit() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://nkliobv7w5.execute-api.ap-south-1.amazonaws.com/dev/")
+//                .baseUrl("http://0124ce90.ngrok.io")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -325,7 +354,12 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
                 }
                 TaskDetail details = response.body();
                 adapter.clear();
-                adapter.addAll(details.getTasks());
+
+
+                TaskListHolder.taskData = details.getTasks();
+                adapter.addAll(TaskListHolder.taskData);
+
+
                 shimmerContainer.stopShimmer();
                 shimmerContainer.animate().alpha(0.0f).setDuration(500).start();
                 listView.animate().alpha(1.0f).setDuration(1000).start();
@@ -369,6 +403,7 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
         getThemeColors();
         setThemeColors();
         initFab();
+        initCatChips();
 
         adapter = new TaskListAdapter(DashboardActivity.this, new ArrayList<>());
         listView.setAdapter(adapter);
