@@ -14,15 +14,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/LightMode">
-        <activity android:name=".activities.ThemeSetting"></activity>
+        <activity android:name=".activities.QuestionDetailActivity"></activity>
+        <activity android:name=".activities.PostQuestion" />
+        <activity android:name=".activities.ThemeSetting" />
         <activity android:name=".activities.TaskDetailActivity" />
-        <activity android:name=".activities.PostActivity" />
+        <activity android:name=".activities.PostTask" />
         <activity android:name=".activities.dummy.TempPostActivity" />
-        <activity android:name=".activities.DashboardActivity"></activity>
+        <activity android:name=".activities.DashboardActivity" />
         <activity android:name=".activities.AuthActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

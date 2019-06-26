@@ -5,29 +5,28 @@
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@+id/start"
-        motion:duration="300">
+        motion:duration="200">
 
         <ConstraintSet android:id="@+id/start">
             <Constraint
-                android:layout_marginTop="36dp"
-                android:id="@+id/cat_menu"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                motion:layout_constraintEnd_toEndOf="parent"
-                motion:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/list_head"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="4dp"
+                motion:layout_constraintEnd_toEndOf="@+id/swipe_refresh_layout"
+                motion:layout_constraintStart_toStartOf="@+id/swipe_refresh_layout"
                 motion:layout_constraintTop_toTopOf="parent"/>
         </ConstraintSet>
 
         <ConstraintSet android:id="@+id/end">
-
             <Constraint
-                android:layout_marginTop="36dp"
-                android:id="@+id/cat_menu"
-                android:layout_width="match_parent"
+                android:id="@+id/list_head"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                motion:layout_constraintEnd_toEndOf="parent"
-                motion:layout_constraintStart_toStartOf="parent"
-                motion:layout_constraintTop_toTopOf="parent" />
+                android:layout_marginTop="4dp"
+                motion:layout_constraintEnd_toEndOf="@+id/swipe_refresh_layout"
+                motion:layout_constraintStart_toStartOf="@+id/swipe_refresh_layout"
+                motion:layout_constraintTop_toTopOf="parent"/>
         </ConstraintSet>
     </Transition>
 </MotionScene>

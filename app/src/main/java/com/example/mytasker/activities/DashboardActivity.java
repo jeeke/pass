@@ -2,134 +2,60 @@ package com.example.mytasker.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Point;
-import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.motion.widget.MotionLayout;
-import androidx.constraintlayout.motion.widget.MotionScene;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.mytasker.R;
+import com.example.mytasker.adapters.FeedAdapter;
+import com.example.mytasker.adapters.QuestionAdapter;
 import com.example.mytasker.adapters.TaskListAdapter;
-import com.example.mytasker.retrofit.JsonPlaceHolder;
-import com.example.mytasker.retrofit.TaskDetail;
-import com.example.mytasker.util.CollapsibleToolbar;
-import com.example.mytasker.util.TaskListHolder;
-import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
+import com.example.mytasker.fragments.FeedFragment;
+import com.example.mytasker.fragments.HomeFragment;
+import com.example.mytasker.fragments.QuestionFragment;
+import com.example.mytasker.models.Question;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
+public class DashboardActivity extends AppCompatActivity implements TaskListAdapter.RecyclerViewClickListener,HomeFragment.OnFragmentInteractionListener,QuestionFragment.OnListFragmentInteractionListener, QuestionAdapter.RecyclerViewClickListener,FeedFragment.OnListFragmentInteractionListener, FeedAdapter.RecyclerViewClickListener {
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import static com.example.mytasker.activities.AuthActivity.MY_PREFS_NAME;
-
-public class DashboardActivity extends AppCompatActivity implements TaskListAdapter.RecyclerViewClickListener {
-
-    ImageView bhome, bqna, bfeed, bprofile, logo;
+    ImageView bhome, bqna, bfeed, bprofile;
     ImageView prevbselection;
     View bottomAppBar;
-    ShimmerFrameLayout shimmerContainer;
-    AppBarLayout appBarLayout;
-    CollapsibleToolbar collapsibleToolbar;
-    boolean appBarExpanded;
     boolean fabActivated;
     int CODE_SETTINGS_ACTIVITY = 100;
     Intent starterIntent;
-    private int themeId;
 
     int centerX;
     int centerY;
     int startRadius;
     int endRadius;
     View fabExpanded;
+    Fragment[] fragments = new Fragment[]{null,null,null,null};
 
-    int toolbar, bottombar, fab, list, listHead;
-
-    private void getThemeColors() {
-        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        toolbar = prefs.getInt("toolbar", R.attr.colorPrimary);
-        bottombar = prefs.getInt("bottombar", R.attr.colorPrimary);
-        fab = prefs.getInt("fab", R.attr.colorAccent);
-        list = prefs.getInt("list", R.attr.colorPrimary);
-        listHead = prefs.getInt("listHead", R.attr.colorAccent);
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.commit();
     }
 
-    private void setThemeColors() {
-        View layout = findViewById(R.id.root);
-        layout.setBackgroundColor(toolbar);
-        Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(toolbar);
-
-
-        findViewById(R.id.scrollView3).setBackgroundColor(list);
-        FloatingActionButton floatingActionButton = findViewById(R.id.fab);
-        floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(fab));
-
-        ConstraintLayout listHeadView = findViewById(R.id.list_head);
-        GradientDrawable shape = new GradientDrawable();
-        shape.setShape(GradientDrawable.RECTANGLE);
-        shape.setCornerRadii(new float[]{320, 320, 320, 320, 64, 64, 64, 64});
-        shape.setColor(listHead);
-
-//        Drawable drawable = getDrawable(R.drawable.dashboard_anim_bapbar);
-//        drawable.setTint(bottombar);
-//        bottomAppBar.setBackground(drawable);
-
-        listHeadView.setBackground(shape);
+    public void loadNextFrag(View view) {
     }
 
-    private Chip createChip(Context context,String title){
-        Chip chip = new Chip(context);
-        chip.setText(title);
-        chip.setCheckable(true);
-        chip.setClickable(true);
-        return chip;
-    }
-
-    ChipGroup chipGroup1,chipGroup2;
-    private void initCatChips(){
-        chipGroup1 = findViewById(R.id.chipGroup1);
-        chipGroup2 = findViewById(R.id.chipGroup2);
-        String[] chipTitle = {"one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"};
-        for (int i=0;i<chipTitle.length;i++) {
-            if(i%2==0){
-                View view;
-                chipGroup1.addView(createChip(chipGroup1.getContext(),chipTitle[i]));
-            }else{
-                chipGroup2.addView(createChip(chipGroup2.getContext(),chipTitle[i]));
-            }
-
-        }
-    }
+    FloatingActionButton fab;
     private void initFab() {
         fabActivated = false;
+        fab = findViewById(R.id.fab);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -140,108 +66,6 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
         fabExpanded = findViewById(R.id.fab_expanded);
     }
 
-
-    MotionLayout catMenu, filterMenu;
-
-    private void initListHead() {
-        catOpen = false;
-        filterOpen = false;
-        catMenu = findViewById(R.id.list_head_cat_menu);
-        filterMenu = findViewById(R.id.list_head_filter_menu);
-    }
-
-    private void setMotionListener(final MotionLayout firstLayout, final MotionLayout secondLayout) {
-
-
-        firstLayout.setTransitionListener(new MotionLayout.TransitionListener() {
-            @Override
-            public void onTransitionStarted(MotionLayout motionLayout, int i, int i1) {
-
-            }
-
-            @Override
-            public void onTransitionChange(MotionLayout motionLayout, int i, int i1, float v) {
-
-            }
-
-            @Override
-            public void onTransitionCompleted(MotionLayout motionLayout, int i) {
-                secondLayout.transitionToEnd();
-            }
-
-            @Override
-            public void onTransitionTrigger(MotionLayout motionLayout, int i, boolean b, float v) {
-
-            }
-
-            @Override
-            public boolean allowsTransition(MotionScene.Transition transition) {
-                return false;
-            }
-        });
-
-        secondLayout.setTransitionListener(new MotionLayout.TransitionListener() {
-            @Override
-            public void onTransitionStarted(MotionLayout motionLayout, int i, int i1) {
-
-            }
-
-            @Override
-            public void onTransitionChange(MotionLayout motionLayout, int i, int i1, float v) {
-
-            }
-
-            @Override
-            public void onTransitionCompleted(MotionLayout motionLayout, int i) {
-                firstLayout.setTransitionListener(null);
-                secondLayout.setTransitionListener(null);
-            }
-
-            @Override
-            public void onTransitionTrigger(MotionLayout motionLayout, int i, boolean b, float v) {
-
-            }
-
-            @Override
-            public boolean allowsTransition(MotionScene.Transition transition) {
-                return false;
-            }
-        });
-        firstLayout.transitionToStart();
-    }
-
-    boolean catOpen;
-
-    public void categories(View v) {
-        if (catOpen) {
-            catMenu.transitionToStart();
-        } else {
-            if (filterOpen) {
-                filterOpen = false;
-                setMotionListener(filterMenu, catMenu);
-            } else {
-                catMenu.transitionToEnd();
-            }
-        }
-        catOpen = !catOpen;
-    }
-
-
-    boolean filterOpen;
-
-    public void filters(View v) {
-        if (filterOpen) {
-            filterMenu.transitionToStart();
-        } else {
-            if (catOpen) {
-                catOpen = false;
-                setMotionListener(catMenu, filterMenu);
-            } else {
-                filterMenu.transitionToEnd();
-            }
-        }
-        filterOpen = !filterOpen;
-    }
 
     public void circularReveal(View v) {
         float angle;
@@ -279,118 +103,32 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        circularReveal(null);
         if (requestCode == CODE_SETTINGS_ACTIVITY) {
 //            if (resultCode == RESULT_OK) {
 //            }
             finish();
-            starterIntent.putExtra("theme", getThemeToLaunch());
+//            starterIntent.putExtra("theme", getThemeToLaunch());
             startActivity(starterIntent);
         }
     }
 
 
     @Override
-    public void setTheme(int themeId) {
-        super.setTheme(themeId);
-        this.themeId = themeId;
-    }
-
-    private int getThemeToLaunch() {
-        return SettingActivity.darkMode ? R.style.DarkMode : R.style.LightMode;
-    }
-
-    public int getThemeId() {
-        return themeId;
-    }
-
-
-    public void toggleAppBarExpansion(View v) {
-        appBarExpanded = !appBarExpanded;
-        appBarLayout.setExpanded(appBarExpanded);
-    }
-
-    @Override
     public void onClick(View view, int position) {
-//        FragmentManager fm = getSupportFragmentManager();
-//        androidx.fragment.app.FragmentTransaction ft = fm.beginTransaction();
-//        androidx.fragment.app.Fragment prev = fm.findFragmentByTag("dialog");
-//        if (prev != null) {
-//            ft.remove(prev);
-//        }
-//        ft.addToBackStack(null);
         Intent intent = new Intent(this,TaskDetailActivity.class);
         intent.putExtra("position",position);
         startActivity(intent);
     }
 
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        shimmerContainer.stopShimmer();
-    }
-
-    private void callRetrofit() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://nkliobv7w5.execute-api.ap-south-1.amazonaws.com/dev/")
-//                .baseUrl("http://0124ce90.ngrok.io")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<TaskDetail> call = jsonPlaceHolder.getDetail(
-                new Integer[]{25, 25},
-                100,
-                new String[]{"tech", "null"}
-        );
-
-        call.enqueue(new Callback<TaskDetail>() {
-            @Override
-            public void onResponse(Call<TaskDetail> call, Response<TaskDetail> response) {
-                if (!response.isSuccessful()) {
-                    Log.v("Code: ", String.valueOf(response.code()));
-                    return;
-                }
-                TaskDetail details = response.body();
-                adapter.clear();
-
-
-                TaskListHolder.taskData = details.getTasks();
-                adapter.addAll(TaskListHolder.taskData);
-
-
-                shimmerContainer.stopShimmer();
-                shimmerContainer.animate().alpha(0.0f).setDuration(500).start();
-                listView.animate().alpha(1.0f).setDuration(1000).start();
-                swipeContainer.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(Call<TaskDetail> call, Throwable t) {
-                Log.v("error ", t.getMessage());
-                swipeContainer.setRefreshing(false);
-            }
-        });
-    }
-
-    private RecyclerView listView;
-    private SwipeRefreshLayout swipeContainer;
-    TaskListAdapter adapter;
-
     private void init() {
         bottomAppBar = findViewById(R.id.bottom_app_bar);
-        listView = findViewById(R.id.ListView_dashboard);
-        shimmerContainer = findViewById(R.id.shimmer_container);
-        swipeContainer = findViewById(R.id.swipe_refresh_layout);
         bhome = findViewById(R.id.home);
         bqna = findViewById(R.id.qna);
         bfeed = findViewById(R.id.feed);
         bprofile = findViewById(R.id.profile);
-        appBarLayout = findViewById(R.id.app_bar);
-        collapsibleToolbar = appBarLayout.findViewById(R.id.motionLayout);
-        logo = findViewById(R.id.esselion);
+
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -400,101 +138,65 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
         setTheme(theme);
         setContentView(R.layout.activity_dashboard);
         init();
-        getThemeColors();
-        setThemeColors();
         initFab();
-        initCatChips();
-
-        adapter = new TaskListAdapter(DashboardActivity.this, new ArrayList<>());
-        listView.setAdapter(adapter);
-        listView.setLayoutManager(new LinearLayoutManager(DashboardActivity.this));
-        shimmerContainer.startShimmer();
-
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                callRetrofit();
-            }
-
-        });
-        callRetrofit();
-        swipeContainer.setColorSchemeResources(
-                android.R.color.holo_red_light,
-
-                android.R.color.holo_orange_light,
-
-                android.R.color.holo_blue_bright,
-
-                android.R.color.holo_green_light);
-
-
-        initListHead();
-
-
-        appBarLayout.setExpanded(false);
-//        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-//        AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
-//        AppBarLayout.Behavior.DragCallback dragCallback = new AppBarLayout.Behavior.DragCallback() {
-//            @Override
-//            public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
-//                return false;
-//            }
-//        };
-//        behavior.setDragCallback(dragCallback);
-//        params.setBehavior(behavior);
-
+        fragments[0] = new HomeFragment();
+        loadFragment(fragments[0]);
         prevbselection = bhome;
-//        View listHead = findViewById(R.id.list_head);
-//        listHead.setBackground(getResources().getDrawable(R.drawable.list_head_dark));
-        if (getThemeId() == R.style.DarkMode)
-            logo.setImageResource(R.drawable.esselion_white);
-        else
-            logo.setImageResource(R.drawable.esselion_dark);
     }
 
     //    TODO
-    public void profile(View v) {
-//        Intent intent = new Intent(DashboardActivity.this, ProfileActivity.class);
-//        startActivity(intent);
-//        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-    }
 
-    public void setting(View v) {
-        Intent intent = new Intent(DashboardActivity.this, SettingActivity.class);
-        startActivityForResult(intent, CODE_SETTINGS_ACTIVITY);
+    public void postTask(View v) {
+        Intent intent = new Intent(DashboardActivity.this, PostTask.class);
+        circularReveal(fab);
+        startActivity(intent);
         overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 
-    public void support(View v) {
-//        Intent intent = new Intent(DashboardActivity.this,Support_activity.class);
-//        startActivity(intent);
-//        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-    }
-
-    public void post(View v) {
-        Intent intent = new Intent(DashboardActivity.this, PostActivity.class);
+    public void postQues(View v) {
+        circularReveal(fab);
+        Intent intent = new Intent(DashboardActivity.this, PostQuestion.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 
     public void bselected(View v) {
         ImageView current = (ImageView) v;
-        prevbselection.setImageResource(toogleImage(prevbselection.getId(), false));
-        current.setImageResource(toogleImage(current.getId(), true));
-        prevbselection = current;
+        if(v.getId()!=prevbselection.getId()){
+            prevbselection.setImageResource(toogleImage(prevbselection.getId(), false));
+            current.setImageResource(toogleImage(current.getId(), true));
+            prevbselection = current;
+        }
     }
+
 
     private int toogleImage(int id, boolean selected) {
         switch (id) {
             case R.id.home:
+                fragments[0] = fragments[0]==null? new HomeFragment():fragments[0];
+                loadFragment(fragments[0]);
                 return selected ? R.mipmap.home_fill : R.mipmap.home;
             case R.id.feed:
+                fragments[2] = fragments[2]==null? new FeedFragment():fragments[2];
+                loadFragment(fragments[2]);
                 return selected ? R.mipmap.scroll_fill : R.mipmap.scroll;
             case R.id.qna:
+                fragments[1] = fragments[1]==null? new QuestionFragment():fragments[1];
+                loadFragment(fragments[1]);
                 return selected ? R.mipmap.qna_fill : R.mipmap.qna;
             case R.id.profile:
                 return selected ? R.mipmap.profile_fill : R.mipmap.profile;
         }
         return 0;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+// TODO
+    }
+
+    @Override
+    public void onListFragmentInteraction(Question question) {
+
     }
 }

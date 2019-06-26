@@ -2,14 +2,15 @@
 
     <style name="LightMode" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/lightGrey</item>
-        <item name="colorAccent">@color/black</item>
+        <item name="colorPrimaryDark">@color/creme</item>
+        <item name="colorAccent">@color/blue_grey</item>
+        <item name="colorSecondary">@color/orange</item>
+        <item name="colorSecondaryVariant">@color/dark_blue_grey</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:textViewStyle">@style/Widget.TextView.Custom</item>
         <item name="colorBackgroundFloating">#F0F3F5</item>
-        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/creme</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_back</item>
-        <item name="android:toolbarStyle">@style/TextAppearance.Widget.AppCompat.Toolbar.Title.</item>
         <item name="android:fontFamily">@font/din</item>
 
     </style>
@@ -23,35 +24,9 @@
         <item name="mrl_rippleColor">#8096989A</item>
     </style>
 
-    <style name="DarkMode" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/black</item>
-        <item name="colorPrimaryDark">@color/darkGrey</item>
-        <item name="colorAccent">@color/white</item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:textViewStyle">@style/Widget.TextView.Custom</item>
-        <item name="colorBackgroundFloating">@color/black</item>
-        <item name="android:statusBarColor">@color/black</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_back</item>
-        <item name="android:toolbarStyle">@style/TextAppearance.Widget.AppCompat.Toolbar.Title.</item>
-        <item name="android:fontFamily">@font/p_nova</item>
-    </style>
-
-    <style name="TextAppearance.Widget.AppCompat.Toolbar.Title." parent="android:Widget.TextView">
-        <item name="android:textColor">?attr/colorAccent</item>
-    </style>
-
     <style name="Widget.TextView.Custom" parent="android:Widget.TextView">
         <item name="android:textColor">?attr/colorAccent</item>
     </style>
-
-    <style name="InvertedText">
-        <item name="android:textColor">?attr/colorPrimary</item>
-    </style>
-
-    <style name="InvertedImageIcon">
-        <item name="android:tint">?attr/colorPrimary</item>
-    </style>
-
 
     <style name="ImageIcon">
         <item name="android:tint">?attr/colorAccent</item>

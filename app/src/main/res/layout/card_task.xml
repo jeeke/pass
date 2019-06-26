@@ -1,119 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/lyt_parent"
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#00ffffff">
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp">
 
-    <ImageView
-        android:id="@+id/task_cat_image"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="16dp"
-        android:scaleType="fitXY"
-        tools:src="@drawable/shifting"
-        app:layout_constraintBottom_toBottomOf="@+id/task_time"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <View
-        android:id="@+id/task_seekbar"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lyt_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/divider8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task_time" />
+        android:background="@drawable/bg_soft_orange"
+        android:minHeight="136dp">
 
-    <TextView
-        android:id="@+id/task_desc"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        tools:text="Want my house cleaned"
-        android:textColor="#212121"
-        app:layout_constraintStart_toEndOf="@+id/task_cat_image"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/task_desc"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center_vertical|start"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/task_price"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Want my house cleaned" />
 
-    <TextView
-        android:id="@+id/task_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        tools:text="$500"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/task_dist"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/task_desc" />
+        <TextView
+            android:id="@+id/task_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/task_desc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/task_desc"
+            android:text="$500" />
 
-    <TextView
-        android:id="@+id/task_dist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="0.4 kms"
-        android:textColor="@color/color_12"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/task_time"
-        app:layout_constraintEnd_toEndOf="@+id/task_price"
-        app:layout_constraintTop_toBottomOf="@+id/task_price" />
+        <TextView
+            android:id="@+id/task_dist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_12"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/task_price"
+            app:layout_constraintStart_toStartOf="@+id/task_price"
+            app:layout_constraintTop_toBottomOf="@+id/task_price"
+            android:text="" />
 
-    <TextView
-        android:id="@+id/task_loc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        tools:text="Jalandhar"
-        android:textColor="#212121"
-        android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/task_cat_image"
-        app:layout_constraintTop_toBottomOf="@+id/task_desc" />
-
-    <TextView
-        android:id="@+id/task_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="4dp"
-        tools:text="28 Jan 6 pm"
-        android:textColor="#212121"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/task_cat_image"
-        app:layout_constraintTop_toBottomOf="@+id/task_loc" />
-
-    <ImageView
-        android:id="@+id/imageView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/task_dist"
-        app:layout_constraintEnd_toStartOf="@+id/task_dist"
-        app:layout_constraintTop_toTopOf="@+id/task_dist"
-        tools:src="@drawable/ic_location" />
-
-    <View
-        android:id="@+id/divider8"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="12dp"
-        android:background="?attr/colorPrimaryDark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task_seekbar" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
