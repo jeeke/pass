@@ -31,6 +31,7 @@
             android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:paddingTop="?actionBarSize"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:id="@+id/ListView_dashboard"
                 android:layout_width="match_parent"
@@ -53,11 +54,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <include layout="@layout/card_question_place_holder" />
+                <include layout="@layout/card_feed_placeholder" />
 
-                <include layout="@layout/card_question_place_holder" />
+                <include layout="@layout/card_feed_placeholder" />
 
-                <include layout="@layout/card_question_place_holder" />
+                <include layout="@layout/card_feed_placeholder" />
             </LinearLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
 

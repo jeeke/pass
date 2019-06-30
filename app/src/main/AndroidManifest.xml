@@ -14,6 +14,38 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/LightMode">
+        <activity android:name=".activities.ContactUs"></activity>
+        <activity android:name=".activities.TandC" />
+        <activity android:name=".activities.PrivacyPolicy">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.mytasker.activities.SettingActivity" />
+        </activity>
+        <activity
+            android:name=".activities.EditPassword"
+            android:parentActivityName=".activities.SettingActivity"
+            android:theme="@style/LightMode.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.mytasker.activities.SettingActivity" />
+        </activity>
+        <activity
+            android:name=".activities.EditEmail"
+            android:parentActivityName=".activities.SettingActivity"
+            android:theme="@style/LightMode.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.mytasker.activities.SettingActivity" />
+        </activity>
+        <activity
+            android:name=".activities.EditFirstName"
+            android:label="@string/title_activity_edit_first_name"
+            android:parentActivityName=".activities.SettingActivity"
+            android:theme="@style/LightMode.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.mytasker.activities.SettingActivity" />
+        </activity>
         <activity
             android:name=".activities.SearchActivity"
             android:label="@string/title_activity_search"
@@ -46,16 +78,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SettingActivity" />
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.SettingActivity">
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.mytasker.activities.DashboardActivity" />
         </activity>
+        <activity android:name=".activities.MainActivity" />
     </application>
 
 </manifest>

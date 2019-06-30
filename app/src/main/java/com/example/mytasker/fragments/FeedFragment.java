@@ -53,7 +53,8 @@ public class FeedFragment extends Fragment {
 
 
     private void callRetrofit() {
-        shimmerContainer.startShimmer();
+        shimmerContainer.setVisibility(View.GONE);
+//        shimmerContainer.startShimmer();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://nkliobv7w5.execute-api.ap-south-1.amazonaws.com/dev/")
 //                .baseUrl("http://fc3b9623.ngrok.io")

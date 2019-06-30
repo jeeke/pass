@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 
 import com.example.mytasker.R;
+import com.example.mytasker.activities.ContactUs;
 import com.example.mytasker.activities.SearchActivity;
 import com.example.mytasker.activities.SettingActivity;
 
@@ -23,8 +24,14 @@ public class ToolbarHelper {
         v.findViewById(R.id.action_search).setOnClickListener(this::search);
         v.findViewById(R.id.menu_icon).setOnClickListener(this::toggleToolBar);
         v.findViewById(R.id.chats).setOnClickListener(this::setting);
-        v.findViewById(R.id.support).setOnClickListener(this::support);
+        v.findViewById(R.id.support).setOnClickListener(this::contactUs);
         v.findViewById(R.id.my_posts).setOnClickListener(this::profile);
+    }
+
+    private void contactUs(View view) {
+        Intent intent = new Intent(context, ContactUs.class);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 
     private void toggleToolBar(View v){
@@ -52,11 +59,5 @@ public class ToolbarHelper {
         Intent intent = new Intent(context, SettingActivity.class);
         context.startActivityForResult(intent, CODE_SETTINGS_ACTIVITY);
         context.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-    }
-
-    private void support(View v) {
-//        Intent intent = new Intent(DashboardActivity.this,Support_activity.class);
-//        startActivity(intent);
-//        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 }

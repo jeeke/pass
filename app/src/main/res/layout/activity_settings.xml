@@ -267,29 +267,30 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/divider6" />
 
-            <TextView
-                android:id="@+id/textView57"
-                android:layout_width="0dp"
-                android:layout_height="42dp"
-                android:gravity="center_vertical"
-                android:text="Suggest a feature"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/textView58"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView56"
-                app:layout_constraintTop_toBottomOf="@+id/textView95" />
+            <!--<TextView-->
+                <!--android:id="@+id/textView57"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="42dp"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:text="Suggest a feature"-->
+                <!--android:textSize="16sp"-->
+                <!--app:layout_constraintBottom_toTopOf="@+id/textView58"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintStart_toStartOf="@+id/textView56"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/textView95" />-->
 
             <TextView
                 android:id="@+id/textView58"
                 android:layout_width="0dp"
                 android:layout_height="42dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center_vertical"
-                android:text="Feedback"
+                android:text="Contact Us"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/textView69"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView56"
-                app:layout_constraintTop_toBottomOf="@+id/textView57" />
+                app:layout_constraintTop_toBottomOf="@+id/textView56" />
 
             <TextView
                 android:id="@+id/textView69"
@@ -310,46 +311,46 @@
                 android:gravity="center_vertical"
                 android:text="Privacy Policy"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/textView96"
+                app:layout_constraintBottom_toTopOf="@+id/textView97"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView56"
                 app:layout_constraintTop_toBottomOf="@+id/textView69" />
 
-            <TextView
-                android:id="@+id/textView95"
-                android:layout_width="0dp"
-                android:layout_height="42dp"
-                android:layout_marginTop="16dp"
-                android:gravity="center_vertical"
-                android:text="FAQs"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/textView57"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/textView56"
-                app:layout_constraintTop_toBottomOf="@+id/textView56" />
+            <!--<TextView-->
+                <!--android:id="@+id/textView95"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="42dp"-->
+                <!--android:layout_marginTop="16dp"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:text="FAQs"-->
+                <!--android:textSize="16sp"-->
+                <!--app:layout_constraintBottom_toTopOf="@+id/textView57"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintHorizontal_bias="0.0"-->
+                <!--app:layout_constraintStart_toStartOf="@+id/textView56"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/textView56" />-->
 
-            <TextView
-                android:id="@+id/textView96"
-                android:layout_width="0dp"
-                android:layout_height="42dp"
-                android:gravity="center_vertical"
-                android:text="About Us"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView56"
-                app:layout_constraintTop_toBottomOf="@+id/textView76" />
+            <!--<TextView-->
+                <!--android:id="@+id/textView96"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="42dp"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:text="About Us"-->
+                <!--android:textSize="16sp"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintStart_toStartOf="@+id/textView56"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/textView76" />-->
 
             <TextView
                 android:id="@+id/textView97"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="Version 0.0.1"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView96" />
+                app:layout_constraintTop_toBottomOf="@+id/textView76" />
 
             <TextView
                 android:id="@+id/textView98"
