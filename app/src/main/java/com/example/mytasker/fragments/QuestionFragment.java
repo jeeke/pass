@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,6 +33,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.example.mytasker.util.Contracts.okHttpClient;
+
 public class QuestionFragment extends Fragment {
 
     private OnListFragmentInteractionListener mListener;
@@ -53,6 +56,7 @@ public class QuestionFragment extends Fragment {
         shimmerContainer.startShimmer();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Contracts.BASE_GET_URL)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -109,7 +113,7 @@ public class QuestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_question_list, container, false);
-        toolbarHelper = new ToolbarHelper(getActivity(),(MotionLayout)v);
+        toolbarHelper = new ToolbarHelper((AppCompatActivity) getActivity(),(MotionLayout)v);
         filterHelper = new FilterHelper((MotionLayout) v);
         adapter = new QuestionAdapter(getContext(), new ArrayList<>());
         initViews(v);

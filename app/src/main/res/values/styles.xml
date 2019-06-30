@@ -19,12 +19,14 @@
     <style name="RatingBar" parent="Widget.AppCompat.RatingBar.Small">
         <item name="android:progressTint">@color/green_A700</item>
     </style>
+
     <style name="RippleStyleWhite">
         <item name="mrl_rippleOverlay">true</item>
         <item name="mrl_rippleColor">#80FFFFFF</item>
         <item name="mrl_rippleHover">true</item>
         <item name="mrl_rippleAlpha">0.2</item>
     </style>
+
     <style name="RippleStyleBlack" parent="RippleStyleWhite">
         <item name="mrl_rippleColor">#8096989A</item>
     </style>
@@ -36,5 +38,14 @@
     <style name="ImageIcon">
         <item name="android:tint">?attr/colorAccent</item>
     </style>
+
+    <style name="LightMode.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="LightMode.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="LightMode.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

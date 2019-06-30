@@ -18,9 +18,9 @@ import com.example.mytasker.R;
 import com.example.mytasker.adapters.TaskListAdapter;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.TaskList;
+import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.FilterHelper;
 import com.example.mytasker.util.NetworkCache;
-import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.ToolbarHelper;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -31,6 +31,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.example.mytasker.util.Contracts.okHttpClient;
 
 public class HomeFragment extends Fragment {
 
@@ -58,6 +60,7 @@ public class HomeFragment extends Fragment {
         shimmerContainer.startShimmer();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Contracts.BASE_GET_URL)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -73,6 +76,7 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<TaskList> call, Response<TaskList> response) {
                 if (!response.isSuccessful()) {
                     Log.v("Code: ", String.valueOf(response.code()));
+                    swipeContainer.setRefreshing(false);
                     return;
                 }
                 TaskList details = response.body();

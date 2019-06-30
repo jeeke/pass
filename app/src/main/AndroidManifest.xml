@@ -14,7 +14,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/LightMode">
-        <activity android:name=".activities.QuestionDetailActivity"></activity>
+        <activity
+            android:name=".activities.SearchActivity"
+            android:label="@string/title_activity_search"
+            android:parentActivityName=".activities.DashboardActivity"
+            android:theme="@style/LightMode.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.mytasker.activities.DashboardActivity" />
+        </activity>
+        <activity
+            android:name=".activities.NotificationActivity"
+            android:label="@string/title_activity_notification"
+            android:parentActivityName=".activities.DashboardActivity"
+            android:theme="@style/LightMode.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.mytasker.activities.DashboardActivity" />
+        </activity>
+        <activity android:name=".activities.QuestionDetailActivity" />
         <activity android:name=".activities.PostQuestion" />
         <activity android:name=".activities.ThemeSetting" />
         <activity android:name=".activities.TaskDetailActivity" />

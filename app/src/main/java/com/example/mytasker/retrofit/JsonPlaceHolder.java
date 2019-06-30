@@ -31,4 +31,9 @@ public interface JsonPlaceHolder {
             @Query("radius") Integer radius,
             @Query("tags") String[] tags
     ) ;
+
+    @GET("notifications")
+    Call<NotificationList> getNotifications(
+            @Query("id") String id
+    ) ;
 }

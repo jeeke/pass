@@ -17,8 +17,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.example.mytasker.R;
+import com.example.mytasker.activities.NotificationActivity;
 import com.example.mytasker.activities.SettingActivity;
 
+import static com.example.mytasker.util.Contracts.CODE_NOTIFICATION_ACTIVITY;
 import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
 
 public class ProfileFragment extends Fragment {
@@ -40,6 +42,7 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.frag_profile, container, false);
         Toolbar toolbar = v.findViewById(R.id.toolbar);
+        toolbar.setTitle("PROFILE");
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
         return v;
@@ -47,13 +50,18 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent;
         if (item.getItemId() == R.id.setting) {
-            Intent intent = new Intent(getContext(), SettingActivity.class);
+            intent = new Intent(getContext(), SettingActivity.class);
             getActivity().startActivityForResult(intent, CODE_SETTINGS_ACTIVITY);
             getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
             return true;
+        }else {
+            intent = new Intent(getContext(), NotificationActivity.class);
+            getActivity().startActivityForResult(intent, CODE_NOTIFICATION_ACTIVITY);
+            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+            return true;
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
