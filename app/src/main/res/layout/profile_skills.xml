@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textView45"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Skills"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip2"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:text="Web Development"
+        android:fontFamily="@font/din"
+        android:textColor="?colorAccent"
+        app:chipBackgroundColor="?colorPrimary"
+        app:chipStrokeColor="@color/green_A400"
+        app:chipStrokeWidth="2dp"
+        app:layout_constraintEnd_toStartOf="@+id/chip4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView45" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip4"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="Android"
+        android:textColor="?colorAccent"
+        app:chipBackgroundColor="?colorPrimary"
+        app:chipStrokeColor="@color/green_A400"
+        app:chipStrokeWidth="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/chip2"
+        app:layout_constraintEnd_toStartOf="@+id/chip5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/chip2"
+        app:layout_constraintTop_toTopOf="@+id/chip2" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip5"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="Kotlin"
+        android:textColor="?colorAccent"
+        app:chipBackgroundColor="?colorPrimary"
+        app:chipStrokeColor="@color/green_A400"
+        app:chipStrokeWidth="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/chip4"
+        app:layout_constraintEnd_toStartOf="@+id/chip6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/chip4"
+        app:layout_constraintTop_toTopOf="@+id/chip4" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip6"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:textColor="?colorAccent"
+        android:text="Java"
+        app:chipBackgroundColor="?colorPrimary"
+        app:chipStrokeColor="@color/green_A400"
+        app:chipStrokeWidth="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/chip5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/chip5"
+        app:layout_constraintTop_toTopOf="@+id/chip5" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip7"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_marginBottom="8dp"
+        android:text="UI and UX"
+        android:textColor="?colorAccent"
+        app:chipBackgroundColor="?colorPrimary"
+        app:chipStrokeColor="@color/green_A400"
+        app:chipStrokeWidth="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/chip2"
+        app:layout_constraintTop_toBottomOf="@+id/chip2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

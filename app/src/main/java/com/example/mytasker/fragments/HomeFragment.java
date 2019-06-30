@@ -20,6 +20,7 @@ import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.TaskList;
 import com.example.mytasker.util.FilterHelper;
 import com.example.mytasker.util.NetworkCache;
+import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.ToolbarHelper;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -56,8 +57,7 @@ public class HomeFragment extends Fragment {
     private void callRetrofit() {
         shimmerContainer.startShimmer();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://nkliobv7w5.execute-api.ap-south-1.amazonaws.com/dev/")
-//                .baseUrl("http://8eb3c7e9.ngrok.io")
+                .baseUrl(Contracts.BASE_GET_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<TaskList> call, Throwable t) {
-                Log.v("error ", t.getMessage());
+                Log.e("error ", t.getMessage());
                 swipeContainer.setRefreshing(false);
             }
         });
@@ -120,7 +120,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        toolbarHelper = new ToolbarHelper((MotionLayout)v);
+        toolbarHelper = new ToolbarHelper(getActivity(), (MotionLayout)v);
         filterHelper = new FilterHelper((MotionLayout) v);
         initViews(v);
 

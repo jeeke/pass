@@ -23,17 +23,19 @@ import com.example.mytasker.adapters.QuestionAdapter;
 import com.example.mytasker.adapters.TaskListAdapter;
 import com.example.mytasker.fragments.FeedFragment;
 import com.example.mytasker.fragments.HomeFragment;
+import com.example.mytasker.fragments.ProfileFragment;
 import com.example.mytasker.fragments.QuestionFragment;
 import com.example.mytasker.models.Question;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class DashboardActivity extends AppCompatActivity implements TaskListAdapter.RecyclerViewClickListener,HomeFragment.OnFragmentInteractionListener,QuestionFragment.OnListFragmentInteractionListener, QuestionAdapter.RecyclerViewClickListener,FeedFragment.OnListFragmentInteractionListener, FeedAdapter.RecyclerViewClickListener {
+import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
+
+public class DashboardActivity extends AppCompatActivity implements TaskListAdapter.RecyclerViewClickListener,HomeFragment.OnFragmentInteractionListener,QuestionFragment.OnListFragmentInteractionListener, QuestionAdapter.RecyclerViewClickListener,FeedFragment.OnListFragmentInteractionListener, FeedAdapter.RecyclerViewClickListener,ProfileFragment.OnFragmentInteractionListener {
 
     ImageView bhome, bqna, bfeed, bprofile;
     ImageView prevbselection;
     View bottomAppBar;
     boolean fabActivated;
-    int CODE_SETTINGS_ACTIVITY = 100;
     Intent starterIntent;
 
     int centerX;
@@ -185,6 +187,8 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
                 loadFragment(fragments[1]);
                 return selected ? R.mipmap.qna_fill : R.mipmap.qna;
             case R.id.profile:
+                fragments[3] = fragments[3]==null? new ProfileFragment():fragments[3];
+                loadFragment(fragments[3]);
                 return selected ? R.mipmap.profile_fill : R.mipmap.profile;
         }
         return 0;

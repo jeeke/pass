@@ -20,6 +20,7 @@ import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.QuestionList;
 import com.example.mytasker.util.FilterHelper;
 import com.example.mytasker.util.NetworkCache;
+import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.ToolbarHelper;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -51,8 +52,7 @@ public class QuestionFragment extends Fragment {
     private void callRetrofit() {
         shimmerContainer.startShimmer();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://nkliobv7w5.execute-api.ap-south-1.amazonaws.com/dev/")
-//                .baseUrl("http://fc3b9623.ngrok.io")
+                .baseUrl(Contracts.BASE_GET_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -109,7 +109,7 @@ public class QuestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_question_list, container, false);
-        toolbarHelper = new ToolbarHelper((MotionLayout)v);
+        toolbarHelper = new ToolbarHelper(getActivity(),(MotionLayout)v);
         filterHelper = new FilterHelper((MotionLayout) v);
         adapter = new QuestionAdapter(getContext(), new ArrayList<>());
         initViews(v);

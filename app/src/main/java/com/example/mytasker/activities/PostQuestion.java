@@ -19,6 +19,7 @@ import com.example.mytasker.models.PeopleChip;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
+import com.example.mytasker.util.Contracts;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.ChipInterface;
@@ -106,8 +107,7 @@ public class PostQuestion extends AppCompatActivity {
                 new String[]{"tech","null"}
         );
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://post-gateway-ewezudecda-uc.a.run.app/")
-//                .baseUrl("http://8eb3c7e9.ngrok.io")
+                .baseUrl(Contracts.BASE_POST_URL)
                 .addConverterFactory(new NullOnEmptyConverterFactory())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
