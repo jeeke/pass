@@ -14,7 +14,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/LightMode">
-        <activity android:name=".activities.ContactUs"></activity>
+        <activity
+            android:name=".activities.PrevPosts"
+            android:label="@string/title_activity_prev_posts"
+            android:theme="@style/LightMode.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.mytasker.activities.DashboardActivity" />
+        </activity>
+        <activity android:name=".activities.ContactUs" />
         <activity android:name=".activities.TandC" />
         <activity android:name=".activities.PrivacyPolicy">
             <meta-data
@@ -79,7 +87,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.SettingActivity">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />

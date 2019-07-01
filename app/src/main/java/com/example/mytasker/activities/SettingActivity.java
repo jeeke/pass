@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.example.mytasker.R;
+import com.example.mytasker.util.Tools;
 
 
 public class SettingActivity extends AppCompatActivity {
@@ -17,7 +17,7 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        initToolbar();
+        Tools.initMinToolbar(this, "SETTINGS", false);
         findViewById(R.id.textView81).setOnClickListener(this::editName);
         findViewById(R.id.textView82).setOnClickListener(this::editName);
         findViewById(R.id.textView83).setOnClickListener(this::editEmail);
@@ -69,13 +69,6 @@ public class SettingActivity extends AppCompatActivity {
     private void openUri(String uri){
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         startActivity(intent);
-    }
-
-    private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("SETTINGS");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void editName(View v){

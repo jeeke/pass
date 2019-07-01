@@ -8,10 +8,9 @@ import androidx.constraintlayout.motion.widget.MotionLayout;
 
 import com.example.mytasker.R;
 import com.example.mytasker.activities.ContactUs;
+import com.example.mytasker.activities.PrevPosts;
 import com.example.mytasker.activities.SearchActivity;
 import com.example.mytasker.activities.SettingActivity;
-
-import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
 
 public class ToolbarHelper {
     private MotionLayout toolbar;
@@ -25,13 +24,21 @@ public class ToolbarHelper {
         v.findViewById(R.id.menu_icon).setOnClickListener(this::toggleToolBar);
         v.findViewById(R.id.chats).setOnClickListener(this::setting);
         v.findViewById(R.id.support).setOnClickListener(this::contactUs);
-        v.findViewById(R.id.my_posts).setOnClickListener(this::profile);
+        v.findViewById(R.id.my_posts).setOnClickListener(this::posts);
+    }
+
+    private void posts(View view) {
+        launchActivity(PrevPosts.class);
+    }
+
+    private void launchActivity(Class className){
+        Intent intent = new Intent(context, className);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 
     private void contactUs(View view) {
-        Intent intent = new Intent(context, ContactUs.class);
-        context.startActivity(intent);
-        context.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        launchActivity(ContactUs.class);
     }
 
     private void toggleToolBar(View v){
@@ -44,20 +51,11 @@ public class ToolbarHelper {
     }
 
     private void search(View view) {
-        Intent intent = new Intent(context, SearchActivity.class);
-        context.startActivity(intent);
-        context.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-    }
-
-    private void profile(View v) {
-//        Intent intent = new Intent(DashboardActivity.this, ProfileActivity.class);
-//        startActivity(intent);
-//        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        launchActivity(SearchActivity.class);
     }
 
     private void setting(View v) {
-        Intent intent = new Intent(context, SettingActivity.class);
-        context.startActivityForResult(intent, CODE_SETTINGS_ACTIVITY);
-        context.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        launchActivity(SettingActivity.class);
+//        context.startActivityForResult(intent, CODE_SETTINGS_ACTIVITY);
     }
 }

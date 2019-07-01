@@ -7,4 +7,7 @@
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_account_edit">AccountEditActivity</string>
     <string name="title_activity_edit_first_name">EditFirstName</string>
+    <string name="title_activity_prev_posts">PrevPosts</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
 </resources>

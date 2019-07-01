@@ -2,15 +2,20 @@ package com.example.mytasker.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import androidx.annotation.DrawableRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.example.mytasker.R;
 
 public class Tools {
     public static void displayImageRound(final Context ctx, final ImageView img, @DrawableRes int drawable) {
@@ -32,6 +37,20 @@ public class Tools {
             return email;
         }
         return name;
+    }
+
+    public static void initMinToolbar(AppCompatActivity activity, String title, boolean zeroElevation){
+        Toolbar toolbar = activity.findViewById(R.id.toolbar);
+        if(zeroElevation){
+            toolbar.setElevation(0f);
+        }
+
+        Drawable drawable = activity.getDrawable(R.drawable.ic_back);
+        drawable.setTint(Color.parseColor("#80ffffff"));
+        toolbar.setNavigationIcon(drawable);
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setTitle(title);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 }
