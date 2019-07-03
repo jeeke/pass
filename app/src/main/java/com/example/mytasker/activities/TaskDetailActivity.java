@@ -32,8 +32,10 @@ public class TaskDetailActivity extends AppCompatActivity implements AppBarLayou
     private Chip createChip(Context context, String title) {
         Chip chip = new Chip(context);
         chip.setText(title);
+        chip.setChipStrokeWidth(4);
+//        chip.setChipStrokeColor(ColorStateList.valueOf(R.color.green_A700));
 //        chip.setCheckable(true);
-//        chip.setClickable(false);
+        chip.setClickable(false);
         return chip;
     }
 
