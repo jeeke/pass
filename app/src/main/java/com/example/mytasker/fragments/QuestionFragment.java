@@ -19,9 +19,9 @@ import com.example.mytasker.adapters.QuestionAdapter;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.QuestionList;
+import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.FilterHelper;
 import com.example.mytasker.util.NetworkCache;
-import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.ToolbarHelper;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -33,7 +33,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.example.mytasker.util.Contracts.okHttpClient;
 
 public class QuestionFragment extends Fragment {
 
@@ -56,7 +55,7 @@ public class QuestionFragment extends Fragment {
         shimmerContainer.startShimmer();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Contracts.BASE_GET_URL)
-                .client(okHttpClient)
+//                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

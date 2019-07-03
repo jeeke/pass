@@ -32,7 +32,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.example.mytasker.util.Contracts.okHttpClient;
 
 public class HomeFragment extends Fragment {
 
@@ -60,7 +59,7 @@ public class HomeFragment extends Fragment {
         shimmerContainer.startShimmer();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Contracts.BASE_GET_URL)
-                .client(okHttpClient)
+//                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

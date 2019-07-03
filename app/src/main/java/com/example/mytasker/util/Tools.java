@@ -2,8 +2,6 @@ package com.example.mytasker.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import androidx.annotation.DrawableRes;
@@ -44,10 +42,9 @@ public class Tools {
         if(zeroElevation){
             toolbar.setElevation(0f);
         }
-
-        Drawable drawable = activity.getDrawable(R.drawable.ic_back);
-        drawable.setTint(Color.parseColor("#80ffffff"));
-        toolbar.setNavigationIcon(drawable);
+//        Drawable drawable = activity.getDrawable(R.drawable.ic_back);
+//        drawable.setTint(Color.parseColor("#80ffffff"));
+//        toolbar.setNavigationIcon(drawable);
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setTitle(title);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);

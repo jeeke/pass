@@ -2,8 +2,6 @@ package com.example.mytasker.activities.ui.main;
 
 import android.content.Context;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -11,8 +9,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    @StringRes
-    private static final String[] TAB_TITLES = new String[]{"Tasks", "Questions","Feed"};
+    //    @StringRes
+//    private static final String[] TAB_TITLES = new String[]{"Tasks", "Questions","Feed"};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -27,11 +25,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         return PlaceholderFragment.newInstance(position + 1);
     }
 
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return TAB_TITLES[position];
-    }
+//    @Nullable
+//    @Override
+//    public CharSequence getPageTitle(int position) {
+//        return TAB_TITLES[position];
+//    }
+
+
 
     @Override
     public int getCount() {

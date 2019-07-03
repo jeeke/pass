@@ -12,15 +12,25 @@ import com.google.android.material.tabs.TabLayout;
 
 public class PrevPosts extends AppCompatActivity {
 
+    final int[] tabIcon = {
+            R.mipmap.home,
+            R.mipmap.qna,
+            R.mipmap.scroll
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prev_posts);
-        Tools.initMinToolbar(this,"MY POSTS",true);
+        Tools.initMinToolbar(this, "ACTIVITIES", true);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+        tabs.setTabIconTint(getResources().getColorStateList(R.color.tab_icon_color));
+        for (int i = 0; i < tabs.getTabCount(); i++) {
+            tabs.getTabAt(i).setIcon(tabIcon[i]);
+        }
     }
 }

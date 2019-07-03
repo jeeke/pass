@@ -8,24 +8,17 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:background="?colorAccent"
         android:layout_height="wrap_content"
-        android:elevation="8dp">
+        android:theme="@style/LightMode.AppBarOverlay">
 
-        <androidx.appcompat.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/toolbar"
-            app:titleTextColor="#80ffffff"/>
+        <include layout="@layout/toolbar" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabSelectedTextColor="?colorSecondary"
-            app:tabIndicatorColor="?colorPrimary"
-            app:tabTextColor="#80ffffff"
-            android:background="?colorAccent" />
+            android:background="?colorPrimaryDark"
+            app:tabIndicatorColor="?colorAccent" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
