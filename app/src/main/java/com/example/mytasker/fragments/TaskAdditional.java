@@ -33,10 +33,10 @@ public class TaskAdditional extends Fragment implements View.OnClickListener, Da
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.frag_task_additional, container, false);
-        btnDatePicker = layout.findViewById(R.id.btn_date);
-        btnTimePicker = layout.findViewById(R.id.btn_time);
-        txtDate = layout.findViewById(R.id.in_date);
-        txtTime = layout.findViewById(R.id.in_time);
+//        btnDatePicker = layout.findViewById(R.id.btn_date);
+//        btnTimePicker = layout.findViewById(R.id.btn_time);
+//        txtDate = layout.findViewById(R.id.in_date);
+//        txtTime = layout.findViewById(R.id.in_time);
 
         btnDatePicker.setOnClickListener(this);
         btnTimePicker.setOnClickListener(this);

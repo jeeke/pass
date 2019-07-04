@@ -76,7 +76,11 @@
         <activity android:name=".activities.PostQuestion" />
         <activity android:name=".activities.ThemeSetting" />
         <activity android:name=".activities.TaskDetailActivity" />
-        <activity android:name=".activities.PostTask" />
+        <activity android:name=".activities.PostTask">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.mytasker.activities.DashboardActivity" />
+        </activity>
         <activity android:name=".activities.dummy.TempPostActivity" />
         <activity android:name=".activities.DashboardActivity" />
         <activity android:name=".activities.AuthActivity">

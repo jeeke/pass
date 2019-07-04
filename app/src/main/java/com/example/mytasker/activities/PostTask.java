@@ -62,6 +62,7 @@ public class PostTask extends AppCompatActivity {
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         fab = findViewById(R.id.floatingActionButton);
         dlg = new ProgressDialog(this);
         dlg.setTitle("Posting your task, Please Wait....");
@@ -112,8 +113,7 @@ public class PostTask extends AppCompatActivity {
                 "time",
                 new double[]{25.0,25.0},
                 new String[]{"tech","null"},
-                PostTaskDetail.must_have
-
+                new ArrayList<>()
         );
 
         Retrofit retrofit = new Retrofit.Builder()

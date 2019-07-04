@@ -8,52 +8,61 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:fabSize="normal"
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
+        app:backgroundTint="?colorSecondary"
         android:onClick="loadNextFrag"
-        app:layout_constraintBottom_toBottomOf="@+id/frameLayout"
-        app:layout_constraintEnd_toEndOf="@+id/frameLayout"
-        app:backgroundTint="@color/color_16"/>
-
-    <androidx.appcompat.widget.Toolbar
-        app:titleTextColor="#55027b"
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="#00ffffff"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:title="Post Task"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:tint="?colorPrimary" />
 
-    <com.badoualy.stepperindicator.StepperIndicator
-        android:id="@+id/stepperIndicator"
+    <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        app:stpi_lineDoneColor="@color/color_16"
-        android:layout_marginEnd="32dp"
+        android:background="@drawable/bg_post_toolbar"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:stpi_stepCount="3" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:minHeight="?attr/actionBarSize"
+            app:title="Post Task"
+            app:titleTextColor="?colorAccent" />
+
+        <com.badoualy.stepperindicator.StepperIndicator
+            android:id="@+id/stepperIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginBottom="48dp"
+            app:stpi_animDuration="400"
+            app:stpi_circleColor="?colorAccent"
+            app:stpi_indicatorColor="@color/green_A700"
+            app:stpi_lineDoneColor="@color/green_A700"
+            app:stpi_lineStrokeWidth="6dp"
+            app:stpi_stepCount="3" />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="48dp"
+        app:layout_constraintBottom_toTopOf="@id/floatingActionButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stepperIndicator">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
