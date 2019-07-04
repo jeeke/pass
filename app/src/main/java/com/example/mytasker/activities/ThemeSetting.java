@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.mytasker.R;
 
 import static com.example.mytasker.activities.AuthActivity.MY_PREFS_NAME;
 
-public class ThemeSetting extends AppCompatActivity {
+public class ThemeSetting extends BaseActivity {
     EditText Etoolbar, Ebottombar, Efab, Elist, ElistHead;
     View view1,view2,view3,view4,view5;
     boolean previewDone;

@@ -26,7 +26,7 @@ public class PostTaskDetail extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root =  inflater.inflate(R.layout.frag_task_detail, container, false);
+        View root = inflater.inflate(R.layout.post_task_detail, container, false);
         iniComponent(root);
         return root;
     }

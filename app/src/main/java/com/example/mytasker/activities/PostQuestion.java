@@ -6,14 +6,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.example.mytasker.R;
-import com.example.mytasker.fragments.PostCategory;
-import com.example.mytasker.fragments.QuestionDetail;
+import com.example.mytasker.fragments.PostQuesCat;
+import com.example.mytasker.fragments.PostQuesDetail;
 import com.example.mytasker.models.People;
 import com.example.mytasker.models.PeopleChip;
 import com.example.mytasker.models.Question;
@@ -34,7 +33,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PostQuestion extends AppCompatActivity {
+public class PostQuestion extends BaseActivity {
 
     private ChipsInput mChipsInput;
     private List<PeopleChip> items = new ArrayList<>();
@@ -58,12 +57,13 @@ public class PostQuestion extends AppCompatActivity {
         setContentView(R.layout.activity_post);
         indicator = findViewById(R.id.stepperIndicator);
         indicator.setStepCount(2);
-        fragment = new PostCategory();
+        fragment = new PostQuesCat();
         loadFragment(fragment);
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Post Question");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         fab = findViewById(R.id.floatingActionButton);
         dlg = new ProgressDialog(this);
         dlg.setTitle("Posting your question, Please Wait....");
@@ -80,7 +80,7 @@ public class PostQuestion extends AppCompatActivity {
             indicator.setCurrentStep(++currentpage);
         }
         if (currentpage == 1) {
-            fragment = new QuestionDetail();
+            fragment = new PostQuesDetail();
 //            fragment = new OrdersFrag();
             loadFragment(fragment);
             AnimatedVectorDrawable icon = (AnimatedVectorDrawable) fab.getDrawable();
@@ -98,7 +98,7 @@ public class PostQuestion extends AppCompatActivity {
         Date date = new Date();
         Question question = new Question(
                 date.getTime(),
-                ((QuestionDetail)fragment).getQuestion(),
+                ((PostQuesDetail) fragment).getQuestion(),
                 "rakesh2432",
                 "Rakesh Pandy",
                 null,

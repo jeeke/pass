@@ -12,7 +12,6 @@ import android.view.ViewAnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -29,8 +28,9 @@ import com.example.mytasker.models.Question;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
+import static com.example.mytasker.util.Tools.launchActivity;
 
-public class DashboardActivity extends AppCompatActivity implements TaskListAdapter.RecyclerViewClickListener,HomeFragment.OnFragmentInteractionListener,QuestionFragment.OnListFragmentInteractionListener, QuestionAdapter.RecyclerViewClickListener,FeedFragment.OnListFragmentInteractionListener, FeedAdapter.RecyclerViewClickListener,ProfileFragment.OnFragmentInteractionListener {
+public class DashboardActivity extends BaseActivity implements TaskListAdapter.RecyclerViewClickListener, HomeFragment.OnFragmentInteractionListener, QuestionFragment.OnListFragmentInteractionListener, QuestionAdapter.RecyclerViewClickListener, FeedFragment.OnListFragmentInteractionListener, FeedAdapter.RecyclerViewClickListener, ProfileFragment.OnFragmentInteractionListener {
 
     ImageView bhome, bqna, bfeed, bprofile;
     ImageView prevbselection;
@@ -148,18 +148,22 @@ public class DashboardActivity extends AppCompatActivity implements TaskListAdap
 
     //    TODO
 
+
     public void postTask(View v) {
-        Intent intent = new Intent(DashboardActivity.this, PostTask.class);
         circularReveal(fab);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        launchActivity(this, PostTask.class);
     }
 
     public void postQues(View v) {
         circularReveal(fab);
-        Intent intent = new Intent(DashboardActivity.this, PostQuestion.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        launchActivity(this, PostQuestion.class);
+
+    }
+
+    public void postFeed(View v) {
+        circularReveal(fab);
+        launchActivity(this, PostFeed.class);
+
     }
 
     public void bselected(View v) {

@@ -2,12 +2,11 @@ package com.example.mytasker.activities;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.mytasker.R;
 
-public class EditPassword extends AppCompatActivity {
+public class EditPassword extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

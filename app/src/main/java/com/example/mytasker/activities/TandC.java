@@ -4,12 +4,11 @@ import android.os.Bundle;
 import android.text.Html;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.mytasker.R;
 
-public class TandC extends AppCompatActivity {
+public class TandC extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

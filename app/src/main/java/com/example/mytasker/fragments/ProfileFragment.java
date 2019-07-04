@@ -54,12 +54,12 @@ public class ProfileFragment extends Fragment {
         if (item.getItemId() == R.id.setting) {
             intent = new Intent(getContext(), SettingActivity.class);
             getActivity().startActivityForResult(intent, CODE_SETTINGS_ACTIVITY);
-            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+//            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
             return true;
         }else {
             intent = new Intent(getContext(), NotificationActivity.class);
             getActivity().startActivityForResult(intent, CODE_NOTIFICATION_ACTIVITY);
-            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+//            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
             return true;
         }
     }

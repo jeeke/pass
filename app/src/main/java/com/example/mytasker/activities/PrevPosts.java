@@ -2,7 +2,6 @@ package com.example.mytasker.activities;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mytasker.R;
@@ -10,7 +9,7 @@ import com.example.mytasker.activities.ui.main.SectionsPagerAdapter;
 import com.example.mytasker.util.Tools;
 import com.google.android.material.tabs.TabLayout;
 
-public class PrevPosts extends AppCompatActivity {
+public class PrevPosts extends BaseActivity {
 
     final int[] tabIcon = {
             R.mipmap.home,

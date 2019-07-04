@@ -1,6 +1,8 @@
 package com.example.mytasker.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
@@ -48,6 +50,12 @@ public class Tools {
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setTitle(title);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    public static void launchActivity(Activity context, Class className) {
+        Intent intent = new Intent(context, className);
+        context.startActivity(intent);
+//        context.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 
 }

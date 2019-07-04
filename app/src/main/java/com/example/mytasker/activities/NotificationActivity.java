@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +24,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class NotificationActivity extends AppCompatActivity implements NotificationAdapter.RecyclerViewClickListener{
+public class NotificationActivity extends BaseActivity implements NotificationAdapter.RecyclerViewClickListener {
 
     ProgressDialog dlg;
     RecyclerView listView;

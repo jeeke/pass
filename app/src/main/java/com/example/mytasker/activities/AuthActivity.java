@@ -9,12 +9,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.mytasker.R;
 
-public class AuthActivity extends AppCompatActivity {
+public class AuthActivity extends BaseActivity {
     private View login_selector,signup_selector;
     private ConstraintLayout login_tab,signup_tab;
     private EditText usernameView;

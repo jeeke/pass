@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.mytasker.R;
@@ -14,7 +13,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
-public class TaskDetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class TaskDetailActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private int position;
     ChipGroup chipGroup;

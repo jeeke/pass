@@ -13,12 +13,21 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_back</item>
         <item name="android:fontFamily">@font/din</item>
         <item name="android:ratingBarStyleSmall">@style/RatingBar</item>
-
+        <!--<item name="android:windowAnimationStyle">@style/WindowTransition</item>-->
     </style>
 
     <style name="RatingBar" parent="Widget.AppCompat.RatingBar.Small">
         <item name="android:progressTint">@color/green_A700</item>
     </style>
+
+    <!--<style name="WindowTransition">-->
+    <!--<item name="android:windowEnterAnimation">@anim/slide_from_right</item>-->
+    <!--<item name="android:windowExitAnimation">@anim/slide_to_left</item>-->
+    <!--<item name="android:activityOpenEnterAnimation">@anim/slide_from_right</item>-->
+    <!--<item name="android:activityOpenExitAnimation">@anim/slide_to_left</item>-->
+    <!--<item name="android:activityCloseExitAnimation">@anim/slide_to_right</item>-->
+    <!--<item name="android:activityCloseEnterAnimation">@anim/slide_from_left</item>-->
+    <!--</style>-->
 
     <style name="RippleStyleWhite">
         <item name="mrl_rippleOverlay">true</item>

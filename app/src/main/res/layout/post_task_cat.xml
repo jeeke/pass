@@ -5,9 +5,9 @@
     android:background="#ffffff">
 
     <TextView
-        android:id="@+id/editText"
+        android:id="@+id/task_cat"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="56dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/edittext2"
@@ -23,9 +23,9 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/editText6"
+        android:id="@+id/task_tag"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="56dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
@@ -39,12 +39,12 @@
         android:text="Add Some Tags"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/task_cat" />
 
     <TextView
-        android:id="@+id/editText7"
+        android:id="@+id/task_must_haves"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="56dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/edittext2"
@@ -58,27 +58,29 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText6" />
+        app:layout_constraintTop_toBottomOf="@+id/task_tag" />
 
     <com.google.android.material.chip.ChipGroup
+        android:id="@+id/task_tag_chips"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText7"
-        app:layout_constraintEnd_toEndOf="@+id/editText6"
-        app:layout_constraintStart_toStartOf="@+id/editText6"
-        app:layout_constraintTop_toBottomOf="@+id/editText6" />
+        app:layout_constraintBottom_toTopOf="@+id/task_must_haves"
+        app:layout_constraintEnd_toEndOf="@+id/task_tag"
+        app:layout_constraintStart_toStartOf="@+id/task_tag"
+        app:layout_constraintTop_toBottomOf="@+id/task_tag" />
 
     <com.google.android.material.chip.ChipGroup
+        android:id="@+id/task_must_chips"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/editText7"
-        app:layout_constraintStart_toStartOf="@+id/editText7"
-        app:layout_constraintTop_toBottomOf="@+id/editText7" />
+        app:layout_constraintEnd_toEndOf="@+id/task_must_haves"
+        app:layout_constraintStart_toStartOf="@+id/task_must_haves"
+        app:layout_constraintTop_toBottomOf="@+id/task_must_haves" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
