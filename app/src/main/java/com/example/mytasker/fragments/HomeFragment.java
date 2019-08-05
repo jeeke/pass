@@ -35,6 +35,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeFragment extends Fragment {
 
+
     private OnFragmentInteractionListener mListener;
 
     public HomeFragment() {
@@ -47,6 +48,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView listView;
     private SwipeRefreshLayout swipeContainer;
     private TaskListAdapter adapter;
+
     private void initViews(View v) {
         listView = v.findViewById(R.id.ListView_dashboard);
         shimmerContainer = v.findViewById(R.id.shimmer_container);
@@ -66,8 +68,10 @@ public class HomeFragment extends Fragment {
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
         Call<TaskList> call = jsonPlaceHolder.getTasks(
                 new double[]{25.0, 25.0},
-                100,
-                new String[]{"tech", "null"}
+                filterHelper.radius,
+                filterHelper.tags,
+                filterHelper.price,
+                filterHelper.remote
         );
 
         call.enqueue(new Callback<TaskList>() {

@@ -1,46 +1,38 @@
 package com.example.mytasker.activities.ui.main;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mytasker.R;
+import com.example.mytasker.models.PrevTaskModel;
+import com.example.mytasker.retrofit.JsonPlaceHolder;
+import com.example.mytasker.util.Contracts;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class PlaceholderFragment extends Fragment {
-
-    private static final String ARG_SECTION_NUMBER = "section_number";
-
-    private PageViewModel pageViewModel;
-
+    private static int index;
+    private RecyclerView recyclerView;
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt(ARG_SECTION_NUMBER, index);
-        fragment.setArguments(bundle);
+        PlaceholderFragment.index = index;
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        pageViewModel = ViewModelProviders.of(this).get(PageViewModel.class);
-        int index = 1;
-        if (getArguments() != null) {
-            index = getArguments().getInt(ARG_SECTION_NUMBER);
-        }
-        pageViewModel.setIndex(index);
     }
 
     @Override
@@ -48,13 +40,43 @@ public class PlaceholderFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_prev_posts, container, false);
-        final TextView textView = root.findViewById(R.id.section_label);
-        pageViewModel.getText().observe(this, new Observer<String>() {
+        recyclerView = root.findViewById(R.id.recyclerView);
+        return root;
+    }
+
+    void setupapi(int index) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Contracts.BASE_GET_URL)
+//                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
+        Call<PrevTaskModel> call = jsonPlaceHolder.getPrevTask("rakesh");
+
+        call.enqueue(new Callback<PrevTaskModel>() {
             @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+            public void onResponse(Call<PrevTaskModel> call, Response<PrevTaskModel> response) {
+                if (!response.isSuccessful()) {
+                    Log.v("Code: ", String.valueOf(response.code()));
+                    return;
+                }
+                PrevTaskModel details = response.body();
+                PrevPostAdapter adapter = new PrevPostAdapter(details, index);
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(adapter);
+
+//                if (details != null) {
+//                    NetworkCache.tasks = details.getTasks();
+//                }
+
+            }
+
+            @Override
+            public void onFailure(Call<PrevTaskModel> call, Throwable t) {
+                Log.e("error ", t.getMessage());
             }
         });
-        return root;
     }
 }

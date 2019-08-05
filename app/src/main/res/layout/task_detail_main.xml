@@ -81,7 +81,7 @@
             app:layout_constraintTop_toBottomOf="@+id/numBids" />
 
         <ImageView
-            android:id="@+id/imageView8"
+            android:id="@+id/filter"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="16dp"
@@ -99,9 +99,9 @@
             android:layout_marginTop="8dp"
             android:text="4/5"
             android:textSize="15dp"
-            app:layout_constraintEnd_toEndOf="@+id/imageView8"
-            app:layout_constraintStart_toStartOf="@+id/imageView8"
-            app:layout_constraintTop_toBottomOf="@+id/imageView8" />
+            app:layout_constraintEnd_toEndOf="@+id/filter"
+            app:layout_constraintStart_toStartOf="@+id/filter"
+            app:layout_constraintTop_toBottomOf="@+id/filter" />
 
         <TextView
             android:id="@+id/textView7"
@@ -110,8 +110,8 @@
             android:layout_marginBottom="16dp"
             android:text="Bids"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/imageView8"
-            app:layout_constraintStart_toStartOf="@+id/imageView8"
+            app:layout_constraintEnd_toEndOf="@+id/filter"
+            app:layout_constraintStart_toStartOf="@+id/filter"
             app:layout_constraintTop_toBottomOf="@+id/posterRating" />
 
         <View
@@ -137,7 +137,7 @@
             android:layout_marginBottom="24dp"
             android:background="?android:attr/listDivider"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView8"
+            app:layout_constraintEnd_toStartOf="@+id/filter"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/imageView7"
             app:layout_constraintTop_toTopOf="parent" />

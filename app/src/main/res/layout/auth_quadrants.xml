@@ -29,7 +29,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
         app:layout_constraintTop_toBottomOf="@+id/imageView9" />
 
     <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/filter"
         android:layout_width="167dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -48,7 +48,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView8" />
+        app:layout_constraintTop_toBottomOf="@+id/filter" />
 
     <TextView
         android:id="@+id/textView20"

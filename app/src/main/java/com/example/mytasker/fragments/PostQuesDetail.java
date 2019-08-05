@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import com.example.mytasker.R;
 
 public class PostQuesDetail extends Fragment {
-    private EditText question;
+    public EditText question;
 
     public PostQuesDetail() {
     }

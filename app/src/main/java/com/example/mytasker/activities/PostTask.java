@@ -43,6 +43,9 @@ public class PostTask extends BaseActivity {
     FloatingActionButton fab;
     int currentpage = 0;
     ProgressDialog dlg;
+    String title, desc;
+    float reward;
+    Fragment fragment;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -96,13 +99,14 @@ public class PostTask extends BaseActivity {
         if (currentpage < 3) {
             indicator.setCurrentStep(++currentpage);
         }
-        Fragment fragment;
         if (currentpage == 1) {
             fragment = new PostTaskDetail();
 //            fragment = new OrdersFrag();
             loadFragment(fragment);
             //Load frag
         } else if (currentpage == 2) {
+            title = ((PostTaskDetail) fragment).title.getText().toString();
+            desc = ((PostTaskDetail) fragment).description.getText().toString();
             fragment = new PostTaskExtra();
             loadFragment(fragment);
             AnimatedVectorDrawable icon = (AnimatedVectorDrawable) fab.getDrawable();
@@ -110,20 +114,20 @@ public class PostTask extends BaseActivity {
             //Load frag and change fab drawable
         } else {
             //done
+            reward = Float.parseFloat(((PostTaskExtra) fragment).reward.getText().toString());
             postmytask();
         }
     }
 
-    public void postmytask()
-    {
+    public void postmytask() {
         dlg.show();
         //result.setText("sending");
         Date date = new Date();
         Task task = new Task(
                 date.getTime(),
-                PostTaskDetail.description.getText().toString(),
-                PostTaskDetail.title.getText().toString(),
-                2500,
+                desc,
+                title,
+                (int) reward,
                 "mumbai",
                 "rakesh",
                 PostTaskCat.category,

@@ -44,6 +44,7 @@ public class PostQuestion extends BaseActivity {
     int currentpage = 0;
     Fragment fragment;
     ProgressDialog dlg;
+    String question;
 
     @Override
     protected void onResume() {

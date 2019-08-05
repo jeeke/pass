@@ -11,15 +11,13 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mytasker.R;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PostTaskDetail extends Fragment {
-    public static EditText title,description;
+
+    public EditText title, description;
     public PostTaskDetail() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -32,7 +30,8 @@ public class PostTaskDetail extends Fragment {
     }
 
     private void iniComponent(View view) {
-
+        title = view.findViewById(R.id.post_title);
+        description = view.findViewById(R.id.post_desc);
     }
 
 }

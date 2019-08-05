@@ -60,7 +60,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder
             case 3:
                 v.setBackground(context.getDrawable(R.drawable.bg_blue));
         }
-        ((TextView) mView.findViewById(R.id.task_desc)).setText(list.get(position).getTitle());
+        ((TextView) mView.findViewById(R.id.task_title)).setText(list.get(position).getTitle());
 //        ((TextView) mView.findViewById(R.id.task_dist)).setText(list.get(position).getDistance());
 //        ((TextView) mView.findViewById(R.id.task_time)).setText(list.get(position).getCategory());
         TextView textView = mView.findViewById(R.id.task_price);

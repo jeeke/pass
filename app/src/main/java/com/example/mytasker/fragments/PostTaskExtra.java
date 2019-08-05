@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -26,6 +27,7 @@ public class PostTaskExtra extends Fragment implements DatePickerDialog.OnDateSe
     TimePickerDialog tpd;
     String date;
     Calendar c;
+    public EditText reward;
     private int mYear;
     private int mMonth;
     private int mDay;
@@ -41,6 +43,7 @@ public class PostTaskExtra extends Fragment implements DatePickerDialog.OnDateSe
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.post_task_extra, container, false);
         txtDate = layout.findViewById(R.id.pick_time);
+        reward = layout.findViewById(R.id.reward);
         layout.findViewById(R.id.pick_image).setOnClickListener(this::chooseImage);
         txtDate.setOnClickListener(this::openDatePicker);
         c = Calendar.getInstance();
