@@ -33,7 +33,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements FilterHelper.FilterListener {
 
 
     private OnFragmentInteractionListener mListener;
@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment {
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
         Call<TaskList> call = jsonPlaceHolder.getTasks(
-                new double[]{25.0, 25.0},
+                filterHelper.loc,
                 filterHelper.radius,
                 filterHelper.tags,
                 filterHelper.price,
@@ -128,7 +128,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         toolbarHelper = new ToolbarHelper(getActivity(), (MotionLayout)v);
-        filterHelper = new FilterHelper((MotionLayout) v);
+        filterHelper = new FilterHelper(this,(MotionLayout) v);
         initViews(v);
 
         adapter = new TaskListAdapter(getContext(), new ArrayList<>());
@@ -170,6 +170,12 @@ public class HomeFragment extends Fragment {
         super.onDetach();
         mListener = null;
         shimmerContainer.stopShimmer();
+    }
+
+    @Override
+    public void closedMenu() {
+        swipeContainer.setRefreshing(true);
+        callRetrofit();
     }
 
     public interface OnFragmentInteractionListener {

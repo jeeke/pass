@@ -11,9 +11,9 @@
         android:layout_marginStart="16dp"
         android:text="Tasker Rating"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/ratingBar8"
+        app:layout_constraintBottom_toBottomOf="@+id/taskerrating"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ratingBar8" />
+        app:layout_constraintTop_toTopOf="@+id/taskerrating" />
 
     <TextView
         android:id="@+id/textView74"
@@ -22,9 +22,9 @@
         android:layout_marginStart="16dp"
         android:text="Poster Rating"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/ratingBar9"
+        app:layout_constraintBottom_toBottomOf="@+id/posterating"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ratingBar9" />
+        app:layout_constraintTop_toTopOf="@+id/posterating" />
 
     <TextView
         android:id="@+id/textView75"
@@ -33,6 +33,7 @@
         android:layout_marginStart="16dp"
         android:text="Community Factor"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/ratingBar7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ratingBar7" />
@@ -44,14 +45,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:rating="4.2"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/ratingBar8"
+        android:rating="4.2"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/taskerrating"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <RatingBar
-        android:id="@+id/ratingBar8"
+        android:id="@+id/taskerrating"
         style="?ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,12 +61,12 @@
         android:rating="4.7"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/ratingBar9"
+        app:layout_constraintBottom_toTopOf="@+id/posterating"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ratingBar7" />
 
     <RatingBar
-        android:id="@+id/ratingBar9"
+        android:id="@+id/posterating"
         android:rating="4.3"
         style="?ratingBarStyleSmall"
         android:layout_width="wrap_content"
@@ -74,6 +76,6 @@
         android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ratingBar8" />
+        app:layout_constraintTop_toBottomOf="@+id/taskerrating" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

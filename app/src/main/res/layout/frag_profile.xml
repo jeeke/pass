@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -16,39 +17,53 @@
 
             <include layout="@layout/profile_main"/>
 
-            <include layout="@layout/profile_person_detail"/>
+            <include
+                android:id="@+id/detail"
+                layout="@layout/profile_person_detail" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
                 android:background="?android:attr/listDivider" />
 
-            <include layout="@layout/profile_medals"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="?android:attr/listDivider" />
-            <include layout="@layout/profile_stats"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="?android:attr/listDivider" />
-            <include layout="@layout/profile_skills"/>
-
+            <include
+                android:id="@+id/medals"
+                layout="@layout/profile_medals" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
                 android:background="?android:attr/listDivider" />
 
-            <include layout="@layout/profile_rating" />
-
+            <include
+                android:id="@+id/stats"
+                layout="@layout/profile_stats" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
                 android:background="?android:attr/listDivider" />
 
-            <include layout="@layout/profile_reviews"/>
+            <include
+                android:id="@+id/skills"
+                layout="@layout/profile_skills" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="?android:attr/listDivider" />
+
+            <include
+                android:id="@+id/rating"
+                layout="@layout/profile_rating" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="?android:attr/listDivider" />
+
+            <include
+                layout="@layout/profile_reviews"
+                tools:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>

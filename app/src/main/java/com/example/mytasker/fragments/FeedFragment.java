@@ -63,9 +63,7 @@ public class FeedFragment extends Fragment {
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
         Call<QuestionList> call = jsonPlaceHolder.getQuestions(
-                new double[]{25.0, 25.0},
-                100,
-                new String[]{"tech", "null"}
+                new double[]{25.0, 25.0}
         );
 
         call.enqueue(new Callback<QuestionList>() {

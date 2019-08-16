@@ -1,6 +1,7 @@
 package com.example.mytasker.retrofit;
 
-import com.example.mytasker.models.PrevTaskModel;
+import com.example.mytasker.models.PrevPostModel;
+import com.example.mytasker.models.Profile;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.models.Task;
 
@@ -15,8 +16,11 @@ import retrofit2.http.Query;
 public interface JsonPlaceHolder {
 
 
-    @POST("raw-task")
+    @POST("task/create")
     Call<Task> createTask(@Body Task task);
+
+
+
 
     @POST("raw-ques")
     Call<Question> createQuestion(@Body Question question);
@@ -32,9 +36,9 @@ public interface JsonPlaceHolder {
 
     @GET("ques-feed")
     Call<QuestionList> getQuestions(
-            @Query("loc") double[] loc,
-            @Query("radius") Integer radius,
-            @Query("tags") String[] tags
+            @Query("loc") double[] loc
+//            @Query("radius") Integer radius,
+//            @Query("tags") String[] tags
     ) ;
 
     @GET("notifications")
@@ -42,8 +46,14 @@ public interface JsonPlaceHolder {
             @Query("id") String id
     ) ;
 
-    @GET("task-prev")
-    Call<PrevTaskModel> getPrevTask(
-            @Query("id") String id
+    @GET("prev-post")
+    Call<PrevPostModel> getPrevTask(
+            @Query("id") String id,
+            @Query("index") int index
+    );
+
+
+    @GET("profile")
+    Call<Profile> getProfile(
     );
 }

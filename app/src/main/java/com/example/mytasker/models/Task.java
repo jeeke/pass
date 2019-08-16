@@ -15,6 +15,8 @@ public class Task {
     String title;
     @SerializedName("cost")
     Integer cost;
+    @SerializedName("remote")
+    boolean remote;
     @SerializedName("address")
     String address;
     @SerializedName("poster_id")
@@ -34,6 +36,13 @@ public class Task {
 
 
     // For query Thing that will be returned use getter !!
+    public boolean isRemote() {
+        return remote;
+    }
+
+    public void setRemote(boolean remote) {
+        this.remote = remote;
+    }
     public Integer getCost() {
         return cost;
     }
@@ -59,7 +68,7 @@ public class Task {
     }
 
     // For Post use constructor that shoud be send to server !!
-    public Task(long c_date, String job_des, String title, Integer cost, String address, String poster_id, String category, String attachment, String deadline, double[] location, String[] tags, ArrayList<String> musthaves) {
+    public Task(long c_date, String job_des, String title, Integer cost, String address, String poster_id, String category, String attachment, String deadline, double[] location, String[] tags, ArrayList<String> musthaves,boolean remote) {
         this.c_date = c_date;
         this.job_des = job_des;
         this.title = title;
@@ -71,6 +80,7 @@ public class Task {
         this.deadline = deadline;
         this.location = location;
         this.tags = tags;
+        this.remote = remote;
         this.musthaves = musthaves;
     }
 

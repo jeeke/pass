@@ -33,7 +33,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView36"
+        android:id="@+id/taskposted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
@@ -45,7 +45,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView37"
+        android:id="@+id/taskdone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="48dp"
@@ -53,53 +53,53 @@
         android:text="10k"
         android:textColor="?colorSecondary"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView40"
+        app:layout_constraintBottom_toBottomOf="@+id/bucksearned"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView40" />
+        app:layout_constraintTop_toTopOf="@+id/bucksearned" />
 
     <TextView
-        android:id="@+id/textView40"
+        android:id="@+id/bucksearned"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="$461"
         android:textColor="?colorSecondary"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/textView37"
-        app:layout_constraintStart_toEndOf="@+id/textView36"
-        app:layout_constraintTop_toTopOf="@+id/textView36" />
+        app:layout_constraintEnd_toStartOf="@+id/taskdone"
+        app:layout_constraintStart_toEndOf="@+id/taskposted"
+        app:layout_constraintTop_toTopOf="@+id/taskposted" />
 
     <TextView
         android:id="@+id/textView41"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Projects"
+        android:text="Task Posted"
         android:textColor="?colorPrimary"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView36"
-        app:layout_constraintStart_toStartOf="@+id/textView36"
-        app:layout_constraintTop_toBottomOf="@+id/textView36" />
+        app:layout_constraintEnd_toEndOf="@+id/taskposted"
+        app:layout_constraintStart_toStartOf="@+id/taskposted"
+        app:layout_constraintTop_toBottomOf="@+id/taskposted" />
 
     <TextView
         android:id="@+id/textView42"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bucks"
+        android:text="Bucks Earned"
         android:textColor="?colorPrimary"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView41"
-        app:layout_constraintEnd_toEndOf="@+id/textView40"
-        app:layout_constraintStart_toStartOf="@+id/textView40"
+        app:layout_constraintEnd_toEndOf="@+id/bucksearned"
+        app:layout_constraintStart_toStartOf="@+id/bucksearned"
         app:layout_constraintTop_toTopOf="@+id/textView41" />
 
     <TextView
         android:id="@+id/textView43"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hits"
+        android:text="Task Done"
         android:textColor="?colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/textView42"
-        app:layout_constraintEnd_toEndOf="@+id/textView37"
-        app:layout_constraintStart_toStartOf="@+id/textView37"
+        app:layout_constraintEnd_toEndOf="@+id/taskdone"
+        app:layout_constraintStart_toStartOf="@+id/taskdone"
         app:layout_constraintTop_toTopOf="@+id/textView42" />
 
     <TextView
@@ -110,8 +110,8 @@
         android:layout_weight="1"
         android:text="145"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView36"
-        app:layout_constraintStart_toStartOf="@+id/textView36"
+        app:layout_constraintEnd_toEndOf="@+id/taskposted"
+        app:layout_constraintStart_toStartOf="@+id/taskposted"
         app:layout_constraintTop_toBottomOf="@+id/textView41" />
 
     <TextView
@@ -133,8 +133,8 @@
         android:layout_height="wrap_content"
         android:text="8"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView40"
-        app:layout_constraintStart_toStartOf="@+id/textView40"
+        app:layout_constraintEnd_toEndOf="@+id/bucksearned"
+        app:layout_constraintStart_toStartOf="@+id/bucksearned"
         app:layout_constraintTop_toTopOf="@+id/textView59" />
 
     <TextView
@@ -163,8 +163,8 @@
         android:layout_height="wrap_content"
         android:text="20"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView37"
-        app:layout_constraintStart_toStartOf="@+id/textView37"
+        app:layout_constraintEnd_toEndOf="@+id/taskdone"
+        app:layout_constraintStart_toStartOf="@+id/taskdone"
         app:layout_constraintTop_toTopOf="@+id/textView61" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

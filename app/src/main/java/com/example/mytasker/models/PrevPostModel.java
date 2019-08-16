@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class PrevTaskModel {
+public class PrevPostModel {
 
     @SerializedName("posted")
     ArrayList<Task> posted;

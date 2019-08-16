@@ -135,7 +135,8 @@ public class PostTask extends BaseActivity {
                 "time",
                 new double[]{25.0,25.0},
                 new String[]{"tech","null"},
-                new ArrayList<>()
+                new ArrayList<>(),
+                false
         );
 
         Retrofit retrofit = new Retrofit.Builder()

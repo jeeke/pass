@@ -9,42 +9,64 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mytasker.R;
+import com.example.mytasker.models.PrevPostModel;
 import com.example.mytasker.models.Task;
 
 import java.util.ArrayList;
 
 public class PrevPostAdapter extends RecyclerView.Adapter<PrevPostAdapter.ViewHolder> {
 
-    int index;
+    int indexTop,indexBot;
+    PrevPostModel model;
+    int id;
     ArrayList<Task> list;
 
-    public PrevPostAdapter(ArrayList<Task> list, int index) {
-        this.index = index;
+    public PrevPostAdapter(PrevPostModel list, int indexTop, int indexBot) {
+        this.model = list;
+        this.indexTop = indexTop;
+        this.indexBot = indexBot;
+        getId();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View item = inflater.inflate(getId(), parent, false);
+        View item = inflater.inflate(id, parent, false);
         return new ViewHolder(item);
     }
 
-    private int getId() {
-        switch (index) {
-            case 1:
-                return R.layout.card_task_posted;
-            case 2:
-            case 3:
-                return R.layout.card_task_done;
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-            default:
-                return 0;
+    private void getId() {
+        if(indexTop==2){
+            if(indexBot==2){
+               id = R.layout.card_task_done;
+               list = model.getSaved();
+            }else if(indexBot==1){
+                id =  R.layout.card_task_done;
+                list = model.getDone();
+            }else {
+                id = R.layout.card_task_posted;
+                list = model.getPosted();
+            }
+        }else if(indexTop==1){
+            if(indexBot==2){
+
+            }else if(indexBot==1){
+
+            }else {
+
+            }
+        }else {
+            if(indexBot==2){
+                id = R.layout.card_task_done;
+                list = model.getSaved();
+            }else if(indexBot==1){
+                id =  R.layout.card_task_done;
+                list = model.getDone();
+            }else {
+                id = R.layout.card_task_posted;
+                list = model.getPosted();
+            }
         }
     }
 
@@ -70,7 +92,8 @@ public class PrevPostAdapter extends RecyclerView.Adapter<PrevPostAdapter.ViewHo
             bids = itemView.findViewById(R.id.bids);
             comments = itemView.findViewById(R.id.comments);
             details = itemView.findViewById(R.id.details);
-            bids.setOnClickListener(this);
+            if(bids!=null)
+                bids.setOnClickListener(this);
             comments.setOnClickListener(this);
             details.setOnClickListener(this);
         }

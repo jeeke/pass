@@ -12,22 +12,26 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class FilterHelper {
 
-    public ArrayList<String> tags = new ArrayList<>();
-    public int radius;
+    private FilterListener listener;
+
+    String[] chipTitle = {"hello", "tech", "null", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"};
+    public ArrayList<String> tags = new ArrayList<>(Arrays.asList(chipTitle));
+    public int radius = 100;
     public boolean remote = false;
-    public int[] price = new int[2];
-    String[] chipTitle = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"};
-    float[] loc = new float[2];
+    public int[] price = {0,100};
+    public double[] loc = {25.0, 25.0};
     private MotionLayout filter;
     private boolean open;
     RangeBar radiusBar, priceBar;
     Switch remoteTask;
     private ChipGroup chipGroup;
 
-    public FilterHelper(MotionLayout v){
+    public FilterHelper(FilterListener listener,MotionLayout v){
+        this.listener = listener;
         open = false;
         filter = v.findViewById(R.id.scrollable);
         v.findViewById(R.id.filter).setOnClickListener(this::toggle);
@@ -64,10 +68,15 @@ public class FilterHelper {
             price[0] = priceBar.getLeftIndex() * (int) priceBar.getTickInterval();
             price[1] = priceBar.getRightIndex() * (int) priceBar.getTickInterval();
             remote = remoteTask.isActivated();
+            listener.closedMenu();
             //Log.e("tags",tags.toString() + "\n" + radius + " "  + price[0] + " " + price[1]);
         }else{
             filter.transitionToEnd();
         }
         open = !open;
+    }
+
+    public interface FilterListener{
+        void closedMenu();
     }
 }

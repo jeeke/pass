@@ -34,7 +34,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class QuestionFragment extends Fragment {
+public class QuestionFragment extends Fragment implements FilterHelper.FilterListener {
 
     private OnListFragmentInteractionListener mListener;
     private ShimmerFrameLayout shimmerContainer;
@@ -60,11 +60,11 @@ public class QuestionFragment extends Fragment {
                 .build();
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<QuestionList> call = jsonPlaceHolder.getQuestions(
-                new double[]{25.0, 25.0},
-                100,
-                new String[]{"tech", "null"}
-        );
+        Call<QuestionList> call = jsonPlaceHolder.getQuestions(new double[]{25.0, 25.0});
+
+//        new double[]{25.0, 25.0},
+//                100,
+//                new String[]{"tech", "null"}
 
         call.enqueue(new Callback<QuestionList>() {
             @Override
@@ -113,7 +113,7 @@ public class QuestionFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_question_list, container, false);
         toolbarHelper = new ToolbarHelper((AppCompatActivity) getActivity(),(MotionLayout)v);
-        filterHelper = new FilterHelper((MotionLayout) v);
+        filterHelper = new FilterHelper(this,(MotionLayout) v);
         adapter = new QuestionAdapter(getContext(), new ArrayList<>());
         initViews(v);
         initListeners(v);
@@ -157,6 +157,11 @@ public class QuestionFragment extends Fragment {
         super.onDetach();
         mListener = null;
         shimmerContainer.stopShimmer();
+    }
+
+    @Override
+    public void closedMenu() {
+
     }
 
     public interface OnListFragmentInteractionListener {

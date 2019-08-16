@@ -1,5 +1,6 @@
 package com.example.mytasker.activities.ui.main;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mytasker.R;
-import com.example.mytasker.models.PrevTaskModel;
+import com.example.mytasker.models.PrevPostModel;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.util.Contracts;
+import com.google.android.material.tabs.TabLayout;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,12 +29,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * A placeholder fragment containing a simple view.
  */
 public class PlaceholderFragment extends Fragment {
-    private static int index;
+    private int indexTop;
+    ProgressDialog dialog;
+    private int indexBot;
     private RecyclerView recyclerView;
-    public static PlaceholderFragment newInstance(int index) {
-        PlaceholderFragment fragment = new PlaceholderFragment();
-        PlaceholderFragment.index = index;
-        return fragment;
+
+
+    PlaceholderFragment(int indexTop) {
+//        Log.e("Constructor",indexTop + "");
+        this.indexTop = indexTop;
     }
 
     @Override
@@ -41,10 +46,31 @@ public class PlaceholderFragment extends Fragment {
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_prev_posts, container, false);
         recyclerView = root.findViewById(R.id.recyclerView);
+        TabLayout tabLayout = root.findViewById(R.id.tabLayoutInner);
+        dialog = new ProgressDialog(getContext());
+        dialog.setTitle("Fetching List, Please Wait....");
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                indexBot = tab.getPosition();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        dialog.show();
+        setupapi();
         return root;
     }
 
-    void setupapi(int index) {
+    void setupapi() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Contracts.BASE_GET_URL)
 //                .client(okHttpClient)
@@ -52,17 +78,19 @@ public class PlaceholderFragment extends Fragment {
                 .build();
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<PrevTaskModel> call = jsonPlaceHolder.getPrevTask("rakesh");
+        Call<PrevPostModel> call = jsonPlaceHolder.getPrevTask("rakesh",indexTop);
 
-        call.enqueue(new Callback<PrevTaskModel>() {
+        call.enqueue(new Callback<PrevPostModel>() {
             @Override
-            public void onResponse(Call<PrevTaskModel> call, Response<PrevTaskModel> response) {
+            public void onResponse(Call<PrevPostModel> call, Response<PrevPostModel> response) {
+
+                dialog.dismiss();
                 if (!response.isSuccessful()) {
                     Log.v("Code: ", String.valueOf(response.code()));
                     return;
                 }
-                PrevTaskModel details = response.body();
-                PrevPostAdapter adapter = new PrevPostAdapter(details, index);
+                PrevPostModel details = response.body();
+                PrevPostAdapter adapter = new PrevPostAdapter(details, indexTop,indexBot);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(adapter);
@@ -74,8 +102,9 @@ public class PlaceholderFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PrevTaskModel> call, Throwable t) {
+            public void onFailure(Call<PrevPostModel> call, Throwable t) {
                 Log.e("error ", t.getMessage());
+                dialog.dismiss();
             }
         });
     }
