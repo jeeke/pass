@@ -4,8 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -17,20 +17,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.mytasker.R;
-import com.example.mytasker.adapters.FeedAdapter;
-import com.example.mytasker.adapters.QuestionAdapter;
-import com.example.mytasker.adapters.TaskListAdapter;
 import com.example.mytasker.fragments.FeedFragment;
 import com.example.mytasker.fragments.HomeFragment;
 import com.example.mytasker.fragments.ProfileFragment;
 import com.example.mytasker.fragments.QuestionFragment;
-import com.example.mytasker.models.Question;
+import com.example.mytasker.util.Contracts;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
 import static com.example.mytasker.util.Tools.launchActivity;
 
-public class DashboardActivity extends BaseActivity implements TaskListAdapter.RecyclerViewClickListener, HomeFragment.OnFragmentInteractionListener, QuestionFragment.OnListFragmentInteractionListener, QuestionAdapter.RecyclerViewClickListener, FeedFragment.OnListFragmentInteractionListener, FeedAdapter.RecyclerViewClickListener, ProfileFragment.OnFragmentInteractionListener {
+public class DashboardActivity extends BaseActivity {
 
     ImageView bhome, bqna, bfeed, bprofile;
     ImageView prevbselection;
@@ -112,14 +109,11 @@ public class DashboardActivity extends BaseActivity implements TaskListAdapter.R
 //            starterIntent.putExtra("theme", getThemeToLaunch());
             startActivity(starterIntent);
         }
-    }
 
-
-    @Override
-    public void onClick(View view, int position) {
-        Intent intent = new Intent(this,TaskDetailActivity.class);
-        intent.putExtra("position",position);
-        startActivity(intent);
+        Log.e("AddedSkill","Dash" + requestCode + " "+ resultCode);
+        if(requestCode == Contracts.ADD_SKILL_REQUEST && resultCode == RESULT_OK){
+                ((ProfileFragment)fragments[3]).addskill();
+        }
     }
 
     private void init() {
@@ -191,20 +185,10 @@ public class DashboardActivity extends BaseActivity implements TaskListAdapter.R
                 loadFragment(fragments[1]);
                 return selected ? R.mipmap.qna_fill : R.mipmap.qna;
             case R.id.profile:
-                fragments[3] = fragments[3]==null? new ProfileFragment():fragments[3];
+                fragments[3] = fragments[3]==null? new ProfileFragment(true):fragments[3];
                 loadFragment(fragments[3]);
                 return selected ? R.mipmap.profile_fill : R.mipmap.profile;
         }
         return 0;
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-// TODO
-    }
-
-    @Override
-    public void onListFragmentInteraction(Question question) {
-
     }
 }

@@ -2,6 +2,7 @@
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,31 +19,32 @@
         android:minHeight="136dp">
 
         <TextView
-            android:id="@+id/task_title"
+            android:id="@+id/tasker_name"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:gravity="center_vertical|start"
+            android:text="Want my house cleaned"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/task_price"
+            app:layout_constraintEnd_toStartOf="@+id/bid_price"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="Want my house cleaned" />
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
-            android:id="@+id/task_price"
+            android:id="@+id/bid_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="16dp"
+            android:text="$500"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/task_title"
+            app:layout_constraintBottom_toBottomOf="@+id/tasker_name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/task_title"
-            android:text="$500" />
+            app:layout_constraintTop_toTopOf="@+id/tasker_name" />
 
         <TextView
             android:id="@+id/task_dist"
@@ -50,10 +52,30 @@
             android:layout_height="wrap_content"
             android:textColor="@color/color_12"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/task_price"
-            app:layout_constraintStart_toStartOf="@+id/task_price"
-            app:layout_constraintTop_toBottomOf="@+id/task_price"
+            app:layout_constraintEnd_toEndOf="@+id/bid_price"
+            app:layout_constraintStart_toStartOf="@+id/bid_price"
+            app:layout_constraintTop_toBottomOf="@+id/bid_price"
             android:text="" />
+
+        <View
+            android:id="@+id/dot"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/dotText"
+            app:layout_constraintEnd_toStartOf="@+id/dotText"
+            app:layout_constraintTop_toTopOf="@+id/dotText" />
+
+        <TextView
+            android:id="@+id/dotText"
+            android:layout_width="wrap_content"
+            android:layout_height="19dp"
+            android:layout_marginTop="16dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="@+id/bid_price"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="invisible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

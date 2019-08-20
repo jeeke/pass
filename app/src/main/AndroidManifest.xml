@@ -5,26 +5,45 @@
 
     <dist:module dist:instant="true" />
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/LightMode">
-        <activity android:name=".activities.BidActivity"></activity>
-        <activity android:name=".activities.BaseActivity" />
+        <activity android:name=".activities.LoginActivity"></activity>
+        <activity android:name=".chat.DialogsActivity"></activity>
+        <activity android:name=".chat.MessagesActivity"></activity>
+        <activity android:name=".activities.SignUpActivity" />
+        <activity android:name=".activities.VerifyContact" />
+        <activity android:name=".activities.FeedbackByPosterActivity" />
+        <activity android:name=".activities.FeedbackByTaskerActivity" />
+        <activity android:name=".activities.ProfileActivity" />
+        <activity android:name=".activities.BidConfirm" />
+        <activity android:name=".activities.HistoryQues" />
+        <activity android:name=".activities.HistoryFeed" />
+        <activity android:name=".activities.AddSkill">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.mytasker.activities.DashboardActivity" />
+        </activity>
+        <activity android:name=".activities.BidsListActivity" />
         <activity android:name=".activities.PostFeed">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
         </activity>
         <activity
-            android:name=".activities.PrevPosts"
-            android:label="@string/title_activity_prev_posts"
-            android:theme="@style/LightMode.NoActionBar">
+            android:name=".activities.HistoryTask"
+            android:label="@string/title_activity_prev_posts">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
@@ -38,25 +57,22 @@
         </activity>
         <activity
             android:name=".activities.EditPassword"
-            android:parentActivityName=".activities.SettingActivity"
-            android:theme="@style/LightMode.NoActionBar">
+            android:parentActivityName=".activities.SettingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.SettingActivity" />
         </activity>
         <activity
             android:name=".activities.EditEmail"
-            android:parentActivityName=".activities.SettingActivity"
-            android:theme="@style/LightMode.NoActionBar">
+            android:parentActivityName=".activities.SettingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.SettingActivity" />
         </activity>
         <activity
-            android:name=".activities.EditFirstName"
+            android:name=".activities.EditName"
             android:label="@string/title_activity_edit_first_name"
-            android:parentActivityName=".activities.SettingActivity"
-            android:theme="@style/LightMode.NoActionBar">
+            android:parentActivityName=".activities.SettingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.SettingActivity" />
@@ -64,8 +80,7 @@
         <activity
             android:name=".activities.SearchActivity"
             android:label="@string/title_activity_search"
-            android:parentActivityName=".activities.DashboardActivity"
-            android:theme="@style/LightMode.NoActionBar">
+            android:parentActivityName=".activities.DashboardActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
@@ -73,8 +88,7 @@
         <activity
             android:name=".activities.NotificationActivity"
             android:label="@string/title_activity_notification"
-            android:parentActivityName=".activities.DashboardActivity"
-            android:theme="@style/LightMode.NoActionBar">
+            android:parentActivityName=".activities.DashboardActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
@@ -85,7 +99,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
         </activity>
-        <activity android:name=".activities.ThemeSetting" />
         <activity android:name=".activities.TaskDetailActivity" />
         <activity android:name=".activities.PostTask">
             <meta-data
@@ -94,19 +107,18 @@
         </activity>
         <activity android:name=".activities.dummy.TempPostActivity" />
         <activity android:name=".activities.DashboardActivity" />
-        <activity android:name=".activities.AuthActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity android:name=".activities.SettingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
         </activity>
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.MainActivity">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

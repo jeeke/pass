@@ -1,73 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
+
+    <include layout="@layout/toolbar" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="?actionBarSize"
-        android:scrollbars="none">
+        android:layout_marginTop="16dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="100dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="100dp">
 
-            <include layout="@layout/profile_main"/>
+            <include layout="@layout/profile_main" />
 
             <include
                 android:id="@+id/detail"
                 layout="@layout/profile_person_detail" />
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="8dp"-->
+            <!--android:background="?android:attr/listDivider" />-->
+
+            <!--<include-->
+            <!--android:id="@+id/medals"-->
+            <!--layout="@layout/profile_medals" />-->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
                 android:background="?android:attr/listDivider" />
 
-            <include
-                android:id="@+id/medals"
-                layout="@layout/profile_medals" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="?android:attr/listDivider" />
-
-            <include
-                android:id="@+id/stats"
-                layout="@layout/profile_stats" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="?android:attr/listDivider" />
 
             <include
                 android:id="@+id/skills"
                 layout="@layout/profile_skills" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="?android:attr/listDivider" />
-
-            <include
-                android:id="@+id/rating"
-                layout="@layout/profile_rating" />
-
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
                 android:background="?android:attr/listDivider" />
 
+
             <include
-                layout="@layout/profile_reviews"
-                tools:visibility="gone" />
+                android:id="@+id/stats"
+                layout="@layout/profile_stats" />
+
+
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="8dp"-->
+            <!--android:background="?android:attr/listDivider" />-->
+
+
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="8dp"-->
+            <!--android:background="?android:attr/listDivider" />-->
+
+            <!--<include-->
+            <!--layout="@layout/profile_reviews"-->
+            <!--tools:visibility="gone" />-->
 
         </LinearLayout>
     </ScrollView>
 
-    <include layout="@layout/toolbar"/>
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

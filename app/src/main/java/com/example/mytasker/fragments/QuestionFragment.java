@@ -1,6 +1,5 @@
 package com.example.mytasker.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,8 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
+import com.example.mytasker.activities.HistoryQues;
+import com.example.mytasker.activities.QuestionDetailActivity;
 import com.example.mytasker.adapters.QuestionAdapter;
-import com.example.mytasker.models.Question;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.QuestionList;
 import com.example.mytasker.util.Contracts;
@@ -33,10 +33,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.example.mytasker.util.Tools.launchActivity;
 
-public class QuestionFragment extends Fragment implements FilterHelper.FilterListener {
 
-    private OnListFragmentInteractionListener mListener;
+public class QuestionFragment extends Fragment implements FilterHelper.FilterListener,QuestionAdapter.RecyclerViewClickListener{
+
     private ShimmerFrameLayout shimmerContainer;
     private FilterHelper filterHelper;
     private ToolbarHelper toolbarHelper;
@@ -112,9 +113,9 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_question_list, container, false);
-        toolbarHelper = new ToolbarHelper((AppCompatActivity) getActivity(),(MotionLayout)v);
+        toolbarHelper = new ToolbarHelper((AppCompatActivity) getActivity(),(MotionLayout)v, HistoryQues.class);
         filterHelper = new FilterHelper(this,(MotionLayout) v);
-        adapter = new QuestionAdapter(getContext(), new ArrayList<>());
+        adapter = new QuestionAdapter(getContext(),this, new ArrayList<>(),false);
         initViews(v);
         initListeners(v);
         listView.setAdapter(adapter);
@@ -142,30 +143,12 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-        shimmerContainer.stopShimmer();
-    }
-
-    @Override
     public void closedMenu() {
 
     }
 
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(Question question);
+    @Override
+    public void onClick(View view, int position) {
+        launchActivity(getActivity(), QuestionDetailActivity.class);
     }
 }

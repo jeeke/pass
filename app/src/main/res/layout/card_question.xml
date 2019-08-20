@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="6dp"
@@ -26,6 +27,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <View
+            android:id="@+id/dot"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/dotText"
+            app:layout_constraintEnd_toStartOf="@+id/dotText"
+            app:layout_constraintTop_toTopOf="@+id/dotText" />
+
         <TextView
             android:id="@+id/poster_id"
             android:layout_width="wrap_content"
@@ -41,73 +52,23 @@
             android:id="@+id/noAnswers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
             android:text="5 Answers"
-            app:layout_constraintBottom_toBottomOf="@+id/poster_id"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/poster_id" />
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="@+id/dotText" />
 
         <TextView
             android:id="@+id/question"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
             android:text="Whats Your Name"
             android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/noAnswers"
             app:layout_constraintStart_toStartOf="@+id/poster_image"
             app:layout_constraintTop_toBottomOf="@+id/poster_image" />
-
-        <View
-            android:id="@+id/divider3"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="32dp"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintEnd_toEndOf="@+id/noAnswers"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/poster_image"
-            app:layout_constraintTop_toBottomOf="@+id/question" />
-
-        <TextView
-            android:id="@+id/save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_save"
-            android:drawablePadding="8dp"
-            android:text="Save"
-            android:drawableTint="?colorAccent"
-            app:layout_constraintBottom_toBottomOf="@+id/share"
-            app:layout_constraintStart_toStartOf="@+id/divider3"
-            app:layout_constraintTop_toTopOf="@+id/share" />
-
-        <TextView
-            android:drawablePadding="8dp"
-            android:drawableStart="@drawable/ic_share"
-            android:id="@+id/share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="Share"
-            android:drawableTint="?colorAccent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/answer"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/save"
-            app:layout_constraintTop_toBottomOf="@+id/divider3" />
-
-        <TextView
-            android:id="@+id/answer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_comment"
-            android:drawablePadding="8dp"
-            android:text="Answer"
-            android:drawableTint="?colorAccent"
-            app:layout_constraintBottom_toBottomOf="@+id/share"
-            app:layout_constraintEnd_toEndOf="@+id/divider3"
-            app:layout_constraintTop_toTopOf="@+id/share" />
 
         <TextView
             android:id="@+id/textView"
@@ -118,5 +79,16 @@
             app:layout_constraintBottom_toBottomOf="@+id/poster_image"
             app:layout_constraintStart_toStartOf="@+id/poster_id"
             app:layout_constraintTop_toBottomOf="@+id/poster_id" />
+
+        <TextView
+            android:id="@+id/dotText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="ONGOING"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/noAnswers"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/poster_id" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

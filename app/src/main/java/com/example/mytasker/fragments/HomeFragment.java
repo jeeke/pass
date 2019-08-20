@@ -1,7 +1,6 @@
 package com.example.mytasker.fragments;
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
+import com.example.mytasker.activities.HistoryTask;
+import com.example.mytasker.activities.TaskDetailActivity;
 import com.example.mytasker.adapters.TaskListAdapter;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.TaskList;
@@ -33,10 +34,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class HomeFragment extends Fragment implements FilterHelper.FilterListener {
+public class HomeFragment extends Fragment implements FilterHelper.FilterListener,TaskListAdapter.RecyclerViewClickListener {
 
-
-    private OnFragmentInteractionListener mListener;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -127,11 +126,11 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        toolbarHelper = new ToolbarHelper(getActivity(), (MotionLayout)v);
+        toolbarHelper = new ToolbarHelper(getActivity(), (MotionLayout)v, HistoryTask.class);
         filterHelper = new FilterHelper(this,(MotionLayout) v);
         initViews(v);
 
-        adapter = new TaskListAdapter(getContext(), new ArrayList<>());
+        adapter = new TaskListAdapter(getContext(),this, new ArrayList<>(),false);
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
         swipeContainer.setOnRefreshListener(this::callRetrofit);
@@ -147,38 +146,18 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-        shimmerContainer.stopShimmer();
-    }
-
     @Override
     public void closedMenu() {
         swipeContainer.setRefreshing(true);
         callRetrofit();
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+
+    @Override
+    public void onClick(View view, int position) {
+        TaskDetailActivity.FROM = 0;
+        Intent intent = new Intent(getActivity(),TaskDetailActivity.class);
+        intent.putExtra("position",position);
+        startActivity(intent);
     }
 }

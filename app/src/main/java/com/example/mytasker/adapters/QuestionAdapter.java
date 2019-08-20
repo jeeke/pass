@@ -1,6 +1,7 @@
 package com.example.mytasker.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mytasker.R;
 import com.example.mytasker.models.Question;
+import com.example.mytasker.util.Contracts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +21,18 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.holder
 
     private ArrayList<Question> list;
     private RecyclerViewClickListener mListener;
+    private boolean type;
+    private Context context;
 
     public interface RecyclerViewClickListener {
         void onClick(View view, int position);
     }
 
-    public QuestionAdapter(Context context, ArrayList<Question> list) {
+    public QuestionAdapter(Context context,RecyclerViewClickListener listener, ArrayList<Question> list, boolean type) {
         this.list = list;
-        this.mListener = (RecyclerViewClickListener) context;
+        this.mListener =  listener;
+        this.context = context;
+        this.type = type;
     }
 
     @NonNull
@@ -44,10 +50,21 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.holder
         notifyDataSetChanged();
     }
 
+    private void setStage(View v,int stage){
+        View dot = v.findViewById(R.id.dot);
+        TextView dotText = v.findViewById(R.id.dotText);
+        dotText.setVisibility(View.VISIBLE);
+        dot.setVisibility(View.VISIBLE);
+        Drawable drawable = (context.getDrawable(R.drawable.notification_dot_indicator));
+        drawable.setTint(context.getResources().getColor(Contracts.QUES_STAGE_COLORS[stage]));
+        dot.setBackground(drawable);
+//        dot.setBackgroundColor(((Context)mListener).getResources().getColor(Contracts.QUES_STAGE_COLORS[stage]));
+        dotText.setText(Contracts.QUES_STAGE_TEXT[stage]);
+    }
+
     @Override
     public void onBindViewHolder(@NonNull holder holder, int position) {
         View mView = holder.itemView;
-        Context context = (Context) mListener;
         View v = mView.findViewById(R.id.lyt_parent);
         switch (position % 4) {
             case 0:
@@ -65,6 +82,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.holder
         Question current = list.get(position);
         ((TextView) mView.findViewById(R.id.question)).setText(current.getQues());
         ((TextView) mView.findViewById(R.id.poster_id)).setText(current.getPosterName());
+        if(type) setStage(mView,current.getStage());
     }
 
     @Override

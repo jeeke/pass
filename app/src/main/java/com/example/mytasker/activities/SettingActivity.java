@@ -1,5 +1,6 @@
 package com.example.mytasker.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.view.View;
 
 import com.example.mytasker.R;
 import com.example.mytasker.util.Tools;
+import com.firebase.ui.auth.AuthUI;
 
 import static com.example.mytasker.util.Tools.launchActivity;
 
@@ -18,8 +20,8 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Tools.initMinToolbar(this, "SETTINGS", false);
-        findViewById(R.id.textView81).setOnClickListener((View v) -> launchActivity(this, EditFirstName.class));
-        findViewById(R.id.textView82).setOnClickListener((View v) -> launchActivity(this, EditFirstName.class));
+        findViewById(R.id.textView81).setOnClickListener((View v) -> launchActivity(this, EditName.class));
+        findViewById(R.id.textView82).setOnClickListener((View v) -> launchActivity(this, EditName.class));
         findViewById(R.id.textView83).setOnClickListener((View v) -> launchActivity(this, EditEmail.class));
         findViewById(R.id.textView84).setOnClickListener((View v) -> launchActivity(this, EditPassword.class));
         findViewById(R.id.textView92).setOnClickListener(this::invite);
@@ -30,6 +32,17 @@ public class SettingActivity extends BaseActivity {
         findViewById(R.id.textView76).setOnClickListener((View v) -> launchActivity(this, PrivacyPolicy.class));
         findViewById(R.id.textView69).setOnClickListener((View v) -> launchActivity(this, TandC.class));
         findViewById(R.id.textView58).setOnClickListener((View v) -> launchActivity(this, ContactUs.class));
+        findViewById(R.id.logout).setOnClickListener(v -> {
+            ProgressDialog dialog = new ProgressDialog(SettingActivity.this);
+            dialog.setTitle("Logging out, Please Wait....");
+            dialog.show();
+            AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(task -> {
+                    dialog.dismiss();
+                    launchActivity(SettingActivity.this,MainActivity.class);
+                });
+        });
     }
 
 

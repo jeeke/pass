@@ -1,88 +1,100 @@
 package com.example.mytasker.activities;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
-
-import androidx.appcompat.widget.Toolbar;
 
 import com.example.mytasker.R;
 import com.example.mytasker.models.Task;
+import com.example.mytasker.util.ChipAdapter;
+import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.NetworkCache;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.chip.Chip;
+import com.example.mytasker.util.Tools;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-public class TaskDetailActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
+import java.util.ArrayList;
+import java.util.Arrays;
 
-    private int position;
-    ChipGroup chipGroup;
-    Toolbar toolbar;
-    //    int colorTo;
-//    int colorFrom;
-    boolean toolbarColor;
+import static com.example.mytasker.util.Tools.launchActivity;
 
-    private void initTags(String[] tagList) {
-        for (String tag : tagList) {
-            chipGroup.addView(createChip(this, tag));
+public class TaskDetailActivity extends BaseActivity {
+    ChipAdapter tagAdapter,mustAdapter;
+    public static int FROM = 0;
+
+    private void initButton(int position){
+
+        Button action = findViewById(R.id.bid);
+        if(FROM==0) {
+            current = NetworkCache.tasks.get(position);
+            action.setOnClickListener(v -> launchActivity(this, BidConfirm.class));
+            return;
+        }else if(FROM==1){
+            current = NetworkCache.prevPostModel.getPosted().get(position);
+        }else current = NetworkCache.prevPostModel.getDone().get(position);
+        int stage = current.getStage();
+
+        FROM = ((FROM -1) * 3) + stage + 1;
+        String title = Contracts.TASK_DETAIL_BUTTONS[FROM-1];
+
+
+        switch (FROM ){
+//          Poster stages
+            case 1:
+                action.setOnClickListener(v -> launchActivity(this,BidsListActivity.class));
+                break;
+            case 2:
+                title+="Rakesh";
+                action.setOnClickListener(v -> launchActivity(this,ProfileActivity.class));
+                break;
+            case 3:
+                title +="Rakesh";
+                action.setOnClickListener(v -> launchActivity(this,ProfileActivity.class));
+                break;
+//          Tasker Stages
+            case 4:
+                action.setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+                        .setTitle("CANCEL BID")
+                        .setMessage("Do you want to cancel bid on this task?")
+                        .setPositiveButton("YES, CANCEL NOW", null)
+                        .show());
+
+                break;
+            case 5:
+                action.setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+                        .setTitle("")
+                        .setMessage("This task has been assigned to you.")
+                        .setPositiveButton("Mark As Done", (dialog, which) -> launchActivity(this,FeedbackByTaskerActivity.class))
+                        .setNegativeButton("Resign Task",null)
+                        .show());
+
+                break;
+            case 6:
+                break;
         }
+
+        action.setBackgroundColor(getResources().getColor(Contracts.TASK_STAGE_COLORS[stage]));
+        action.setText(title);
     }
 
-    private Chip createChip(Context context, String title) {
-        Chip chip = new Chip(context);
-        chip.setText(title);
-        chip.setChipStrokeWidth(4);
-//        chip.setChipStrokeColor(ColorStateList.valueOf(R.color.green_A700));
-//        chip.setCheckable(true);
-        chip.setClickable(false);
-        return chip;
-    }
-
+    Task current;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_detail);
-//        Tools.initMinToolbar(this,"Task Details",false);
+        setContentView(R.layout.activity_task_detail2);
+        Tools.initMinToolbar(this,"Task Details",false);
 
+        int position = getIntent().getIntExtra("position", 0);
+        initButton(position);
 
-        toolbar = findViewById(R.id.toolbar);
-//        initBackground();
-        toolbarColor = false;
-        AppBarLayout appBarLayout = findViewById(R.id.app_bar);
-        appBarLayout.addOnOffsetChangedListener(this);
-
-
-        position = getIntent().getIntExtra("position",0);
-        Task current = NetworkCache.tasks.get(position);
         ((TextView)findViewById(R.id.taskTitle)).setText(current.getTitle());
         ((TextView)findViewById(R.id.taskDesc)).setText(current.getJob_des());
         ((TextView)findViewById(R.id.rewardValue)).setText(current.getCost()+"");
-        ((TextView)findViewById(R.id.numBids)).setText(current.getCost()+"");
-
-        chipGroup = findViewById(R.id.tagGroup);
-//        initTags(current.getTags());
-        String[] array = {"tech","hello","others","three","nothing"};
-        initTags(array);
-    }
 //
-//    ObjectAnimator forward,reverse;
-//    private void initBackground(){
-//        colorTo = getResources().getColor(R.color.creme);
-//        colorFrom = 0;
-//        forward = ObjectAnimator.ofObject(toolbar,"backgroundColor",new ArgbEvaluator(),colorFrom,colorTo).setDuration(300);
-//        reverse = ObjectAnimator.ofObject(toolbar,"backgroundColor",new ArgbEvaluator(),colorTo,colorFrom).setDuration(70);
-//    }
-
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        if (verticalOffset < -32 && !toolbarColor) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.creme));
-//            forward.start();
-            toolbarColor = !toolbarColor;
-        } else if (verticalOffset > -32 && toolbarColor) {
-            toolbar.setBackgroundColor(0);
-//            forward.reverse();
-            toolbarColor = !toolbarColor;
-        }
+        ChipGroup chipGroup = findViewById(R.id.tagGroup);
+        ChipGroup mustGroup = findViewById(R.id.mustGroup);
+        String[] array = {"tech","hello","others","three","nothing"};
+        tagAdapter = new ChipAdapter(chipGroup,new ArrayList<>(Arrays.asList(array)));
+        mustAdapter = new ChipAdapter(mustGroup,new ArrayList<>(Arrays.asList(array)));
     }
 }

@@ -1,6 +1,7 @@
 package com.example.mytasker.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mytasker.R;
 import com.example.mytasker.models.Task;
+import com.example.mytasker.util.Contracts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +26,26 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder
         void onClick(View view, int position);
     }
 
-    public TaskListAdapter(Context context, ArrayList<Task> list) {
+    boolean type;
+    Context context;
+
+    public TaskListAdapter(Context context,RecyclerViewClickListener listener, ArrayList<Task> list, boolean type) {
         this.list = list;
-        this.mListener = (RecyclerViewClickListener) context;
+        this.mListener = listener;
+        this.context = context;
+        this.type = type;
+    }
+
+    private void setStage(View v,int stage){
+        View dot = v.findViewById(R.id.dot);
+        TextView dotText = v.findViewById(R.id.dotText);
+        dotText.setVisibility(View.VISIBLE);
+        dot.setVisibility(View.VISIBLE);
+        Drawable drawable = (context.getDrawable(R.drawable.notification_dot_indicator));
+        drawable.setTint(context.getResources().getColor(Contracts.TASK_STAGE_COLORS[stage]));
+        dot.setBackground(drawable);
+//        dot.setBackgroundColor(((Context)mListener).getResources().getColor(Contracts.QUES_STAGE_COLORS[stage]));
+        dotText.setText(Contracts.TASK_STAGE_TEXT[stage]);
     }
 
     @NonNull
@@ -45,7 +64,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder
     @Override
     public void onBindViewHolder(@NonNull holder holder, int position) {
         View mView = holder.itemView;
-        Context context = (Context) mListener;
         View v = mView.findViewById(R.id.lyt_parent);
         switch (position % 4) {
             case 0:
@@ -60,17 +78,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder
             case 3:
                 v.setBackground(context.getDrawable(R.drawable.bg_blue));
         }
-        ((TextView) mView.findViewById(R.id.task_title)).setText(list.get(position).getTitle());
-//        ((TextView) mView.findViewById(R.id.task_dist)).setText(list.get(position).getDistance());
-//        ((TextView) mView.findViewById(R.id.task_time)).setText(list.get(position).getCategory());
-        TextView textView = mView.findViewById(R.id.task_price);
-        textView.setText("$" + list.get(position).getCost());
-//        textView = mView.findViewById(R.id.task_dist);
-//        textView.setText(list.get(position).getAddress());
+        Task current = list.get(position);
+        ((TextView) mView.findViewById(R.id.tasker_name)).setText(current.getTitle());
+        TextView textView = mView.findViewById(R.id.bid_price);
+        textView.setText("$" + current.getCost());
+        if(type) setStage(mView,current.getStage());
+        else mView.findViewById(R.id.dotText).setVisibility(View.GONE);
 
-//        int imageId = R.drawable.google;
-//        ImageView imageView = mView.findViewById(R.id.task_cat_image);
-//        imageView.setImageResource(imageId);
     }
 
     @Override

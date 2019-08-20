@@ -18,14 +18,16 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.holder> {
 
     private ArrayList<Feed> list;
     private RecyclerViewClickListener mListener;
+    private Context context;
 
     public interface RecyclerViewClickListener {
         void onClick(View view, int position);
     }
 
-    public FeedAdapter(Context context, ArrayList<Feed> list) {
+    public FeedAdapter(Context context,RecyclerViewClickListener listener, ArrayList<Feed> list) {
         this.list = list;
-        this.mListener = (RecyclerViewClickListener) context;
+        this.mListener = listener;
+        this.context = context;
     }
 
     @NonNull

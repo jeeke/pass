@@ -29,11 +29,11 @@
     <ImageView
         android:id="@+id/action_search"
         style="@style/ImageIcon"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_search"
+        android:src="@drawable/ic_history"
         app:layout_constraintTop_toTopOf="@+id/menu_icon"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -86,15 +86,15 @@
             android:gravity="center"
             android:text="SUPPORT"
             android:textSize="17sp" />
-        <TextView
-            android:id="@+id/my_posts"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="8dp"
-            android:gravity="center"
-            android:text="ACTIVITIES"
-            android:textSize="17sp" />
+        <!--<TextView-->
+            <!--android:id="@+id/my_posts"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_margin="8dp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="ACTIVITIES"-->
+            <!--android:textSize="17sp" />-->
 
         <!--<TextView-->
             <!--android:id="@+id/my_ques"-->

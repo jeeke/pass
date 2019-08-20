@@ -2,7 +2,7 @@ package com.example.mytasker.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Question {
+public class Question extends Message{
     @SerializedName("c_date")
     private long c_date;
     @SerializedName("dis")
@@ -22,6 +22,12 @@ public class Question {
     @SerializedName("tags")
     private String[] tags;
 
+    @SerializedName("accepted")
+    private int done;
+
+    public int getStage() {
+        return done;
+    }
 
     public String getQues() {
         return ques;

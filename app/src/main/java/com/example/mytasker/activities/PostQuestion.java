@@ -13,19 +13,13 @@ import com.badoualy.stepperindicator.StepperIndicator;
 import com.example.mytasker.R;
 import com.example.mytasker.fragments.PostQuesCat;
 import com.example.mytasker.fragments.PostQuesDetail;
-import com.example.mytasker.models.People;
-import com.example.mytasker.models.PeopleChip;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
 import com.example.mytasker.util.Contracts;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.pchmn.materialchips.ChipsInput;
-import com.pchmn.materialchips.model.ChipInterface;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,16 +29,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PostQuestion extends BaseActivity {
 
-    private ChipsInput mChipsInput;
-    private List<PeopleChip> items = new ArrayList<>();
-    private List<ChipInterface> items_added = new ArrayList<>();
-    private List<People> items_people = new ArrayList<>();
     StepperIndicator indicator;
     FloatingActionButton fab;
     int currentpage = 0;
     Fragment fragment;
     ProgressDialog dlg;
-    String question;
 
     @Override
     protected void onResume() {

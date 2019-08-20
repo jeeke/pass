@@ -1,6 +1,6 @@
 package com.example.mytasker.models;
 
-public class ModelPost {
+public class ModelPost extends Message {
 
     private String title;
     private int person;

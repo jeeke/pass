@@ -4,14 +4,12 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class PrevPostModel {
+public class PrevPostModel extends Message{
 
-    @SerializedName("posted")
+    @SerializedName("poster")
     ArrayList<Task> posted;
-    @SerializedName("done")
+    @SerializedName("tasker")
     ArrayList<Task> done;
-    @SerializedName("saved")
-    ArrayList<Task> saved;
 
     public ArrayList<Task> getPosted() {
         return posted;
@@ -27,13 +25,5 @@ public class PrevPostModel {
 
     public void setDone(ArrayList<Task> done) {
         this.done = done;
-    }
-
-    public ArrayList<Task> getSaved() {
-        return saved;
-    }
-
-    public void setSaved(ArrayList<Task> saved) {
-        this.saved = saved;
     }
 }

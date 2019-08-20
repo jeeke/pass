@@ -4,23 +4,24 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class Profile {
+public class Profile extends Message{
 
     @SerializedName("medals")
     ArrayList<String> medals;
 
-    @SerializedName("statistics")
-    ArrayList<String> stats;
+    String on_time,on_budget,quality,behaviour,t_posted,t_done,bucks;
 
     @SerializedName("skills")
     ArrayList<String> skills;
 
-    @SerializedName("detail")
+    @SerializedName("details")
     ArrayList<String> detail;
 
+    @SerializedName("t_rating")
     String tasker_rating;
+
+    @SerializedName("p_rating")
     String poster_rating;
-    String message;
 
     public ArrayList<String> getMedals() {
         return medals;
@@ -30,12 +31,60 @@ public class Profile {
         this.medals = medals;
     }
 
-    public ArrayList<String> getStats() {
-        return stats;
+    public String getOn_time() {
+        return on_time;
     }
 
-    public void setStats(ArrayList<String> stats) {
-        this.stats = stats;
+    public void setOn_time(String on_time) {
+        this.on_time = on_time;
+    }
+
+    public String getOn_budget() {
+        return on_budget;
+    }
+
+    public void setOn_budget(String on_budget) {
+        this.on_budget = on_budget;
+    }
+
+    public String getQuality() {
+        return quality;
+    }
+
+    public void setQuality(String quality) {
+        this.quality = quality;
+    }
+
+    public String getBehaviour() {
+        return behaviour;
+    }
+
+    public void setBehaviour(String behaviour) {
+        this.behaviour = behaviour;
+    }
+
+    public String getT_posted() {
+        return t_posted;
+    }
+
+    public void setT_posted(String t_posted) {
+        this.t_posted = t_posted;
+    }
+
+    public String getT_done() {
+        return t_done;
+    }
+
+    public void setT_done(String t_done) {
+        this.t_done = t_done;
+    }
+
+    public String getBucks() {
+        return bucks;
+    }
+
+    public void setBucks(String bucks) {
+        this.bucks = bucks;
     }
 
     public ArrayList<String> getSkills() {
@@ -70,11 +119,4 @@ public class Profile {
         this.poster_rating = poster_rating;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

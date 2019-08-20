@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class Task {
+public class Task extends Message{
     @SerializedName("c_date")
     long c_date;
     @SerializedName("job_des")
@@ -31,10 +31,23 @@ public class Task {
     double[] location;
     @SerializedName("tags")
     String[] tags;
+
+    @SerializedName("stage")
+    int stage;
+
     @SerializedName("must_haves")
     ArrayList<String> musthaves;
 
 
+
+
+    public int getStage() {
+        return stage;
+    }
+
+    public void setStage(int stage) {
+        this.stage = stage;
+    }
     // For query Thing that will be returned use getter !!
     public boolean isRemote() {
         return remote;

@@ -1,6 +1,5 @@
 package com.example.mytasker.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
 import com.example.mytasker.adapters.FeedAdapter;
-import com.example.mytasker.models.Question;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.QuestionList;
 import com.example.mytasker.util.NetworkCache;
@@ -30,9 +28,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class FeedFragment extends Fragment {
+public class FeedFragment extends Fragment implements FeedAdapter.RecyclerViewClickListener {
 
-    private OnListFragmentInteractionListener mListener;
     private ShimmerFrameLayout shimmerContainer;
 
     public FeedFragment() {
@@ -115,7 +112,7 @@ public class FeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_feed, container, false);
         initToolbar(v);
-        adapter = new FeedAdapter(getContext(), new ArrayList<>());
+        adapter = new FeedAdapter(getContext(),this, new ArrayList<>());
         initViews(v);
         initListeners(v);
         listView.setAdapter(adapter);
@@ -143,25 +140,7 @@ public class FeedFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
+    public void onClick(View view, int position) {
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-        shimmerContainer.stopShimmer();
-    }
-
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(Question question);
     }
 }

@@ -10,4 +10,15 @@
     <string name="title_activity_prev_posts">PrevPosts</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
+
+
+
+<!--  chatkit-->
+    <string name="start_typing_status">Start typing</string>
+    <string name="stop_typing_status">Stop typing</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_copy">Copy</string>
+    <string name="copied_message">Message copied!</string>
+    <string name="hint_enter_a_message">Type a message…</string>
+
 </resources>

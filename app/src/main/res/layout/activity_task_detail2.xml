@@ -2,114 +2,48 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
+    <include layout="@layout/toolbar" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?actionBarSize"
         android:scrollbars="none">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <include
-                android:id="@+id/toolbar"
-                layout="@layout/toolbar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/textView57"
+                android:id="@+id/taskTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="700dp"
                 android:text="God saves his toughest battle for his best soldier"
                 android:textSize="22sp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip3"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginTop="32dp"
-                android:fontFamily="@font/din"
-                android:text="Android"
-                android:textColor="?colorAccent"
-                app:chipBackgroundColor="?colorPrimary"
-                app:chipCornerRadius="12dp"
-                app:chipStrokeColor="@color/green_A400"
-                app:chipStrokeWidth="2dp"
-                app:layout_constraintStart_toStartOf="@+id/textView57"
-                app:layout_constraintTop_toBottomOf="@+id/textView57" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip8"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginStart="24dp"
-                android:fontFamily="@font/din"
-                android:text="Java"
-                android:textColor="?colorAccent"
-                app:chipBackgroundColor="?colorPrimary"
-                app:chipCornerRadius="12dp"
-                app:chipStrokeColor="@color/green_A400"
-                app:chipStrokeWidth="2dp"
-                app:layout_constraintBottom_toBottomOf="@+id/chip3"
-                app:layout_constraintStart_toEndOf="@+id/chip3"
-                app:layout_constraintTop_toTopOf="@+id/chip3" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip9"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginStart="24dp"
-                android:fontFamily="@font/din"
-                android:text="App development"
-                android:textColor="?colorAccent"
-                app:chipBackgroundColor="?colorPrimary"
-                app:chipCornerRadius="12dp"
-                app:chipStrokeColor="@color/green_A400"
-                app:chipStrokeWidth="2dp"
-                app:layout_constraintBottom_toBottomOf="@+id/chip8"
-                app:layout_constraintStart_toEndOf="@+id/chip8"
-                app:layout_constraintTop_toTopOf="@+id/chip8" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip10"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/din"
-                android:text="UI and UX"
-                android:textColor="?colorAccent"
-                app:chipBackgroundColor="?colorPrimary"
-                app:chipCornerRadius="12dp"
-                app:chipStrokeColor="@color/green_A400"
-                app:chipStrokeWidth="2dp"
-                app:layout_constraintStart_toStartOf="@+id/chip3"
-                app:layout_constraintTop_toBottomOf="@+id/chip3" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout13"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
                 android:background="?colorAccent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/chip10">
+                app:layout_constraintTop_toBottomOf="@+id/divider9">
 
                 <TextView
-                    android:id="@+id/textView96"
+                    android:id="@+id/rewardValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="48dp"
@@ -128,9 +62,9 @@
                     android:textColor="?colorPrimary"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/textView96"
-                    app:layout_constraintStart_toStartOf="@+id/textView96"
-                    app:layout_constraintTop_toBottomOf="@+id/textView96" />
+                    app:layout_constraintEnd_toEndOf="@+id/rewardValue"
+                    app:layout_constraintStart_toStartOf="@+id/rewardValue"
+                    app:layout_constraintTop_toBottomOf="@+id/rewardValue" />
 
                 <TextView
                     android:id="@+id/textView105"
@@ -141,7 +75,7 @@
                     android:textColor="?colorSecondary"
                     app:layout_constraintEnd_toStartOf="@+id/textView107"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/textView96"
+                    app:layout_constraintStart_toEndOf="@+id/rewardValue"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -187,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:text="Description"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -195,7 +129,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout13" />
 
             <TextView
-                android:id="@+id/textView110"
+                android:id="@+id/taskDesc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -214,7 +148,7 @@
                 android:layout_marginTop="24dp"
                 android:text="Till Date :"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView110" />
+                app:layout_constraintTop_toBottomOf="@+id/taskDesc" />
 
             <TextView
                 android:id="@+id/textView112"
@@ -224,13 +158,109 @@
                 android:layout_marginTop="24dp"
                 android:text="12 July 2019"
                 app:layout_constraintStart_toEndOf="@+id/textView111"
-                app:layout_constraintTop_toBottomOf="@+id/textView110" />
+                app:layout_constraintTop_toBottomOf="@+id/taskDesc" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/tagGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/taskTitle"
+                app:layout_constraintStart_toStartOf="@+id/taskTitle"
+                app:layout_constraintTop_toBottomOf="@+id/taskTitle" />
+
+            <View
+                android:id="@+id/divider9"
+                android:layout_width="0dp"
+                android:layout_height="8dp"
+                android:layout_marginTop="32dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tagGroup" />
+
+            <View
+                android:id="@+id/divider12"
+                android:layout_width="0dp"
+                android:layout_height="8dp"
+                android:layout_marginTop="24dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView111" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Must Haves"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider12" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/mustGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+            <View
+                android:id="@+id/divider13"
+                android:layout_width="0dp"
+                android:layout_height="8dp"
+                android:layout_marginTop="24dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mustGroup" />
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="Any Query/Issue?"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider13" />
+
+            <include
+                layout="@layout/task_detail_bottombar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="125dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView26" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 
-    <include layout="@layout/task_detail_bottombar" />
+    <Button
+        android:id="@+id/bid"
+        style="@style/ButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:text="BID NOW" />
 
 </FrameLayout>
