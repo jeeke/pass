@@ -7,7 +7,7 @@
     <include layout="@layout/toolbar"/>
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/pass"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="48dp"
@@ -30,8 +30,8 @@
         android:text="ADD"
         android:textColor="?colorAccent"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/email"
-        app:layout_constraintStart_toStartOf="@+id/email"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
+        app:layout_constraintEnd_toEndOf="@+id/pass"
+        app:layout_constraintStart_toStartOf="@+id/pass"
+        app:layout_constraintTop_toBottomOf="@+id/pass" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

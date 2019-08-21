@@ -23,6 +23,11 @@ import com.example.mytasker.fragments.ProfileFragment;
 import com.example.mytasker.fragments.QuestionFragment;
 import com.example.mytasker.util.Contracts;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
 import static com.example.mytasker.util.Tools.launchActivity;
@@ -42,10 +47,41 @@ public class DashboardActivity extends BaseActivity {
     View fabExpanded;
     Fragment[] fragments = new Fragment[]{null,null,null,null};
 
+    private FirebaseAuth mAuth;
+
+    private DatabaseReference mUserRef;
+
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null){
+            launchActivity(this,MainActivity.class);
+            finish();
+        } else {
+            mUserRef.child("online").setValue("true");
+        }
+
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if(currentUser != null) {
+            mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
+        }
+
     }
 
     public void loadNextFrag(View view) {
@@ -130,6 +166,12 @@ public class DashboardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         starterIntent = getIntent();
+
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() != null) {
+            mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+        }
+
         int theme = starterIntent.getIntExtra("theme", R.style.LightMode);
         setTheme(theme);
         setContentView(R.layout.activity_dashboard);

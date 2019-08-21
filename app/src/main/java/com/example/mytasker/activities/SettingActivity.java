@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.mytasker.R;
 import com.example.mytasker.util.Tools;
 import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import static com.example.mytasker.util.Tools.launchActivity;
 
@@ -20,9 +23,11 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Tools.initMinToolbar(this, "SETTINGS", false);
-        findViewById(R.id.textView81).setOnClickListener((View v) -> launchActivity(this, EditName.class));
-        findViewById(R.id.textView82).setOnClickListener((View v) -> launchActivity(this, EditName.class));
-        findViewById(R.id.textView83).setOnClickListener((View v) -> launchActivity(this, EditEmail.class));
+        initViews();
+
+    }
+
+    private void initViews(){
         findViewById(R.id.textView84).setOnClickListener((View v) -> launchActivity(this, EditPassword.class));
         findViewById(R.id.textView92).setOnClickListener(this::invite);
         findViewById(R.id.textView90).setOnClickListener((View v) -> openUri("https://google.com"));
@@ -37,12 +42,25 @@ public class SettingActivity extends BaseActivity {
             dialog.setTitle("Logging out, Please Wait....");
             dialog.show();
             AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(task -> {
-                    dialog.dismiss();
-                    launchActivity(SettingActivity.this,MainActivity.class);
-                });
+                    .signOut(this)
+                    .addOnCompleteListener(task -> {
+                        dialog.dismiss();
+                        launchActivity(SettingActivity.this,MainActivity.class);
+                    });
         });
+        TextView name,contact,contactHead;
+        name = findViewById(R.id.textView85);
+        contact = findViewById(R.id.textView87);
+        contactHead = findViewById(R.id.textView79);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            name.setText(user.getDisplayName());
+            if(user.getEmail()!=null) contact.setText(user.getEmail());
+            else{
+                contact.setText(user.getPhoneNumber());
+                contactHead.setText("Phone No");
+            }
+        }
     }
 
 

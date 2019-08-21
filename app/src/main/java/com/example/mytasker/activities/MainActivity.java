@@ -1,19 +1,25 @@
 package com.example.mytasker.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.mytasker.R;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static com.example.mytasker.util.Tools.launchActivity;
 
@@ -117,6 +123,13 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+
+
+    private DatabaseReference mDatabase;
+
+    //ProgressDialog
+    private ProgressDialog mRegProgress;
+
 //    TODO complete email link signup
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -127,13 +140,31 @@ public class MainActivity extends BaseActivity {
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                finish();
-                launchActivity(this,DashboardActivity.class);
+                FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = current_user.getUid();
+
+                mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+
+                String device_token = FirebaseInstanceId.getInstance().getToken();
+
+                HashMap<String, String> userMap = new HashMap<>();
+                userMap.put("name", current_user.getDisplayName());
+                userMap.put("status", "Hi there I'm using Lapit Chat App.");
+                userMap.put("image", "default");
+                userMap.put("thumb_image", "default");
+                userMap.put("device_token", device_token);
+
+                mDatabase.setValue(userMap).addOnCompleteListener(task -> {
+
+                    if(task.isSuccessful()){
+                        finish();
+                        launchActivity(MainActivity.this,DashboardActivity.class);
+                    }
+//                    Toast.makeText(this, task.getResult().toString() + "Value putting error", Toast.LENGTH_SHORT).show();
+
+                });
             } else {
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
+                Toast.makeText(this, "Sign In Error", Toast.LENGTH_SHORT).show();
             }
         }
     }

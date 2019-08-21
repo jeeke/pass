@@ -24,6 +24,7 @@ import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
 import com.example.mytasker.util.Contracts;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -129,7 +130,7 @@ public class PostTask extends BaseActivity {
                 title,
                 (int) reward,
                 "mumbai",
-                "rakesh",
+                FirebaseAuth.getInstance().getCurrentUser().getUid(),
                 PostTaskCat.category,
                 "videos",
                 "time",
@@ -138,7 +139,6 @@ public class PostTask extends BaseActivity {
                 new ArrayList<>(),
                 false
         );
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Contracts.BASE_POST_URL)
                 .addConverterFactory(new NullOnEmptyConverterFactory())

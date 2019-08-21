@@ -12,13 +12,25 @@ public class Message implements IMessage,
         MessageContentType.Image, /*this is for default image messages implementation*/
         MessageContentType /*and this one is for custom content type (in this case - voice message)*/ {
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     private String id;
     private String text;
     private Date createdAt;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     private User user;
     private Image image;
     private Voice voice;
 
+    public Message(){
+
+    }
     public Message(String id, User user, String text) {
         this(id, user, text, new Date());
     }

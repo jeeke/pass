@@ -19,6 +19,11 @@ public class Task extends Message{
     boolean remote;
     @SerializedName("address")
     String address;
+
+    public String getPoster_id() {
+        return poster_id;
+    }
+
     @SerializedName("poster_id")
     String poster_id;
     @SerializedName("category")

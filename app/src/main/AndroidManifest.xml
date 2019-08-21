@@ -63,21 +63,6 @@
                 android:value="com.example.mytasker.activities.SettingActivity" />
         </activity>
         <activity
-            android:name=".activities.EditEmail"
-            android:parentActivityName=".activities.SettingActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.mytasker.activities.SettingActivity" />
-        </activity>
-        <activity
-            android:name=".activities.EditName"
-            android:label="@string/title_activity_edit_first_name"
-            android:parentActivityName=".activities.SettingActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.mytasker.activities.SettingActivity" />
-        </activity>
-        <activity
             android:name=".activities.SearchActivity"
             android:label="@string/title_activity_search"
             android:parentActivityName=".activities.DashboardActivity">

@@ -1,10 +1,13 @@
 package com.example.mytasker.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mytasker.R;
+import com.example.mytasker.chat.MessagesActivity;
 import com.example.mytasker.models.Task;
 import com.example.mytasker.util.ChipAdapter;
 import com.example.mytasker.util.Contracts;
@@ -32,6 +35,7 @@ public class TaskDetailActivity extends BaseActivity {
         }else if(FROM==1){
             current = NetworkCache.prevPostModel.getPosted().get(position);
         }else current = NetworkCache.prevPostModel.getDone().get(position);
+
         int stage = current.getStage();
 
         FROM = ((FROM -1) * 3) + stage + 1;
@@ -86,6 +90,13 @@ public class TaskDetailActivity extends BaseActivity {
 
         int position = getIntent().getIntExtra("position", 0);
         initButton(position);
+        findViewById(R.id.chat).setOnClickListener(v -> {
+            Toast.makeText(this, current.getPoster_id(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, MessagesActivity.class);
+            intent.putExtra("user_id",current.getPoster_id());
+            startActivity(intent);
+            finish();
+        });
 
         ((TextView)findViewById(R.id.taskTitle)).setText(current.getTitle());
         ((TextView)findViewById(R.id.taskDesc)).setText(current.getJob_des());

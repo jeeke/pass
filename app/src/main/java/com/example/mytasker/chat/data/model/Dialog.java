@@ -4,9 +4,6 @@ import com.stfalcon.chatkit.commons.models.IDialog;
 
 import java.util.ArrayList;
 
-/*
- * Created by troy379 on 04.04.17.
- */
 public class Dialog implements IDialog<Message> {
 
     private String id;
@@ -14,7 +11,6 @@ public class Dialog implements IDialog<Message> {
     private String dialogName;
     private ArrayList<User> users;
     private Message lastMessage;
-
     private int unreadCount;
 
     public Dialog(String id, String name, String photo,

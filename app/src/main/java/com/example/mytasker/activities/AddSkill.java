@@ -21,7 +21,7 @@ public class AddSkill extends BaseActivity {
         setContentView(R.layout.activity_add_skill);
         Toolbar toolbar = findViewById(R.id.toolbar);
         save = findViewById(R.id.save);
-        skill = findViewById(R.id.email);
+        skill = findViewById(R.id.pass);
         save.setOnClickListener(v -> {
             Contracts.added_skill = skill.getText().toString();
             if(Contracts.added_skill.equals("")){

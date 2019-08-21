@@ -1,34 +1,41 @@
 package com.example.mytasker.chat;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.mytasker.R;
 import com.example.mytasker.activities.BaseActivity;
-import com.example.mytasker.chat.data.fixtures.MessagesFixtures;
 import com.example.mytasker.chat.data.model.Message;
+import com.example.mytasker.chat.data.model.User;
 import com.example.mytasker.chat.utils.AppUtils;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 
 public abstract class DemoMessagesActivity extends BaseActivity
         implements MessagesListAdapter.SelectionListener,
         MessagesListAdapter.OnLoadMoreListener {
-
-    private static final int TOTAL_MESSAGES_COUNT = 100;
 
     protected final String senderId = "0";
     protected ImageLoader imageLoader;
@@ -36,25 +43,14 @@ public abstract class DemoMessagesActivity extends BaseActivity
 
     private Menu menu;
     private int selectionCount;
-    private Date lastLoadedDate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        imageLoader = new ImageLoader() {
-            @Override
-            public void loadImage(ImageView imageView, String url, Object payload) {
-                Picasso.with(DemoMessagesActivity.this).load(url).into(imageView);
-            }
-        };
+        imageLoader = (imageView, url, payload) -> Picasso.with(DemoMessagesActivity.this).load(url).into(imageView);
+        initFireBase();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        messagesAdapter.addToStart(MessagesFixtures.getTextMessage(), true);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,15 +62,8 @@ public abstract class DemoMessagesActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_delete:
-                messagesAdapter.deleteSelectedMessages();
-                break;
-            case R.id.action_copy:
-                messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
-                AppUtils.showToast(this, R.string.copied_message, true);
-                break;
-        }
+        messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
+        AppUtils.showToast(this, R.string.copied_message, true);
         return true;
     }
 
@@ -87,45 +76,178 @@ public abstract class DemoMessagesActivity extends BaseActivity
         }
     }
 
+
     @Override
     public void onLoadMore(int page, int totalItemsCount) {
-        Log.i("TAG", "onLoadMore: " + page + " " + totalItemsCount);
-        if (totalItemsCount < TOTAL_MESSAGES_COUNT) {
-            loadMessages();
-        }
+        loadMessages();
     }
 
     @Override
     public void onSelectionChanged(int count) {
         this.selectionCount = count;
-        menu.findItem(R.id.action_delete).setVisible(count > 0);
         menu.findItem(R.id.action_copy).setVisible(count > 0);
     }
 
-    protected void loadMessages() {
-        new Handler().postDelayed(new Runnable() { //imitation of internet connection
+
+    protected DatabaseReference mRootRef;
+    protected String mCurrentUserId;
+    protected String mChatUser;
+    protected FirebaseAuth mAuth;
+
+    private void initFireBase() {
+        mRootRef = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        mCurrentUserId = mAuth.getCurrentUser().getUid();
+        mChatUser = getIntent().getStringExtra("user_id");
+//        String userName = getIntent().getStringExtra("user_name");
+        //TODO set title bar user id
+
+        mRootRef.child("Chats").child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
             @Override
-            public void run() {
-                ArrayList<Message> messages = MessagesFixtures.getMessages(lastLoadedDate);
-                lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
-                messagesAdapter.addToEnd(messages, false);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (!dataSnapshot.hasChild(mChatUser)) {
+
+                    Map chatAddMap = new HashMap();
+                    chatAddMap.put("seen", false);
+                    chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
+
+                    Map chatUserMap = new HashMap();
+                    chatUserMap.put("Chat/" + mCurrentUserId + "/" + mChatUser, chatAddMap);
+                    chatUserMap.put("Chat/" + mChatUser + "/" + mCurrentUserId, chatAddMap);
+
+                    mRootRef.updateChildren(chatUserMap, (databaseError, databaseReference) -> {
+
+                        if (databaseError != null) {
+
+                            Log.d("CHAT_LOG", databaseError.getMessage());
+
+                        }
+
+                    });
+
+                }
+
             }
-        }, 1000);
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+//        mRootRef.child("Users").child(mChatUser).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                String online = dataSnapshot.child("online").getValue().toString();
+//
+//                if(online.equals("true")) {
+//
+//                    TODO online indicator to true
+//
+//                } else {
+//
+//                    GetTimeAgo getTimeAgo = new GetTimeAgo();
+//
+//                    long lastTime = Long.parseLong(online);
+//
+//                    String lastSeenTime = getTimeAgo.getTimeAgo(lastTime, getApplicationContext());
+//
+//                    mLastSeenView.setText(lastSeenTime);
+//                }
+//
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//
+//
+//    }
+
+    String mKey = "";
+    private boolean firstLoad = true;
+
+    private void loadMessages() {
+        DatabaseReference messageRef;
+        Query messageQuery;
+        if (firstLoad) {
+            messageRef = mRootRef.child("Messages").child(mCurrentUserId).child(mChatUser);
+            messageQuery = messageRef.orderByChild("createdAt").limitToFirst(20);
+            firstLoad = false;
+        } else {
+            messageRef = mRootRef.child("Messages").child(mCurrentUserId).child(mChatUser);
+            messageQuery = messageRef.orderByChild("createdAt").startAt(mKey).limitToFirst(10);
+        }
+        messageQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                if (!dataSnapshot.getKey().equals(mKey)) {
+                    mKey = dataSnapshot.getKey();
+                    Message message = new Message();
+                    message.setText(dataSnapshot.child("text").getValue(String.class));
+                    Long l = dataSnapshot.child("createdAt").getValue(Long.class);
+                    message.setCreatedAt( new Date(l));
+                    message.setId(dataSnapshot.child("id").getValue(String.class));
+                    String from = dataSnapshot.child("from").getValue().toString();
+                    DatabaseReference usersDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from);
+                    usersDatabase.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            message.setUser(dataSnapshot.getValue(User.class));
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+//                    Message message = dataSnapshot.getValue(Message.class);
+//                    ArrayList<Message> messages = new ArrayList<>();
+//                    messages.add(message);
+                    messagesAdapter.addToStart(message, false);
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private MessagesListAdapter.Formatter<Message> getMessageStringFormatter() {
-        return new MessagesListAdapter.Formatter<Message>() {
-            @Override
-            public String format(Message message) {
-                String createdAt = new SimpleDateFormat("MMM d, EEE 'at' h:mm a", Locale.getDefault())
-                        .format(message.getCreatedAt());
+        return message -> {
+            String createdAt = new SimpleDateFormat("MMM d, EEE 'at' h:mm a", Locale.getDefault())
+                    .format(message.getCreatedAt());
 
-                String text = message.getText();
-                if (text == null) text = "[attachment]";
+            String text = message.getText();
+            if (text == null) text = "[attachment]";
 
-                return String.format(Locale.getDefault(), "%s: %s (%s)",
-                        message.getUser().getName(), text, createdAt);
-            }
+            return String.format(Locale.getDefault(), "%s: %s (%s)",
+                    message.getUser().getName(), text, createdAt);
         };
     }
 }
