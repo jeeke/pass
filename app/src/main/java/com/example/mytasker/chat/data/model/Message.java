@@ -1,16 +1,17 @@
 package com.example.mytasker.chat.data.model;
 
+import com.google.firebase.database.ServerValue;
 import com.stfalcon.chatkit.commons.models.IMessage;
-import com.stfalcon.chatkit.commons.models.MessageContentType;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-/*
- * Created by troy379 on 04.04.17.
- */
-public class Message implements IMessage,
-        MessageContentType.Image, /*this is for default image messages implementation*/
-        MessageContentType /*and this one is for custom content type (in this case - voice message)*/ {
+public class Message implements IMessage{
+
+    public static final String MESSAGE_SEEN = "Seen";
+    public static final String MESSAGE_SENT = "Sent";
+    public static final String MESSAGE_NOT_SENT = "Not Sent";
 
     public void setId(String id) {
         this.id = id;
@@ -19,27 +20,38 @@ public class Message implements IMessage,
     private String id;
     private String text;
     private Date createdAt;
+    private User user;
+    private String status;
+
+
+
+    public Map toMap(){
+        Map map = new HashMap();
+        map.put("text",text);
+        map.put("user",user.toMap());
+        map.put("createdAt", ServerValue.TIMESTAMP);
+        map.put("status",MESSAGE_SENT);
+        return map;
+    }
 
     public void setUser(User user) {
         this.user = user;
     }
 
-    private User user;
-    private Image image;
-    private Voice voice;
 
-    public Message(){
+    public Message(){}
 
-    }
-    public Message(String id, User user, String text) {
-        this(id, user, text, new Date());
+    public String getStatus() {
+        return status;
     }
 
-    public Message(String id, User user, String text, Date createdAt) {
-        this.id = id;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Message(User user, String text) {
         this.text = text;
         this.user = user;
-        this.createdAt = createdAt;
     }
 
     @Override
@@ -62,60 +74,11 @@ public class Message implements IMessage,
         return this.user;
     }
 
-    @Override
-    public String getImageUrl() {
-        return image == null ? null : image.url;
-    }
-
-    public Voice getVoice() {
-        return voice;
-    }
-
-    public String getStatus() {
-        return "Sent";
-    }
-
     public void setText(String text) {
         this.text = text;
     }
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    public void setVoice(Voice voice) {
-        this.voice = voice;
-    }
-
-    public static class Image {
-
-        private String url;
-
-        public Image(String url) {
-            this.url = url;
-        }
-    }
-
-    public static class Voice {
-
-        private String url;
-        private int duration;
-
-        public Voice(String url, int duration) {
-            this.url = url;
-            this.duration = duration;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public int getDuration() {
-            return duration;
-        }
     }
 }

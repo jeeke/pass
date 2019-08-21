@@ -1,17 +1,14 @@
 package com.example.mytasker.chat;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.mytasker.R;
 import com.example.mytasker.activities.BaseActivity;
 import com.example.mytasker.chat.data.model.Message;
-import com.example.mytasker.chat.data.model.User;
 import com.example.mytasker.chat.utils.AppUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -20,17 +17,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ServerValue;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 
 public abstract class DemoMessagesActivity extends BaseActivity
@@ -102,39 +94,39 @@ public abstract class DemoMessagesActivity extends BaseActivity
 //        String userName = getIntent().getStringExtra("user_name");
         //TODO set title bar user id
 
-        mRootRef.child("Chats").child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                if (!dataSnapshot.hasChild(mChatUser)) {
-
-                    Map chatAddMap = new HashMap();
-                    chatAddMap.put("seen", false);
-                    chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
-
-                    Map chatUserMap = new HashMap();
-                    chatUserMap.put("Chat/" + mCurrentUserId + "/" + mChatUser, chatAddMap);
-                    chatUserMap.put("Chat/" + mChatUser + "/" + mCurrentUserId, chatAddMap);
-
-                    mRootRef.updateChildren(chatUserMap, (databaseError, databaseReference) -> {
-
-                        if (databaseError != null) {
-
-                            Log.d("CHAT_LOG", databaseError.getMessage());
-
-                        }
-
-                    });
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//        mRootRef.child("Chats").child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                if (!dataSnapshot.hasChild(mChatUser)) {
+//
+//                    Map chatAddMap = new HashMap();
+//                    chatAddMap.put("seen", false);
+//                    chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
+//
+//                    Map chatUserMap = new HashMap();
+//                    chatUserMap.put("Chats/" + mCurrentUserId + "/" + mChatUser, chatAddMap);
+//                    chatUserMap.put("Chats/" + mChatUser + "/" + mCurrentUserId, chatAddMap);
+//
+//                    mRootRef.updateChildren(chatUserMap, (databaseError, databaseReference) -> {
+//
+//                        if (databaseError != null) {
+//
+//                            Log.d("CHAT_LOG", databaseError.getMessage());
+//
+//                        }
+//
+//                    });
+//
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
 
@@ -186,33 +178,9 @@ public abstract class DemoMessagesActivity extends BaseActivity
         messageQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                if (!dataSnapshot.getKey().equals(mKey)) {
-                    mKey = dataSnapshot.getKey();
-                    Message message = new Message();
-                    message.setText(dataSnapshot.child("text").getValue(String.class));
-                    Long l = dataSnapshot.child("createdAt").getValue(Long.class);
-                    message.setCreatedAt( new Date(l));
-                    message.setId(dataSnapshot.child("id").getValue(String.class));
-                    String from = dataSnapshot.child("from").getValue().toString();
-                    DatabaseReference usersDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from);
-                    usersDatabase.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            message.setUser(dataSnapshot.getValue(User.class));
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-//                    Message message = dataSnapshot.getValue(Message.class);
-//                    ArrayList<Message> messages = new ArrayList<>();
-//                    messages.add(message);
-                    messagesAdapter.addToStart(message, false);
-                }
-
+                Message message = dataSnapshot.getValue(Message.class);
+                messagesAdapter.addToStart(message, false);
+                dataSnapshot.child("status");
             }
 
             @Override

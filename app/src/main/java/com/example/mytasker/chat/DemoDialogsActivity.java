@@ -1,7 +1,6 @@
 package com.example.mytasker.chat;
 
 import android.os.Bundle;
-import android.widget.ImageView;
 
 import com.example.mytasker.activities.BaseActivity;
 import com.example.mytasker.chat.data.model.Dialog;
@@ -23,12 +22,7 @@ public abstract class DemoDialogsActivity extends BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        imageLoader = new ImageLoader() {
-            @Override
-            public void loadImage(ImageView imageView, String url, Object payload) {
-                Picasso.with(DemoDialogsActivity.this).load(url).into(imageView);
-            }
-        };
+        imageLoader = (imageView, url, payload) -> Picasso.with(DemoDialogsActivity.this).load(url).into(imageView);
     }
 
     @Override

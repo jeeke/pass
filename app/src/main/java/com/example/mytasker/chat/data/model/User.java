@@ -1,10 +1,11 @@
 package com.example.mytasker.chat.data.model;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.stfalcon.chatkit.commons.models.IUser;
 
-/*
- * Created by troy379 on 04.04.17.
- */
+import java.util.HashMap;
+import java.util.Map;
+
 public class User implements IUser {
 
     public void setId(String id) {
@@ -19,28 +20,18 @@ public class User implements IUser {
         this.avatar = avatar;
     }
 
-    public String getOnline() {
-        return online;
-    }
-
-    public void setOnline(Long online) {
-        this.online = online+"";
-    }
-
     private String id;
     private String name;
     private String avatar;
-    private String online;
 
     public User(){
 
     }
 
-    public User(String id, String name, String avatar, String online) {
+    public User(String id, String name, String avatar) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
-        this.online = online+"";
 
     }
 
@@ -57,6 +48,18 @@ public class User implements IUser {
     @Override
     public String getAvatar() {
         return avatar;
+    }
+
+    public Map toMap(){
+        Map map = new HashMap();
+        map.put("id",id);
+        map.put("name",name);
+        map.put("avatar",avatar);
+        return map;
+    }
+
+    public static User fromFireBaseUser(FirebaseUser user){
+        return new User(user.getUid(),user.getDisplayName(),user.getPhotoUrl().toString());
     }
 
 }

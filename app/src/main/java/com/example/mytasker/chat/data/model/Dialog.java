@@ -3,6 +3,7 @@ package com.example.mytasker.chat.data.model;
 import com.stfalcon.chatkit.commons.models.IDialog;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Dialog implements IDialog<Message> {
 
@@ -12,16 +13,17 @@ public class Dialog implements IDialog<Message> {
     private ArrayList<User> users;
     private Message lastMessage;
     private int unreadCount;
+    private Date lastActivity;
 
     public Dialog(String id, String name, String photo,
-                  ArrayList<User> users, Message lastMessage, int unreadCount) {
-
+                  ArrayList<User> users, Message lastMessage, int unreadCount,Date lastActivity) {
         this.id = id;
         this.dialogName = name;
         this.dialogPhoto = photo;
         this.users = users;
         this.lastMessage = lastMessage;
         this.unreadCount = unreadCount;
+        this.lastActivity = lastActivity;
     }
 
     @Override
@@ -61,5 +63,13 @@ public class Dialog implements IDialog<Message> {
 
     public void setUnreadCount(int unreadCount) {
         this.unreadCount = unreadCount;
+    }
+
+    public Date getLastActivity() {
+        return lastActivity;
+    }
+
+    public void setLastActivity(Date lastActivity) {
+        this.lastActivity = lastActivity;
     }
 }

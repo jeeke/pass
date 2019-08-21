@@ -47,8 +47,7 @@ public class MessagesActivity extends DemoMessagesActivity
 
     @Override
     public boolean onSubmit(CharSequence input) {
-        User user = new User(mAuth.getCurrentUser().getUid(),mAuth.getCurrentUser().getDisplayName(),mAuth.getCurrentUser().getPhotoUrl().toString(),"false");
-        Message message = new Message(null,user,input.toString());
+        Message message = new Message(User.fromFireBaseUser(mAuth.getCurrentUser()),input.toString());
         super.messagesAdapter.addToStart(
                 message, true);
         String current_user_ref = "Messages/" + mCurrentUserId + "/" + mChatUser;
@@ -57,27 +56,12 @@ public class MessagesActivity extends DemoMessagesActivity
         DatabaseReference user_message_push = mRootRef.child("Messages")
                 .child(mCurrentUserId).child(mChatUser).push();
         String push_id = user_message_push.getKey();
-
-        Map messageMap = new HashMap();
-        messageMap.put("text", input.toString());
-        messageMap.put("seen", false);
-        messageMap.put("createdAt", ServerValue.TIMESTAMP);
-        messageMap.put("from", mCurrentUserId);
-
         Map messageUserMap = new HashMap();
-        messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
-        messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
-
-//            mChatMessageView.setText("");
-
-        mRootRef.child("Chats").child(mCurrentUserId).child(mChatUser).child("seen").setValue(true);
-        mRootRef.child("Chats").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
-
-        mRootRef.child("Chats").child(mChatUser).child(mCurrentUserId).child("seen").setValue(false);
-        mRootRef.child("Chats").child(mChatUser).child(mCurrentUserId).child("timestamp").setValue(ServerValue.TIMESTAMP);
-
+        messageUserMap.put(current_user_ref + "/" + push_id, message.toMap());
+        messageUserMap.put(chat_user_ref + "/" + push_id, message.toMap());
+        mRootRef.child("Chats").child(mCurrentUserId).child(mChatUser).child("lastActivity").setValue(ServerValue.TIMESTAMP);
+        mRootRef.child("Chats").child(mChatUser).child(mCurrentUserId).child("lastActivity").setValue(ServerValue.TIMESTAMP);
         mRootRef.updateChildren(messageUserMap, (databaseError, databaseReference) -> {
-
             if(databaseError != null){
                 Log.d("CHAT_LOG", databaseError.getMessage());
             }

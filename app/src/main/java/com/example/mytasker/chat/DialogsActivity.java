@@ -8,10 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.mytasker.R;
-import com.example.mytasker.chat.data.model.Bridge;
 import com.example.mytasker.chat.data.model.Dialog;
 import com.example.mytasker.chat.data.model.Message;
-import com.example.mytasker.chat.data.model.User;
 import com.example.mytasker.util.Tools;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -20,12 +18,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class DialogsActivity extends DemoDialogsActivity {
 
@@ -63,82 +59,12 @@ public class DialogsActivity extends DemoDialogsActivity {
     }
 
     private void queryFireBase(){
-        Query conversationQuery = mConvDatabase.orderByChild("timestamp");
+        Query conversationQuery = mConvDatabase.orderByChild("lastActivity");
         conversationQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Bridge bridge = new Bridge();
-                String id = dataSnapshot.getKey();
-                bridge.setId(id);
-                if(id!=null){
-                    Query lastMessageQuery = mMessageDatabase.child(id).limitToLast(1);
-                    lastMessageQuery.addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            Message message = new Message();
-                            message.setText(dataSnapshot.child("text").getValue(String.class));
-                            Long l = dataSnapshot.child("createdAt").getValue(Long.class);
-                            message.setCreatedAt( new Date(l));
-                            message.setId(dataSnapshot.child("id").getValue(String.class));
-                            String from = dataSnapshot.child("from").getValue().toString();
-                            DatabaseReference usersDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from);
-                            usersDatabase.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    message.setUser(dataSnapshot.getValue(User.class));
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-                            bridge.setLastMessage(message);
-                        }
-
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                    mUsersDatabase.child(id).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                            bridge.setName(dataSnapshot.child("name").getValue().toString());
-                            bridge.setAvatar(dataSnapshot.child("image").getValue().toString());
-
-                            if (dataSnapshot.hasChild("online")) {
-                                bridge.setOnline(dataSnapshot.child("online").getValue(String.class));
-
-                                //TODO implement last online time
-                            }
-                            bridge.setUnreadCount(0);
-                            //TODO implement unread count
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-                onNewDialog(bridge.getDialog());
+                Dialog dialog = dataSnapshot.getValue(Dialog.class);
+                onNewDialog(dialog);
             }
 
             @Override
