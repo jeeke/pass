@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.example.mytasker.R;
 import com.example.mytasker.chat.data.model.Dialog;
+import com.example.mytasker.chat.data.model.DialogHelper;
 import com.example.mytasker.chat.data.model.Message;
 import com.example.mytasker.util.Tools;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,8 +27,8 @@ import java.util.ArrayList;
 public class DialogsActivity extends DemoDialogsActivity {
 
     private DatabaseReference mConvDatabase;
-    private DatabaseReference mMessageDatabase;
-    private DatabaseReference mUsersDatabase;
+//    private DatabaseReference mMessageDatabase;
+//    private DatabaseReference mUsersDatabase;
 
 
     public static void open(Context context) {
@@ -51,9 +52,9 @@ public class DialogsActivity extends DemoDialogsActivity {
 
         mConvDatabase = FirebaseDatabase.getInstance().getReference().child("Chats").child(mCurrent_user_id);
         mConvDatabase.keepSynced(true);
-        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-        mMessageDatabase = FirebaseDatabase.getInstance().getReference().child("Messages").child(mCurrent_user_id);
-        mUsersDatabase.keepSynced(true);
+//        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+//        mMessageDatabase = FirebaseDatabase.getInstance().getReference().child("Messages").child(mCurrent_user_id);
+//        mUsersDatabase.keepSynced(true);
         queryFireBase();
 
     }
@@ -63,7 +64,7 @@ public class DialogsActivity extends DemoDialogsActivity {
         conversationQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Dialog dialog = dataSnapshot.getValue(Dialog.class);
+                Dialog dialog = dataSnapshot.getValue(DialogHelper.class).toDialog();
                 onNewDialog(dialog);
             }
 

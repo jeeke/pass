@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class Task extends Message{
+
+
     @SerializedName("c_date")
     long c_date;
     @SerializedName("job_des")
@@ -19,11 +21,10 @@ public class Task extends Message{
     boolean remote;
     @SerializedName("address")
     String address;
-
-    public String getPoster_id() {
-        return poster_id;
-    }
-
+    @SerializedName("poster_name")
+    String poster_name;
+    @SerializedName("poster_avatar")
+    String poster_avatar;
     @SerializedName("poster_id")
     String poster_id;
     @SerializedName("category")
@@ -43,9 +44,25 @@ public class Task extends Message{
     @SerializedName("must_haves")
     ArrayList<String> musthaves;
 
+    public String getPoster_name() {
+        return poster_name;
+    }
 
+    public void setPoster_name(String poster_name) {
+        this.poster_name = poster_name;
+    }
 
+    public String getPoster_avatar() {
+        return poster_avatar;
+    }
 
+    public void setPoster_avatar(String poster_avatar) {
+        this.poster_avatar = poster_avatar;
+    }
+
+    public String getPoster_id() {
+        return poster_id;
+    }
     public int getStage() {
         return stage;
     }
@@ -86,13 +103,16 @@ public class Task extends Message{
     }
 
     // For Post use constructor that shoud be send to server !!
-    public Task(long c_date, String job_des, String title, Integer cost, String address, String poster_id, String category, String attachment, String deadline, double[] location, String[] tags, ArrayList<String> musthaves,boolean remote) {
+    public Task(String poster_id,String poster_name,String poster_avatar,long c_date, String job_des, String title, Integer cost, String address,  String category, String attachment, String deadline, double[] location, String[] tags, ArrayList<String> musthaves,boolean remote) {
         this.c_date = c_date;
+        this.poster_avatar = poster_avatar;
+        this.poster_name = poster_name;
         this.job_des = job_des;
         this.title = title;
         this.cost = cost;
         this.address = address;
         this.poster_id = poster_id;
+
         this.category = category;
         this.attachment = attachment;
         this.deadline = deadline;

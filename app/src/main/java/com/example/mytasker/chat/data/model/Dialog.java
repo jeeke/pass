@@ -3,7 +3,6 @@ package com.example.mytasker.chat.data.model;
 import com.stfalcon.chatkit.commons.models.IDialog;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Dialog implements IDialog<Message> {
 
@@ -13,22 +12,28 @@ public class Dialog implements IDialog<Message> {
     private ArrayList<User> users;
     private Message lastMessage;
     private int unreadCount;
-    private Date lastActivity;
 
-    public Dialog(String id, String name, String photo,
-                  ArrayList<User> users, Message lastMessage, int unreadCount,Date lastActivity) {
+    Dialog(){
+    }
+
+    Dialog(String id, String dialogPhoto, String dialogName, int unreadCount) {
         this.id = id;
-        this.dialogName = name;
-        this.dialogPhoto = photo;
-        this.users = users;
-        this.lastMessage = lastMessage;
+        this.dialogPhoto = dialogPhoto;
+        this.dialogName = dialogName;
         this.unreadCount = unreadCount;
-        this.lastActivity = lastActivity;
+    }
+
+    void setUsers(ArrayList<User> users) {
+        this.users = users;
     }
 
     @Override
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override
@@ -40,6 +45,7 @@ public class Dialog implements IDialog<Message> {
     public String getDialogName() {
         return dialogName;
     }
+
 
     @Override
     public ArrayList<User> getUsers() {
@@ -59,17 +65,5 @@ public class Dialog implements IDialog<Message> {
     @Override
     public int getUnreadCount() {
         return unreadCount;
-    }
-
-    public void setUnreadCount(int unreadCount) {
-        this.unreadCount = unreadCount;
-    }
-
-    public Date getLastActivity() {
-        return lastActivity;
-    }
-
-    public void setLastActivity(Date lastActivity) {
-        this.lastActivity = lastActivity;
     }
 }

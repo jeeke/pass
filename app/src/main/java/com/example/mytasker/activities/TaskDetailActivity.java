@@ -93,7 +93,9 @@ public class TaskDetailActivity extends BaseActivity {
         findViewById(R.id.chat).setOnClickListener(v -> {
             Toast.makeText(this, current.getPoster_id(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MessagesActivity.class);
-            intent.putExtra("user_id",current.getPoster_id());
+            intent.putExtra("id",current.getPoster_id());
+            intent.putExtra("name",current.getPoster_name());
+            intent.putExtra("avatar",current.getPoster_avatar());
             startActivity(intent);
             finish();
         });

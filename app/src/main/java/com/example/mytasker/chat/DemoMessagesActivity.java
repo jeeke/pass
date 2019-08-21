@@ -8,7 +8,9 @@ import androidx.annotation.Nullable;
 
 import com.example.mytasker.R;
 import com.example.mytasker.activities.BaseActivity;
+import com.example.mytasker.chat.data.model.DialogHelper;
 import com.example.mytasker.chat.data.model.Message;
+import com.example.mytasker.chat.data.model.MessageHelper;
 import com.example.mytasker.chat.utils.AppUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -29,7 +31,6 @@ public abstract class DemoMessagesActivity extends BaseActivity
         implements MessagesListAdapter.SelectionListener,
         MessagesListAdapter.OnLoadMoreListener {
 
-    protected final String senderId = "0";
     protected ImageLoader imageLoader;
     protected MessagesListAdapter<Message> messagesAdapter;
 
@@ -41,6 +42,7 @@ public abstract class DemoMessagesActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         imageLoader = (imageView, url, payload) -> Picasso.with(DemoMessagesActivity.this).load(url).into(imageView);
         initFireBase();
+        onLoadMore(1,10);
     }
 
 
@@ -69,6 +71,7 @@ public abstract class DemoMessagesActivity extends BaseActivity
     }
 
 
+    private boolean firstLoad = true;
     @Override
     public void onLoadMore(int page, int totalItemsCount) {
         loadMessages();
@@ -83,104 +86,47 @@ public abstract class DemoMessagesActivity extends BaseActivity
 
     protected DatabaseReference mRootRef;
     protected String mCurrentUserId;
-    protected String mChatUser;
+    protected String mChatUId;
+    protected String mChatAvatar;
+    protected String mChatUName;
     protected FirebaseAuth mAuth;
 
     private void initFireBase() {
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         mCurrentUserId = mAuth.getCurrentUser().getUid();
-        mChatUser = getIntent().getStringExtra("user_id");
-//        String userName = getIntent().getStringExtra("user_name");
-        //TODO set title bar user id
+        mChatUId = getIntent().getStringExtra("id");
+        mChatUName = getIntent().getStringExtra("name");
+        mChatAvatar = getIntent().getStringExtra("avatar");
 
-//        mRootRef.child("Chats").child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                if (!dataSnapshot.hasChild(mChatUser)) {
-//
-//                    Map chatAddMap = new HashMap();
-//                    chatAddMap.put("seen", false);
-//                    chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
-//
-//                    Map chatUserMap = new HashMap();
-//                    chatUserMap.put("Chats/" + mCurrentUserId + "/" + mChatUser, chatAddMap);
-//                    chatUserMap.put("Chats/" + mChatUser + "/" + mCurrentUserId, chatAddMap);
-//
-//                    mRootRef.updateChildren(chatUserMap, (databaseError, databaseReference) -> {
-//
-//                        if (databaseError != null) {
-//
-//                            Log.d("CHAT_LOG", databaseError.getMessage());
-//
-//                        }
-//
-//                    });
-//
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
+//        TODO online indicator to true
+
     }
 
-
-//        mRootRef.child("Users").child(mChatUser).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                String online = dataSnapshot.child("online").getValue().toString();
-//
-//                if(online.equals("true")) {
-//
-//                    TODO online indicator to true
-//
-//                } else {
-//
-//                    GetTimeAgo getTimeAgo = new GetTimeAgo();
-//
-//                    long lastTime = Long.parseLong(online);
-//
-//                    String lastSeenTime = getTimeAgo.getTimeAgo(lastTime, getApplicationContext());
-//
-//                    mLastSeenView.setText(lastSeenTime);
-//                }
-//
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//
-//
-//
-//    }
-
     String mKey = "";
-    private boolean firstLoad = true;
-
     private void loadMessages() {
         DatabaseReference messageRef;
         Query messageQuery;
         if (firstLoad) {
-            messageRef = mRootRef.child("Messages").child(mCurrentUserId).child(mChatUser);
+            messageRef = mRootRef.child("Messages").child(mCurrentUserId).child(mChatUId);
             messageQuery = messageRef.orderByChild("createdAt").limitToFirst(20);
             firstLoad = false;
         } else {
-            messageRef = mRootRef.child("Messages").child(mCurrentUserId).child(mChatUser);
+            messageRef = mRootRef.child("Messages").child(mCurrentUserId).child(mChatUId);
             messageQuery = messageRef.orderByChild("createdAt").startAt(mKey).limitToFirst(10);
         }
         messageQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Message message = dataSnapshot.getValue(Message.class);
-                messagesAdapter.addToStart(message, false);
-                dataSnapshot.child("status");
+                MessageHelper message = dataSnapshot.getValue(MessageHelper.class);
+//                List<Message> messages= new ArrayList<>();
+//                messages.add(message.toMessage());
+                messagesAdapter.addToStart(message.toMessage(), true);
+                DialogHelper dialogHelper = new DialogHelper(mChatUId,"rakesh",mAuth.getCurrentUser().getPhotoUrl().toString(),0,null,message.getText());
+                mRootRef.child("Chats").child(mCurrentUserId).child(mChatUId).setValue(dialogHelper.toMap());
+//                TODO updaate seen value
+//                dataSnapshot.child("status").getRef().setValue(Message.MESSAGE_SEEN);
+//                mRootRef.child("Messages").child(mChatUId).child(mCurrentUserId).child("status").setValue(Message.MESSAGE_SEEN);
             }
 
             @Override

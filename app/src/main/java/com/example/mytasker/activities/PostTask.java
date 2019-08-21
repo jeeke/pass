@@ -25,6 +25,7 @@ import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
 import com.example.mytasker.util.Contracts;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -124,13 +125,16 @@ public class PostTask extends BaseActivity {
         dlg.show();
         //result.setText("sending");
         Date date = new Date();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Task task = new Task(
+                user.getUid(),
+                user.getDisplayName(),
+                user.getPhotoUrl().toString(),
                 date.getTime(),
                 desc,
                 title,
                 (int) reward,
                 "mumbai",
-                FirebaseAuth.getInstance().getCurrentUser().getUid(),
                 PostTaskCat.category,
                 "videos",
                 "time",

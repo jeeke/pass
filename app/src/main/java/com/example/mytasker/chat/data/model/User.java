@@ -1,6 +1,5 @@
 package com.example.mytasker.chat.data.model;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.stfalcon.chatkit.commons.models.IUser;
 
 import java.util.HashMap;
@@ -25,7 +24,6 @@ public class User implements IUser {
     private String avatar;
 
     public User(){
-
     }
 
     public User(String id, String name, String avatar) {
@@ -56,10 +54,6 @@ public class User implements IUser {
         map.put("name",name);
         map.put("avatar",avatar);
         return map;
-    }
-
-    public static User fromFireBaseUser(FirebaseUser user){
-        return new User(user.getUid(),user.getDisplayName(),user.getPhotoUrl().toString());
     }
 
 }
