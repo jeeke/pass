@@ -92,7 +92,11 @@ public class DialogsActivity extends DemoDialogsActivity {
 
     @Override
     public void onDialogClick(Dialog dialog) {
-        MessagesActivity.open(this);
+        Intent intent = new Intent(this, MessagesActivity.class);
+        intent.putExtra("id",dialog.getId());
+        intent.putExtra("name",dialog.getDialogName());
+        intent.putExtra("avatar",dialog.getDialogPhoto());
+        startActivity(intent);
     }
 
     private void initAdapter() {

@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -21,8 +22,6 @@ import com.example.mytasker.fragments.PostTaskDetail;
 import com.example.mytasker.fragments.PostTaskExtra;
 import com.example.mytasker.models.Task;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
-import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
-import com.example.mytasker.util.Contracts;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,9 +34,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.mytasker.util.Contracts.PICK_IMAGE_REQUEST;
+import static com.example.mytasker.util.Tools.getRetrofit;
 
 public class PostTask extends BaseActivity {
 
@@ -117,13 +116,25 @@ public class PostTask extends BaseActivity {
         } else {
             //done
             reward = Float.parseFloat(((PostTaskExtra) fragment).reward.getText().toString());
-            postmytask();
+            verifyNCall();
         }
     }
 
-    public void postmytask() {
+    private void verifyNCall() {
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        postmytask(task.getResult().getToken());
+                    } else {
+                        // Handle error -> task.getException();
+                        Toast.makeText(this, "Authentication Error!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    public void postmytask(String token) {
         dlg.show();
-        //result.setText("sending");
         Date date = new Date();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Task task = new Task(
@@ -143,12 +154,7 @@ public class PostTask extends BaseActivity {
                 new ArrayList<>(),
                 false
         );
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contracts.BASE_POST_URL)
-                .addConverterFactory(new NullOnEmptyConverterFactory())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        Retrofit retrofit = getRetrofit(token);
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
         Call<Task> call = jsonPlaceHolder.createTask(task);
         call.enqueue(new Callback<Task>() {

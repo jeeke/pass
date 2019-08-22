@@ -5,6 +5,7 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -15,9 +16,9 @@ import com.example.mytasker.fragments.PostQuesCat;
 import com.example.mytasker.fragments.PostQuesDetail;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
-import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
-import com.example.mytasker.util.Contracts;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Date;
 
@@ -25,7 +26,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.example.mytasker.util.Tools.getRetrofit;
 
 public class PostQuestion extends BaseActivity {
 
@@ -77,30 +79,39 @@ public class PostQuestion extends BaseActivity {
             icon.start();
         } else {
             //done
-            postQuestion();
+            verifyNCall();
         }
     }
 
-    public void postQuestion()
-    {
+    private void verifyNCall() {
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        postQuestion(task.getResult().getToken());
+                    } else {
+                        // Handle error -> task.getException();
+                        Toast.makeText(this, "Authentication Error!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    public void postQuestion(String token) {
         dlg.show();
         //result.setText("sending");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Date date = new Date();
         Question question = new Question(
                 date.getTime(),
                 ((PostQuesDetail) fragment).getQuestion(),
-                "rakesh2432",
-                "Rakesh Pandy",
+                user.getUid(),
+                user.getDisplayName(),
                 null,
                 null,
-                new double[]{25.0,25.0},
-                new String[]{"tech","null"}
+                new double[]{25.0, 25.0},
+                new String[]{"tech", "null"}
         );
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contracts.BASE_POST_URL)
-                .addConverterFactory(new NullOnEmptyConverterFactory())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = getRetrofit(token);
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
         Call<Question> call = jsonPlaceHolder.createQuestion(question);
@@ -109,7 +120,7 @@ public class PostQuestion extends BaseActivity {
             public void onResponse(Call<Question> call, Response<Question> response) {
 
                 dlg.dismiss();
-                Log.e("error",response.toString());
+                Log.e("error", response.toString());
                 if (!response.isSuccessful()) {
                     return;
                 }
@@ -120,7 +131,7 @@ public class PostQuestion extends BaseActivity {
 
             @Override
             public void onFailure(Call<Question> call, Throwable t) {
-                Log.e("error",t.getMessage());
+                Log.e("error", t.getMessage());
                 dlg.dismiss();
             }
         });

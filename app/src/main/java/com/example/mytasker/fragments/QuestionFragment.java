@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
@@ -19,11 +20,12 @@ import com.example.mytasker.activities.QuestionDetailActivity;
 import com.example.mytasker.adapters.QuestionAdapter;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.QuestionList;
-import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.FilterHelper;
 import com.example.mytasker.util.NetworkCache;
 import com.example.mytasker.util.ToolbarHelper;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -31,8 +33,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.example.mytasker.util.Tools.getRetrofit;
 import static com.example.mytasker.util.Tools.launchActivity;
 
 
@@ -52,13 +54,22 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
     }
 
 
-    private void callRetrofit() {
+    private void verifyNCall() {
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callRetrofit(task.getResult().getToken());
+                    } else {
+                        // Handle error -> task.getException();
+                        Toast.makeText(getContext(), "Authentication Error!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void callRetrofit(String token) {
         shimmerContainer.startShimmer();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contracts.BASE_GET_URL)
-//                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = getRetrofit(token);
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
         Call<QuestionList> call = jsonPlaceHolder.getQuestions(new double[]{25.0, 25.0});
@@ -101,7 +112,7 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
             adapter.update(NetworkCache.questions);
             listView.setAlpha(1.0f);
         }else {
-            callRetrofit();
+            verifyNCall();
         }
     }
 
@@ -133,13 +144,13 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
     }
 
     private void initViews(View v) {
-        listView = v.findViewById(R.id.ListView_dashboard);
+        listView = v.findViewById(R.id.list);
         shimmerContainer = v.findViewById(R.id.shimmer_container);
         swipeContainer = v.findViewById(R.id.swipe_refresh_layout);
     }
 
     private void initListeners(View v) {
-        swipeContainer.setOnRefreshListener(this::callRetrofit);
+        swipeContainer.setOnRefreshListener(this::verifyNCall);
     }
 
     @Override

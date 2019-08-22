@@ -28,7 +28,6 @@ import com.example.mytasker.activities.NotificationActivity;
 import com.example.mytasker.activities.SettingActivity;
 import com.example.mytasker.models.Profile;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
-import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
 import com.example.mytasker.util.ChipAdapter;
 import com.example.mytasker.util.Contracts;
 import com.google.android.material.chip.ChipGroup;
@@ -41,11 +40,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.mytasker.util.Contracts.ADD_SKILL_REQUEST;
 import static com.example.mytasker.util.Contracts.CODE_NOTIFICATION_ACTIVITY;
 import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
+import static com.example.mytasker.util.Tools.getRetrofit;
 
 public class ProfileFragment extends Fragment {
 
@@ -120,7 +119,7 @@ public class ProfileFragment extends Fragment {
         toolbar = v.findViewById(R.id.toolbar);
         toolbar.setVisibility(View.GONE);
         if(mine) forMe(v);
-        myapi(v);
+        verifyNCall();
         return v;
     }
 
@@ -147,8 +146,7 @@ public class ProfileFragment extends Fragment {
         inflater.inflate(R.menu.profile_menu, menu);
     }
 
-
-    public void addskill() {
+    public void addskill(String token) {
         Log.e("AddedSkill","added_skill");
         if (!adapter.isSafe(Contracts.added_skill)){
             Toast.makeText(getContext(), "Skill Already Exist", Toast.LENGTH_SHORT).show();
@@ -157,14 +155,10 @@ public class ProfileFragment extends Fragment {
         dlg.setTitle("Adding Skill...");
         dlg.show();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contracts.BASE_POST_URL)
-                .addConverterFactory(new NullOnEmptyConverterFactory())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = getRetrofit(token);
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<Profile> call = jsonPlaceHolder.addskill("1", Contracts.added_skill);
+        Call<Profile> call = jsonPlaceHolder.addskill(Contracts.added_skill);
         call.enqueue(new Callback<Profile>() {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
@@ -175,7 +169,7 @@ public class ProfileFragment extends Fragment {
                     Log.e("error", response.toString());
                     return;
                 }
-                Toast.makeText(getContext(), response.body().getMessage().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 adapter.addChild(Contracts.added_skill);
             }
 
@@ -190,17 +184,39 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    public void myapi(View v) {
+    public void verifyNCall2() {
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        addskill(task.getResult().getToken());
+                    } else {
+                        // Handle error -> task.getException();
+                        Toast.makeText(getContext(), "Authentication Error!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void verifyNCall() {
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        myapi(task.getResult().getToken());
+                    } else {
+                        // Handle error -> task.getException();
+                        Toast.makeText(getContext(), "Authentication Error!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    public void myapi(String token) {
         dlg.setTitle("Getting Profile Info..");
         dlg.show();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contracts.BASE_POST_URL)
-                .addConverterFactory(new NullOnEmptyConverterFactory())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = getRetrofit(token);
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<Profile> call = jsonPlaceHolder.getProfile("1");
+        Call<Profile> call = jsonPlaceHolder.getProfile();
         call.enqueue(new Callback<Profile>() {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {

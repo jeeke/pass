@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.viewpager.widget.ViewPager;
 
@@ -13,16 +14,18 @@ import com.example.mytasker.adapters.HistoryTaskAdapter;
 import com.example.mytasker.adapters.TaskListAdapter;
 import com.example.mytasker.models.PrevPostModel;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
-import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.NetworkCache;
 import com.example.mytasker.util.Tools;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.example.mytasker.util.Tools.getRetrofit;
 
 public class HistoryTask extends BaseActivity implements TaskListAdapter.RecyclerViewClickListener {
 
@@ -32,20 +35,30 @@ public class HistoryTask extends BaseActivity implements TaskListAdapter.Recycle
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_task);
         Tools.initMinToolbar(this, "My Tasks", true);
-        setupapi();
+        verifyNCall();
     }
 
-    void setupapi() {
+    private void verifyNCall() {
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        setupapi(task.getResult().getToken());
+                    } else {
+                        // Handle error -> task.getException();
+                        Toast.makeText(HistoryTask.this, "Authentication Error!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    void setupapi(String token) {
         ProgressDialog dialog = new ProgressDialog(this);
         dialog.setTitle("Getting Your Previous Tasks, Please Wait....");
         dialog.show();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contracts.BASE_GET_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = getRetrofit(token);
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<PrevPostModel> call = jsonPlaceHolder.getPrevTask("rakesh");
+        Call<PrevPostModel> call = jsonPlaceHolder.getPrevTask();
 
         call.enqueue(new Callback<PrevPostModel>() {
             @Override

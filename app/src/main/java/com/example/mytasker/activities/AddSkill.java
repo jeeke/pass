@@ -6,10 +6,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.Toolbar;
-
 import com.example.mytasker.R;
 import com.example.mytasker.util.Contracts;
+import com.example.mytasker.util.Tools;
 
 public class AddSkill extends BaseActivity {
 
@@ -19,7 +18,6 @@ public class AddSkill extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_skill);
-        Toolbar toolbar = findViewById(R.id.toolbar);
         save = findViewById(R.id.save);
         skill = findViewById(R.id.pass);
         save.setOnClickListener(v -> {
@@ -33,8 +31,6 @@ public class AddSkill extends BaseActivity {
                 finish();
             }
         });
-        toolbar.setTitle("Add Skill");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Tools.initMinToolbar(this,"Add Skill",false);
     }
 }

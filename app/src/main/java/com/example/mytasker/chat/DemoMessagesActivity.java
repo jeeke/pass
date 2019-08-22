@@ -40,8 +40,8 @@ public abstract class DemoMessagesActivity extends BaseActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        imageLoader = (imageView, url, payload) -> Picasso.with(DemoMessagesActivity.this).load(url).into(imageView);
         initFireBase();
+        imageLoader = (imageView, url, payload) -> Picasso.with(DemoMessagesActivity.this).load(url).into(imageView);
         onLoadMore(1,10);
     }
 
@@ -56,8 +56,11 @@ public abstract class DemoMessagesActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
-        AppUtils.showToast(this, R.string.copied_message, true);
+        super.onOptionsItemSelected(item);
+        if(item.getItemId()==R.id.action_copy) {
+            messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
+            AppUtils.showToast(this, R.string.copied_message, true);
+        }
         return true;
     }
 
@@ -119,10 +122,8 @@ public abstract class DemoMessagesActivity extends BaseActivity
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 MessageHelper message = dataSnapshot.getValue(MessageHelper.class);
-//                List<Message> messages= new ArrayList<>();
-//                messages.add(message.toMessage());
                 messagesAdapter.addToStart(message.toMessage(), true);
-                DialogHelper dialogHelper = new DialogHelper(mChatUId,"rakesh",mAuth.getCurrentUser().getPhotoUrl().toString(),0,null,message.getText());
+                DialogHelper dialogHelper = new DialogHelper(mChatUId,mChatUName,mChatAvatar,0,null,message.getText());
                 mRootRef.child("Chats").child(mCurrentUserId).child(mChatUId).setValue(dialogHelper.toMap());
 //                TODO updaate seen value
 //                dataSnapshot.child("status").getRef().setValue(Message.MESSAGE_SEEN);

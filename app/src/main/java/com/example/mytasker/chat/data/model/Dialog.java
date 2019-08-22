@@ -13,8 +13,7 @@ public class Dialog implements IDialog<Message> {
     private Message lastMessage;
     private int unreadCount;
 
-    Dialog(){
-    }
+    Dialog(){ }
 
     Dialog(String id, String dialogPhoto, String dialogName, int unreadCount) {
         this.id = id;

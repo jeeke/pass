@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,7 +15,8 @@ import com.example.mytasker.R;
 import com.example.mytasker.adapters.NotificationAdapter;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.NotificationList;
-import com.example.mytasker.util.Contracts;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -22,7 +24,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.example.mytasker.util.Tools.getRetrofit;
 
 public class NotificationActivity extends BaseActivity implements NotificationAdapter.RecyclerViewClickListener {
 
@@ -49,21 +52,29 @@ public class NotificationActivity extends BaseActivity implements NotificationAd
         adapter = new NotificationAdapter(this, new ArrayList<>());
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(this));
-        swipeContainer.setOnRefreshListener(this::callRetrofit);
-        callRetrofit();
+        swipeContainer.setOnRefreshListener(this::verifyNCall);
+        verifyNCall();
     }
 
 
-
-    private void callRetrofit() {
+    private void verifyNCall() {
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callRetrofit(task.getResult().getToken());
+                    } else {
+                        // Handle error -> task.getException();
+                        Toast.makeText(NotificationActivity.this, "Authentication Error!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    private void callRetrofit(String token) {
 //        dlg.show();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contracts.BASE_GET_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = getRetrofit(token);
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<NotificationList> call = jsonPlaceHolder.getNotifications("Rakesh Pandey");
+        Call<NotificationList> call = jsonPlaceHolder.getNotifications();
 
         call.enqueue(new Callback<NotificationList>() {
 

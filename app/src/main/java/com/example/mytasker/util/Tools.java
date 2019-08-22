@@ -16,6 +16,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.example.mytasker.R;
+import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Tools {
     public static void displayImageRound(final Context ctx, final ImageView img, @DrawableRes int drawable) {
@@ -31,6 +37,7 @@ public class Tools {
         } catch (Exception e) {
         }
     }
+
     public static String getEmailFromName(String name) {
         if (name != null && !name.equals("")) {
             String email = name.replaceAll(" ", ".").toLowerCase().concat("@mail.com");
@@ -39,9 +46,9 @@ public class Tools {
         return name;
     }
 
-    public static void initMinToolbar(AppCompatActivity activity, String title, boolean zeroElevation){
+    public static void initMinToolbar(AppCompatActivity activity, String title, boolean zeroElevation) {
         Toolbar toolbar = activity.findViewById(R.id.toolbar);
-        if(zeroElevation){
+        if (zeroElevation) {
             toolbar.setElevation(0f);
         }
 //        Drawable drawable = activity.getDrawable(R.drawable.ic_back);
@@ -56,6 +63,26 @@ public class Tools {
         Intent intent = new Intent(context, className);
         context.startActivity(intent);
 //        context.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
+
+    public static Retrofit getRetrofit(String token){
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(chain -> {
+            Request original = chain.request();
+
+            // Request customization: add request headers
+            Request.Builder requestBuilder = original.newBuilder()
+                    .header("Authorization", token); // <-- this is the important line
+            Request request = requestBuilder.build();
+            return chain.proceed(request);
+        });
+        OkHttpClient client = httpClient.build();
+        return new Retrofit.Builder()
+                .client(client)
+                .baseUrl(Contracts.BASE_POST_URL)
+                .addConverterFactory(new NullOnEmptyConverterFactory())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
     }
 
 }

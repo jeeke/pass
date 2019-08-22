@@ -191,7 +191,7 @@
             app:layout_constraintTop_toBottomOf="@+id/list_head">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/ListView_dashboard"
+                android:id="@+id/list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"

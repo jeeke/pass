@@ -17,7 +17,7 @@ public class Contracts {
     public static final int[] QUES_STAGE_COLORS = {R.color.orange,R.color.green_400};
     public static final String[] TASK_STAGE_TEXT = {"NEW","ONGOING","COMPLETED"};
     public static final String[] QUES_STAGE_TEXT = {"POSTED","REPLIED"};
-//    public static String BASE_GET_URL = BASE_POST_URL = "http://27908e14.ngrok.io";
+//    public static String BASE_GET_URL = BASE_POST_URL = "https://0a9dc396.ngrok.io";
         public static String BASE_GET_URL = "https://sheltered-escarpment-49063.herokuapp.com/";
 //    public static String BASE_POST_URL ;
     //=  "https://2a61d6f5.ngrok.io";
