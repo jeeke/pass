@@ -1,17 +1,23 @@
 package com.example.mytasker.models;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Bid {
     private String id;
+    private long createdAt;
+    private String bidderId;
     private String name;
-    private String contact;
+    private long contact;
     private String message;
-    private int bidPrice;
-    public Bid(String id,String name,String message,String contact,int bidPrice) {
-        this.id = id;
-        this.name = name;
-        this.message = message;
-        this.contact = contact;
-        this.bidPrice = bidPrice;
+    private int price;
+
+    public static Map toMap(int price, long contact, String message) {
+        Map map = new HashMap();
+        map.put("price", price);
+        map.put("contact", contact);
+        map.put("message", message);
+        return map;
     }
 
     public String getId() {
@@ -30,14 +36,6 @@ public class Bid {
         this.name = name;
     }
 
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
     public String getMessage() {
         return message;
     }
@@ -46,11 +44,35 @@ public class Bid {
         this.message = message;
     }
 
-    public int getBidPrice() {
-        return bidPrice;
+    public String getBidderId() {
+        return bidderId;
     }
 
-    public void setBidPrice(int bidPrice) {
-        this.bidPrice = bidPrice;
+    public void setBidderId(String bidderId) {
+        this.bidderId = bidderId;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public long getContact() {
+        return contact;
+    }
+
+    public void setContact(long contact) {
+        this.contact = contact;
     }
 }
