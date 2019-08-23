@@ -8,19 +8,12 @@ import android.widget.Toast;
 
 import com.example.mytasker.R;
 import com.example.mytasker.models.Bid;
-import com.example.mytasker.models.Message;
-import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
 import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.Tools;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static com.example.mytasker.util.Tools.launchActivity;
 
 public class BidConfirm extends BaseActivity {
 
@@ -71,27 +64,22 @@ public class BidConfirm extends BaseActivity {
                 contact.getText().toString(),
                 Integer.parseInt(price.getText().toString()));
 
-        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<Message> call = jsonPlaceHolder.confirmBid(bid,"1");
-        call.enqueue(new Callback<Message>() {
-            @Override
-            public void onResponse(Call<Message> call, Response<Message> response) {
-
-                dlg.dismiss();
-                if (!response.isSuccessful()) {
-                    Log.e("error",response.toString());
-                    return;
+        API api = new API();
+        api.createTask(task).addOnCompleteListener(t -> {
+            dlg.dismiss();
+            if (!t.isSuccessful()) {
+                Exception e = t.getException();
+                if (e instanceof FirebaseFunctionsException) {
+                    FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+                    FirebaseFunctionsException.Code code = ffe.getCode();
+                    Object details = ffe.getDetails();
+                    Log.e("tag", ffe + "\n" + code + "\n" + details);
                 }
-                Toast.makeText(BidConfirm.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                launchActivity(BidConfirm.this,HistoryTask.class);
-                finish();
+                Toast.makeText(this, "Posting Unsuccessful", Toast.LENGTH_SHORT).show();
+                Log.e("tag", e + "");
+                return;
             }
-
-            @Override
-            public void onFailure(Call<Message> call, Throwable t) {
-                Log.e("error",t.getMessage());
-                dlg.dismiss();
-            }
+            Toast.makeText(this, t.getResult().getMessage() + "", Toast.LENGTH_SHORT).show();
         });
     }
 }
