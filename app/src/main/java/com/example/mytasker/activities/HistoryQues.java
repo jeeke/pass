@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mytasker.R;
 import com.example.mytasker.adapters.QuestionAdapter;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
-import com.example.mytasker.retrofit.QuestionList;
+import com.example.mytasker.retrofit.RetrofitFeedHelper;
 import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.Tools;
 
@@ -52,21 +52,21 @@ public class HistoryQues extends BaseActivity implements QuestionAdapter.Recycle
                 .build();
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-//        Call<QuestionList> call = jsonPlaceHolder.historyQues("rakesh");
-        Call<QuestionList> call = jsonPlaceHolder.getQuestions(new double[]{25.0, 25.0});
-        call.enqueue(new Callback<QuestionList>() {
+//        Call<RetrofitFeedHelper> call = jsonPlaceHolder.historyQues("rakesh");
+        Call<RetrofitFeedHelper> call = jsonPlaceHolder.getQuestions(new double[]{25.0, 25.0});
+        call.enqueue(new Callback<RetrofitFeedHelper>() {
             @Override
-            public void onResponse(Call<QuestionList> call, Response<QuestionList> response) {
+            public void onResponse(Call<RetrofitFeedHelper> call, Response<RetrofitFeedHelper> response) {
                 dlg.dismiss();
                 if (!response.isSuccessful()) {
                     Log.e("Code: ", response.toString());
                     return;
                 }
-                adapter.update(response.body().getQuestions());
+                adapter.update(response.body().toQuesList());
             }
 
             @Override
-            public void onFailure(Call<QuestionList> call, Throwable t) {
+            public void onFailure(Call<RetrofitFeedHelper> call, Throwable t) {
                 Log.e("error ", t.getMessage());
                 dlg.dismiss();
             }

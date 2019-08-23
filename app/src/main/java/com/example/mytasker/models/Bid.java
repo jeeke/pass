@@ -1,17 +1,10 @@
 package com.example.mytasker.models;
 
-import com.google.gson.annotations.SerializedName;
-
 public class Bid {
-    @SerializedName("bidder_id")
     private String id;
-    @SerializedName("bidder_name")
     private String name;
-    @SerializedName("contact")
     private String contact;
-    @SerializedName("message")
     private String message;
-    @SerializedName("bid_price")
     private int bidPrice;
     public Bid(String id,String name,String message,String contact,int bidPrice) {
         this.id = id;

@@ -20,14 +20,14 @@ import retrofit2.http.Query;
 public interface JsonPlaceHolder {
 
 
-    @POST("task/create")
+    @POST("createTask")
     Call<Task> createTask(@Body Task task);
 
-    @POST("raw-ques")
+    @POST("createQues")
     Call<Question> createQuestion(@Body Question question);
 
     @GET("task-feed")
-    Call<TaskList> getTasks(
+    Call<RetrofitFeedHelper> getTasks(
             @Query("loc") double[] loc,
             @Query("radius") Integer radius,
             @Query("tags") ArrayList<String> tags,
@@ -42,7 +42,7 @@ public interface JsonPlaceHolder {
     Call<ArrayList<Answer>> getAnswers(@Query("ques_id") String id);
 
     @GET("ques-feed")
-    Call<QuestionList> getQuestions(@Query("loc") double[] loc);
+    Call<RetrofitFeedHelper> getQuestions(@Query("loc") double[] loc);
 
     @GET("notifications")
     Call<NotificationList> getNotifications();
@@ -51,7 +51,7 @@ public interface JsonPlaceHolder {
     Call<PrevPostModel> getPrevTask();
 
     @GET("prev-ques")
-    Call<QuestionList> historyQues();
+    Call<ArrayList<Question>> historyQues();
 
     //TODO add token in all request
 

@@ -7,12 +7,85 @@ import java.util.ArrayList;
 public class Task extends Message{
 
 
+    String dis;
+    @SerializedName("attachment")
+    String attachment;
+
+    public Task() {
+    }
+
+    public String getDis() {
+        return dis;
+    }
+
+    public void setDis(String dis) {
+        this.dis = dis;
+    }
+
+    public void setC_date(long c_date) {
+        this.c_date = c_date;
+    }
+
+    public void setJob_des(String job_des) {
+        this.job_des = job_des;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setCost(Integer cost) {
+        this.cost = cost;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPoster_id(String poster_id) {
+        this.poster_id = poster_id;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(String attachment) {
+        this.attachment = attachment;
+    }
+
+    public String getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
+
+    public double[] getLocation() {
+        return location;
+    }
+
+    public void setLocation(double[] location) {
+        this.location = location;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
+    }
+
+    public ArrayList<String> getMusthaves() {
+        return musthaves;
+    }
+
     @SerializedName("c_date")
     long c_date;
     @SerializedName("job_des")
     String job_des;
-    @SerializedName("dis")
-    String distance;
     @SerializedName("title")
     String title;
     @SerializedName("cost")
@@ -29,8 +102,10 @@ public class Task extends Message{
     String poster_id;
     @SerializedName("category")
     String category;
-    @SerializedName("attachments")
-    String attachment;
+
+    public void setMusthaves(ArrayList<String> musthaves) {
+        this.musthaves = musthaves;
+    }
     @SerializedName("deadline")
     String deadline;
     @SerializedName("loc")
@@ -84,9 +159,6 @@ public class Task extends Message{
     public String getTitle() {
         return title;
     }
-    public String getDistance() {
-        return distance;
-    }
     public String getJob_des() {
         return job_des;
     }
@@ -112,7 +184,6 @@ public class Task extends Message{
         this.cost = cost;
         this.address = address;
         this.poster_id = poster_id;
-
         this.category = category;
         this.attachment = attachment;
         this.deadline = deadline;

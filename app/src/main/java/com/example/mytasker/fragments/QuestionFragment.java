@@ -19,7 +19,7 @@ import com.example.mytasker.activities.HistoryQues;
 import com.example.mytasker.activities.QuestionDetailActivity;
 import com.example.mytasker.adapters.QuestionAdapter;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
-import com.example.mytasker.retrofit.QuestionList;
+import com.example.mytasker.retrofit.RetrofitFeedHelper;
 import com.example.mytasker.util.FilterHelper;
 import com.example.mytasker.util.NetworkCache;
 import com.example.mytasker.util.ToolbarHelper;
@@ -72,23 +72,23 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
         Retrofit retrofit = getRetrofit(token);
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<QuestionList> call = jsonPlaceHolder.getQuestions(new double[]{25.0, 25.0});
+        Call<RetrofitFeedHelper> call = jsonPlaceHolder.getQuestions(new double[]{25.0, 25.0});
 
 //        new double[]{25.0, 25.0},
 //                100,
 //                new String[]{"tech", "null"}
 
-        call.enqueue(new Callback<QuestionList>() {
+        call.enqueue(new Callback<RetrofitFeedHelper>() {
             @Override
-            public void onResponse(Call<QuestionList> call, Response<QuestionList> response) {
+            public void onResponse(Call<RetrofitFeedHelper> call, Response<RetrofitFeedHelper> response) {
                 if (!response.isSuccessful()) {
                     Log.e("Code: ", response.toString());
                     return;
                 }
-                QuestionList details = response.body();
+                RetrofitFeedHelper details = response.body();
 
                 if (details != null) {
-                    NetworkCache.questions = details.getQuestions();
+                    NetworkCache.questions = details.toQuesList();
                 }
                 adapter.update(NetworkCache.questions);
 
@@ -99,7 +99,7 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
             }
 
             @Override
-            public void onFailure(Call<QuestionList> call, Throwable t) {
+            public void onFailure(Call<RetrofitFeedHelper> call, Throwable t) {
                 Log.e("error ", t.getMessage());
                 swipeContainer.setRefreshing(false);
             }

@@ -5,8 +5,17 @@ import com.google.gson.annotations.SerializedName;
 public class Question extends Message{
     @SerializedName("c_date")
     private long c_date;
+
     @SerializedName("dis")
-    private String distance;
+    private String dis;
+
+    public String getDis() {
+        return dis;
+    }
+
+    public void setDis(String dis) {
+        this.dis = dis;
+    }
     @SerializedName("ques")
     private String ques;
     @SerializedName("poster_id")
@@ -31,9 +40,6 @@ public class Question extends Message{
 
     public String getQues() {
         return ques;
-    }
-    public String getDistance() {
-        return distance;
     }
 
     public String getCategory() {

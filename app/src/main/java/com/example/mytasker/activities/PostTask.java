@@ -146,7 +146,7 @@ public class PostTask extends BaseActivity {
                 title,
                 (int) reward,
                 "mumbai",
-                PostTaskCat.category,
+                "tech",
                 "videos",
                 "time",
                 new double[]{25.0,25.0},

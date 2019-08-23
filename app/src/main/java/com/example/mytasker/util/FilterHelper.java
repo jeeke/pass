@@ -18,7 +18,7 @@ public class FilterHelper {
 
     private FilterListener listener;
 
-    String[] chipTitle = {"hello", "tech", "null", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"};
+    String[] chipTitle = {"hello", "tech", "null"};
     public ArrayList<String> tags = new ArrayList<>(Arrays.asList(chipTitle));
     public int radius = 100;
     public boolean remote = false;

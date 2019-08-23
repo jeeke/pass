@@ -19,7 +19,7 @@ import com.example.mytasker.activities.HistoryTask;
 import com.example.mytasker.activities.TaskDetailActivity;
 import com.example.mytasker.adapters.TaskListAdapter;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
-import com.example.mytasker.retrofit.TaskList;
+import com.example.mytasker.retrofit.RetrofitFeedHelper;
 import com.example.mytasker.util.FilterHelper;
 import com.example.mytasker.util.NetworkCache;
 import com.example.mytasker.util.ToolbarHelper;
@@ -76,7 +76,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         shimmerContainer.startShimmer();
         Retrofit retrofit = getRetrofit(token);
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<TaskList> call = jsonPlaceHolder.getTasks(
+        Call<RetrofitFeedHelper> call = jsonPlaceHolder.getTasks(
                 filterHelper.loc,
                 filterHelper.radius,
                 filterHelper.tags,
@@ -84,19 +84,19 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
                 filterHelper.remote
         );
 
-        call.enqueue(new Callback<TaskList>() {
+        call.enqueue(new Callback<RetrofitFeedHelper>() {
             @Override
-            public void onResponse(Call<TaskList> call, Response<TaskList> response) {
+            public void onResponse(Call<RetrofitFeedHelper> call, Response<RetrofitFeedHelper> response) {
                 if (!response.isSuccessful()) {
                     Log.v("Code: ", String.valueOf(response.code()));
                     swipeContainer.setRefreshing(false);
                     return;
                 }
-                TaskList details = response.body();
+                RetrofitFeedHelper details = response.body();
 
 
                 if (details != null) {
-                    NetworkCache.tasks = details.getTasks();
+                    NetworkCache.tasks = details.toTaskList();
                 }
                 adapter.update(NetworkCache.tasks);
 
@@ -108,7 +108,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
             }
 
             @Override
-            public void onFailure(Call<TaskList> call, Throwable t) {
+            public void onFailure(Call<RetrofitFeedHelper> call, Throwable t) {
                 Log.e("error ", t.getMessage());
                 swipeContainer.setRefreshing(false);
             }

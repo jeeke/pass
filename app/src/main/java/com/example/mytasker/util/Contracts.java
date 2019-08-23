@@ -17,11 +17,11 @@ public class Contracts {
     public static final int[] QUES_STAGE_COLORS = {R.color.orange,R.color.green_400};
     public static final String[] TASK_STAGE_TEXT = {"NEW","ONGOING","COMPLETED"};
     public static final String[] QUES_STAGE_TEXT = {"POSTED","REPLIED"};
-//    public static String BASE_GET_URL = BASE_POST_URL = "https://0a9dc396.ngrok.io";
-        public static String BASE_GET_URL = "https://sheltered-escarpment-49063.herokuapp.com/";
-//    public static String BASE_POST_URL ;
+    //        public static String BASE_GET_URL = "https://sheltered-escarpment-49063.herokuapp.com/";
+    public static String BASE_POST_URL;
+    public static String BASE_GET_URL = BASE_POST_URL = "http://99cd58ce.ngrok.io";
     //=  "https://2a61d6f5.ngrok.io";
-        public static String BASE_POST_URL = "https://sheltered-escarpment-49063.herokuapp.com/";
+//        public static String BASE_POST_URL = "https://sheltered-escarpment-49063.herokuapp.com/";
     public static int CODE_SETTINGS_ACTIVITY = 100;
     public static int CODE_NOTIFICATION_ACTIVITY = 101;
     public static int PICK_IMAGE_REQUEST = 102;
