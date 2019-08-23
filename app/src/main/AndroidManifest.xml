@@ -19,42 +19,88 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/LightMode">
-        <activity android:name=".chat.DialogsActivity"></activity>
-        <activity android:name=".chat.MessagesActivity"></activity>
-        <activity android:name=".activities.FeedbackByPosterActivity" />
-        <activity android:name=".activities.FeedbackByTaskerActivity" />
-        <activity android:name=".activities.ProfileActivity" />
-        <activity android:name=".activities.BidConfirm" />
-        <activity android:name=".activities.HistoryQues" />
-        <activity android:name=".activities.HistoryFeed" />
-        <activity android:name=".activities.AddSkill">
+        <activity
+            android:name=".chat.DialogsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".chat.MessagesActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activities.FeedbackByPosterActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.FeedbackByTaskerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.BidConfirm"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.HistoryQues"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.HistoryFeed"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AddSkill"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
         </activity>
-        <activity android:name=".activities.BidsListActivity" />
-        <activity android:name=".activities.PostFeed">
+        <activity
+            android:name=".activities.BidsListActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.PostFeed"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
         </activity>
         <activity
             android:name=".activities.HistoryTask"
-            android:label="@string/title_activity_prev_posts">
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_prev_posts"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
         </activity>
-        <activity android:name=".activities.ContactUs" />
-        <activity android:name=".activities.TandC" />
-        <activity android:name=".activities.PrivacyPolicy">
+        <activity
+            android:name=".activities.ContactUs"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.TandC"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.PrivacyPolicy"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.SettingActivity" />
         </activity>
         <activity
             android:name=".activities.EditPassword"
-            android:parentActivityName=".activities.SettingActivity">
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".activities.SettingActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.SettingActivity" />
@@ -62,7 +108,9 @@
         <activity
             android:name=".activities.SearchActivity"
             android:label="@string/title_activity_search"
-            android:parentActivityName=".activities.DashboardActivity">
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".activities.DashboardActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
@@ -70,31 +118,59 @@
         <activity
             android:name=".activities.NotificationActivity"
             android:label="@string/title_activity_notification"
-            android:parentActivityName=".activities.DashboardActivity">
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".activities.DashboardActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
         </activity>
-        <activity android:name=".activities.QuestionDetailActivity" />
-        <activity android:name=".activities.PostQuestion">
+        <activity
+            android:name=".activities.QuestionDetailActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.PostQuestion"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
         </activity>
-        <activity android:name=".activities.TaskDetailActivity" />
-        <activity android:name=".activities.PostTask">
+        <activity
+            android:name=".activities.TaskDetailActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.PostTask"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
         </activity>
-        <activity android:name=".activities.dummy.TempPostActivity" />
-        <activity android:name=".activities.DashboardActivity" />
-        <activity android:name=".activities.SettingActivity">
+        <activity
+            android:name=".activities.dummy.TempPostActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.DashboardActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.SettingActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
+                android:configChanges="keyboardHidden|orientation|screenSize"
+                android:screenOrientation="portrait"
                 android:value="com.example.mytasker.activities.DashboardActivity" />
         </activity>
-        <activity android:name=".activities.MainActivity">
+        <activity
+            android:name=".activities.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
 

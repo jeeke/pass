@@ -2,6 +2,7 @@ package com.example.mytasker.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -61,6 +62,7 @@ public class PostFeed extends BaseActivity {
     Uri mUri;
     private void uploadImage(Uri uri){
         fab.setClickable(false);
+        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey_400)));
 //        fab.setBackgroundTintList(new ColorStateList(R.color.grey_400));
         ProgressBar progressBar = findViewById(R.id.progress);
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -83,13 +85,13 @@ public class PostFeed extends BaseActivity {
         }).addOnFailureListener(exception -> {
             // Handle unsuccessful uploads
             Toast.makeText(this, "Image couldn't be uploaded", Toast.LENGTH_SHORT).show();
-        }).addOnSuccessListener(taskSnapshot -> {
+        }).addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl().addOnSuccessListener(uri1 -> {
             // Handle successful uploads on complete
             progressBar.setVisibility(View.GONE);
             //TODO remove glide or picasso
-            imageURL = imageRef.getDownloadUrl().toString();
+            imageURL = uri1.toString();
             verifyNCall();
-        });
+        }));
     }
 
     ProgressDialog dlg;
@@ -120,8 +122,12 @@ public class PostFeed extends BaseActivity {
         DatabaseReference push = FirebaseDatabase.getInstance().getReference().child("Feeds").push();
         push.setValue(feed).addOnSuccessListener(aVoid -> {
             dlg.dismiss();
+            fab.setBackgroundTintList(ColorStateList.valueOf(R.attr.colorAccent));
+            fab.setClickable(true);
         }).addOnFailureListener(e -> {
             dlg.dismiss();
+            fab.setBackgroundTintList(ColorStateList.valueOf(R.attr.colorAccent));
+            fab.setClickable(true);
             Toast.makeText(PostFeed.this, "Feed can't be posted", Toast.LENGTH_SHORT).show();
         });
     }

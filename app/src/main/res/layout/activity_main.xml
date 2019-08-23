@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <pl.droidsonroids.gif.GifTextView
+    <ImageView
         android:id="@+id/gifTextView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
