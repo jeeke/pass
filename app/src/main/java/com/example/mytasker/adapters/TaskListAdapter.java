@@ -29,7 +29,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder
     boolean type;
     Context context;
 
-    public TaskListAdapter(Context context,RecyclerViewClickListener listener, ArrayList<Task> list, boolean type) {
+    public TaskListAdapter(Context context, RecyclerViewClickListener listener, ArrayList<Task> list, boolean type) {
         this.list = list;
         this.mListener = listener;
         this.context = context;

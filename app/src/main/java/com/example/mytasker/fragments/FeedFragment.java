@@ -95,7 +95,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.RecyclerViewCl
                 switch (state) {
                     case LOADING_INITIAL:
                     case LOADING_MORE:
-                        // Do your loading animation
+                        // Do your loadingPng animation
                         mSwipeRefreshLayout.setRefreshing(true);
                         break;
 

@@ -1,11 +1,17 @@
 package com.example.mytasker.models;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.HashMap;
 
 public class Message {
 
-    @SerializedName("message")
     private String message;
+
+    public Message(HashMap data) {
+        this.message = data.get("message") + "";
+    }
+
+    public Message() {
+    }
 
     public String getMessage() {
         return message;

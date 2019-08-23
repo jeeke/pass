@@ -33,6 +33,7 @@ import com.example.mytasker.util.Contracts;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -53,7 +54,7 @@ public class ProfileFragment extends Fragment {
     private ProgressBar ontime, budget, behaviour, quality;
     private TextView ontimet, behaviourt, qualityt, budgett;
     private ChipGroup chipGroup;
-    private ImageView imageView, sugga;
+    private ImageView imageView, sugga, profileImage;
     private ProgressDialog dlg;
     private ConstraintLayout constraintLayout,layout;
     private View divider;
@@ -86,42 +87,7 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.frag_profile, container, false);
-        taskerrating = v.findViewById(R.id.taskerrating);
-        posterrating = v.findViewById(R.id.posterating);
-        taskdone = v.findViewById(R.id.taskdone);
-        taskposted = v.findViewById(R.id.taskposted);
-        bucksearned = v.findViewById(R.id.bucksearned);
-        ontime = v.findViewById(R.id.progressontime);
-        ontimet = v.findViewById(R.id.textViewontime);
-        behaviour = v.findViewById(R.id.progressbehaviour);
-        behaviourt = v.findViewById(R.id.textViewbehaviour);
-        quality = v.findViewById(R.id.progressquality);
-        qualityt = v.findViewById(R.id.textViewquality);
-        budget = v.findViewById(R.id.progressbudget);
-        budgett = v.findViewById(R.id.textViewbudget);
-        chipGroup = v.findViewById(R.id.skillschip);
-        imageView = v.findViewById(R.id.addskill);
-        dlg = new ProgressDialog(getContext());
-        dlg.setTitle("Getting Profile Info..");
-        constraintLayout = v.findViewById(R.id.layoutstats);
-        sugga = v.findViewById(R.id.sugga);
-        layout = v.findViewById(R.id.layoutrating);
-        divider  = v.findViewById(R.id.divider11);
-        constraintLayout.setVisibility(View.GONE);
-        sugga.setVisibility(View.VISIBLE);
-        divider.setVisibility(View.GONE);
-        imageView.setVisibility(View.GONE);
-        toolbar = v.findViewById(R.id.toolbar);
-        toolbar.setVisibility(View.GONE);
-        if(mine) forMe(v);
-        verifyNCall();
-        return v;
-    }
+    private ChipAdapter adapter;
 
 
     @Override
@@ -152,8 +118,6 @@ public class ProfileFragment extends Fragment {
             Toast.makeText(getContext(), "Skill Already Exist", Toast.LENGTH_SHORT).show();
             return;
         }
-        dlg.setTitle("Adding Skill...");
-        dlg.show();
 
         Retrofit retrofit = getRetrofit(token);
 
@@ -184,26 +148,56 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.frag_profile, container, false);
+        profileImage = v.findViewById(R.id.profile_image);
+        String url = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
+        if (url != null && !url.equals(""))
+            Picasso.with(getContext()).load(url).placeholder(R.drawable.person)
+                    .error(R.drawable.person).into(profileImage);
+        taskerrating = v.findViewById(R.id.taskerrating);
+        posterrating = v.findViewById(R.id.posterating);
+        taskdone = v.findViewById(R.id.taskdone);
+        taskposted = v.findViewById(R.id.taskposted);
+        bucksearned = v.findViewById(R.id.bucksearned);
+        ontime = v.findViewById(R.id.progressontime);
+        ontimet = v.findViewById(R.id.textViewontime);
+        behaviour = v.findViewById(R.id.progressbehaviour);
+        behaviourt = v.findViewById(R.id.textViewbehaviour);
+        quality = v.findViewById(R.id.progressquality);
+        qualityt = v.findViewById(R.id.textViewquality);
+        budget = v.findViewById(R.id.progressbudget);
+        budgett = v.findViewById(R.id.textViewbudget);
+        chipGroup = v.findViewById(R.id.skillschip);
+        imageView = v.findViewById(R.id.addskill);
+        constraintLayout = v.findViewById(R.id.layoutstats);
+        sugga = v.findViewById(R.id.sugga);
+        layout = v.findViewById(R.id.layoutrating);
+        divider = v.findViewById(R.id.divider11);
+        constraintLayout.setVisibility(View.GONE);
+        sugga.setVisibility(View.VISIBLE);
+        divider.setVisibility(View.GONE);
+        imageView.setVisibility(View.GONE);
+        toolbar = v.findViewById(R.id.toolbar);
+        toolbar.setVisibility(View.GONE);
+        if (mine) forMe(v);
+        verifyNCall();
+        return v;
+    }
+
     public void verifyNCall2() {
+        dlg.setTitle("Adding Skill...");
+        dlg.show();
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         mUser.getIdToken(true)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         addskill(task.getResult().getToken());
                     } else {
-                        // Handle error -> task.getException();
-                        Toast.makeText(getContext(), "Authentication Error!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void verifyNCall() {
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUser.getIdToken(true)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        myapi(task.getResult().getToken());
-                    } else {
+                        dlg.dismiss();
                         // Handle error -> task.getException();
                         Toast.makeText(getContext(), "Authentication Error!", Toast.LENGTH_SHORT).show();
                     }
@@ -211,10 +205,7 @@ public class ProfileFragment extends Fragment {
     }
 
     public void myapi(String token) {
-        dlg.setTitle("Getting Profile Info..");
-        dlg.show();
         Retrofit retrofit = getRetrofit(token);
-
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
         Call<Profile> call = jsonPlaceHolder.getProfile();
         call.enqueue(new Callback<Profile>() {
@@ -256,7 +247,22 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    ChipAdapter adapter;
+    private void verifyNCall() {
+        dlg = new ProgressDialog(getContext());
+        dlg.setTitle("Getting Profile Info..");
+        dlg.show();
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        myapi(task.getResult().getToken());
+                    } else {
+                        // Handle error -> task.getException();
+                        dlg.dismiss();
+                        Toast.makeText(getContext(), "Authentication Error!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
     private void setupskills(ArrayList<String> skills) {
         adapter = new ChipAdapter(chipGroup, skills);

@@ -17,26 +17,21 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.example.mytasker.R;
+import com.example.mytasker.api.API;
 import com.example.mytasker.fragments.PostTaskCat;
 import com.example.mytasker.fragments.PostTaskDetail;
 import com.example.mytasker.fragments.PostTaskExtra;
 import com.example.mytasker.models.Task;
-import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.functions.FirebaseFunctionsException;
+
+import org.json.JSONArray;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import java.util.Map;
 
 import static com.example.mytasker.util.Contracts.PICK_IMAGE_REQUEST;
-import static com.example.mytasker.util.Tools.getRetrofit;
 
 public class PostTask extends BaseActivity {
 
@@ -116,65 +111,43 @@ public class PostTask extends BaseActivity {
         } else {
             //done
             reward = Float.parseFloat(((PostTaskExtra) fragment).reward.getText().toString());
-            verifyNCall();
+            post();
         }
     }
 
-    private void verifyNCall() {
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUser.getIdToken(true)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        postmytask(task.getResult().getToken());
-                    } else {
-                        // Handle error -> task.getException();
-                        Toast.makeText(this, "Authentication Error!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    public void postmytask(String token) {
+    public void post() {
         dlg.show();
-        Date date = new Date();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Task task = new Task(
-                user.getUid(),
-                user.getDisplayName(),
-                user.getPhotoUrl().toString(),
-                date.getTime(),
-                desc,
-                title,
+        Map task = Task.toMap(
+                false,
                 (int) reward,
-                "mumbai",
+                25.0,
+                25.0,
+                new Date().getTime(),
                 PostTaskCat.category,
-                "videos",
-                "time",
-                new double[]{25.0,25.0},
-                new String[]{"tech","null"},
-                new ArrayList<>(),
-                false
+                title,
+                desc,
+                "mumbai",
+                new JSONArray(),
+                new JSONArray()
         );
-        Retrofit retrofit = getRetrofit(token);
-        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<Task> call = jsonPlaceHolder.createTask(task);
-        call.enqueue(new Callback<Task>() {
-            @Override
-            public void onResponse(Call<Task> call, Response<Task> response) {
-
-                dlg.dismiss();
-                if (!response.isSuccessful()) {
-                    Log.e("error",response.toString());
-                    return;
+        API api = new API();
+        api.createTask(task).addOnCompleteListener(t -> {
+            dlg.dismiss();
+            if (!t.isSuccessful()) {
+                Exception e = t.getException();
+                if (e instanceof FirebaseFunctionsException) {
+                    FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+                    FirebaseFunctionsException.Code code = ffe.getCode();
+                    Object details = ffe.getDetails();
+                    Log.e("tag", ffe + "\n" + code + "\n" + details);
                 }
-                finish();
-                overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+                Toast.makeText(this, "Posting Unsuccessful", Toast.LENGTH_SHORT).show();
+                Log.e("tag", e + "");
+                return;
             }
-
-            @Override
-            public void onFailure(Call<Task> call, Throwable t) {
-                Log.e("error",t.getMessage());
-                dlg.dismiss();
-            }
+            Toast.makeText(this, t.getResult().getMessage() + "", Toast.LENGTH_SHORT).show();
         });
     }
+
+
 }
