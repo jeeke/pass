@@ -61,10 +61,10 @@ public class BidsAdapter extends RecyclerView.Adapter<BidsAdapter.holder> {
                 v.setBackground(context.getDrawable(R.drawable.bg_blue));
         }
         Bid current = list.get(position);
-        ((TextView) mView.findViewById(R.id.tasker_name)).setText(current.getName());
-        ((TextView) mView.findViewById(R.id.bid_message)).setText(current.getMessage());
+        ((TextView) mView.findViewById(R.id.name)).setText(current.getName());
+        ((TextView) mView.findViewById(R.id.desc)).setText(current.getDes());
         ((TextView) mView.findViewById(R.id.contact)).setText("CONTACT - "+ current.getContact());
-        ((TextView) mView.findViewById(R.id.bid_price)).setText("$" + current.getBidPrice());
+        ((TextView) mView.findViewById(R.id.price)).setText("$" + current.getPrice());
     }
 
     @Override

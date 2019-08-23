@@ -5,18 +5,19 @@ import java.util.Map;
 
 public class Bid {
     private String id;
-    private long createdAt;
-    private String bidderId;
+    private long c_date;
+    private String bidder_id;
     private String name;
+    private String avatar;
     private long contact;
-    private String message;
+    private String des;
     private int price;
 
     public static Map toMap(int price, long contact, String message) {
         Map map = new HashMap();
         map.put("price", price);
         map.put("contact", contact);
-        map.put("message", message);
+        map.put("des", message);
         return map;
     }
 
@@ -36,30 +37,6 @@ public class Bid {
         this.name = name;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getBidderId() {
-        return bidderId;
-    }
-
-    public void setBidderId(String bidderId) {
-        this.bidderId = bidderId;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public int getPrice() {
         return price;
     }
@@ -74,5 +51,37 @@ public class Bid {
 
     public void setContact(long contact) {
         this.contact = contact;
+    }
+
+    public long getC_date() {
+        return c_date;
+    }
+
+    public void setC_date(long c_date) {
+        this.c_date = c_date;
+    }
+
+    public String getBidder_id() {
+        return bidder_id;
+    }
+
+    public void setBidder_id(String bidder_id) {
+        this.bidder_id = bidder_id;
+    }
+
+    public String getDes() {
+        return des;
+    }
+
+    public void setDes(String des) {
+        this.des = des;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

@@ -16,8 +16,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
 import com.example.mytasker.adapters.FeedAdapter;
+import com.example.mytasker.holders.FeedHolder;
 import com.example.mytasker.models.Feed;
-import com.example.mytasker.models.FeedViewHolder;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -42,6 +42,11 @@ public class FeedFragment extends Fragment implements FeedAdapter.RecyclerViewCl
         super.onCreate(savedInstanceState);
 
     }
+
+    FirebaseRecyclerPagingAdapter<Feed, FeedHolder> mAdapter;
+
+    private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private void callFireBase() {
         mSwipeRefreshLayout.setColorSchemeResources(
@@ -76,15 +81,15 @@ public class FeedFragment extends Fragment implements FeedAdapter.RecyclerViewCl
                 .build();
 
         //Initialize Adapter
-        mAdapter = new FirebaseRecyclerPagingAdapter<Feed, FeedViewHolder>(options) {
+        mAdapter = new FirebaseRecyclerPagingAdapter<Feed, FeedHolder>(options) {
             @NonNull
             @Override
-            public FeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return new FeedViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_feed, parent, false));
+            public FeedHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                return new FeedHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_feed, parent, false));
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull FeedViewHolder holder,
+            protected void onBindViewHolder(@NonNull FeedHolder holder,
                                             int position,
                                             @NonNull Feed model) {
                 holder.setItem(model);
@@ -129,10 +134,6 @@ public class FeedFragment extends Fragment implements FeedAdapter.RecyclerViewCl
         //Set listener to SwipeRefreshLayout for refresh action
         mSwipeRefreshLayout.setOnRefreshListener(() -> mAdapter.refresh());
     }
-
-    private RecyclerView mRecyclerView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    FirebaseRecyclerPagingAdapter<Feed, FeedViewHolder> mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

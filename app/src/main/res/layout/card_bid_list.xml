@@ -18,40 +18,63 @@
         android:layout_gravity="center"
         android:background="@drawable/bg_soft_orange">
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/person" />
+        </androidx.cardview.widget.CardView>
+
         <TextView
-            android:id="@+id/tasker_name"
+            android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
             android:gravity="center_vertical|start"
             android:text="Want my house cleaned"
             android:textSize="22sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/cardView2"
+            app:layout_constraintEnd_toStartOf="@+id/price"
+            app:layout_constraintStart_toEndOf="@+id/cardView2"
+            app:layout_constraintTop_toTopOf="@+id/cardView2" />
 
         <TextView
-            android:id="@+id/bid_price"
+            android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
             android:text="$500"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/tasker_name"
+            app:layout_constraintBottom_toTopOf="@+id/divider10"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tasker_name" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/task_dist"
+            android:id="@+id/c_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text=""
             android:textColor="@color/color_12"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/bid_price"
-            app:layout_constraintStart_toStartOf="@+id/bid_price"
-            app:layout_constraintTop_toBottomOf="@+id/bid_price" />
+            app:layout_constraintEnd_toEndOf="@+id/price"
+            app:layout_constraintStart_toStartOf="@+id/price"
+            app:layout_constraintTop_toBottomOf="@+id/price"
+            tools:text="5 min ago" />
 
         <LinearLayout
             android:id="@+id/linearLayout6"
@@ -102,14 +125,14 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/bid_message"
+            android:id="@+id/desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Message"
             android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="@+id/tasker_name"
-            app:layout_constraintTop_toBottomOf="@+id/tasker_name" />
+            app:layout_constraintStart_toStartOf="@+id/name"
+            app:layout_constraintTop_toBottomOf="@+id/name" />
 
         <TextView
             android:id="@+id/contact"
@@ -120,8 +143,8 @@
             android:text="TextView"
             android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@+id/divider10"
-            app:layout_constraintStart_toStartOf="@+id/bid_message"
-            app:layout_constraintTop_toBottomOf="@+id/bid_message"
+            app:layout_constraintStart_toStartOf="@+id/desc"
+            app:layout_constraintTop_toBottomOf="@+id/desc"
             tools:text="Contact :" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

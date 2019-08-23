@@ -19,7 +19,7 @@
         android:minHeight="136dp">
 
         <TextView
-            android:id="@+id/tasker_name"
+            android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="32dp"
@@ -28,33 +28,33 @@
             android:text="Want my house cleaned"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/bid_price"
+            app:layout_constraintEnd_toStartOf="@+id/price"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
         <TextView
-            android:id="@+id/bid_price"
+            android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:text="$500"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/tasker_name"
+            app:layout_constraintBottom_toBottomOf="@+id/name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tasker_name" />
+            app:layout_constraintTop_toTopOf="@+id/name" />
 
         <TextView
-            android:id="@+id/task_dist"
+            android:id="@+id/c_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/color_12"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/bid_price"
-            app:layout_constraintStart_toStartOf="@+id/bid_price"
-            app:layout_constraintTop_toBottomOf="@+id/bid_price"
+            app:layout_constraintEnd_toEndOf="@+id/price"
+            app:layout_constraintStart_toStartOf="@+id/price"
+            app:layout_constraintTop_toBottomOf="@+id/price"
             android:text="" />
 
         <View
@@ -73,7 +73,7 @@
             android:layout_height="19dp"
             android:layout_marginTop="16dp"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/bid_price"
+            app:layout_constraintEnd_toEndOf="@+id/price"
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="invisible" />
 

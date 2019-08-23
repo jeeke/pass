@@ -79,8 +79,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder
                 v.setBackground(context.getDrawable(R.drawable.bg_blue));
         }
         Task current = list.get(position);
-        ((TextView) mView.findViewById(R.id.tasker_name)).setText(current.getTitle());
-        TextView textView = mView.findViewById(R.id.bid_price);
+        ((TextView) mView.findViewById(R.id.name)).setText(current.getTitle());
+        TextView textView = mView.findViewById(R.id.price);
         textView.setText("$" + current.getCost());
         if(type) setStage(mView,current.getStage());
         else mView.findViewById(R.id.dotText).setVisibility(View.GONE);

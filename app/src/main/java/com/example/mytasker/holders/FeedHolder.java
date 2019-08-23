@@ -1,4 +1,4 @@
-package com.example.mytasker.models;
+package com.example.mytasker.holders;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -8,15 +8,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mytasker.R;
+import com.example.mytasker.models.Feed;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 
-public class FeedViewHolder extends RecyclerView.ViewHolder {
+public class FeedHolder extends RecyclerView.ViewHolder {
     private TextView title,likes,name,date;
     private ImageView avatar,image;
 
-    public FeedViewHolder(@NonNull View itemView) {
+    public FeedHolder(@NonNull View itemView) {
         super(itemView);
         title = itemView.findViewById(R.id.title);
         likes = itemView.findViewById(R.id.numLikes);
