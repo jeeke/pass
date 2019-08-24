@@ -32,7 +32,7 @@ public class Tools {
 //    }
 
     public static String elapsedTime(long cDate) {
-        long different = new Date().getTime() - cDate;
+        long different = new Date().getTime() / 1000 - cDate;
 
         long secondsInMilli = 1000;
         long minutesInMilli = secondsInMilli * 60;

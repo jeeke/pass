@@ -171,7 +171,8 @@ public class ProfileFragment extends Fragment {
                 Log.e("tag", e + "");
                 return;
             }
-            Toast.makeText(getContext(), t.getResult().getMessage() + "", Toast.LENGTH_SHORT).show();
+            Log.e("tag", t.getResult() + "");
+            Toast.makeText(getContext(), "Skills Updated", Toast.LENGTH_SHORT).show();
         });
     }
 

@@ -3,7 +3,6 @@ package com.example.mytasker.holders;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +17,7 @@ public class BidHolder extends RecyclerView.ViewHolder implements View.OnClickLi
     private ImageView avatar;
     private TextView desc, name, c_date, contact, price;
     private Listener mListener;
-    private String b_id, tasker_id;
+    private String tasker_id;
     //TODO confirm assign and resign button
 //    private static final int BUTTON_ASSIGN = R.id.assign;
 
@@ -38,21 +37,19 @@ public class BidHolder extends RecyclerView.ViewHolder implements View.OnClickLi
         name.setText(bid.getName());
         desc.setText(bid.getDes() + "");
         c_date.setText(elapsedTime(bid.getC_date()));
-        contact.setText("Contact: " + bid.getContact());
         price.setText("$" + bid.getPrice());
-        this.b_id = bid.getId();
-        Toast.makeText(itemView.getContext(), b_id, Toast.LENGTH_SHORT).show();
-        this.tasker_id = bid.getBidder_id();
+//        Toast.makeText(itemView.getContext(),  Toast.LENGTH_SHORT).show();
+        this.tasker_id = bid.getId();
         if (bid.getAvatar() != null)
             Picasso.with(avatar.getContext()).load(bid.getAvatar()).into(avatar);
     }
 
     @Override
     public void onClick(View v) {
-        mListener.onClick(v, b_id, tasker_id);
+        mListener.onClick(v, tasker_id);
     }
 
     public interface Listener {
-        void onClick(View v, String bid, String tasker_id);
+        void onClick(View v, String tasker_id);
     }
 }

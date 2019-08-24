@@ -45,7 +45,9 @@ public class SettingActivity extends BaseActivity {
                     .signOut(this)
                     .addOnCompleteListener(task -> {
                         dialog.dismiss();
+                        FirebaseAuth.getInstance().signOut();
                         launchActivity(SettingActivity.this,MainActivity.class);
+                        finish();
                     });
         });
         TextView name,contact,contactHead;

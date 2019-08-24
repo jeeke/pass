@@ -122,12 +122,12 @@ public class TaskDetailActivity extends BaseActivity {
 
     private void markDone() {
         ProgressDialog dlg = new ProgressDialog(this);
-        dlg.setTitle("Posting your Bid..");
+        dlg.setTitle("Marking task..");
         dlg.show();
         Map map = new HashMap();
         map.put("p_id", current.getPoster_id());
         map.put("task_id", current.getId());
-        Contracts.call(map, "bid").addOnCompleteListener(t -> {
+        Contracts.call(map, "taskDone").addOnCompleteListener(t -> {
             dlg.dismiss();
             if (!t.isSuccessful()) {
                 Exception e = t.getException();
@@ -142,7 +142,9 @@ public class TaskDetailActivity extends BaseActivity {
                 return;
             }
             finish();
-            Toast.makeText(this, t.getResult().getMessage() + "", Toast.LENGTH_SHORT).show();
+            Log.e("tag", t.getResult() + "");
+            Toast.makeText(this, "Task Done Successfully", Toast.LENGTH_SHORT).show();
+            launchActivity(this, FeedbackByTaskerActivity.class);
         });
     }
 
@@ -167,7 +169,8 @@ public class TaskDetailActivity extends BaseActivity {
                 return;
             }
             finish();
-            Toast.makeText(this, t.getResult().getMessage() + "", Toast.LENGTH_SHORT).show();
+            Log.e("tag", t.getResult() + "");
+            Toast.makeText(this, "Bid Cancelled", Toast.LENGTH_SHORT).show();
         });
     }
 }

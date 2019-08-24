@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Task extends Message implements Serializable {
     @SerializedName("dis")
@@ -57,6 +59,27 @@ public class Task extends Message implements Serializable {
         this.tags = tags;
         this.remote = remote;
         this.musthaves = musthaves;
+    }
+
+    public Map toMap() {
+        Map map = new HashMap();
+        map.put("id", id);
+        map.put("stage", stage);
+        map.put("c_date", c_date);
+        map.put("poster_avatar", poster_avatar);
+        map.put("poster_name", poster_name);
+        map.put("job_des", job_des);
+        map.put("title", title);
+        map.put("cost", cost);
+        map.put("address", address);
+        map.put("poster_id", poster_id);
+        map.put("category", category);
+        map.put("deadline", deadline);
+        map.put("loc", location);
+        map.put("tags", tags);
+        map.put("remote", remote);
+        map.put("must_haves", musthaves);
+        return map;
     }
 
     public String getId() {

@@ -3,11 +3,9 @@ package com.example.mytasker.util;
 import android.content.res.Resources;
 
 import com.example.mytasker.R;
-import com.example.mytasker.models.Message;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.functions.FirebaseFunctions;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +29,8 @@ public class Contracts {
     public static int CODE_NOTIFICATION_ACTIVITY = 101;
     public static int PICK_IMAGE_REQUEST = 102;
     public static int ADD_SKILL_REQUEST = 103;
-    public static int dpToPx(int dp) {
+
+    static int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
@@ -46,7 +45,7 @@ public class Contracts {
             .build();
     private Contracts(){}
 
-    public static Task<Message> call(Map data, String fn) {
+    public static Task<String> call(Map data, String fn) {
         // Create the arguments to the callable function.
         FirebaseFunctions functions = FirebaseFunctions.getInstance();
         return functions
@@ -56,7 +55,8 @@ public class Contracts {
                     // This continuation runs on either success or failure, but if the task
                     // has failed then getResult() will throw an Exception which will be
                     // propagated down.
-                    return new Message((HashMap) task.getResult().getData());
+                    return task.getResult().toString();
+//                    return new Message((HashMap) task.getResult().getData());
                 });
     }
 }

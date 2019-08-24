@@ -154,12 +154,12 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
     }
 
 
-    private void verifyNCall(String b_id, String tasker_id) {
+    private void verifyNCall(String tasker_id) {
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         mUser.getIdToken(true)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        callRetrofit(task.getResult().getToken(), b_id, tasker_id);
+                        callRetrofit(task.getResult().getToken(), tasker_id);
                     } else {
                         // Handle error -> task.getException();
                         Toast.makeText(this, "Authentication Error!", Toast.LENGTH_SHORT).show();
@@ -167,7 +167,7 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
                 });
     }
 
-    private void callRetrofit(String token, String b_id, String tasker_id) {
+    private void callRetrofit(String token, String tasker_id) {
         ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle("Assigning Task...");
         dlg.show();
@@ -176,7 +176,6 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
         Map map = new HashMap();
         map.put("task", task);
         map.put("tasker_id", tasker_id);
-        map.put("b_id", b_id);
         Call<Message> call = jsonPlaceHolder.assignTask(map);
 
         call.enqueue(new Callback<Message>() {
@@ -202,11 +201,11 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
 //    TODO why we save tasks separately if we are saving in prev tasks
 
     @Override
-    public void onClick(View v, String bid, String tasker_id) {
+    public void onClick(View v, String tasker_id) {
         new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
                 .setTitle("ASSIGN TASK")
                 .setMessage("Do you want to assign the task to this bid ?")
-                .setPositiveButton("YES, ASSIGN", (dialog, which) -> verifyNCall(bid, tasker_id))
+                .setPositiveButton("YES, ASSIGN", (dialog, which) -> verifyNCall(tasker_id))
                 .show();
     }
 }

@@ -12,14 +12,13 @@ import com.example.mytasker.models.Task;
 import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.Tools;
 import com.google.firebase.functions.FirebaseFunctionsException;
-import com.google.gson.Gson;
 
 import java.util.Map;
 
 public class BidConfirm extends BaseActivity {
 
 
-    EditText price,desc,contact;
+    EditText price, desc;
     private Task task;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,18 +33,13 @@ public class BidConfirm extends BaseActivity {
 
     private void initFields(){
         price = findViewById(R.id.bidPrice);
-        contact = findViewById(R.id.contact);
         desc = findViewById(R.id.extraText);
     }
 
     private  void checkFields(){
         if(price.getText().toString().equals("")){
             Toast.makeText(this, "Please enter bid price", Toast.LENGTH_SHORT).show();
-        }
-        else if(contact.getText().toString().length()!=10){
-            Toast.makeText(this, "Please enter valid contact", Toast.LENGTH_SHORT).show();
-        }
-        else if(desc.getText().toString().equals("")){
+        } else if (desc.getText().toString().equals("")) {
             Toast.makeText(this, "Please enter some message", Toast.LENGTH_SHORT).show();
         }else {
             callAPI();
@@ -61,11 +55,8 @@ public class BidConfirm extends BaseActivity {
         ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle("Posting your Bid..");
         dlg.show();
-        Gson gson = new Gson();
-        String t1 = gson.toJson(task);
         Map bid = Bid.toMap((int) Float.parseFloat(price.getText().toString()),
-                Long.parseLong(contact.getText().toString()),
-                t1,
+                task,
                 desc.getText().toString());
 
         Contracts.call(bid, "bid").addOnCompleteListener(t -> {
@@ -83,7 +74,8 @@ public class BidConfirm extends BaseActivity {
                 return;
             }
             finish();
-            Toast.makeText(this, t.getResult().getMessage() + "", Toast.LENGTH_SHORT).show();
+            Log.v("tag", t.getResult());
+            Toast.makeText(this, "Bidding Successful", Toast.LENGTH_SHORT).show();
         });
     }
 }

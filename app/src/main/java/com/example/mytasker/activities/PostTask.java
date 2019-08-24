@@ -38,6 +38,7 @@ import retrofit2.Retrofit;
 import static com.example.mytasker.util.Contracts.PICK_IMAGE_REQUEST;
 import static com.example.mytasker.util.Tools.getRetrofit;
 
+
 public class PostTask extends BaseActivity {
 
     StepperIndicator indicator;
@@ -88,6 +89,8 @@ public class PostTask extends BaseActivity {
         fab = findViewById(R.id.floatingActionButton);
         dlg = new ProgressDialog(this);
         dlg.setTitle("Posting your task, Please Wait....");
+
+
     }
 
     private void loadFragment(Fragment fragment) {
