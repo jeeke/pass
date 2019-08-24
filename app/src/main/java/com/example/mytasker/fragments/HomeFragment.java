@@ -18,10 +18,11 @@ import com.example.mytasker.R;
 import com.example.mytasker.activities.HistoryTask;
 import com.example.mytasker.activities.TaskDetailActivity;
 import com.example.mytasker.adapters.TaskListAdapter;
+import com.example.mytasker.holders.TaskHolder;
+import com.example.mytasker.models.Task;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
-import com.example.mytasker.retrofit.RetrofitFeedHelper;
+import com.example.mytasker.retrofit.RetrofitParser;
 import com.example.mytasker.util.FilterHelper;
-import com.example.mytasker.util.NetworkCache;
 import com.example.mytasker.util.ToolbarHelper;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +38,7 @@ import retrofit2.Retrofit;
 import static com.example.mytasker.util.Tools.getRetrofit;
 
 
-public class HomeFragment extends Fragment implements FilterHelper.FilterListener, TaskListAdapter.RecyclerViewClickListener {
+public class HomeFragment extends Fragment implements FilterHelper.FilterListener, TaskHolder.RecyclerViewClickListener {
 
 
     public HomeFragment() {
@@ -72,35 +73,32 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     }
 
 
+    private ArrayList<Task> tasks;
     private void callRetrofit(String token) {
         shimmerContainer.startShimmer();
         Retrofit retrofit = getRetrofit(token);
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<RetrofitFeedHelper> call = jsonPlaceHolder.getTasks(
+        Call<RetrofitParser> call = jsonPlaceHolder.getTasks(
                 filterHelper.loc,
                 filterHelper.radius,
-                filterHelper.tags,
-                filterHelper.price,
-                filterHelper.remote
+                filterHelper.tags
         );
 
-        call.enqueue(new Callback<RetrofitFeedHelper>() {
+        call.enqueue(new Callback<RetrofitParser>() {
             @Override
-            public void onResponse(Call<RetrofitFeedHelper> call, Response<RetrofitFeedHelper> response) {
+            public void onResponse(Call<RetrofitParser> call, Response<RetrofitParser> response) {
                 if (!response.isSuccessful()) {
                     Log.v("Code: ", String.valueOf(response.code()));
                     swipeContainer.setRefreshing(false);
                     return;
                 }
-                RetrofitFeedHelper details = response.body();
+                RetrofitParser details = response.body();
 
 
                 if (details != null) {
-                    NetworkCache.tasks = details.toTaskList();
+                    tasks = details.toTaskList();
                 }
-                adapter.update(NetworkCache.tasks);
-
-
+                adapter.update(tasks);
                 shimmerContainer.stopShimmer();
                 shimmerContainer.animate().alpha(0.0f).setDuration(500).start();
                 listView.animate().alpha(1.0f).setDuration(1000).start();
@@ -108,7 +106,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
             }
 
             @Override
-            public void onFailure(Call<RetrofitFeedHelper> call, Throwable t) {
+            public void onFailure(Call<RetrofitParser> call, Throwable t) {
                 Log.e("error ", t.getMessage());
                 swipeContainer.setRefreshing(false);
             }
@@ -116,9 +114,9 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     }
 
     private void callRetrofitHelper() {
-        if (NetworkCache.tasks != null) {
+        if (tasks != null) {
             shimmerContainer.setVisibility(View.GONE);
-            adapter.update(NetworkCache.tasks);
+            adapter.update(tasks);
             listView.setAlpha(1.0f);
         } else {
             verifyNCall();
@@ -141,7 +139,6 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         toolbarHelper = new ToolbarHelper(getActivity(), (MotionLayout) v, HistoryTask.class);
         filterHelper = new FilterHelper(this, (MotionLayout) v);
         initViews(v);
-
         adapter = new TaskListAdapter(getContext(), this, new ArrayList<>(), false);
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -166,10 +163,10 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
 
 
     @Override
-    public void onClick(View view, int position) {
-        TaskDetailActivity.FROM = 0;
+    public void onClick(View view, Task task) {
         Intent intent = new Intent(getActivity(), TaskDetailActivity.class);
-        intent.putExtra("position", position);
+        intent.putExtra("from", 0);
+        intent.putExtra("task", task);
         startActivity(intent);
     }
 }

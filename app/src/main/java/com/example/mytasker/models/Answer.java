@@ -12,6 +12,9 @@ public class Answer extends Message{
         this.answer = answer;
     }
 
+    public Answer() {
+    }
+
 
     public String getName() {
         return name;

@@ -14,12 +14,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        app:cardCornerRadius="30dp"
+        app:cardCornerRadius="25dp"
         app:cardElevation="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <ImageView
+            android:id="@+id/person"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:scaleType="centerCrop"
@@ -27,27 +28,25 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/textView27"
+        android:id="@+id/person_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="16dp"
-        android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/cardView2"
         app:layout_constraintStart_toEndOf="@+id/cardView2"
         app:layout_constraintTop_toTopOf="@+id/cardView2" />
 
     <TextView
-        android:id="@+id/textView28"
+        android:id="@+id/question"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="TextView"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/textView27"
-        app:layout_constraintTop_toBottomOf="@+id/textView27" />
+        app:layout_constraintStart_toStartOf="@+id/person_name"
+        app:layout_constraintTop_toBottomOf="@+id/person_name" />
 
     <View
         android:id="@+id/divider3"
@@ -57,18 +56,25 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView28" />
+        app:layout_constraintTop_toBottomOf="@+id/question" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:paddingTop="16dp"
-        android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider3" />
+        app:layout_constraintTop_toBottomOf="@+id/divider3">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <EditText
         android:id="@+id/editText"

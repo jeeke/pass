@@ -5,54 +5,37 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mytasker.R;
+import com.example.mytasker.holders.TaskHolder;
 import com.example.mytasker.models.Task;
 import com.example.mytasker.util.Contracts;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder> {
+public class TaskListAdapter extends RecyclerView.Adapter<TaskHolder> {
 
     private ArrayList<Task> list;
-    private RecyclerViewClickListener mListener;
+    private boolean type;
+    private Context context;
+    private TaskHolder.RecyclerViewClickListener mListener;
 
-    public interface RecyclerViewClickListener {
-        void onClick(View view, int position);
-    }
-
-    boolean type;
-    Context context;
-
-    public TaskListAdapter(Context context, RecyclerViewClickListener listener, ArrayList<Task> list, boolean type) {
+    public TaskListAdapter(Context context, TaskHolder.RecyclerViewClickListener listener, ArrayList<Task> list, boolean type) {
         this.list = list;
-        this.mListener = listener;
         this.context = context;
         this.type = type;
-    }
-
-    private void setStage(View v,int stage){
-        View dot = v.findViewById(R.id.dot);
-        TextView dotText = v.findViewById(R.id.dotText);
-        dotText.setVisibility(View.VISIBLE);
-        dot.setVisibility(View.VISIBLE);
-        Drawable drawable = (context.getDrawable(R.drawable.notification_dot_indicator));
-        drawable.setTint(context.getResources().getColor(Contracts.TASK_STAGE_COLORS[stage]));
-        dot.setBackground(drawable);
-//        dot.setBackgroundColor(((Context)mListener).getResources().getColor(Contracts.QUES_STAGE_COLORS[stage]));
-        dotText.setText(Contracts.TASK_STAGE_TEXT[stage]);
+        this.mListener = listener;
     }
 
     @NonNull
     @Override
-    public holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_task, parent, false);
-        return new holder(view);
+        return new TaskHolder(view, mListener);
     }
 
     public void update(List<Task> list) {
@@ -62,49 +45,29 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.holder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull holder holder, int position) {
-        View mView = holder.itemView;
-        View v = mView.findViewById(R.id.lyt_parent);
+    public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
+        Drawable drawable;
         switch (position % 4) {
             case 0:
-                v.setBackground(context.getDrawable(R.drawable.bg_soft_orange));
+                drawable = context.getDrawable(R.drawable.bg_soft_orange);
                 break;
             case 1:
-                v.setBackground(context.getDrawable(R.drawable.bg_orange));
+                drawable = context.getDrawable(R.drawable.bg_orange);
                 break;
             case 2:
-                v.setBackground(context.getDrawable(R.drawable.bg_green));
+                drawable = context.getDrawable(R.drawable.bg_green);
                 break;
-            case 3:
-                v.setBackground(context.getDrawable(R.drawable.bg_blue));
+            default:
+                drawable = context.getDrawable(R.drawable.bg_blue);
         }
-        Task current = list.get(position);
-        ((TextView) mView.findViewById(R.id.name)).setText(current.getTitle());
-        TextView textView = mView.findViewById(R.id.price);
-        textView.setText("$" + current.getCost());
-        if(type) setStage(mView,current.getStage());
-        else mView.findViewById(R.id.dotText).setVisibility(View.GONE);
-
+        Drawable drawable2 = (context.getDrawable(R.drawable.notification_dot_indicator));
+        int c = context.getResources().getColor(Contracts.TASK_STAGE_COLORS[list.get(position).getStage()]);
+        holder.setItem(list.get(position), false, drawable, drawable2, c);
     }
 
     @Override
     public int getItemCount() {
         return list.size();
-    }
-
-    public class holder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        View itemView;
-
-        holder(@NonNull View itemView) {
-            super(itemView);
-            this.itemView = itemView;
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            mListener.onClick(v, getAdapterPosition());
-        }
     }
 }
 

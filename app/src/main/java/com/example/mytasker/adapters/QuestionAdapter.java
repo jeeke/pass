@@ -81,7 +81,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.holder
         }
         Question current = list.get(position);
         ((TextView) mView.findViewById(R.id.question)).setText(current.getQues());
-        ((TextView) mView.findViewById(R.id.poster_id)).setText(current.getPosterName());
+        ((TextView) mView.findViewById(R.id.poster_name)).setText(current.getPosterName());
         if(type) setStage(mView,current.getStage());
     }
 

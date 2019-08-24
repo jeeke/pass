@@ -1,5 +1,6 @@
 package com.example.mytasker.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,10 +19,10 @@ import com.example.mytasker.R;
 import com.example.mytasker.activities.HistoryQues;
 import com.example.mytasker.activities.QuestionDetailActivity;
 import com.example.mytasker.adapters.QuestionAdapter;
+import com.example.mytasker.models.Question;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
-import com.example.mytasker.retrofit.RetrofitFeedHelper;
+import com.example.mytasker.retrofit.RetrofitParser;
 import com.example.mytasker.util.FilterHelper;
-import com.example.mytasker.util.NetworkCache;
 import com.example.mytasker.util.ToolbarHelper;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,14 +36,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import static com.example.mytasker.util.Tools.getRetrofit;
-import static com.example.mytasker.util.Tools.launchActivity;
 
 
 public class QuestionFragment extends Fragment implements FilterHelper.FilterListener,QuestionAdapter.RecyclerViewClickListener{
 
     private ShimmerFrameLayout shimmerContainer;
-    private FilterHelper filterHelper;
-    private ToolbarHelper toolbarHelper;
+    ArrayList<Question> questions;
 
     public QuestionFragment() {
     }
@@ -67,30 +66,35 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
                 });
     }
 
+    FilterHelper filterHelper;
+
     private void callRetrofit(String token) {
         shimmerContainer.startShimmer();
         Retrofit retrofit = getRetrofit(token);
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<RetrofitFeedHelper> call = jsonPlaceHolder.getQuestions(new double[]{25.0, 25.0});
+        Call<RetrofitParser> call = jsonPlaceHolder.getQuestions(
+                filterHelper.loc,
+                filterHelper.radius,
+                filterHelper.tags);
 
 //        new double[]{25.0, 25.0},
 //                100,
 //                new String[]{"tech", "null"}
 
-        call.enqueue(new Callback<RetrofitFeedHelper>() {
+        call.enqueue(new Callback<RetrofitParser>() {
             @Override
-            public void onResponse(Call<RetrofitFeedHelper> call, Response<RetrofitFeedHelper> response) {
+            public void onResponse(Call<RetrofitParser> call, Response<RetrofitParser> response) {
                 if (!response.isSuccessful()) {
                     Log.e("Code: ", response.toString());
                     return;
                 }
-                RetrofitFeedHelper details = response.body();
+                RetrofitParser details = response.body();
 
                 if (details != null) {
-                    NetworkCache.questions = details.toQuesList();
+                    questions = details.toQuesList();
                 }
-                adapter.update(NetworkCache.questions);
+                adapter.update(questions);
 
                 shimmerContainer.stopShimmer();
                 shimmerContainer.animate().alpha(0.0f).setDuration(500).start();
@@ -99,7 +103,7 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
             }
 
             @Override
-            public void onFailure(Call<RetrofitFeedHelper> call, Throwable t) {
+            public void onFailure(Call<RetrofitParser> call, Throwable t) {
                 Log.e("error ", t.getMessage());
                 swipeContainer.setRefreshing(false);
             }
@@ -107,15 +111,14 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
     }
 
     private void callRetrofitHelper() {
-        if(NetworkCache.questions!=null) {
+        if (questions != null) {
             shimmerContainer.setVisibility(View.GONE);
-            adapter.update(NetworkCache.questions);
+            adapter.update(questions);
             listView.setAlpha(1.0f);
         }else {
             verifyNCall();
         }
     }
-
     private RecyclerView listView;
     private SwipeRefreshLayout swipeContainer;
     private QuestionAdapter adapter;
@@ -124,8 +127,8 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_question_list, container, false);
-        toolbarHelper = new ToolbarHelper((AppCompatActivity) getActivity(),(MotionLayout)v, HistoryQues.class);
-        filterHelper = new FilterHelper(this,(MotionLayout) v);
+        ToolbarHelper toolbarHelper = new ToolbarHelper((AppCompatActivity) getActivity(), (MotionLayout) v, HistoryQues.class);
+        filterHelper = new FilterHelper(this, (MotionLayout) v);
         adapter = new QuestionAdapter(getContext(),this, new ArrayList<>(),false);
         initViews(v);
         initListeners(v);
@@ -160,6 +163,8 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
 
     @Override
     public void onClick(View view, int position) {
-        launchActivity(getActivity(), QuestionDetailActivity.class);
+        Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
+        intent.putExtra("ques", questions.get(position));
+        startActivity(intent);
     }
 }

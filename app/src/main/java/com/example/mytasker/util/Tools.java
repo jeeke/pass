@@ -9,6 +9,8 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.mytasker.R;
 import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
 
+import java.util.Date;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
@@ -28,6 +30,37 @@ public class Tools {
 //        } catch (Exception e) {
 //        }
 //    }
+
+    public static String elapsedTime(long cDate) {
+        long different = new Date().getTime() - cDate;
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+        long monthsInMilli = daysInMilli * 30;
+
+        long elapsedMonths = different / monthsInMilli;
+        different = different % monthsInMilli;
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+        long elapsedSeconds = different / secondsInMilli;
+
+        String elapsed;
+        if (elapsedMonths != 0) elapsed = elapsedMonths + " months";
+        else if (elapsedDays != 0) elapsed = elapsedDays + " days";
+        else if (elapsedHours != 0) elapsed = elapsedHours + " hours";
+        else if (elapsedMinutes != 0) elapsed = elapsedMinutes + " minutes";
+        else elapsed = elapsedSeconds + " seconds";
+        return elapsed + " ago";
+    }
 
     public static void initMinToolbar(AppCompatActivity activity, String title, boolean zeroElevation) {
         Toolbar toolbar = activity.findViewById(R.id.toolbar);

@@ -2,14 +2,13 @@ package com.example.mytasker.retrofit;
 
 import com.example.mytasker.models.Answer;
 import com.example.mytasker.models.Bid;
-import com.example.mytasker.models.Feed;
 import com.example.mytasker.models.Message;
-import com.example.mytasker.models.PrevPostModel;
 import com.example.mytasker.models.Profile;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.models.Task;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -26,14 +25,16 @@ public interface JsonPlaceHolder {
     @POST("createQues")
     Call<Question> createQuestion(@Body Question question);
 
+    @POST("assignTask")
+    Call<Message> assignTask(@Body Map map);
+
     @GET("task-feed")
-    Call<RetrofitFeedHelper> getTasks(
+    Call<RetrofitParser> getTasks(
             @Query("loc") double[] loc,
             @Query("radius") Integer radius,
-            @Query("tags") ArrayList<String> tags,
-            @Query("price") int[] price,
-            @Query("remoteTask") boolean remoteTask
+            @Query("tags") ArrayList<String> tags
     );
+
 
     @GET("bids-list")
     Call<ArrayList<Bid>> getBids(@Query("task_id") String id);
@@ -42,28 +43,15 @@ public interface JsonPlaceHolder {
     Call<ArrayList<Answer>> getAnswers(@Query("ques_id") String id);
 
     @GET("ques-feed")
-    Call<RetrofitFeedHelper> getQuestions(@Query("loc") double[] loc);
+    Call<RetrofitParser> getQuestions(@Query("loc") double[] loc,
+                                      @Query("radius") Integer radius,
+                                      @Query("tags") ArrayList<String> tags);
 
     @GET("notifications")
     Call<NotificationList> getNotifications();
 
-    @GET("prev-post")
-    Call<PrevPostModel> getPrevTask();
-
-    @GET("prev-ques")
-    Call<ArrayList<Question>> historyQues();
-
-    //TODO add token in all request
-
-    @GET("profile")
-    Call<Profile> getProfile();
-
     @POST("add-skill")
     Call<Profile> addskill(@Query("skill") String string);
-
-    @POST("bid")
-    Call<Message> confirmBid(@Body Bid bid,
-                             @Query("task_id") String id);
 
     @POST("answer")
     Call<Message> submitAnswer(@Body Answer answer,
@@ -75,7 +63,4 @@ public interface JsonPlaceHolder {
                            @Query("poster_id") String p_id,
                            @Query("task_id") String id
     );
-
-    @POST("create-feed")
-    Call<Feed> createFeed(@Body Feed feed);
 }

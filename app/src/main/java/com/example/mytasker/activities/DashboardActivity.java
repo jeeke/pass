@@ -148,7 +148,7 @@ public class DashboardActivity extends BaseActivity {
 
         Log.e("AddedSkill","Dash" + requestCode + " "+ resultCode);
         if(requestCode == Contracts.ADD_SKILL_REQUEST && resultCode == RESULT_OK){
-                ((ProfileFragment)fragments[3]).verifyNCall2();
+            ((ProfileFragment) fragments[3]).callAPI();
         }
     }
 

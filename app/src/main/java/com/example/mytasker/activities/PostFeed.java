@@ -33,6 +33,7 @@ public class PostFeed extends BaseActivity {
     ImageView mImage;
     EditText text;
     FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,23 +45,24 @@ public class PostFeed extends BaseActivity {
         text = findViewById(R.id.text);
         fab = findViewById(R.id.done);
         fab.setOnClickListener(v -> {
-            if(mUri!=null){
+            if (mUri != null) {
                 uploadImage(mUri);
-            }else verifyNCall();
+            } else verifyNCall();
         });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if(uploadTask!=null)
-        uploadTask.cancel();
+        if (uploadTask != null)
+            uploadTask.cancel();
     }
 
     UploadTask uploadTask;
     String imageURL;
     Uri mUri;
-    private void uploadImage(Uri uri){
+
+    private void uploadImage(Uri uri) {
         fab.setClickable(false);
         fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey_400)));
 //        fab.setBackgroundTintList(new ColorStateList(R.color.grey_400));
@@ -70,8 +72,8 @@ public class PostFeed extends BaseActivity {
         int n = rand.nextInt(10);
         String path = "images/" + n + "/";
         n = rand.nextInt(10);
-        path+= n  + "/";
-        path+= new Date().getTime() + uri.getLastPathSegment();
+        path += n + "/";
+        path += new Date().getTime() + uri.getLastPathSegment();
         StorageReference imageRef = storage.getReference().child(path);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -95,9 +97,10 @@ public class PostFeed extends BaseActivity {
     }
 
     ProgressDialog dlg;
+
     private void verifyNCall() {
 //        Toast.makeText(this, imageURL, Toast.LENGTH_SHORT).show();
-        if(text.getText().toString().equals("") && imageURL==null){
+        if (text.getText().toString().equals("") && imageURL == null) {
             Toast.makeText(this, "Both Fields can not be empty", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -119,16 +122,27 @@ public class PostFeed extends BaseActivity {
                 text.getText().toString(),
                 1
         );
-        DatabaseReference push = FirebaseDatabase.getInstance().getReference().child("Feeds").push();
-        push.setValue(feed).addOnSuccessListener(aVoid -> {
-            dlg.dismiss();
-            fab.setBackgroundTintList(ColorStateList.valueOf(R.attr.colorAccent));
-            fab.setClickable(true);
-        }).addOnFailureListener(e -> {
-            dlg.dismiss();
-            fab.setBackgroundTintList(ColorStateList.valueOf(R.attr.colorAccent));
-            fab.setClickable(true);
-            Toast.makeText(PostFeed.this, "Feed can't be posted", Toast.LENGTH_SHORT).show();
+        DatabaseReference push = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference feeds = push.child("Feeds").push();
+        feeds.setValue(feed).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DatabaseReference ref = push.child("/PrevFeeds").child(user.getUid()).push();
+                ref.setValue(feed).addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
+                        Toast.makeText(PostFeed.this, "Feed posted successfully", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(PostFeed.this, "Feed could not be posted", Toast.LENGTH_SHORT).show();
+                    }
+                    dlg.dismiss();
+                    fab.setBackgroundTintList(ColorStateList.valueOf(R.attr.colorAccent));
+                    fab.setClickable(true);
+                });
+            } else {
+                dlg.dismiss();
+                fab.setBackgroundTintList(ColorStateList.valueOf(R.attr.colorAccent));
+                fab.setClickable(true);
+                Toast.makeText(PostFeed.this, "Feed could not be posted", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -150,12 +164,12 @@ public class PostFeed extends BaseActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             mUri = data.getData();
             Picasso.with(this).load(mUri).into(mImage);
-            ((ImageView)findViewById(R.id.picker)).setImageResource(R.drawable.ic_edit);
-            ((TextView)findViewById(R.id.add_image)).setText("Edit Image");
+            ((ImageView) findViewById(R.id.picker)).setImageResource(R.drawable.ic_edit);
+            ((TextView) findViewById(R.id.add_image)).setText("Edit Image");
         }
     }
 }

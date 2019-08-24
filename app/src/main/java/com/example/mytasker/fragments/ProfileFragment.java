@@ -27,25 +27,25 @@ import com.example.mytasker.activities.AddSkill;
 import com.example.mytasker.activities.NotificationActivity;
 import com.example.mytasker.activities.SettingActivity;
 import com.example.mytasker.models.Profile;
-import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.util.ChipAdapter;
 import com.example.mytasker.util.Contracts;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.squareup.picasso.Picasso;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.functions.FirebaseFunctionsException;
 
 import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.example.mytasker.util.Contracts.ADD_SKILL_REQUEST;
 import static com.example.mytasker.util.Contracts.CODE_NOTIFICATION_ACTIVITY;
 import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
-import static com.example.mytasker.util.Tools.getRetrofit;
 
 public class ProfileFragment extends Fragment {
 
@@ -54,7 +54,7 @@ public class ProfileFragment extends Fragment {
     private ProgressBar ontime, budget, behaviour, quality;
     private TextView ontimet, behaviourt, qualityt, budgett;
     private ChipGroup chipGroup;
-    private ImageView imageView, sugga, profileImage;
+    ChipAdapter adapter;
     private ProgressDialog dlg;
     private ConstraintLayout constraintLayout,layout;
     private View divider;
@@ -87,8 +87,44 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    private ChipAdapter adapter;
+    private ImageView imageView, sugga;
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.frag_profile, container, false);
+        taskerrating = v.findViewById(R.id.taskerrating);
+        posterrating = v.findViewById(R.id.posterating);
+        taskdone = v.findViewById(R.id.taskdone);
+        taskposted = v.findViewById(R.id.taskposted);
+        bucksearned = v.findViewById(R.id.bucksearned);
+        ontime = v.findViewById(R.id.progressontime);
+        ontimet = v.findViewById(R.id.textViewontime);
+        behaviour = v.findViewById(R.id.progressbehaviour);
+        behaviourt = v.findViewById(R.id.textViewbehaviour);
+        quality = v.findViewById(R.id.progressquality);
+        qualityt = v.findViewById(R.id.textViewquality);
+        budget = v.findViewById(R.id.progressbudget);
+        budgett = v.findViewById(R.id.textViewbudget);
+        chipGroup = v.findViewById(R.id.skillschip);
+        imageView = v.findViewById(R.id.addskill);
+        dlg = new ProgressDialog(getContext());
+        dlg.setTitle("Getting Profile Info..");
+        constraintLayout = v.findViewById(R.id.layoutstats);
+        sugga = v.findViewById(R.id.sugga);
+        layout = v.findViewById(R.id.layoutrating);
+        divider = v.findViewById(R.id.divider11);
+        constraintLayout.setVisibility(View.GONE);
+        sugga.setVisibility(View.VISIBLE);
+        divider.setVisibility(View.GONE);
+        imageView.setVisibility(View.GONE);
+        toolbar = v.findViewById(R.id.toolbar);
+        toolbar.setVisibility(View.GONE);
+        if (mine) forMe(v);
+        myapi();
+        return v;
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -112,127 +148,30 @@ public class ProfileFragment extends Fragment {
         inflater.inflate(R.menu.profile_menu, menu);
     }
 
-    public void addskill(String token) {
-        Log.e("AddedSkill","added_skill");
-        if (!adapter.isSafe(Contracts.added_skill)){
+    public void callAPI() {
+        if (!adapter.isSafe(Contracts.added_skill)) {
             Toast.makeText(getContext(), "Skill Already Exist", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        Retrofit retrofit = getRetrofit(token);
-
-        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<Profile> call = jsonPlaceHolder.addskill(Contracts.added_skill);
-        call.enqueue(new Callback<Profile>() {
-            @Override
-            public void onResponse(Call<Profile> call, Response<Profile> response) {
-
-                dlg.dismiss();
-                if (!response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Something went wrong, Try later ", Toast.LENGTH_SHORT).show();
-                    Log.e("error", response.toString());
-                    return;
-                }
-                Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                adapter.addChild(Contracts.added_skill);
-            }
-
-            @Override
-            public void onFailure(Call<Profile> call, Throwable t) {
-                Toast.makeText(getContext(), "Something went wrong, Try later ", Toast.LENGTH_SHORT).show();
-                Log.e("error", t.getMessage());
-                dlg.dismiss();
-            }
-        });
-
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.frag_profile, container, false);
-        profileImage = v.findViewById(R.id.profile_image);
-        String url = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
-        if (url != null && !url.equals(""))
-            Picasso.with(getContext()).load(url).placeholder(R.drawable.person)
-                    .error(R.drawable.person).into(profileImage);
-        taskerrating = v.findViewById(R.id.taskerrating);
-        posterrating = v.findViewById(R.id.posterating);
-        taskdone = v.findViewById(R.id.taskdone);
-        taskposted = v.findViewById(R.id.taskposted);
-        bucksearned = v.findViewById(R.id.bucksearned);
-        ontime = v.findViewById(R.id.progressontime);
-        ontimet = v.findViewById(R.id.textViewontime);
-        behaviour = v.findViewById(R.id.progressbehaviour);
-        behaviourt = v.findViewById(R.id.textViewbehaviour);
-        quality = v.findViewById(R.id.progressquality);
-        qualityt = v.findViewById(R.id.textViewquality);
-        budget = v.findViewById(R.id.progressbudget);
-        budgett = v.findViewById(R.id.textViewbudget);
-        chipGroup = v.findViewById(R.id.skillschip);
-        imageView = v.findViewById(R.id.addskill);
-        constraintLayout = v.findViewById(R.id.layoutstats);
-        sugga = v.findViewById(R.id.sugga);
-        layout = v.findViewById(R.id.layoutrating);
-        divider = v.findViewById(R.id.divider11);
-        constraintLayout.setVisibility(View.GONE);
-        sugga.setVisibility(View.VISIBLE);
-        divider.setVisibility(View.GONE);
-        imageView.setVisibility(View.GONE);
-        toolbar = v.findViewById(R.id.toolbar);
-        toolbar.setVisibility(View.GONE);
-        if (mine) forMe(v);
-        verifyNCall();
-        return v;
-    }
-
-    public void verifyNCall2() {
         dlg.setTitle("Adding Skill...");
         dlg.show();
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUser.getIdToken(true)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        addskill(task.getResult().getToken());
-                    } else {
-                        dlg.dismiss();
-                        // Handle error -> task.getException();
-                        Toast.makeText(getContext(), "Authentication Error!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    public void myapi(String token) {
-        Retrofit retrofit = getRetrofit(token);
-        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<Profile> call = jsonPlaceHolder.getProfile();
-        call.enqueue(new Callback<Profile>() {
-            @Override
-            public void onResponse(Call<Profile> call, Response<Profile> response) {
-
-                dlg.dismiss();
-                if (!response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Something went wrong, Try later ", Toast.LENGTH_SHORT).show();
-                    Log.e("error", response.toString());
-                    return;
+        Map map = new HashMap();
+        map.put("skill", Contracts.added_skill);
+        Contracts.call(map, "addSkill").addOnCompleteListener(t -> {
+            dlg.dismiss();
+            if (!t.isSuccessful()) {
+                Exception e = t.getException();
+                if (e instanceof FirebaseFunctionsException) {
+                    FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+                    FirebaseFunctionsException.Code code = ffe.getCode();
+                    Object details = ffe.getDetails();
+                    Log.e("tag", ffe + "\n" + code + "\n" + details);
                 }
-                if(mine) imageView.setVisibility(View.VISIBLE);
-                taskerrating.setRating(Float.parseFloat(response.body().getTasker_rating()));
-                posterrating.setRating(Float.parseFloat(response.body().getPoster_rating()));
-                setupstats(response.body());
-                setupskills(response.body().getSkills());
-                setupmedals(response.body().getMedals());
-                settupdetail(response.body());
+                Toast.makeText(getContext(), "Skill could not be added", Toast.LENGTH_SHORT).show();
+                Log.e("tag", e + "");
+                return;
             }
-
-            @Override
-            public void onFailure(Call<Profile> call, Throwable t) {
-                Toast.makeText(getContext(), "Something went wrong, Try later ", Toast.LENGTH_SHORT).show();
-                Log.e("error", t.getMessage());
-                dlg.dismiss();
-            }
+            Toast.makeText(getContext(), t.getResult().getMessage() + "", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -240,28 +179,41 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    private void myapi() {
+        dlg.setTitle("Getting Profile Info..");
+        dlg.show();
+        DatabaseReference r = FirebaseDatabase.getInstance().getReference().child("Profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        r.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                r.removeEventListener(this);
+                dlg.dismiss();
+                Profile profile = snapshot.getValue(Profile.class);
+                if (profile != null) {
+                    if (mine) imageView.setVisibility(View.VISIBLE);
+                    taskerrating.setRating(profile.getTasker_rating());
+                    posterrating.setRating(profile.getPoster_rating());
+                    setupstats(profile);
+                    setupskills(profile.getSkills());
+                    setupmedals(profile.getMedals());
+                    settupdetail(profile);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                r.removeEventListener(this);
+                dlg.dismiss();
+                Toast.makeText(getContext(), "Something went wrong, Try later ", Toast.LENGTH_SHORT).show();
+                Log.e("error", databaseError.toString());
+            }
+        });
+    }
+
     private void settupdetail(Profile p) {
         taskdone.setText(p.getT_done());
         bucksearned.setText("$"+p.getBucks());
-        taskposted.setText(p.getT_posted());
+        taskposted.setText(p.getT_posted() + "");
 
-    }
-
-    private void verifyNCall() {
-        dlg = new ProgressDialog(getContext());
-        dlg.setTitle("Getting Profile Info..");
-        dlg.show();
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUser.getIdToken(true)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        myapi(task.getResult().getToken());
-                    } else {
-                        // Handle error -> task.getException();
-                        dlg.dismiss();
-                        Toast.makeText(getContext(), "Authentication Error!", Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     private void setupskills(ArrayList<String> skills) {

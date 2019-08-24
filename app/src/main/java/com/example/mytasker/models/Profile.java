@@ -1,27 +1,43 @@
 package com.example.mytasker.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 
 public class Profile extends Message{
 
-    @SerializedName("medals")
-    ArrayList<String> medals;
+    private ArrayList<String> medals, skills, details;
+    private String on_time, on_budget, quality, behaviour, t_done;
+    private int bucks;
+    private long t_posted;
+    private float t_rating, p_rating;
 
-    String on_time,on_budget,quality,behaviour,t_posted,t_done,bucks;
+    Profile() {
+        t_rating = 0;
+        p_rating = 0;
+        on_budget = on_time = quality = behaviour = t_done = "0";
+        bucks = 0;
+        t_posted = 0;
+        medals = new ArrayList<>();
+        skills = new ArrayList<>();
+        details = new ArrayList<>();
 
-    @SerializedName("skills")
-    ArrayList<String> skills;
+    }
 
-    @SerializedName("details")
-    ArrayList<String> detail;
+    public float getTasker_rating() {
+        return t_rating;
+    }
 
-    @SerializedName("t_rating")
-    String tasker_rating;
+    public void setTasker_rating(float tasker_rating) {
+        this.t_rating = tasker_rating;
+    }
 
-    @SerializedName("p_rating")
-    String poster_rating;
+    public float getPoster_rating() {
+        return p_rating;
+    }
+
+    public void setPoster_rating(float poster_rating) {
+        this.p_rating = poster_rating;
+    }
+
 
     public ArrayList<String> getMedals() {
         return medals;
@@ -63,11 +79,11 @@ public class Profile extends Message{
         this.behaviour = behaviour;
     }
 
-    public String getT_posted() {
+    public long getT_posted() {
         return t_posted;
     }
 
-    public void setT_posted(String t_posted) {
+    public void setT_posted(long t_posted) {
         this.t_posted = t_posted;
     }
 
@@ -79,11 +95,11 @@ public class Profile extends Message{
         this.t_done = t_done;
     }
 
-    public String getBucks() {
+    public int getBucks() {
         return bucks;
     }
 
-    public void setBucks(String bucks) {
+    public void setBucks(int bucks) {
         this.bucks = bucks;
     }
 
@@ -96,27 +112,11 @@ public class Profile extends Message{
     }
 
     public ArrayList<String> getDetail() {
-        return detail;
+        return details;
     }
 
-    public void setDetail(ArrayList<String> detail) {
-        this.detail = detail;
-    }
-
-    public String getTasker_rating() {
-        return tasker_rating;
-    }
-
-    public void setTasker_rating(String tasker_rating) {
-        this.tasker_rating = tasker_rating;
-    }
-
-    public String getPoster_rating() {
-        return poster_rating;
-    }
-
-    public void setPoster_rating(String poster_rating) {
-        this.poster_rating = poster_rating;
+    public void setDetail(ArrayList<String> details) {
+        this.details = details;
     }
 
 }

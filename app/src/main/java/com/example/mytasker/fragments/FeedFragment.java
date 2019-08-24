@@ -2,30 +2,27 @@ package com.example.mytasker.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.paging.PagedList;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
-import com.example.mytasker.adapters.FeedAdapter;
-import com.example.mytasker.holders.FeedHolder;
-import com.example.mytasker.models.Feed;
-import com.google.firebase.database.DatabaseError;
+import com.example.mytasker.activities.HistoryFeed;
+import com.example.mytasker.util.FeedActNFrag;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
-import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
-import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
-public class FeedFragment extends Fragment implements FeedAdapter.RecyclerViewClickListener {
+import static com.example.mytasker.util.Tools.launchActivity;
+
+public class FeedFragment extends Fragment {
     public FeedFragment() {
     }
 
@@ -37,103 +34,29 @@ public class FeedFragment extends Fragment implements FeedAdapter.RecyclerViewCl
 //        Tools.setSystemBarColor(getActivity(), R.color.green_800);
     }
 
+    private FeedActNFrag feedActNFrag;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
     }
 
-    FirebaseRecyclerPagingAdapter<Feed, FeedHolder> mAdapter;
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_history, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_history) {
+            launchActivity(getActivity(), HistoryFeed.class);
+        }
+        return false;
+    }
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    private void callFireBase() {
-        mSwipeRefreshLayout.setColorSchemeResources(
-                android.R.color.holo_red_light,
-
-                android.R.color.holo_orange_light,
-
-                android.R.color.holo_blue_bright,
-
-                android.R.color.holo_green_light);
-
-        //Initialize RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-
-        LinearLayoutManager mManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mManager);
-
-        //Initialize Database
-        Query mQuery = FirebaseDatabase.getInstance().getReference().child("Feeds").orderByChild("createdAt");
-
-        //Initialize PagedList Configuration
-        PagedList.Config config = new PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setPrefetchDistance(5)
-                .setPageSize(10)
-                .build();
-
-        //Initialize FirebasePagingOptions
-        DatabasePagingOptions<Feed> options = new DatabasePagingOptions.Builder<Feed>()
-                .setLifecycleOwner(this)
-                .setQuery(mQuery,config,Feed.class)
-                .build();
-
-        //Initialize Adapter
-        mAdapter = new FirebaseRecyclerPagingAdapter<Feed, FeedHolder>(options) {
-            @NonNull
-            @Override
-            public FeedHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return new FeedHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_feed, parent, false));
-            }
-
-            @Override
-            protected void onBindViewHolder(@NonNull FeedHolder holder,
-                                            int position,
-                                            @NonNull Feed model) {
-                holder.setItem(model);
-            }
-
-            @Override
-            protected void onLoadingStateChanged(@NonNull LoadingState state) {
-                switch (state) {
-                    case LOADING_INITIAL:
-                    case LOADING_MORE:
-                        // Do your loadingPng animation
-                        mSwipeRefreshLayout.setRefreshing(true);
-                        break;
-
-                    case LOADED:
-                        // Stop Animation
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        break;
-
-                    case FINISHED:
-                        //Reached end of Data set
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        break;
-
-                    case ERROR:
-                        retry();
-                        break;
-                }
-            }
-
-            @Override
-            protected void onError(@NonNull DatabaseError databaseError) {
-                super.onError(databaseError);
-                mSwipeRefreshLayout.setRefreshing(false);
-                databaseError.toException().printStackTrace();
-            }
-        };
-
-        //Set Adapter to RecyclerView
-        mRecyclerView.setAdapter(mAdapter);
-
-        //Set listener to SwipeRefreshLayout for refresh action
-        mSwipeRefreshLayout.setOnRefreshListener(() -> mAdapter.refresh());
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -141,7 +64,9 @@ public class FeedFragment extends Fragment implements FeedAdapter.RecyclerViewCl
         View v = inflater.inflate(R.layout.fragment_feed, container, false);
         initToolbar(v);
         initViews(v);
-        callFireBase();
+        Query mQuery = FirebaseDatabase.getInstance().getReference().child("Feeds").orderByChild("createdAt");
+        feedActNFrag = new FeedActNFrag();
+        feedActNFrag.callFireBase(getActivity(), mQuery, mSwipeRefreshLayout, mRecyclerView, false);
         return v;
     }
 
@@ -149,23 +74,18 @@ public class FeedFragment extends Fragment implements FeedAdapter.RecyclerViewCl
     @Override
     public void onStart() {
         super.onStart();
-        mAdapter.startListening();
+        feedActNFrag.mAdapter.startListening();
     }
 
     //Stop Listening Adapter
     @Override
     public void onStop() {
         super.onStop();
-        mAdapter.stopListening();
+        feedActNFrag.mAdapter.stopListening();
     }
 
     private void initViews(View v) {
         mRecyclerView = v.findViewById(R.id.list);
         mSwipeRefreshLayout = v.findViewById(R.id.swipe_refresh_layout);
-    }
-
-    @Override
-    public void onClick(View view, int position) {
-
     }
 }

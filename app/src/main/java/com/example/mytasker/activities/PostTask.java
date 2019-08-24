@@ -135,6 +135,12 @@ public class PostTask extends BaseActivity {
 
     public void postmytask(String token) {
         dlg.show();
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("tech");
+        strings.add("null");
+        ArrayList<Double> doubles = new ArrayList<>(2);
+        doubles.add(25.0);
+        doubles.add(25.0);
         Date date = new Date();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Task task = new Task(
@@ -149,8 +155,8 @@ public class PostTask extends BaseActivity {
                 "tech",
                 "videos",
                 "time",
-                new double[]{25.0,25.0},
-                new String[]{"tech","null"},
+                doubles,
+                strings,
                 new ArrayList<>(),
                 false
         );

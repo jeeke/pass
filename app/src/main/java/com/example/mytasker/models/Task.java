@@ -2,14 +2,66 @@ package com.example.mytasker.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Task extends Message{
-
-
+public class Task extends Message implements Serializable {
+    @SerializedName("dis")
     String dis;
-    @SerializedName("attachment")
-    String attachment;
+    @SerializedName("id")
+    String id;
+    @SerializedName("c_date")
+    long c_date;
+    @SerializedName("job_des")
+    String job_des;
+    @SerializedName("title")
+    String title;
+    @SerializedName("cost")
+    Integer cost;
+    @SerializedName("remote")
+    boolean remote;
+    @SerializedName("address")
+    String address;
+    @SerializedName("poster_name")
+    String poster_name;
+    @SerializedName("poster_avatar")
+    String poster_avatar;
+    @SerializedName("poster_id")
+    String poster_id;
+    @SerializedName("category")
+    String category;
+    @SerializedName("deadline")
+    String deadline;
+    @SerializedName("loc")
+    ArrayList<Double> location;
+    @SerializedName("tags")
+    ArrayList<String> tags;
+    @SerializedName("stage")
+    int stage;
+    @SerializedName("must_haves")
+    ArrayList<String> musthaves;
+
+    // For Post use constructor that shoud be send to server !!
+    public Task(String poster_id, String poster_name, String poster_avatar, long c_date, String job_des, String title, Integer cost, String address, String category, String attachment, String deadline, ArrayList<Double> location, ArrayList tags, ArrayList<String> musthaves, boolean remote) {
+        this.c_date = c_date;
+        this.poster_avatar = poster_avatar;
+        this.poster_name = poster_name;
+        this.job_des = job_des;
+        this.title = title;
+        this.cost = cost;
+        this.address = address;
+        this.poster_id = poster_id;
+        this.category = category;
+        this.deadline = deadline;
+        this.location = location;
+        this.tags = tags;
+        this.remote = remote;
+        this.musthaves = musthaves;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     public Task() {
     }
@@ -50,14 +102,6 @@ public class Task extends Message{
         this.category = category;
     }
 
-    public String getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(String attachment) {
-        this.attachment = attachment;
-    }
-
     public String getDeadline() {
         return deadline;
     }
@@ -66,58 +110,26 @@ public class Task extends Message{
         this.deadline = deadline;
     }
 
-    public double[] getLocation() {
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public ArrayList<Double> getLocation() {
         return location;
     }
 
-    public void setLocation(double[] location) {
+    public void setLocation(ArrayList<Double> location) {
         this.location = location;
-    }
-
-    public void setTags(String[] tags) {
-        this.tags = tags;
     }
 
     public ArrayList<String> getMusthaves() {
         return musthaves;
     }
 
-    @SerializedName("c_date")
-    long c_date;
-    @SerializedName("job_des")
-    String job_des;
-    @SerializedName("title")
-    String title;
-    @SerializedName("cost")
-    Integer cost;
-    @SerializedName("remote")
-    boolean remote;
-    @SerializedName("address")
-    String address;
-    @SerializedName("poster_name")
-    String poster_name;
-    @SerializedName("poster_avatar")
-    String poster_avatar;
-    @SerializedName("poster_id")
-    String poster_id;
-    @SerializedName("category")
-    String category;
-
     public void setMusthaves(ArrayList<String> musthaves) {
         this.musthaves = musthaves;
     }
-    @SerializedName("deadline")
-    String deadline;
-    @SerializedName("loc")
-    double[] location;
-    @SerializedName("tags")
-    String[] tags;
 
-    @SerializedName("stage")
-    int stage;
-
-    @SerializedName("must_haves")
-    ArrayList<String> musthaves;
 
     public String getPoster_name() {
         return poster_name;
@@ -167,31 +179,15 @@ public class Task extends Message{
     public String getCategory() {
         return category;
     }
-    public String[] getTags(){
+
+    public ArrayList<String> getTags() {
         return tags;
     }
     public long getC_date() {
         return c_date;
     }
 
-    // For Post use constructor that shoud be send to server !!
-    public Task(String poster_id,String poster_name,String poster_avatar,long c_date, String job_des, String title, Integer cost, String address,  String category, String attachment, String deadline, double[] location, String[] tags, ArrayList<String> musthaves,boolean remote) {
-        this.c_date = c_date;
-        this.poster_avatar = poster_avatar;
-        this.poster_name = poster_name;
-        this.job_des = job_des;
-        this.title = title;
-        this.cost = cost;
-        this.address = address;
-        this.poster_id = poster_id;
-        this.category = category;
-        this.attachment = attachment;
-        this.deadline = deadline;
-        this.location = location;
+    public void setTags(ArrayList<String> tags) {
         this.tags = tags;
-        this.remote = remote;
-        this.musthaves = musthaves;
     }
-
-
 }

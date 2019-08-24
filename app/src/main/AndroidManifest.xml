@@ -19,14 +19,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/LightMode">
+        <!--
+     Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher_background" />
+        <!--
+ Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+
         <activity
             android:name=".chat.DialogsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".chat.MessagesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.FeedbackByPosterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -107,8 +122,8 @@
         </activity>
         <activity
             android:name=".activities.SearchActivity"
-            android:label="@string/title_activity_search"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_search"
             android:parentActivityName=".activities.DashboardActivity"
             android:screenOrientation="portrait">
             <meta-data
@@ -117,8 +132,8 @@
         </activity>
         <activity
             android:name=".activities.NotificationActivity"
-            android:label="@string/title_activity_notification"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_notification"
             android:parentActivityName=".activities.DashboardActivity"
             android:screenOrientation="portrait">
             <meta-data
@@ -177,6 +192,14 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

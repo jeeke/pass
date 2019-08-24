@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
@@ -121,11 +122,23 @@ public class MainActivity extends BaseActivity {
             startActivity(new Intent(MainActivity.this, DashboardActivity.class));
             finish();
         }
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w("MOBILE ID", "getInstanceId failed", task.getException());
+                        return;
+                    }
+
+                    // Get new Instance ID token
+                    String token = task.getResult().getToken();
+
+                    // Log and toast
+                    String msg = "MOBILE TOKEN" + token;
+                    Log.d("MOBILE TOKEN", msg);
+                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                });
     }
 
-
-
-    private DatabaseReference mDatabase;
 
     //ProgressDialog
     private ProgressDialog mRegProgress;
@@ -143,7 +156,7 @@ public class MainActivity extends BaseActivity {
                 FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = current_user.getUid();
 
-                mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
 
                 String device_token = FirebaseInstanceId.getInstance().getToken();
 

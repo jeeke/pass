@@ -6,6 +6,21 @@ import java.util.Map;
 public class Bid {
     private String id;
     private long c_date;
+
+    private boolean assigned;
+
+    public static Map toMap(int price, long contact, Task task, String message) {
+        Map map = new HashMap();
+        map.put("task", task);
+        map.put("price", price);
+        map.put("contact", contact);
+        map.put("des", message);
+        return map;
+    }
+
+    public boolean isAssigned() {
+        return assigned;
+    }
     private String bidder_id;
     private String name;
     private String avatar;
@@ -13,12 +28,8 @@ public class Bid {
     private String des;
     private int price;
 
-    public static Map toMap(int price, long contact, String message) {
-        Map map = new HashMap();
-        map.put("price", price);
-        map.put("contact", contact);
-        map.put("des", message);
-        return map;
+    public void setAssigned(boolean assigned) {
+        this.assigned = assigned;
     }
 
     public String getId() {

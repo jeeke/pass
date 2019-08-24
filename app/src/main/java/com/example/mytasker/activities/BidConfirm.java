@@ -8,9 +8,11 @@ import android.widget.Toast;
 
 import com.example.mytasker.R;
 import com.example.mytasker.models.Bid;
+import com.example.mytasker.models.Task;
 import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.Tools;
 import com.google.firebase.functions.FirebaseFunctionsException;
+import com.google.gson.Gson;
 
 import java.util.Map;
 
@@ -18,9 +20,12 @@ public class BidConfirm extends BaseActivity {
 
 
     EditText price,desc,contact;
+    private Task task;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        task = (Task) getIntent().getSerializableExtra("task");
+        if (task == null) finish();
         setContentView(R.layout.activity_bid_confirm);
         Tools.initMinToolbar(this,"Confirm Bid",false);
         findViewById(R.id.confirm_bid).setOnClickListener(v -> checkFields());
@@ -47,13 +52,20 @@ public class BidConfirm extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
     private void callAPI() {
         ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle("Posting your Bid..");
         dlg.show();
-
+        Gson gson = new Gson();
+        String t1 = gson.toJson(task);
         Map bid = Bid.toMap((int) Float.parseFloat(price.getText().toString()),
                 Long.parseLong(contact.getText().toString()),
+                t1,
                 desc.getText().toString());
 
         Contracts.call(bid, "bid").addOnCompleteListener(t -> {

@@ -20,6 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import retrofit2.Call;
@@ -99,6 +100,13 @@ public class PostQuestion extends BaseActivity {
     public void postQuestion(String token) {
         dlg.show();
         //result.setText("sending");
+        ArrayList<Double> loc = new ArrayList<>();
+        loc.add(25.0);
+        loc.add(25.0);
+        ArrayList<String> s = new ArrayList<>();
+        s.add("tech");
+        s.add("null");
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Date date = new Date();
         Question question = new Question(
@@ -106,13 +114,13 @@ public class PostQuestion extends BaseActivity {
                 ((PostQuesDetail) fragment).getQuestion(),
                 user.getUid(),
                 user.getDisplayName(),
+                user.getPhotoUrl().toString(),
+                "tech",
                 null,
-                null,
-                new double[]{25.0, 25.0},
-                new String[]{"tech", "null"}
+                loc,
+                s
         );
         Retrofit retrofit = getRetrofit(token);
-
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
         Call<Question> call = jsonPlaceHolder.createQuestion(question);
         call.enqueue(new Callback<Question>() {
