@@ -8,10 +8,10 @@ public class Bid {
     private String id;
     private String name;
     private String avatar;
-    private long c_date;
+    private String c_date;
     private String des;
-    private int price;
-    private boolean assigned;
+    private String price;
+    private String assigned;
 
     public static Map toMap(int price, Task task, String message) {
         Map map = new HashMap();
@@ -21,12 +21,24 @@ public class Bid {
         return map;
     }
 
-    public boolean isAssigned() {
+    public static Bid fromMap(Map<String, String> map) {
+        Bid bid = new Bid();
+        bid.setId(map.get("id"));
+        bid.setName(map.get("name"));
+        bid.setAvatar(map.get("avatar"));
+        bid.setPrice(map.get("price"));
+        bid.setDes(map.get("des"));
+        bid.setC_date(map.get("c_date"));
+        bid.setAssigned(map.get("assigned"));
+        return bid;
+    }
+
+    public String isAssigned() {
         return assigned;
     }
 
 
-    public void setAssigned(boolean assigned) {
+    public void setAssigned(String assigned) {
         this.assigned = assigned;
     }
 
@@ -46,19 +58,19 @@ public class Bid {
         this.name = name;
     }
 
-    public int getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
-    public long getC_date() {
+    public String getC_date() {
         return c_date;
     }
 
-    public void setC_date(long c_date) {
+    public void setC_date(String c_date) {
         this.c_date = c_date;
     }
 

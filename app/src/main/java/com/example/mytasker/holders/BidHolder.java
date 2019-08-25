@@ -36,7 +36,7 @@ public class BidHolder extends RecyclerView.ViewHolder implements View.OnClickLi
         itemView.findViewById(R.id.assign).setOnClickListener(this);
         name.setText(bid.getName());
         desc.setText(bid.getDes() + "");
-        c_date.setText(elapsedTime(bid.getC_date()));
+        c_date.setText(elapsedTime(Long.parseLong(bid.getC_date())));
         price.setText("$" + bid.getPrice());
 //        Toast.makeText(itemView.getContext(),  Toast.LENGTH_SHORT).show();
         this.tasker_id = bid.getId();

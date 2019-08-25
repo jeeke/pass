@@ -12,6 +12,9 @@ import com.example.mytasker.util.Tools;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 import static com.example.mytasker.util.Tools.launchActivity;
 
@@ -28,6 +31,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void initViews(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         findViewById(R.id.textView84).setOnClickListener((View v) -> launchActivity(this, EditPassword.class));
         findViewById(R.id.textView92).setOnClickListener(this::invite);
         findViewById(R.id.textView90).setOnClickListener((View v) -> openUri("https://google.com"));
@@ -46,15 +50,16 @@ public class SettingActivity extends BaseActivity {
                     .addOnCompleteListener(task -> {
                         dialog.dismiss();
                         FirebaseAuth.getInstance().signOut();
-                        launchActivity(SettingActivity.this,MainActivity.class);
+                        DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
+                        mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
                         finish();
+                        launchActivity(SettingActivity.this, MainActivity.class);
                     });
         });
         TextView name,contact,contactHead;
         name = findViewById(R.id.textView85);
         contact = findViewById(R.id.textView87);
         contactHead = findViewById(R.id.textView79);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             name.setText(user.getDisplayName());
             if(user.getEmail()!=null) contact.setText(user.getEmail());

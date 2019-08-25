@@ -93,8 +93,6 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
                     return;
                 }
                 RetrofitParser details = response.body();
-
-
                 if (details != null) {
                     tasks = details.toTaskList();
                 }

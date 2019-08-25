@@ -4,6 +4,10 @@ import android.content.res.Resources;
 
 import com.example.mytasker.R;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.functions.FirebaseFunctions;
 
 import java.util.Map;
@@ -58,5 +62,13 @@ public class Contracts {
                     return task.getResult().toString();
 //                    return new Message((HashMap) task.getResult().getData());
                 });
+    }
+
+    public static void setOnline(Object online) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getUid());
+            mUserRef.child("online").setValue(online);
+        }
     }
 }

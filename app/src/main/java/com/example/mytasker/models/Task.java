@@ -61,7 +61,17 @@ public class Task extends Message implements Serializable {
         this.musthaves = musthaves;
     }
 
-    public Map toMap() {
+    public static Task fromMap(Map<String, String> map) {
+        Task task = new Task();
+        task.setStage(Integer.parseInt(map.get("stage")));
+        task.setC_date(Long.parseLong(map.get("c_date")));
+        task.setPoster_avatar(map.get("poster_avatar"));
+        task.setJob_des(map.get("job_des"));
+        task.setPoster_name(map.get("poster_name"));
+        return task;
+    }
+
+    Map toMap() {
         Map map = new HashMap();
         map.put("id", id);
         map.put("stage", stage);

@@ -78,7 +78,7 @@ public class QuestionDetailActivity extends BaseActivity {
         //Initialize Adapter
         mAdapter = new FirebaseRecyclerPagingAdapter<Answer, AnswerHolder>(options) {
 
-            private int retryCount = 4;
+            private int retryCount = 3;
 
             @NonNull
             @Override
@@ -98,8 +98,7 @@ public class QuestionDetailActivity extends BaseActivity {
                 switch (state) {
                     case LOADING_INITIAL:
                     case LOADING_MORE:
-                        // Do your loading animation
-                        mSwipeRefreshLayout.setRefreshing(true);
+                        mSwipeRefreshLayout.setRefreshing(false);
                         break;
 
                     case LOADED:
@@ -162,23 +161,25 @@ public class QuestionDetailActivity extends BaseActivity {
     }
 
     private void submitAnswer() {
-        ProgressDialog dlg = new ProgressDialog(this);
-        dlg.setTitle("Posting your Answer..");
-        dlg.show();
+//        ProgressDialog dlg = new ProgressDialog(this);
+//        dlg.setTitle("Posting your Answer..");
+//        dlg.show();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Answer ans = new Answer(user.getDisplayName(), user.getUid(), answer.getText().toString());
-        FirebaseDatabase.getInstance().getReference().child("Answers")
-                .child(current.getId()).push().setValue(ans).addOnCompleteListener(task -> {
-            dlg.dismiss();
-            if (task.isSuccessful()) {
-                mAdapter.refresh();
-                Toast.makeText(this, "Posted", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Posting error", Toast.LENGTH_SHORT).show();
-                answer.setText("");
-                closeKeyboard();
-            }
-        });
+        if (user != null) {
+            Answer ans = new Answer(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), current.getPoster_id(), answer.getText().toString());
+            FirebaseDatabase.getInstance().getReference().child("Answers")
+                    .child(current.getId()).push().setValue(ans).addOnCompleteListener(task -> {
+//            dlg.dismiss();
+                if (task.isSuccessful()) {
+                    answer.setText("");
+                    mAdapter.refresh();
+                    closeKeyboard();
+                    Toast.makeText(this, "Posted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Posting error", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
 

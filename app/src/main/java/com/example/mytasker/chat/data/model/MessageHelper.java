@@ -1,22 +1,21 @@
 package com.example.mytasker.chat.data.model;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ServerValue;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MessageHelper {
-    public Long getCreatedAt() {
+    private String createdAt;
+
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Long createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
-
-    private Long createdAt;
     private String status;
 
     private String text;
@@ -34,7 +33,7 @@ public class MessageHelper {
     private void init(){
         id = (idH+1) + "";
         idH++;
-        createdAt = new Date().getTime();
+        createdAt = new Date().getTime() + "";
     }
 
     public MessageHelper(FirebaseUser user, String text){
@@ -55,7 +54,7 @@ public class MessageHelper {
         map.put("uid",uid);
         map.put("name",name);
         map.put("avatar",avatar);
-        map.put("createdAt", ServerValue.TIMESTAMP);
+        map.put("createdAt", new Date().getTime() + "");
         map.put("status",MESSAGE_SENT);
         return map;
     }
@@ -110,7 +109,7 @@ public class MessageHelper {
     }
 
     public Message toMessage(){
-        Message message = new Message(id,text,status,new Date(createdAt));
+        Message message = new Message(id, text, status, new Date(Long.parseLong(createdAt)));
         User user = new User(uid,name,avatar);
         message.setUser(user);
         return message;

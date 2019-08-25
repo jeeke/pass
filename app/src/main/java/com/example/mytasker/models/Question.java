@@ -59,6 +59,10 @@ public class Question extends Message implements Serializable {
         return poster_image;
     }
 
+    public String getPoster_id() {
+        return poster_id;
+    }
+
     @SerializedName("accepted")
     private int done;
 

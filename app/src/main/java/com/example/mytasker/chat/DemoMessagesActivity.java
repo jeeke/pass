@@ -8,23 +8,26 @@ import androidx.annotation.Nullable;
 
 import com.example.mytasker.R;
 import com.example.mytasker.activities.BaseActivity;
-import com.example.mytasker.chat.data.model.DialogHelper;
 import com.example.mytasker.chat.data.model.Message;
 import com.example.mytasker.chat.data.model.MessageHelper;
 import com.example.mytasker.chat.utils.AppUtils;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
+import static com.example.mytasker.util.Contracts.setOnline;
 
 
 public abstract class DemoMessagesActivity extends BaseActivity
@@ -37,9 +40,12 @@ public abstract class DemoMessagesActivity extends BaseActivity
     private Menu menu;
     private int selectionCount;
 
+    protected FirebaseUser mCurrentUser;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setOnline("true");
         initFireBase();
         imageLoader = (imageView, url, payload) -> Picasso.with(DemoMessagesActivity.this).load(url).into(imageView);
         onLoadMore(1,10);
@@ -88,16 +94,19 @@ public abstract class DemoMessagesActivity extends BaseActivity
 
 
     protected DatabaseReference mRootRef;
-    protected String mCurrentUserId;
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        setOnline(ServerValue.TIMESTAMP);
+    }
     protected String mChatUId;
     protected String mChatAvatar;
     protected String mChatUName;
-    protected FirebaseAuth mAuth;
 
     private void initFireBase() {
         mRootRef = FirebaseDatabase.getInstance().getReference();
-        mAuth = FirebaseAuth.getInstance();
-        mCurrentUserId = mAuth.getCurrentUser().getUid();
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         mChatUId = getIntent().getStringExtra("id");
         mChatUName = getIntent().getStringExtra("name");
         mChatAvatar = getIntent().getStringExtra("avatar");
@@ -111,11 +120,11 @@ public abstract class DemoMessagesActivity extends BaseActivity
         DatabaseReference messageRef;
         Query messageQuery;
         if (firstLoad) {
-            messageRef = mRootRef.child("Messages").child(mCurrentUserId).child(mChatUId);
+            messageRef = mRootRef.child("Messages").child(mCurrentUser.getUid()).child(mChatUId);
             messageQuery = messageRef.orderByChild("createdAt").limitToFirst(20);
             firstLoad = false;
         } else {
-            messageRef = mRootRef.child("Messages").child(mCurrentUserId).child(mChatUId);
+            messageRef = mRootRef.child("Messages").child(mCurrentUser.getUid()).child(mChatUId);
             messageQuery = messageRef.orderByChild("createdAt").startAt(mKey).limitToFirst(10);
         }
         messageQuery.addChildEventListener(new ChildEventListener() {
@@ -123,8 +132,6 @@ public abstract class DemoMessagesActivity extends BaseActivity
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 MessageHelper message = dataSnapshot.getValue(MessageHelper.class);
                 messagesAdapter.addToStart(message.toMessage(), true);
-                DialogHelper dialogHelper = new DialogHelper(mChatUId,mChatUName,mChatAvatar,0,null,message.getText());
-                mRootRef.child("Chats").child(mCurrentUserId).child(mChatUId).setValue(dialogHelper.toMap());
 //                TODO updaate seen value
 //                dataSnapshot.child("status").getRef().setValue(Message.MESSAGE_SEEN);
 //                mRootRef.child("Messages").child(mChatUId).child(mCurrentUserId).child("status").setValue(Message.MESSAGE_SEEN);

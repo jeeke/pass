@@ -1,9 +1,12 @@
 package com.example.mytasker.activities;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -16,12 +19,15 @@ import com.example.mytasker.MyApplication;
 import com.example.mytasker.R;
 import com.example.mytasker.broadcastReceivers.ConnectionReceiver;
 
+import static com.example.mytasker.MyFirebaseMessagingService.CHANNEL_ID;
+
 public abstract class BaseActivity extends AppCompatActivity implements ConnectionReceiver.ConnectionReceiverListener {
 
     private static final BroadcastReceiver MyReceiver = new ConnectionReceiver();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createNotificationChannel();
     }
 
     @Override
@@ -32,6 +38,24 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
             setContentView(R.layout.error_page);
             Button click=findViewById(R.id.retry);
             click.setOnClickListener(v -> checkConnection());
+        }
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            CharSequence name = getString(R.string.channel_name);
+//            String description = getString(R.string.channel_description);
+            CharSequence name = "Hello";
+            String description = "Hello World";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
     }
 

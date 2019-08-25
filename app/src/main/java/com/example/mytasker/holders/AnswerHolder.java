@@ -51,7 +51,7 @@ public class AnswerHolder extends RecyclerView.ViewHolder {
 //        if (type) setStage(current.getStage(), drawable2, c);
 //        else dotText.setVisibility(View.GONE);
 //        answer = current;
-        name.setText("by " + current.getName());
+        name.setText("by " + current.getReplier_name());
         ans.setText(current.getAnswer());
     }
 

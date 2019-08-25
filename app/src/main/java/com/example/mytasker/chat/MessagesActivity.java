@@ -38,36 +38,34 @@ public class MessagesActivity extends DemoMessagesActivity
 
     @Override
     public boolean onSubmit(CharSequence input) {
-        MessageHelper messageHelper = new MessageHelper(mAuth.getCurrentUser(),input.toString());
-//        Message message = messageHelper.toMessage();
-//        super.messagesAdapter.addToStart(
-//                message, true);
-        String current_user_ref = "Messages/" + mCurrentUserId + "/" + mChatUId;
-        String chat_user_ref = "Messages/" + mChatUId + "/" + mCurrentUserId;
-
-        DatabaseReference user_message_push = mRootRef.child("Messages")
-                .child(mCurrentUserId).child(mChatUId).push();
+        String uid, name, avatar;
+        uid = mCurrentUser.getUid();
+        name = mCurrentUser.getDisplayName();
+        avatar = mCurrentUser.getPhotoUrl().toString();
+        MessageHelper messageHelper = new MessageHelper(mCurrentUser, input.toString());
+        String current_user_ref = "Messages/" + uid + "/" + mChatUId;
+        String chat_user_ref = "Messages/" + mChatUId + "/" + uid;
+        DatabaseReference user_message_push = mRootRef.child(current_user_ref).push();
         String push_id = user_message_push.getKey();
         Map messageUserMap = new HashMap();
+
+        DialogHelper dialogHelperMe = new DialogHelper(mChatUId, mChatUName, mChatAvatar, 0, null, input.toString());
+        DialogHelper dialogHelperHim = new DialogHelper(uid, name, avatar, 0, null, input.toString());
+        //TODO update and make all the queries in one by putting them in mUpdatemap
         messageUserMap.put(current_user_ref + "/" + push_id, messageHelper.toMap());
         messageUserMap.put(chat_user_ref + "/" + push_id, messageHelper.toMap());
-//        TODO add chat user name,avatar
-        DialogHelper dialogHelper = new DialogHelper(mChatUId,mChatUName,mChatAvatar,0,null,input.toString());
-        mRootRef.child("Chats").child(mCurrentUserId).child(mChatUId).setValue(dialogHelper.toMap());
-//        mRootRef.child("Chats").child(mCurrentUserId).child(mChatUId).child("lastMessage").setValue(message.toMap());
-//        TODO update lastMessage
-//        mRootRef.child("Chats").child(mChatUId).child(mCurrentUserId).child("lastActivity").setValue(ServerValue.TIMESTAMP);
+//        messageUserMap.put("Chats/" + uid + "/" + mChatUId,dialogHelperMe.toMap());
+//        messageUserMap.put("Chats/" + mChatUId + "/" + uid,dialogHelperHim.toMap());
         mRootRef.updateChildren(messageUserMap, (databaseError, databaseReference) -> {
             if(databaseError != null){
                 Log.d("CHAT_LOG", databaseError.getMessage());
             }
-
         });
         return true;
     }
 
     private void initAdapter() {
-        super.messagesAdapter = new MessagesListAdapter<>(mCurrentUserId, super.imageLoader);
+        super.messagesAdapter = new MessagesListAdapter<>(mCurrentUser.getUid(), super.imageLoader);
         super.messagesAdapter.enableSelectionMode(this);
         super.messagesAdapter.setLoadMoreListener(this);
         super.messagesAdapter.registerViewClickListener(R.id.messageUserAvatar,
