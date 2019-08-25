@@ -85,6 +85,8 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
 
     }
 
+    //TODO combine notifications
+
     private void notificationHandler(Map<String, String> map) {
         int type = Integer.parseInt(map.get("type"));
         switch (type) {

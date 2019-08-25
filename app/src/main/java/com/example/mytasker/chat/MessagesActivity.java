@@ -3,11 +3,17 @@ package com.example.mytasker.chat;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.example.mytasker.R;
 import com.example.mytasker.chat.data.model.DialogHelper;
 import com.example.mytasker.chat.data.model.MessageHelper;
 import com.example.mytasker.chat.utils.AppUtils;
 import com.example.mytasker.util.Tools;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
@@ -15,6 +21,7 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MessagesActivity extends DemoMessagesActivity
         implements MessageInput.InputListener,
@@ -30,6 +37,37 @@ public class MessagesActivity extends DemoMessagesActivity
 
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
+
+        mRootRef.child("Messages").child(mCurrentUser.getUid()).
+                child(mChatUId).orderByKey().startAt(lastKey).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if (!Objects.equals(dataSnapshot.getKey(), lastKey)) {
+                    lastKey = dataSnapshot.getKey();
+                    messagesAdapter.addToStart(dataSnapshot.getValue(MessageHelper.class).toMessage(), true);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         MessageInput input = findViewById(R.id.input);
         input.setInputListener(this);
@@ -54,11 +92,12 @@ public class MessagesActivity extends DemoMessagesActivity
         //TODO update and make all the queries in one by putting them in mUpdatemap
         messageUserMap.put(current_user_ref + "/" + push_id, messageHelper.toMap());
         messageUserMap.put(chat_user_ref + "/" + push_id, messageHelper.toMap());
-//        messageUserMap.put("Chats/" + uid + "/" + mChatUId,dialogHelperMe.toMap());
-//        messageUserMap.put("Chats/" + mChatUId + "/" + uid,dialogHelperHim.toMap());
+        messageUserMap.put("Chats/" + uid + "/" + mChatUId, dialogHelperMe.toMap());
+        messageUserMap.put("Chats/" + mChatUId + "/" + uid, dialogHelperHim.toMap());
         mRootRef.updateChildren(messageUserMap, (databaseError, databaseReference) -> {
-            if(databaseError != null){
+            if (databaseError != null) {
                 Log.d("CHAT_LOG", databaseError.getMessage());
+//                messagesAdapter.addToStart(messageHelper.toMessage(),true);
             }
         });
         return true;
