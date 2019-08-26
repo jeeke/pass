@@ -2,6 +2,7 @@ package com.example.mytasker.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -15,8 +16,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 
+import static com.example.mytasker.MyFirebaseMessagingService.MY_PREFS_NAME;
 import static com.example.mytasker.util.Tools.launchActivity;
 
 
@@ -54,7 +55,9 @@ public class SettingActivity extends BaseActivity {
                     task -> {
                         FirebaseAuth.getInstance().signOut();
                         DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
-                        mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
+                        mUserRef.child("device_token").setValue(null);
+                        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                        prefs.edit().putBoolean("token_changed", true).apply();
                         dialog.dismiss();
                         finish();
                         launchActivity(SettingActivity.this, MainActivity.class);

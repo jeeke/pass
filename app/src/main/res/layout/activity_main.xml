@@ -5,7 +5,8 @@
     android:id="@+id/main_layout"
     android:layout_height="match_parent">
 
-    <TextView
+    <Button
+        style="@style/ButtonStyle"
         android:id="@+id/signup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,39 +20,30 @@
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Or Continue With"
+        android:layout_marginTop="24dp"
+        android:text="OR"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login" />
 
-    <ImageButton
+    <com.google.android.gms.common.SignInButton
         android:id="@+id/google"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/fb"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12"
-        app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
+        app:srcCompat="@drawable/common_google_signin_btn_icon_dark">
 
-    <ImageButton
-        android:id="@+id/fb"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/google"
-        app:layout_constraintDimensionRatio="h,1:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/google"
-        app:layout_constraintTop_toTopOf="@+id/google"
-        app:srcCompat="@drawable/google" />
+    </com.google.android.gms.common.SignInButton>
 
-    <TextView
+    <Button
+        style="@style/ButtonStyle"
         android:id="@+id/login"
         android:layout_width="wrap_content"
-        android:layout_height="19dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="16dp"
         android:text="LOGIN"
