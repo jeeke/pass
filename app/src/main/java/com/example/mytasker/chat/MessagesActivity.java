@@ -19,9 +19,9 @@ import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class MessagesActivity extends DemoMessagesActivity
         implements MessageInput.InputListener,
@@ -37,15 +37,11 @@ public class MessagesActivity extends DemoMessagesActivity
 
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
-
         mRootRef.child("Messages").child(mCurrentUser.getUid()).
-                child(mChatUId).orderByKey().startAt(lastKey).addChildEventListener(new ChildEventListener() {
+                child(mChatUId).orderByChild("createdAt").startAt(new Date().getTime() + "").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if (!Objects.equals(dataSnapshot.getKey(), lastKey)) {
-                    lastKey = dataSnapshot.getKey();
                     messagesAdapter.addToStart(dataSnapshot.getValue(MessageHelper.class).toMessage(), true);
-                }
             }
 
             @Override

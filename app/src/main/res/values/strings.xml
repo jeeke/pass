@@ -12,8 +12,7 @@
     <string name="tab_text_2">Tab 2</string>
 
 
-
-<!--  chatkit-->
+    <!--  chatkit-->
     <string name="start_typing_status">Start typing</string>
     <string name="stop_typing_status">Stop typing</string>
     <string name="action_delete">Delete</string>

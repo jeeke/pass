@@ -11,12 +11,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.mytasker.R;
-import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Arrays;
+import static com.example.mytasker.util.Tools.launchActivity;
 
 public class MainActivity extends BaseActivity {
 
@@ -63,54 +62,21 @@ public class MainActivity extends BaseActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
 
-        click.setOnClickListener(view -> startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setIsSmartLockEnabled(false)
-//                        .setIsSmartLockEnabled(!BuildConfig.DEBUG /* credentials */, true /* hints */)
-                        .setAvailableProviders(Arrays.asList(
-                                new AuthUI.IdpConfig.GoogleBuilder().build(),
-                                new AuthUI.IdpConfig.EmailBuilder().build(),
-                                new AuthUI.IdpConfig.PhoneBuilder().build()))
-                        .setTheme(R.style.LightMode)
-                        .setLogo(R.mipmap.ic_launcher_round)
-                        .setTosAndPrivacyPolicyUrls("https://joebirch.co/terms.html", "https://joebirch.co/privacy.html")
-                        .build(),
-                RC_SIGN_IN));
-    }
-//
-//
-//        Smart Lock
-//
-//        By default, FirebaseUI uses Smart Lock for Passwords to store the user's credentials and automatically sign users into your app on subsequent attempts. Using Smart Lock is recommended to provide the best user experience, but in some cases you may want to disable Smart Lock for testing or development. To disable Smart Lock, you can use the setIsSmartLockEnabled method when building your sign-in Intent:
-//
-//        startActivityForResult(
+        click.setOnClickListener(v -> launchActivity(MainActivity.this, LoginActivity.class));
+
+//        click.setOnClickListener(view -> startActivityForResult(
 //                AuthUI.getInstance()
 //                        .createSignInIntentBuilder()
 //                        .setIsSmartLockEnabled(false)
+////                        .setIsSmartLockEnabled(!BuildConfig.DEBUG /* credentials */, true /* hints */)
+//                        .setAvailableProviders(Arrays.asList(
+//                                new AuthUI.IdpConfig.GoogleBuilder().build(),
+//                                new AuthUI.IdpConfig.EmailBuilder().build(),
+//                                new AuthUI.IdpConfig.PhoneBuilder().build()))
+//                        .setTheme(R.style.LightMode)
+//                        .setLogo(R.mipmap.ic_launcher_round)
+//                        .setTosAndPrivacyPolicyUrls("https://joebirch.co/terms.html", "https://joebirch.co/privacy.html")
 //                        .build(),
-//                RC_SIGN_IN);
-//
-//        Smart Lock hints
-//
-//        If you'd like to keep Smart Lock's "hints" but disable the saving/retrieving of credentials, then you can use the two-argument version of setIsSmartLockEnabled:
-//
-//        startActivityForResult(
-//                AuthUI.getInstance()
-//                        .createSignInIntentBuilder()
-//                        .setIsSmartLockEnabled(false, true)
-//                        .build(),
-//                RC_SIGN_IN);
-//
-//        Smart Lock in dev builds
-//
-//        It is often desirable to disable Smart Lock in development but enable it in production. To achieve this, you can use the BuildConfig.DEBUG flag to control Smart Lock:
-//
-//        startActivityForResult(
-//                AuthUI.getInstance()
-//                        .createSignInIntentBuilder()
-//                        .setIsSmartLockEnabled(!BuildConfig.DEBUG /* credentials */, true /* hints */)
-//                        .build(),
-//                RC_SIGN_IN);
+//                RC_SIGN_IN));
+    }
 }
-

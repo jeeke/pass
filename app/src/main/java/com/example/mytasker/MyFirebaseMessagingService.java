@@ -10,6 +10,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.mytasker.activities.NotificationActivity;
 import com.example.mytasker.models.Bid;
@@ -53,6 +54,8 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
         }
     };
 
+    //TODO index firebase data
+
     @Override
     public void onMessageReceived(@NotNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -67,7 +70,14 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
         editor.apply();
     }
 
+
+    final String GROUP_KEY_NOTIFICATION = "com.example.mytasker.GROUP_NOTIFICATION";
+    //TODO Grouping notifications
+    private int id = 0;
+
     private void sendNotification(Bitmap bitmap) {
+
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         Intent intent = new Intent(this, NotificationActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
@@ -78,10 +88,17 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
                 .setContentText(Config.content)
                 .setContentIntent(pendingIntent)
                 .setLargeIcon(bitmap)
+                .setGroupSummary(true)
+                .setStyle(inboxStyle)
+                .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
+                .setGroup(GROUP_KEY_NOTIFICATION)
+                .setStyle(new NotificationCompat.BigTextStyle())
+                .setColor(ContextCompat.getColor(this, R.color.orange));
 //                .setStyle(new NotificationCompat.BigTextStyle()
 //                        .bigText("Much longer text that cannot fit one line..."))
-                .setAutoCancel(true);
-        notificationManager.notify(1, builder.build());
+        //GROUPING will not work if auto cancel of
+//                .setAutoCancel(true);
+        notificationManager.notify("MY TASKER", id++, builder.build());
 
     }
 
