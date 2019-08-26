@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -134,7 +135,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        toolbarHelper = new ToolbarHelper(getActivity(), (MotionLayout) v, HistoryTask.class);
+        toolbarHelper = new ToolbarHelper((AppCompatActivity) getActivity(), (MotionLayout) v, HistoryTask.class);
         filterHelper = new FilterHelper(this, (MotionLayout) v);
         initViews(v);
         adapter = new TaskListAdapter(getContext(), this, new ArrayList<>(), false);

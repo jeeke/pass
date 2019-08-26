@@ -51,7 +51,7 @@ public class FeedFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_history) {
-            launchActivity(getActivity(), HistoryFeed.class);
+            launchActivity((AppCompatActivity) getActivity(), HistoryFeed.class);
         }
         return false;
     }

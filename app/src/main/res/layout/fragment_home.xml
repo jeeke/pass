@@ -12,7 +12,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:src="@drawable/ic_menu"
+        app:srcCompat="@drawable/ic_menu"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="36dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/esselion" />
+        app:srcCompat="@drawable/esselion" />
 
 
     <ImageView
@@ -33,7 +33,7 @@
         android:layout_height="28dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_history"
+        app:srcCompat="@drawable/ic_history"
         app:layout_constraintTop_toTopOf="@+id/menu_icon"
         app:layout_constraintEnd_toEndOf="parent"/>
 

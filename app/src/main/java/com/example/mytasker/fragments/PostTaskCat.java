@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.mytasker.R;
@@ -31,7 +32,7 @@ public class PostTaskCat extends Fragment {
     }
 
     private void click(View v) {
-        launchActivity(getActivity(), SearchActivity.class);
+        launchActivity((AppCompatActivity) getActivity(), SearchActivity.class);
     }
 
 

@@ -7,11 +7,9 @@
     <color name="transparent">#00ffffff</color>
     <color name="transparentGrey">#95000000</color>
 
-    <color name="colorPrimary">#50ffff</color>
-    <color name="colorPrimaryDark">#50ffff</color>
-
     <color name="orange">#f47d31</color>
     <color name="blue_grey">#546e7a</color>
+    <color name="colorAccent">#546e7a</color>
     <color name="dark_blue_grey">#5a6175</color>
     <color name="creme">#f5f2ed</color>
 

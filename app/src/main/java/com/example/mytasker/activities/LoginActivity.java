@@ -1,5 +1,6 @@
 package com.example.mytasker.activities;
 
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,54 +35,63 @@ public class LoginActivity extends AppCompatActivity {
     Button action;
     private String name, email, password;
 
+    ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        boolean from = getIntent().getBooleanExtra("from", false);
+        boolean from = getIntent().getBooleanExtra("from", true);
         initViews(from);
     }
 
     private void checkFields(boolean from) {
-        name = first.getText().toString();
+        dialog = new ProgressDialog(this);
         email = second.getText().toString();
         password = third.getText().toString();
-        if (from && name.equals(""))
+        name = first.getText().toString();
+        if (from && name.equals("")) {
             Toast.makeText(this, "Please Enter Your Name", Toast.LENGTH_SHORT).show();
+        }
         else if (email.equals("") || !email.contains("@") || !email.contains("."))
             Toast.makeText(this, "Please Enter Valid Email", Toast.LENGTH_SHORT).show();
         else if (password.length() < 8)
             Toast.makeText(this, "Password can not be less than 8 characters", Toast.LENGTH_SHORT).show();
         else if (from) {
+            dialog.setTitle("Creating your account,Please Wait...");
+            dialog.show();
             signUp();
-        } else login();
+        } else {
+            dialog.setTitle("Logging you in,Please Wait...");
+            dialog.show();
+            login();
+        }
     }
 
     private void initViews(boolean from) {
         second = findViewById(R.id.second);
         third = findViewById(R.id.third);
         action = findViewById(R.id.action_button);
-        action.setOnClickListener(v -> {
-            checkFields(from);
-        });
-        if (from) {
-            first = findViewById(R.id.first);
+        first = findViewById(R.id.first);
+        action.setOnClickListener(v -> checkFields(from));
+        if (!from) {
             first.setVisibility(View.GONE);
+            action.setText("LOG IN");
         }
     }
 
     private void signUp() {
-
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "createUserWithEmail:success");
-                        launchActivity(LoginActivity.this, DashboardActivity.class);
+                        initProfile();
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(LoginActivity.this, "Authentication failed.",
+                        Toast.makeText(LoginActivity.this, "SignUp failed.",
                                 Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
                 });
     }
@@ -91,12 +101,15 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "signInWithEmail:success");
-                        initProfile();
+                        dialog.dismiss();
+                        finish();
+                        launchActivity(LoginActivity.this, DashboardActivity.class);
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         Toast.makeText(LoginActivity.this, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
                 });
     }
@@ -111,10 +124,13 @@ public class LoginActivity extends AppCompatActivity {
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
+                            dialog.dismiss();
                             Log.d(TAG, "User profile initiated.");
                             launchActivity(LoginActivity.this, DashboardActivity.class);
                         }
+                        dialog.dismiss();
                     });
         }
+        dialog.dismiss();
     }
 }

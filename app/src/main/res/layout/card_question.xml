@@ -20,7 +20,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
-            android:src="@mipmap/profile_fill"
+            app:srcCompat="@mipmap/profile_fill"
             android:tint="?colorAccent"
             app:layout_constraintEnd_toStartOf="@+id/poster_name"
             app:layout_constraintStart_toStartOf="parent"

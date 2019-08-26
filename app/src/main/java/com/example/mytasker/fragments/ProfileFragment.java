@@ -38,6 +38,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.functions.FirebaseFunctionsException;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,6 +95,8 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.frag_profile, container, false);
+        ImageView profileImage = v.findViewById(R.id.profile_image);
+        Picasso.with(v.getContext()).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString()).into(profileImage);
         taskerrating = v.findViewById(R.id.taskerrating);
         posterrating = v.findViewById(R.id.posterating);
         taskdone = v.findViewById(R.id.taskdone);

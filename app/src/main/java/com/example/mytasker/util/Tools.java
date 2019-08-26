@@ -1,6 +1,5 @@
 package com.example.mytasker.util;
 
-import android.app.Activity;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -75,7 +74,7 @@ public class Tools {
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public static void launchActivity(Activity context, Class className) {
+    public static void launchActivity(AppCompatActivity context, Class className) {
         Intent intent = new Intent(context, className);
         context.startActivity(intent);
 //        context.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);

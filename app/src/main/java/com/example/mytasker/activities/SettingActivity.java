@@ -9,7 +9,8 @@ import android.widget.TextView;
 
 import com.example.mytasker.R;
 import com.example.mytasker.util.Tools;
-import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +31,7 @@ public class SettingActivity extends BaseActivity {
 
     }
 
-    private void initViews(){
+    private void initViews() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         findViewById(R.id.textView84).setOnClickListener((View v) -> launchActivity(this, EditPassword.class));
         findViewById(R.id.textView92).setOnClickListener(this::invite);
@@ -45,25 +46,28 @@ public class SettingActivity extends BaseActivity {
             ProgressDialog dialog = new ProgressDialog(SettingActivity.this);
             dialog.setTitle("Logging out, Please Wait....");
             dialog.show();
-            AuthUI.getInstance()
-                    .signOut(this)
-                    .addOnCompleteListener(task -> {
-                        dialog.dismiss();
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build();
+            GoogleSignIn.getClient(this, gso).signOut().addOnCompleteListener(this,
+                    task -> {
                         FirebaseAuth.getInstance().signOut();
                         DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
                         mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
+                        dialog.dismiss();
                         finish();
                         launchActivity(SettingActivity.this, MainActivity.class);
                     });
         });
-        TextView name,contact,contactHead;
+        TextView name, contact, contactHead;
         name = findViewById(R.id.textView85);
         contact = findViewById(R.id.textView87);
         contactHead = findViewById(R.id.textView79);
         if (user != null) {
             name.setText(user.getDisplayName());
-            if(user.getEmail()!=null) contact.setText(user.getEmail());
-            else{
+            if (user.getEmail() != null) contact.setText(user.getEmail());
+            else {
                 contact.setText(user.getPhoneNumber());
                 contactHead.setText("Phone No");
             }
@@ -71,17 +75,17 @@ public class SettingActivity extends BaseActivity {
     }
 
 
-    private void openUri(String uri){
+    private void openUri(String uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         startActivity(intent);
     }
 
-    private void invite(View v){
+    private void invite(View v) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_SUBJECT,"Esselion.com");
-        intent.putExtra(Intent.EXTRA_TEXT,"Checkout this awesome app! \nhttps://esselion.com");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Esselion.com");
+        intent.putExtra(Intent.EXTRA_TEXT, "Checkout this awesome app! \nhttps://esselion.com");
         intent.setType("text/plain");
-        startActivity(Intent.createChooser(intent,"Share MyTasker"));
+        startActivity(Intent.createChooser(intent, "Share MyTasker"));
     }
 }

@@ -71,7 +71,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_back" />
+                        app:srcCompat="@drawable/ic_back" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -85,7 +85,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="16dp"
-                        android:src="@mipmap/profile_fill"
+                        app:srcCompat="@mipmap/profile_fill"
                         android:tint="?colorAccent" />
                 </LinearLayout>
             </androidx.appcompat.widget.Toolbar>

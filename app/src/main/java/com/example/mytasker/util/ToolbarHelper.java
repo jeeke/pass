@@ -1,8 +1,8 @@
 package com.example.mytasker.util;
 
-import android.app.Activity;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 
 import com.example.mytasker.R;
@@ -15,7 +15,7 @@ public class ToolbarHelper {
     private MotionLayout toolbar;
     private boolean open;
 
-    public ToolbarHelper(Activity context, MotionLayout v,Class className){
+    public ToolbarHelper(AppCompatActivity context, MotionLayout v, Class className) {
         toolbar = v;
         open = false;
         v.findViewById(R.id.action_search).setOnClickListener((View view) -> launchActivity(context, className));
