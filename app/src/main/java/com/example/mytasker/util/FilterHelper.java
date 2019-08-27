@@ -18,8 +18,8 @@ public class FilterHelper {
 
     private FilterListener listener;
 
-    String[] chipTitle = {"hello", "tech", "null"};
-    public ArrayList<String> tags = new ArrayList<>(Arrays.asList(chipTitle));
+    public ArrayList<String> tags;
+    String[] chipTitle;
     public int radius = 100;
     public boolean remote = false;
     public int[] price = {0,100};
@@ -33,6 +33,8 @@ public class FilterHelper {
     public FilterHelper(FilterListener listener,MotionLayout v){
         this.listener = listener;
         open = false;
+        chipTitle = v.getContext().getResources().getStringArray(R.array.people_names);
+        tags = new ArrayList<>(Arrays.asList(chipTitle));
         filter = v.findViewById(R.id.scrollable);
         v.findViewById(R.id.filter).setOnClickListener(this::toggle);
         chipGroup = v.findViewById(R.id.chipGroup1);

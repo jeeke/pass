@@ -127,6 +127,7 @@ public class TaskDetailActivity extends BaseActivity {
         Map map = new HashMap();
         map.put("p_id", current.getPoster_id());
         map.put("task_id", current.getId());
+        map.put("task_title", current.getTitle());
         Contracts.call(map, "taskDone").addOnCompleteListener(t -> {
             dlg.dismiss();
             if (!t.isSuccessful()) {

@@ -29,7 +29,7 @@ public class MyApplication extends Application {
         boolean changed = prefs.getBoolean("token_changed", true);
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String token = prefs.getString("token", "0");
-        if (currentUser != null && changed && !Objects.equals(token, "0")) {
+        if (currentUser != null && true && !Objects.equals(token, "0")) {
             DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getUid()).child("device_token");
             mUserRef.setValue(token).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {

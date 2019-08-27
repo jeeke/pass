@@ -1,7 +1,6 @@
 package com.example.mytasker.fragments;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,28 +12,29 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mytasker.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
-import static com.example.mytasker.util.Contracts.PICK_IMAGE_REQUEST;
-
-public class PostTaskExtra extends Fragment implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class PostTaskExtra extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     //    Button btnDatePicker, btnTimePicker;
-    TextView txtDate;
-    DatePickerDialog dpd;
-    TimePickerDialog tpd;
-    String date;
-    Calendar c;
-    public EditText reward;
-    private int mYear;
-    private int mMonth;
-    private int mDay;
-    private int mHour;
+    private TextView txtDate;
+    private DatePickerDialog dpd;
+    private long date;
+    private Calendar c;
+    private EditText reward;
+
+    public long getDate() {
+        return date;
+    }
+
+    public float getReward() {
+        return Float.parseFloat(reward.getText().toString());
+    }
 
     public PostTaskExtra() {
-        // Required empty public constructor
     }
 
     @Override
@@ -44,54 +44,47 @@ public class PostTaskExtra extends Fragment implements DatePickerDialog.OnDateSe
         View layout = inflater.inflate(R.layout.post_task_extra, container, false);
         txtDate = layout.findViewById(R.id.pick_time);
         reward = layout.findViewById(R.id.reward);
-        layout.findViewById(R.id.pick_image).setOnClickListener(this::chooseImage);
+//        layout.findViewById(R.id.pick_image).setOnClickListener(this::chooseImage);
         txtDate.setOnClickListener(this::openDatePicker);
         c = Calendar.getInstance();
         return layout;
     }
 
-    private void chooseImage(View v) {
-        Intent intent = new Intent();
-        // Show only images, no videos or anything else
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        // Always show the chooser (if there are multiple options available)
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }
+//    private void chooseImage(View v) {
+//        Intent intent = new Intent();
+//        // Show only images, no videos or anything else
+//        intent.setType("image/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        // Always show the chooser (if there are multiple options available)
+//        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+//    }
 
     private void openDatePicker(View v) {
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-
+        int mMonth = c.get(Calendar.MONTH);
+        int mDay = c.get(Calendar.DAY_OF_MONTH);
+        int mYear = c.get(Calendar.YEAR);
         dpd = DatePickerDialog.newInstance(this, mYear, mMonth, mDay);
         dpd.setMinDate(c);
         dpd.show(getChildFragmentManager(), "Datepickerdialog");
     }
 
-    private void openTimePicker() {
-        mHour = c.get(Calendar.HOUR_OF_DAY);
-        int mMinute = c.get(Calendar.MINUTE);
-
-        tpd = TimePickerDialog.newInstance(this, mHour, mMinute, false);
-        tpd.show(getChildFragmentManager(), "Timepickerdialog");
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        tpd = null;
         dpd = null;
     }
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year + ", ";
-        openTimePicker();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, monthOfYear);
+        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        SimpleDateFormat formatter =
+                new SimpleDateFormat("EEE, d MMM yyyy", Locale.getDefault());
+        date = cal.getTime().getTime();
+        txtDate.setText(formatter.format(date));
     }
 
-    @Override
-    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-        txtDate.setText(date + hourOfDay + "-" + minute + "-" + second);
-
-    }
 }

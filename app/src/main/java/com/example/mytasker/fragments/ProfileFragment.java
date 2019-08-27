@@ -175,6 +175,7 @@ public class ProfileFragment extends Fragment {
                 return;
             }
             Log.e("tag", t.getResult() + "");
+            adapter.addChild(Contracts.added_skill);
             Toast.makeText(getContext(), "Skills Updated", Toast.LENGTH_SHORT).show();
         });
     }

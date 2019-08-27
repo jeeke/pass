@@ -34,7 +34,7 @@ public class Contracts {
     public static int PICK_IMAGE_REQUEST = 102;
     public static int ADD_SKILL_REQUEST = 103;
 
-    static int dpToPx(int dp) {
+    public static int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 

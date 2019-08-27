@@ -11,9 +11,19 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mytasker.R;
 
+import org.jetbrains.annotations.NotNull;
+
 public class PostTaskDetail extends Fragment {
 
-    public EditText title, description;
+    private EditText title, desc;
+
+    public String getTitle() {
+        return title.getText().toString();
+    }
+
+    public String getDesc() {
+        return desc.getText().toString();
+    }
     public PostTaskDetail() {
         // Required empty public constructor
     }
@@ -21,7 +31,7 @@ public class PostTaskDetail extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.post_task_detail, container, false);
@@ -31,7 +41,7 @@ public class PostTaskDetail extends Fragment {
 
     private void iniComponent(View view) {
         title = view.findViewById(R.id.post_title);
-        description = view.findViewById(R.id.post_desc);
+        desc = view.findViewById(R.id.post_desc);
     }
 
 }

@@ -14,14 +14,16 @@ public class Task extends Message implements Serializable {
     String id;
     @SerializedName("c_date")
     long c_date;
+    @SerializedName("stage")
+    int stage;
+    @SerializedName("cost")
+    float cost;
+    @SerializedName("remote")
+    boolean remote;
     @SerializedName("job_des")
     String job_des;
     @SerializedName("title")
     String title;
-    @SerializedName("cost")
-    Integer cost;
-    @SerializedName("remote")
-    boolean remote;
     @SerializedName("address")
     String address;
     @SerializedName("poster_name")
@@ -38,20 +40,17 @@ public class Task extends Message implements Serializable {
     ArrayList<Double> location;
     @SerializedName("tags")
     ArrayList<String> tags;
-    @SerializedName("stage")
-    int stage;
     @SerializedName("must_haves")
     ArrayList<String> musthaves;
 
     // For Post use constructor that shoud be send to server !!
-    public Task(String poster_id, String poster_name, String poster_avatar, long c_date, String job_des, String title, Integer cost, String address, String category, String attachment, String deadline, ArrayList<Double> location, ArrayList tags, ArrayList<String> musthaves, boolean remote) {
+    public Task(String poster_id, String poster_name, String poster_avatar, long c_date, String job_des, String title, float cost, String category, String deadline, ArrayList<Double> location, ArrayList<String> tags, ArrayList<String> musthaves, boolean remote) {
         this.c_date = c_date;
         this.poster_avatar = poster_avatar;
         this.poster_name = poster_name;
         this.job_des = job_des;
         this.title = title;
         this.cost = cost;
-        this.address = address;
         this.poster_id = poster_id;
         this.category = category;
         this.deadline = deadline;
@@ -198,7 +197,8 @@ public class Task extends Message implements Serializable {
     public void setRemote(boolean remote) {
         this.remote = remote;
     }
-    public Integer getCost() {
+
+    public float getCost() {
         return cost;
     }
     public String getTitle() {

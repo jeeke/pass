@@ -2,6 +2,7 @@ package com.example.mytasker.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import static com.example.mytasker.MyFirebaseMessagingService.MY_PREFS_NAME;
 import static com.example.mytasker.util.Tools.launchActivity;
 
 public class MainActivity extends BaseActivity implements
@@ -117,6 +119,13 @@ public class MainActivity extends BaseActivity implements
     private void updateUI(FirebaseUser user) {
 //        hideProgressDialog();
         if (user != null) {
+            SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+            int pending_feedbacks = prefs.getInt("pending_feedbacks", 0);
+            if (pending_feedbacks > 0) {
+                finish();
+                launchActivity(this, FeedbackByPosterActivity.class);
+                return;
+            }
             launchActivity(this, DashboardActivity.class);
         } else {
             Toast.makeText(this, "No Signed In User", Toast.LENGTH_SHORT).show();

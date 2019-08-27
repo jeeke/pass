@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -121,19 +122,31 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
                 Config.image = map.get("poster_avatar");
                 break;
             case 2:
+                // task done
+                SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                int pending_feedbacks = prefs.getInt("pending_feedbacks", 0) + 1;
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("pending_feedbacks", pending_feedbacks);
+                JSONObject obj = new JSONObject(map);
+                editor.putString("feedback" + pending_feedbacks, obj.toString());
+                editor.apply();
                 Config.title = map.get("title");
                 Config.content = map.get("content");
                 Config.image = map.get("image");
                 break;
             case 3:
+                //Question reply
                 Config.title = "You have a new reply from " + map.get("replier_name").toUpperCase();
                 Config.content = map.get("answer");
                 Config.image = map.get("replier_avatar");
                 break;
             case 4:
+                //New message notification
                 Config.title = map.get("name");
                 Config.content = map.get("text");
                 Config.image = map.get("avatar");
+            case 5:
+
         }
         Handler uiHandler = new Handler(getMainLooper());
         uiHandler.post(() -> Picasso.with(this)
