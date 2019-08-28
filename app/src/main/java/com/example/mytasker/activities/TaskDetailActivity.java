@@ -145,7 +145,11 @@ public class TaskDetailActivity extends BaseActivity {
             finish();
             Log.e("tag", t.getResult() + "");
             Toast.makeText(this, "Task Done Successfully", Toast.LENGTH_SHORT).show();
-            launchActivity(this, FeedbackByTaskerActivity.class);
+            Intent intent = new Intent(this, FeedbackByTaskerActivity.class);
+            intent.putExtra("task_id", current.getId());
+            intent.putExtra("task_title", current.getTitle());
+            intent.putExtra("poster_id", current.getPoster_id());
+            startActivity(intent);
         });
     }
 

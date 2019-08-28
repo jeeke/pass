@@ -26,7 +26,7 @@ public class Contracts {
     public static final String[] QUES_STAGE_TEXT = {"POSTED","REPLIED"};
     public static String BASE_GET_URL = "https://sheltered-escarpment-49063.herokuapp.com/";
     //        public static String BASE_POST_URL;
-//    public static String BASE_GET_URL = BASE_POST_URL = "https://346edcf9.ngrok.io";
+//    public static String BASE_GET_URL = BASE_POST_URL = "https://0643318c.ngrok.io";
     //=  "https://2a61d6f5.ngrok.io";
     public static String BASE_POST_URL = "https://sheltered-escarpment-49063.herokuapp.com/";
     public static int CODE_SETTINGS_ACTIVITY = 100;

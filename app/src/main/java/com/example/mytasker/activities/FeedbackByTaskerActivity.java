@@ -7,17 +7,12 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.mytasker.R;
-import com.example.mytasker.models.Message;
-import com.example.mytasker.retrofit.JsonPlaceHolder;
-import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
 import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.Tools;
+import com.google.firebase.functions.FirebaseFunctionsException;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FeedbackByTaskerActivity extends BaseActivity {
 
@@ -37,9 +32,6 @@ public class FeedbackByTaskerActivity extends BaseActivity {
         behaviour = findViewById(R.id.ratingBar3);
     }
 
-    private float calculateRat(float a,float b,float c){
-        return (a*3 + (b+c)*2)/7.0f;
-    }
 
     private  void checkFields(){
         float a =  price.getRating();
@@ -48,43 +40,45 @@ public class FeedbackByTaskerActivity extends BaseActivity {
         if( a*b*c==0.0f){
             Toast.makeText(this, "Please answer all questions", Toast.LENGTH_SHORT).show();
         }else {
-            callRetrofit(calculateRat(a,b,c));
+            callRetrofit(a, b, c);
         }
     }
 
-    private void callRetrofit(float rating) {
+    private void callRetrofit(float a, float b, float c) {
+        Map map = new HashMap();
+        Map rating = new HashMap();
+        rating.put("r1", a);
+        rating.put("r2", b);
+        rating.put("r3", c);
+        map.put("rating", rating);
+        map.put("by", "Tasker");
+        map.put("user_id", getIntent().getStringExtra("poster_id"));
+        map.put("task_id", getIntent().getStringExtra("task_id"));
+        callAPI(map);
+    }
 
+    private void callAPI(Map data) {
         ProgressDialog dlg = new ProgressDialog(this);
-        dlg.setTitle("Posting your Bid..");
+        dlg.setTitle("Posting your feedback..");
         dlg.show();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contracts.BASE_POST_URL)
-                .addConverterFactory(new NullOnEmptyConverterFactory())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-
-        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<Message> call = jsonPlaceHolder.feedback(rating,"rakesh","id","id");
-        call.enqueue(new Callback<Message>() {
-            @Override
-            public void onResponse(Call<Message> call, Response<Message> response) {
-
-                dlg.dismiss();
-                if (!response.isSuccessful()) {
-                    Log.e("error",response.toString());
-                    return;
+        Contracts.call(data, "rate").addOnCompleteListener(t -> {
+            dlg.dismiss();
+            if (!t.isSuccessful()) {
+                Exception e = t.getException();
+                if (e instanceof FirebaseFunctionsException) {
+                    FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+                    FirebaseFunctionsException.Code code = ffe.getCode();
+                    Object details = ffe.getDetails();
+                    Log.e("tag", ffe + "\n" + code + "\n" + details);
                 }
-                Toast.makeText(FeedbackByTaskerActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                finish();
+                Toast.makeText(this, "Rating Unsuccessful", Toast.LENGTH_SHORT).show();
+                Log.e("tag", e + "");
+                return;
             }
-
-            @Override
-            public void onFailure(Call<Message> call, Throwable t) {
-                Log.e("error",t.getMessage());
-                dlg.dismiss();
-            }
+            finish();
+            Log.v("tag", t.getResult());
+            Toast.makeText(this, "Rating Successful", Toast.LENGTH_SHORT).show();
         });
     }
 }

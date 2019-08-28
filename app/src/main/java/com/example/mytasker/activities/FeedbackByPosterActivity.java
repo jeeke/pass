@@ -1,13 +1,16 @@
 package com.example.mytasker.activities;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mytasker.R;
-import com.google.firebase.database.FirebaseDatabase;
+import com.example.mytasker.util.Contracts;
+import com.google.firebase.functions.FirebaseFunctionsException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,32 +40,23 @@ public class FeedbackByPosterActivity extends BaseActivity {
 
     private void submit() {
         float r = bar1.getRating() * bar3.getRating() * bar2.getRating();
-        if (r == 0) {
+        if (r == 0.0f) {
             Toast.makeText(this, "Please rate all the fields", Toast.LENGTH_SHORT).show();
-        } else callFirebase();
+        } else call();
     }
 
-    private void callFirebase() {
+    private void call() {
         try {
-            String tasker_profile_ref = "Profiles/" + task.getString("tasker_id") + "/Ratings";
-            String rating_ref = "Ratings/" + task.getString("task_id") + "/ByPoster";
             Map map = new HashMap();
             Map rating = new HashMap();
             rating.put("r1", bar1.getRating());
             rating.put("r2", bar2.getRating());
             rating.put("r3", bar3.getRating());
-            map.put(tasker_profile_ref, rating);
-            map.put(rating_ref, rating);
-            FirebaseDatabase.getInstance().getReference().updateChildren(map, (databaseError, databaseReference) -> {
-                if (databaseError == null) {
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putInt("pending_feedbacks", pending_feedbacks - 1);
-                    editor.remove("feedback" + pending_feedbacks);
-                    editor.apply();
-                    finish();
-                }
-                Toast.makeText(this, "Response could not be saved", Toast.LENGTH_SHORT).show();
-            });
+            map.put("rating", rating);
+            map.put("by", "Poster");
+            map.put("task_id", task.getString("task_id"));
+            map.put("user_id", task.getString("tasker_id"));
+            callAPI(map);
         } catch (JSONException e) {
             finish();
             e.printStackTrace();
@@ -80,5 +74,36 @@ public class FeedbackByPosterActivity extends BaseActivity {
             finish();
             e.printStackTrace();
         }
+    }
+
+    private void callAPI(Map data) {
+        ProgressDialog dlg = new ProgressDialog(this);
+        dlg.setTitle("Posting your feedback..");
+        dlg.show();
+
+        Contracts.call(data, "rate").addOnCompleteListener(t -> {
+            dlg.dismiss();
+            if (!t.isSuccessful()) {
+                Exception e = t.getException();
+                if (e instanceof FirebaseFunctionsException) {
+                    FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+                    FirebaseFunctionsException.Code code = ffe.getCode();
+                    Object details = ffe.getDetails();
+                    Log.e("tag", ffe + "\n" + code + "\n" + details);
+                }
+                Toast.makeText(this, "Rating Unsuccessful", Toast.LENGTH_SHORT).show();
+                Log.e("tag", e + "");
+                return;
+            }
+            finish();
+            SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+            int pending_feedbacks = prefs.getInt("pending_feedbacks", 0);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("pending_feedbacks", pending_feedbacks - 1);
+            editor.remove("feedback" + pending_feedbacks);
+            editor.apply();
+            Log.v("tag", t.getResult());
+            Toast.makeText(this, "Rating Successful", Toast.LENGTH_SHORT).show();
+        });
     }
 }

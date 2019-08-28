@@ -112,15 +112,15 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         });
     }
 
-    private void callRetrofitHelper() {
-        if (tasks != null) {
-            shimmerContainer.setVisibility(View.GONE);
-            adapter.update(tasks);
-            listView.setAlpha(1.0f);
-        } else {
-            verifyNCall();
-        }
-    }
+//    private void callRetrofitHelper() {
+//        if (tasks != null) {
+//            shimmerContainer.setVisibility(View.GONE);
+//            adapter.update(tasks);
+//            listView.setAlpha(1.0f);
+//        } else {
+//            verifyNCall();
+//        }
+//    }
 
 
     @Override
@@ -142,14 +142,10 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
         swipeContainer.setOnRefreshListener(this::verifyNCall);
-        callRetrofitHelper();
+//        callRetrofitHelper();
+        verifyNCall();
         swipeContainer.setColorSchemeResources(
-                android.R.color.holo_red_light,
-
                 android.R.color.holo_orange_light,
-
-                android.R.color.holo_blue_bright,
-
                 android.R.color.holo_green_light);
         return v;
     }

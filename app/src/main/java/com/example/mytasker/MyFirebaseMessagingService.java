@@ -32,7 +32,7 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
     public static final String MY_PREFS_NAME = "MyTasker";
 
     @Override
-    public void onNewToken(String token) {
+    public void onNewToken(@NotNull String token) {
         Log.d(TAG, "Refreshed token: " + token);
         sendRegistrationToServer(token);
     }

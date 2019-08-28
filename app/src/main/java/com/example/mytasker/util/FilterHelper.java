@@ -19,14 +19,14 @@ public class FilterHelper {
     private FilterListener listener;
 
     public ArrayList<String> tags;
-    String[] chipTitle;
+    private String[] chipTitle;
     public int radius = 100;
-    public boolean remote = false;
+    private boolean remote = false;
     public int[] price = {0,100};
     public double[] loc = {25.0, 25.0};
     private MotionLayout filter;
     private boolean open;
-    RangeBar radiusBar, priceBar;
+    private RangeBar radiusBar, priceBar;
     Switch remoteTask;
     private ChipGroup chipGroup;
 
@@ -64,7 +64,8 @@ public class FilterHelper {
             filter.transitionToStart();
             for (int i = 0; i < chipGroup.getChildCount(); i++) {
                 Chip chip = (Chip) chipGroup.getChildAt(i);
-                if (chip.isChecked()) tags.add(chip.getText().toString());
+                if (chip.isChecked() && !tags.contains(chip.getText().toString()))
+                    tags.add(chip.getText().toString());
             }
             radius = radiusBar.getRightIndex() * (int) radiusBar.getTickInterval();
             price[0] = priceBar.getLeftIndex() * (int) priceBar.getTickInterval();
