@@ -1,50 +1,23 @@
 package com.example.mytasker.models;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Profile extends Message{
 
-    private ArrayList<String> medals, skills, details;
+    Map rating;
     private String on_time, on_budget, quality, behaviour, t_done;
     private int bucks;
     private long t_posted;
-    private float t_rating, p_rating;
+    private ArrayList<String> skills, details;
 
     Profile() {
-        t_rating = 0;
-        p_rating = 0;
         on_budget = on_time = quality = behaviour = t_done = "0";
         bucks = 0;
         t_posted = 0;
-        medals = new ArrayList<>();
         skills = new ArrayList<>();
         details = new ArrayList<>();
 
-    }
-
-    public float getTasker_rating() {
-        return t_rating;
-    }
-
-    public void setTasker_rating(float tasker_rating) {
-        this.t_rating = tasker_rating;
-    }
-
-    public float getPoster_rating() {
-        return p_rating;
-    }
-
-    public void setPoster_rating(float poster_rating) {
-        this.p_rating = poster_rating;
-    }
-
-
-    public ArrayList<String> getMedals() {
-        return medals;
-    }
-
-    public void setMedals(ArrayList<String> medals) {
-        this.medals = medals;
     }
 
     public String getOn_time() {

@@ -2,11 +2,11 @@ package com.example.mytasker.chat;
 
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
 import com.example.mytasker.activities.BaseActivity;
 import com.example.mytasker.chat.data.model.Dialog;
 import com.example.mytasker.chat.utils.AppUtils;
 import com.google.firebase.database.ServerValue;
-import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
@@ -25,7 +25,7 @@ public abstract class DemoDialogsActivity extends BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setOnline("true");
-        imageLoader = (imageView, url, payload) -> Picasso.with(DemoDialogsActivity.this).load(url).into(imageView);
+        imageLoader = (imageView, url, payload) -> Glide.with(DemoDialogsActivity.this).load(url).into(imageView);
     }
 
     @Override

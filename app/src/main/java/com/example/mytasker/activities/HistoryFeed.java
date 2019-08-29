@@ -24,7 +24,7 @@ public class HistoryFeed extends BaseActivity {
         initViews();
         Query mQuery = FirebaseDatabase.getInstance().getReference().child("PrevFeeds").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         feedActNFrag = new FeedActNFrag();
-        feedActNFrag.callFireBase(this, mQuery, mSwipeRefreshLayout, mRecyclerView, true);
+        feedActNFrag.callFireBase(this, mQuery, mSwipeRefreshLayout, mRecyclerView, true, FirebaseDatabase.getInstance().getReference());
     }
 
     private void initViews() {

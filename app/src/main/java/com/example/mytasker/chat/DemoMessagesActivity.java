@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.example.mytasker.R;
 import com.example.mytasker.activities.BaseActivity;
 import com.example.mytasker.chat.data.model.Message;
@@ -21,7 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
@@ -61,7 +61,7 @@ public abstract class DemoMessagesActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setOnline("true");
         initFireBase();
-        imageLoader = (imageView, url, payload) -> Picasso.with(DemoMessagesActivity.this).load(url).into(imageView);
+        imageLoader = (imageView, url, payload) -> Glide.with(DemoMessagesActivity.this).load(url).into(imageView);
         onLoadMore(0, 0);
     }
 

@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.mytasker.R;
 import com.example.mytasker.activities.AddSkill;
 import com.example.mytasker.activities.NotificationActivity;
@@ -38,7 +39,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.functions.FirebaseFunctionsException;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,7 +96,7 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.frag_profile, container, false);
         ImageView profileImage = v.findViewById(R.id.profile_image);
-        Picasso.with(v.getContext()).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString()).into(profileImage);
+        Glide.with(v.getContext()).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString()).into(profileImage);
         taskerrating = v.findViewById(R.id.taskerrating);
         posterrating = v.findViewById(R.id.posterating);
         taskdone = v.findViewById(R.id.taskdone);
@@ -196,11 +196,11 @@ public class ProfileFragment extends Fragment {
                 Profile profile = snapshot.getValue(Profile.class);
                 if (profile != null) {
                     if (mine) imageView.setVisibility(View.VISIBLE);
-                    taskerrating.setRating(profile.getTasker_rating());
-                    posterrating.setRating(profile.getPoster_rating());
+//                    taskerrating.setRating(profile.getTasker_rating());
+//                    posterrating.setRating(profile.getPoster_rating());
                     setupstats(profile);
                     setupskills(profile.getSkills());
-                    setupmedals(profile.getMedals());
+//                    setupmedals(profile.getMedals());
                     settupdetail(profile);
                 }
             }

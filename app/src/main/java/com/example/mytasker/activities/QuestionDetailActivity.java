@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.mytasker.R;
 import com.example.mytasker.holders.AnswerHolder;
 import com.example.mytasker.models.Answer;
@@ -33,7 +35,6 @@ import com.google.firebase.database.Query;
 import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
 import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
 import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
-import com.squareup.picasso.Picasso;
 
 public class QuestionDetailActivity extends BaseActivity {
 
@@ -144,7 +145,7 @@ public class QuestionDetailActivity extends BaseActivity {
         ImageView image = findViewById(R.id.person);
         name.setText(current.getPosterName());
         ques.setText(current.getQues());
-        Picasso.with(this).load(current.getPoster_image()).placeholder(R.drawable.person).into(image);
+        Glide.with(this).load(current.getPoster_image()).apply(new RequestOptions().placeholder(R.drawable.person)).into(image);
         Tools.initMinToolbar(this,"Answers",false);
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = findViewById(R.id.recyclerView);

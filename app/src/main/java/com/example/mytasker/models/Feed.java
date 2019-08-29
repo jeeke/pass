@@ -1,11 +1,20 @@
 package com.example.mytasker.models;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@IgnoreExtraProperties
 public class Feed {
     private long c_date;
     private String poster_id;
     private String poster_name;
     private String poster_avatar;
     private String image;
+    public int likeCount;
+    public Map<String, Boolean> likes = new HashMap<>();
+    private String text;
 
     public long getC_date() {
         return c_date;
@@ -55,27 +64,24 @@ public class Feed {
         this.text = text;
     }
 
-    public int getLikes() {
-        return likes;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    private String text;
-    private int likes;
-
-    public Feed(){}
-
-    public Feed(long c_date, String poster_id, String poster_name, String poster_avatar, String image, String text, int likes) {
+    public Feed(long c_date, String poster_id, String poster_name, String poster_avatar, String image, String text) {
         this.c_date = c_date;
         this.poster_id = poster_id;
         this.poster_name = poster_name;
         this.poster_avatar = poster_avatar;
         this.image = image;
         this.text = text;
-        this.likes = likes;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public Feed() {
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
     }
 
 }

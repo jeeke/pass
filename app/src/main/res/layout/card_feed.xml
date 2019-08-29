@@ -16,9 +16,8 @@
 
         <ImageView
             android:id="@+id/image"
-            android:layout_width="0dp"
-            android:layout_height="250dp"
-            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/divider19"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,25 +46,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
+            <!--<androidx.cardview.widget.CardView-->
+            <!--android:id="@+id/cardView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="16dp"-->
+            <!--app:cardCornerRadius="12dp"-->
+            <!--android:layout_marginStart="16dp"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--app:cardElevation="0dp"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="parent">-->
+
+            <ImageView
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                app:cardElevation="0dp"
+                android:layout_marginBottom="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
+                app:layout_constraintTop_toTopOf="parent"
                     android:id="@+id/avatar"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    app:srcCompat="@drawable/shifting" />
-            </androidx.cardview.widget.CardView>
+                app:srcCompat="@drawable/person" />
+            <!--</androidx.cardview.widget.CardView>-->
 
 
             <TextView
@@ -75,8 +80,8 @@
                 android:layout_marginStart="8dp"
                 android:text="Rakesh Pandey"
                 app:layout_constraintBottom_toTopOf="@+id/createdAt"
-                app:layout_constraintStart_toEndOf="@+id/cardView"
-                app:layout_constraintTop_toTopOf="@+id/cardView" />
+                app:layout_constraintStart_toEndOf="@+id/avatar"
+                app:layout_constraintTop_toTopOf="@+id/avatar" />
 
             <TextView
                 android:id="@+id/createdAt"
@@ -84,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:text="5 min ago"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/cardView"
+                app:layout_constraintBottom_toBottomOf="@+id/avatar"
                 app:layout_constraintStart_toStartOf="@+id/name"
                 app:layout_constraintTop_toBottomOf="@+id/name" />
 
@@ -101,7 +106,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
-            android:id="@+id/like"
+            android:id="@+id/likeButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -119,14 +124,32 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image">
 
-                <ImageView
-                    android:id="@+id/imageView5"
+                <com.like.LikeButton
+                    android:id="@+id/likeView"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    app:anim_scale_factor="2"
+                    app:circle_start_color="?colorAccent"
+                    app:icon_size="28dp"
+                    app:icon_type="heart"
+                    app:is_enabled="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    app:srcCompat="@drawable/ic_hot" />
+                    app:like_drawable="@drawable/ic_hot_checked"
+                    app:unlike_drawable="@drawable/ic_hot" />
+
+                <!--<CheckBox-->
+                <!--android:button="@null"-->
+                <!--android:checked="false"-->
+                <!--android:id="@+id/likeView"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginTop="16dp"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--android:stateListAnimator="@animator/scale"-->
+                <!--android:background="@drawable/ic_hot_selector" />-->
 
                 <TextView
                     android:id="@+id/numLikes"
@@ -143,14 +166,14 @@
 
         <LinearLayout
             android:id="@+id/loading"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="8dp"
             android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="@+id/image"
-            app:layout_constraintEnd_toEndOf="@+id/image"
-            app:layout_constraintStart_toStartOf="@+id/image"
-            app:layout_constraintTop_toTopOf="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            app:layout_constraintBottom_toTopOf="@+id/divider19"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            app:srcCompat="@drawable/feed_image"
             tools:srcCompat="@tools:sample/avatars">
 
             <ImageView

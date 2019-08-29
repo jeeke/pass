@@ -2,16 +2,16 @@ package com.example.mytasker.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.mytasker.R;
 import com.example.mytasker.models.Feed;
 import com.example.mytasker.util.Tools;
@@ -23,8 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.Random;
 
@@ -64,9 +64,13 @@ public class PostFeed extends BaseActivity {
 
     private void uploadImage(Uri uri) {
         fab.setClickable(false);
-        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey_400)));
-//        fab.setBackgroundTintList(new ColorStateList(R.color.grey_400));
-        ProgressBar progressBar = findViewById(R.id.progress);
+        dlg = new ProgressDialog(this);
+        dlg.setTitle("Uploading Image...");
+        dlg.show();
+//        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey_400)));
+////        fab.setBackgroundTintList(new ColorStateList(R.color.grey_400));
+//        ProgressBar progressBar = findViewById(R.id.progress);
+
         FirebaseStorage storage = FirebaseStorage.getInstance();
         Random rand = new Random();
         int n = rand.nextInt(10);
@@ -75,21 +79,29 @@ public class PostFeed extends BaseActivity {
         path += n + "/";
         path += new Date().getTime() + uri.getLastPathSegment();
         StorageReference imageRef = storage.getReference().child(path);
-        progressBar.setVisibility(View.VISIBLE);
-
-        uploadTask = imageRef.putFile(uri);
+//        progressBar.setVisibility(View.VISIBLE);
+        // Get the data from an ImageView as bytes
+        mImage.setDrawingCacheEnabled(true);
+        mImage.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) mImage.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        byte[] data = baos.toByteArray();
+        uploadTask = imageRef.putBytes(data);
         uploadTask.addOnProgressListener(taskSnapshot -> {
-            int progress = (int) ((100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
-            progressBar.setProgress(progress);
+//            int progress = (int) ((100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
+//            progressBar.setProgress(progress);
         }).addOnPausedListener(taskSnapshot -> {
             Toast.makeText(this, "Image couldn't be uploaded", Toast.LENGTH_SHORT).show();
             uploadTask.cancel();
         }).addOnFailureListener(exception -> {
+            dlg.dismiss();
             // Handle unsuccessful uploads
             Toast.makeText(this, "Image couldn't be uploaded", Toast.LENGTH_SHORT).show();
         }).addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl().addOnSuccessListener(uri1 -> {
             // Handle successful uploads on complete
-            progressBar.setVisibility(View.GONE);
+//            progressBar.setVisibility(View.GONE);
+            dlg.dismiss();
             //TODO remove glide or picasso
             imageURL = uri1.toString();
             verifyNCall();
@@ -119,8 +131,7 @@ public class PostFeed extends BaseActivity {
                 user.getDisplayName(),
                 user.getPhotoUrl().toString(),
                 imageURL,
-                text.getText().toString(),
-                1
+                text.getText().toString()
         );
         DatabaseReference push = FirebaseDatabase.getInstance().getReference();
         DatabaseReference feeds = push.child("Feeds").push();
@@ -134,12 +145,13 @@ public class PostFeed extends BaseActivity {
                         Toast.makeText(PostFeed.this, "Feed could not be posted", Toast.LENGTH_SHORT).show();
                     }
                     dlg.dismiss();
-                    fab.setBackgroundTintList(ColorStateList.valueOf(R.attr.colorAccent));
-                    fab.setClickable(true);
+//                    fab.setBackgroundTintList(ColorStateList.valueOf(R.attr.colorAccent));
+//                    fab.setClickable(true);
+                    finish();
                 });
             } else {
                 dlg.dismiss();
-                fab.setBackgroundTintList(ColorStateList.valueOf(R.attr.colorAccent));
+//                fab.setBackgroundTintList(ColorStateList.valueOf(R.attr.colorAccent));
                 fab.setClickable(true);
                 Toast.makeText(PostFeed.this, "Feed could not be posted", Toast.LENGTH_SHORT).show();
             }
@@ -167,7 +179,7 @@ public class PostFeed extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             mUri = data.getData();
-            Picasso.with(this).load(mUri).into(mImage);
+            Glide.with(this).load(mUri).into(mImage);
             ((ImageView) findViewById(R.id.picker)).setImageResource(R.drawable.ic_edit);
             ((TextView) findViewById(R.id.add_image)).setText("Edit Image");
         }

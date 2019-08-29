@@ -13,9 +13,9 @@ import androidx.fragment.app.Fragment;
 import com.example.mytasker.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
+
+import static com.example.mytasker.util.Tools.formatDate;
 
 public class PostTaskExtra extends Fragment implements DatePickerDialog.OnDateSetListener {
 
@@ -81,10 +81,8 @@ public class PostTaskExtra extends Fragment implements DatePickerDialog.OnDateSe
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, monthOfYear);
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        SimpleDateFormat formatter =
-                new SimpleDateFormat("EEE, d MMM yyyy", Locale.getDefault());
         date = cal.getTime().getTime();
-        txtDate.setText(formatter.format(date));
+        txtDate.setText(formatDate(date));
     }
 
 }

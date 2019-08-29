@@ -4,21 +4,23 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.BaseTarget;
+import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.mytasker.activities.NotificationActivity;
 import com.example.mytasker.models.Bid;
 import com.example.mytasker.models.Config;
-import com.example.mytasker.util.CircularTransform;
 import com.google.firebase.messaging.RemoteMessage;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -36,25 +38,6 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
         Log.d(TAG, "Refreshed token: " + token);
         sendRegistrationToServer(token);
     }
-
-    private Target target = new Target() {
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            sendNotification(bitmap);
-        }
-
-        @Override
-        public void onBitmapFailed(Drawable errorDrawable) {
-            // loading of the bitmap failed
-            // TODO do some action/warning/error message
-        }
-
-        @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-        }
-    };
-
     //TODO index firebase data
 
     @Override
@@ -103,6 +86,26 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
 
     }
 
+
+    int display_size = Math.round(64 * this.getResources().getDisplayMetrics().density);
+    private BaseTarget target = new BaseTarget<Bitmap>() {
+
+        @Override
+        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+            sendNotification(resource);
+        }
+
+        @Override
+        public void getSize(SizeReadyCallback cb) {
+//            cb.onSizeReady(SIZE_ORIGINAL, SIZE_ORIGINAL);
+            cb.onSizeReady(display_size, display_size);
+        }
+
+        @Override
+        public void removeCallback(SizeReadyCallback cb) {
+        }
+    };
+
     //TODO combine notifications
 
     private void notificationHandler(Map<String, String> map) {
@@ -148,12 +151,16 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
             case 5:
 
         }
-        Handler uiHandler = new Handler(getMainLooper());
-        uiHandler.post(() -> Picasso.with(this)
-                .load(Config.image)
-                .transform(new CircularTransform())
-                .into(target));
+
+        Glide.with(this).load(Config.image)
+                .apply(RequestOptions.circleCropTransform())
+                .into(target);
+//                Glide.with(this)
+//                .load(Config.image)
+//                .into(target);
     }
+
+
 }
 //    Because you must create the notification channel before posting any notifications on Android 8.0 and higher,
 //    you should execute this code as soon as your app starts. It's safe to call this repeatedly because creating an

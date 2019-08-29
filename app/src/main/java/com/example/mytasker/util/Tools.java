@@ -8,7 +8,9 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.mytasker.R;
 import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -29,6 +31,28 @@ public class Tools {
 //        } catch (Exception e) {
 //        }
 //    }
+
+    public static String formatDate(Date date) {
+        SimpleDateFormat formatter =
+                new SimpleDateFormat("EEE, d MMM yyyy", Locale.getDefault());
+        return formatter.format(date);
+    }
+
+    public static String formatCount(long count) {
+        if (count > 1000000) {
+            return (count / 1000000) + "m";
+        } else if (count > 1000) {
+            return (count / 1000) + "k";
+        } else return count + "";
+    }
+
+    public static String formatDate(Long date) {
+
+        SimpleDateFormat formatter =
+                new SimpleDateFormat("EEE, d MMM yyyy", Locale.getDefault());
+        return formatter.format(date);
+    }
+
 
     public static String elapsedTime(long cDate) {
         long different = new Date().getTime() / 1000 - cDate;

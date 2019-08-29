@@ -128,6 +128,7 @@ public class TaskDetailActivity extends BaseActivity {
         map.put("p_id", current.getPoster_id());
         map.put("task_id", current.getId());
         map.put("task_title", current.getTitle());
+        map.put("price", current.getCost());
         Contracts.call(map, "taskDone").addOnCompleteListener(t -> {
             dlg.dismiss();
             if (!t.isSuccessful()) {

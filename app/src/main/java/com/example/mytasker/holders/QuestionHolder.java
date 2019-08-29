@@ -8,10 +8,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.mytasker.R;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.util.Contracts;
-import com.squareup.picasso.Picasso;
 
 public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private RecyclerViewClickListener mListener;
@@ -50,7 +51,7 @@ public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnCl
         name.setText(current.getQues());
         ques.setText(current.getQues());
         noAns.setText("");
-        Picasso.with(image.getContext()).load(current.getPoster_image()).placeholder(R.drawable.person).into(image);
+        Glide.with(image.getContext()).load(current.getPoster_image()).apply(new RequestOptions().placeholder(R.drawable.person)).into(image);
         if (type) setStage(current.getStage(), drawable2, c);
         else dotText.setVisibility(View.GONE);
     }

@@ -1,5 +1,6 @@
 package com.example.mytasker.util;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -11,10 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
+import com.example.mytasker.holders.FeedHolder;
 import com.example.mytasker.models.Feed;
-import com.example.mytasker.models.FeedHolder;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.Transaction;
 import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
 import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
 import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
@@ -26,7 +32,7 @@ public class FeedActNFrag {
     public FeedActNFrag() {
     }
 
-    public void callFireBase(FragmentActivity context, Query mQuery, SwipeRefreshLayout mSwipeRefreshLayout, RecyclerView mRecyclerView, boolean type) {
+    public void callFireBase(FragmentActivity context, Query mQuery, SwipeRefreshLayout mSwipeRefreshLayout, RecyclerView mRecyclerView, boolean type, DatabaseReference mDatabase) {
         mSwipeRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_red_light,
 
@@ -66,7 +72,14 @@ public class FeedActNFrag {
             protected void onBindViewHolder(@NonNull FeedHolder holder,
                                             int position,
                                             @NonNull Feed model) {
-                holder.setItem(model);
+                final DatabaseReference postRef = getRef(position);
+                holder.setItem(model, likeView -> {
+                    DatabaseReference globalFeedRef = mDatabase.child("Feeds").child(postRef.getKey());
+                    DatabaseReference userFeedRef = mDatabase.child("PrevFeeds").child(model.getPoster_id()).child(postRef.getKey());
+                    // Run two transactions
+                    onlikeClicked(globalFeedRef);
+                    onlikeClicked(userFeedRef);
+                }, getUid());
             }
 
             @Override
@@ -105,6 +118,44 @@ public class FeedActNFrag {
         //Set Adapter to RecyclerView
         mRecyclerView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(mAdapter::refresh);
+    }
+
+    private void onlikeClicked(DatabaseReference FeedRef) {
+        FeedRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Feed p = mutableData.getValue(Feed.class);
+                if (p == null) {
+                    return Transaction.success(mutableData);
+                }
+
+                if (p.likes.containsKey(getUid())) {
+                    // Unlike the Feed and remove self from likes
+                    p.likeCount = p.likeCount - 1;
+                    p.likes.remove(getUid());
+                } else {
+                    // like the Feed and add self to likes
+                    p.likeCount = p.likeCount + 1;
+                    p.likes.put(getUid(), true);
+                }
+                // Set value and report transaction success
+                mutableData.setValue(p);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                // Transaction completed
+                Log.d("FeedActNFragment", "FeedTransaction:onComplete:" + databaseError);
+            }
+        });
+
+
+    }
+
+    public String getUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
 }

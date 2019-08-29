@@ -7,9 +7,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.mytasker.R;
 import com.example.mytasker.models.Bid;
-import com.squareup.picasso.Picasso;
 
 import static com.example.mytasker.util.Tools.elapsedTime;
 
@@ -41,7 +41,7 @@ public class BidHolder extends RecyclerView.ViewHolder implements View.OnClickLi
 //        Toast.makeText(itemView.getContext(),  Toast.LENGTH_SHORT).show();
         this.tasker_id = bid.getId();
         if (bid.getAvatar() != null)
-            Picasso.with(avatar.getContext()).load(bid.getAvatar()).into(avatar);
+            Glide.with(avatar.getContext()).load(bid.getAvatar()).into(avatar);
     }
 
     @Override
