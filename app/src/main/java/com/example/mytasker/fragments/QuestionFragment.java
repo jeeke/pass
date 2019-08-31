@@ -20,9 +20,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.mytasker.R;
 import com.example.mytasker.activities.HistoryQues;
 import com.example.mytasker.adapters.QuestionAdapter;
-import com.example.mytasker.models.Question;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.RetrofitParser;
+import com.example.mytasker.util.NetworkCache;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -39,8 +40,6 @@ import static com.example.mytasker.util.Tools.launchActivity;
 
 public class QuestionFragment extends Fragment {
 
-    private ArrayList<Question> questions;
-
     public QuestionFragment() {
     }
 
@@ -51,6 +50,7 @@ public class QuestionFragment extends Fragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
+    private ShimmerFrameLayout shimmerContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,8 +72,16 @@ public class QuestionFragment extends Fragment {
         return false;
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        shimmerContainer.stopShimmer();
+    }
 
     private void verifyNCall() {
+        listView.animate().alpha(0.0f).start();
+        shimmerContainer.animate().alpha(1.0f).start();
+        shimmerContainer.startShimmer();
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         mUser.getIdToken(true)
                 .addOnCompleteListener(task -> {
@@ -86,6 +94,17 @@ public class QuestionFragment extends Fragment {
                 });
     }
 
+    private void checkCache() {
+        if (NetworkCache.questions != null) {
+            adapter.update(NetworkCache.questions);
+            swipeContainer.setRefreshing(false);
+            shimmerContainer.animate().alpha(0.0f).start();
+        } else verifyNCall();
+    }
+
+    private RecyclerView listView;
+    private SwipeRefreshLayout swipeContainer;
+    private QuestionAdapter adapter;
 
     private void callRetrofit(String token) {
         Retrofit retrofit = getRetrofit(token);
@@ -103,9 +122,12 @@ public class QuestionFragment extends Fragment {
                 RetrofitParser details = response.body();
 
                 if (details != null) {
-                    questions = details.toQuesList();
+                    NetworkCache.questions = details.toQuesList();
                 }
-                adapter.update(questions);
+                adapter.update(NetworkCache.questions);
+                shimmerContainer.stopShimmer();
+                shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                listView.animate().alpha(1.0f).setDuration(200).start();
                 swipeContainer.setRefreshing(false);
             }
 
@@ -113,13 +135,12 @@ public class QuestionFragment extends Fragment {
             public void onFailure(Call<RetrofitParser> call, Throwable t) {
                 Log.e("error ", t.getMessage());
                 swipeContainer.setRefreshing(false);
+                shimmerContainer.stopShimmer();
+                shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                listView.animate().alpha(1.0f).setDuration(200).start();
             }
         });
     }
-
-    private RecyclerView listView;
-    private SwipeRefreshLayout swipeContainer;
-    private QuestionAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -140,13 +161,14 @@ public class QuestionFragment extends Fragment {
 
                 android.R.color.holo_green_light);
         swipeContainer.setRefreshing(true);
-        verifyNCall();
+        checkCache();
         return v;
     }
 
     private void initViews(View v) {
         listView = v.findViewById(R.id.list);
         swipeContainer = v.findViewById(R.id.swipe_refresh_layout);
+        shimmerContainer = v.findViewById(R.id.shimmer_container);
     }
 
     private void initListeners(View v) {

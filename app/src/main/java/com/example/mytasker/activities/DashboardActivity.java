@@ -44,6 +44,7 @@ public class DashboardActivity extends BaseActivity {
     FloatingActionButton fab;
 
     private void loadFragment(Fragment fragment) {
+        if (fabActivated) circularReveal(fab);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
@@ -51,6 +52,15 @@ public class DashboardActivity extends BaseActivity {
 
     //TODO check for play services android for notification handling
     public void loadNextFrag(View view) {
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (fabActivated) {
+            circularReveal(fab);
+            return;
+        }
+        super.onBackPressed();
     }
 
     private void initFab() {
@@ -133,7 +143,6 @@ public class DashboardActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         starterIntent = getIntent();
         setOnline("true");
-
 //        int theme = starterIntent.getIntExtra("theme", R.style.LightMode);
 //        setTheme(theme);
         setContentView(R.layout.activity_dashboard);

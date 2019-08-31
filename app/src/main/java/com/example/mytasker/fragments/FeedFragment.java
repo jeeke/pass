@@ -66,7 +66,7 @@ public class FeedFragment extends Fragment {
         initViews(v);
         Query mQuery = FirebaseDatabase.getInstance().getReference().child("Feeds");
         feedActNFrag = new FeedActNFrag();
-        feedActNFrag.callFireBase(getActivity(), mQuery, mSwipeRefreshLayout, mRecyclerView, false, FirebaseDatabase.getInstance().getReference());
+        feedActNFrag.callFireBase(getActivity(), v.findViewById(R.id.shimmer_container), mQuery, mSwipeRefreshLayout, mRecyclerView, false, FirebaseDatabase.getInstance().getReference());
         mRecyclerView.setHasFixedSize(true);
         return v;
     }

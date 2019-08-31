@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +27,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class PostFeed extends BaseActivity {
@@ -33,23 +36,8 @@ public class PostFeed extends BaseActivity {
     ImageView mImage;
     EditText text;
     FloatingActionButton fab;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_feed);
-        Tools.initMinToolbar(this, "Create Post", false);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        mImage = findViewById(R.id.image);
-        findViewById(R.id.pick_image).setOnClickListener(v -> pickImage());
-        text = findViewById(R.id.text);
-        fab = findViewById(R.id.done);
-        fab.setOnClickListener(v -> {
-            if (mUri != null) {
-                uploadImage(mUri);
-            } else verifyNCall();
-        });
-    }
+    CheckBox checkBox;
+    boolean onPortfolio;
 
     @Override
     protected void onPause() {
@@ -61,6 +49,25 @@ public class PostFeed extends BaseActivity {
     UploadTask uploadTask;
     String imageURL;
     Uri mUri;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_post_feed);
+        Tools.initMinToolbar(this, "Create Post", false);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        mImage = findViewById(R.id.image);
+        findViewById(R.id.pick_image).setOnClickListener(v -> pickImage());
+        text = findViewById(R.id.text);
+        fab = findViewById(R.id.done);
+        checkBox = findViewById(R.id.checkBox);
+        fab.setOnClickListener(v -> {
+            onPortfolio = checkBox.isChecked();
+            if (mUri != null) {
+                uploadImage(mUri);
+            } else verifyNCall();
+        });
+    }
 
     private void uploadImage(Uri uri) {
         fab.setClickable(false);
@@ -134,25 +141,19 @@ public class PostFeed extends BaseActivity {
                 text.getText().toString()
         );
         DatabaseReference push = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference feeds = push.child("Feeds").push();
-        feeds.setValue(feed).addOnCompleteListener(task -> {
+        String key = push.child("Feeds").push().getKey();
+
+        Map updateMap = new HashMap();
+        updateMap.put("Feeds/" + key, feed);
+        if (onPortfolio)
+            updateMap.put("Portfolios/" + user.getUid() + "/" + key, feed);
+        updateMap.put("PrevFeeds/" + user.getUid() + "/" + key, feed);
+        push.updateChildren(updateMap).addOnCompleteListener(task -> {
+            dlg.dismiss();
+            fab.setClickable(true);
             if (task.isSuccessful()) {
-                DatabaseReference ref = push.child("/PrevFeeds").child(user.getUid()).push();
-                ref.setValue(feed).addOnCompleteListener(task1 -> {
-                    if (task1.isSuccessful()) {
-                        Toast.makeText(PostFeed.this, "Feed posted successfully", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(PostFeed.this, "Feed could not be posted", Toast.LENGTH_SHORT).show();
-                    }
-                    dlg.dismiss();
-//                    fab.setBackgroundTintList(ColorStateList.valueOf(R.attr.colorAccent));
-//                    fab.setClickable(true);
-                    finish();
-                });
+                finish();
             } else {
-                dlg.dismiss();
-//                fab.setBackgroundTintList(ColorStateList.valueOf(R.attr.colorAccent));
-                fab.setClickable(true);
                 Toast.makeText(PostFeed.this, "Feed could not be posted", Toast.LENGTH_SHORT).show();
             }
         });

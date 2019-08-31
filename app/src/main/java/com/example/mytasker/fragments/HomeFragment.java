@@ -19,14 +19,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
-import com.example.mytasker.activities.HistoryFeed;
+import com.example.mytasker.activities.HistoryTask;
 import com.example.mytasker.activities.TaskDetailActivity;
 import com.example.mytasker.adapters.TaskListAdapter;
+import com.example.mytasker.chat.DialogsActivity;
 import com.example.mytasker.holders.TaskHolder;
 import com.example.mytasker.models.Task;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.RetrofitParser;
 import com.example.mytasker.util.FilterHelper;
+import com.example.mytasker.util.NetworkCache;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -67,16 +69,14 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_history) {
-            launchActivity((AppCompatActivity) getActivity(), HistoryFeed.class);
+            launchActivity((AppCompatActivity) getActivity(), HistoryTask.class);
         } else if (id == R.id.action_chats) {
-
+            launchActivity((AppCompatActivity) getActivity(), DialogsActivity.class);
         }
         return false;
     }
 
     private ShimmerFrameLayout shimmerContainer;
-
-
     private RecyclerView listView;
     private SwipeRefreshLayout swipeContainer;
     private TaskListAdapter adapter;
@@ -95,6 +95,9 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     }
 
     private void verifyNCall() {
+        listView.animate().alpha(0.0f).start();
+        shimmerContainer.animate().alpha(1.0f).start();
+        shimmerContainer.startShimmer();
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         mUser.getIdToken(true)
                 .addOnCompleteListener(task -> {
@@ -107,10 +110,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
                 });
     }
 
-
-    private ArrayList<Task> tasks;
     private void callRetrofit(String token) {
-        shimmerContainer.startShimmer();
         Retrofit retrofit = getRetrofit(token);
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
         Call<RetrofitParser> call = jsonPlaceHolder.getTasks(
@@ -129,21 +129,38 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
                 }
                 RetrofitParser details = response.body();
                 if (details != null) {
-                    tasks = details.toTaskList();
+                    NetworkCache.tasks = details.toTaskList();
                 }
-                adapter.update(tasks);
+                adapter.update(NetworkCache.tasks);
                 shimmerContainer.stopShimmer();
-                shimmerContainer.animate().alpha(0.0f).setDuration(500).start();
-                listView.animate().alpha(1.0f).setDuration(1000).start();
+                shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                listView.animate().alpha(1.0f).setDuration(200).start();
                 swipeContainer.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<RetrofitParser> call, Throwable t) {
                 Log.e("error ", t.getMessage());
+                shimmerContainer.stopShimmer();
+                shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                listView.animate().alpha(1.0f).setDuration(200).start();
                 swipeContainer.setRefreshing(false);
             }
         });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        shimmerContainer.stopShimmer();
+    }
+
+    private void checkCache() {
+        if (NetworkCache.questions != null) {
+            adapter.update(NetworkCache.tasks);
+            shimmerContainer.animate().alpha(0.0f).start();
+            swipeContainer.setRefreshing(false);
+        } else verifyNCall();
     }
 
 
@@ -160,7 +177,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
         swipeContainer.setOnRefreshListener(this::verifyNCall);
-        verifyNCall();
+        checkCache();
         swipeContainer.setColorSchemeResources(
                 android.R.color.holo_orange_light,
                 android.R.color.holo_green_light);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.mytasker.R;
+import com.example.mytasker.activities.HistoryFeed;
 import com.example.mytasker.activities.NotificationActivity;
 import com.example.mytasker.activities.SettingActivity;
 import com.example.mytasker.models.Profile;
@@ -69,6 +71,8 @@ public class ProfileFragment extends Fragment {
         this.mine = mine;
     }
 
+    TextView aboutText;
+
     private void forMe(View v) {
         toolbar.setVisibility(View.VISIBLE);
         toolbar.setTitle("PROFILE");
@@ -101,11 +105,19 @@ public class ProfileFragment extends Fragment {
 
     private ImageView imageView, sugga;
 
+    public ProfileFragment() {
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.frag_profile, container, false);
+        v.findViewById(R.id.portfolio).setOnClickListener(v1 -> {
+            Intent intent = new Intent(getContext(), HistoryFeed.class);
+            intent.putExtra("from", true);
+            startActivity(intent);
+        });
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         ImageView profileImage = v.findViewById(R.id.profile_image);
@@ -129,15 +141,40 @@ public class ProfileFragment extends Fragment {
         sugga = v.findViewById(R.id.sugga);
         layout = v.findViewById(R.id.layoutrating);
         divider = v.findViewById(R.id.divider11);
-        constraintLayout.setVisibility(View.GONE);
-        sugga.setVisibility(View.VISIBLE);
-        divider.setVisibility(View.GONE);
-        imageView.setVisibility(View.GONE);
         toolbar = v.findViewById(R.id.toolbar);
-        toolbar.setVisibility(View.GONE);
+        aboutText = v.findViewById(R.id.about);
+        v.findViewById(R.id.edit_about).setOnClickListener(v12 -> {
+            EditText input = new EditText(getContext());
+//            input.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
+            input.setGravity(Gravity.START);
+            input.setHeight(dpToPx(200));
+            int pad = dpToPx(24);
+            int p = dpToPx(16);
+            input.setPadding(pad, pad, pad, p);
+            new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme).setTitle("EDIT ABOUT").setView(input)
+                    .setPositiveButton("SAVE", (dialog, which) -> {
+                        saveAbout(input.getText().toString());
+                    })
+                    .show();
+            input.requestFocus();
+        });
         if (mine) forMe(v);
         myapi();
+        adapter = new ChipAdapter(this::removeSkill, chipGroup, new ArrayList<>());
         return v;
+    }
+
+    private void saveAbout(String about) {
+        dlg.setTitle("Saving...");
+        dlg.show();
+        mDatabase
+                .child("/Profiles/" + mUser.getUid() + "/about").setValue(about)
+                .addOnCompleteListener(task -> {
+                    dlg.dismiss();
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(getContext(), "Could not be updated", Toast.LENGTH_SHORT).show();
+                    } else aboutText.setText(about);
+                });
     }
 
     @Override
@@ -202,15 +239,16 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(DataSnapshot snapshot) {
                 r.removeEventListener(this);
                 dlg.dismiss();
+                if (mine) imageView.setVisibility(View.VISIBLE);
                 Profile profile = snapshot.getValue(Profile.class);
 //                Log.e("\nP\nr\no\nf\ni\nl\ne\n",snapshot.toString());
                 if (profile != null) {
-                    if (mine) imageView.setVisibility(View.VISIBLE);
                     profile.setByTasker(snapshot.child("Ratings/ByTasker").getValue(Rating.class));
                     profile.setByPoster(snapshot.child("Ratings/ByPoster").getValue(Rating.class));
                     for (DataSnapshot skill : snapshot.child("Skills").getChildren()) {
                         profile.addSkill(skill.getKey());
                     }
+                    aboutText.setText(profile.getAbout());
                     setupstats(profile);
                     setupskills(profile.getSkills());
                     settupdetail(profile);
