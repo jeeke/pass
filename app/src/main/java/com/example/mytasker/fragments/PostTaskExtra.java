@@ -44,20 +44,11 @@ public class PostTaskExtra extends Fragment implements DatePickerDialog.OnDateSe
         View layout = inflater.inflate(R.layout.post_task_extra, container, false);
         txtDate = layout.findViewById(R.id.pick_time);
         reward = layout.findViewById(R.id.reward);
-//        layout.findViewById(R.id.pick_image).setOnClickListener(this::chooseImage);
         txtDate.setOnClickListener(this::openDatePicker);
         c = Calendar.getInstance();
         return layout;
     }
 
-//    private void chooseImage(View v) {
-//        Intent intent = new Intent();
-//        // Show only images, no videos or anything else
-//        intent.setType("image/*");
-//        intent.setAction(Intent.ACTION_GET_CONTENT);
-//        // Always show the chooser (if there are multiple options available)
-//        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-//    }
 
     private void openDatePicker(View v) {
         int mMonth = c.get(Calendar.MONTH);
@@ -81,8 +72,8 @@ public class PostTaskExtra extends Fragment implements DatePickerDialog.OnDateSe
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, monthOfYear);
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        date = cal.getTime().getTime() + "";
-        txtDate.setText(formatDate(cal.getTime().getTime()));
+        date = formatDate(cal.getTime().getTime());
+        txtDate.setText(date);
     }
 
 }

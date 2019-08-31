@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?colorAccent"
@@ -9,28 +8,28 @@
     android:orientation="vertical">
 
     <!--<LinearLayout-->
-        <!--android:id="@+id/linearLayout2"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:orientation="vertical"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent">-->
+    <!--android:id="@+id/linearLayout2"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:orientation="vertical"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="parent">-->
 
-        <!--<View-->
-            <!--android:id="@+id/view7"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:background="?colorAccent" />-->
+    <!--<View-->
+    <!--android:id="@+id/view7"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:background="?colorAccent" />-->
 
-        <!--&lt;!&ndash;<View&ndash;&gt;-->
-            <!--&lt;!&ndash;android:id="@+id/view8"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_height="0dp"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:background="?colorPrimary" />&ndash;&gt;-->
+    <!--&lt;!&ndash;<View&ndash;&gt;-->
+    <!--&lt;!&ndash;android:id="@+id/view8"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_height="0dp"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:background="?colorPrimary" />&ndash;&gt;-->
 
     <!--</LinearLayout>-->
 
@@ -105,68 +104,68 @@
         app:layout_constraintTop_toTopOf="@+id/textView42" />
 
     <!--<TextView-->
-        <!--android:id="@+id/textView59"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="32dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:text="145"-->
-        <!--android:textSize="18sp"-->
-        <!--app:layout_constraintEnd_toEndOf="@+id/taskposted"-->
-        <!--app:layout_constraintStart_toStartOf="@+id/taskposted"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/textView41" />-->
+    <!--android:id="@+id/textView59"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="32dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="145"-->
+    <!--android:textSize="18sp"-->
+    <!--app:layout_constraintEnd_toEndOf="@+id/taskposted"-->
+    <!--app:layout_constraintStart_toStartOf="@+id/taskposted"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/textView41" />-->
 
     <!--<TextView-->
-        <!--android:id="@+id/textView60"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="16dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:text="Saved"-->
-        <!--android:textSize="12sp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="@+id/textView59"-->
-        <!--app:layout_constraintStart_toStartOf="@+id/textView59"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/textView59" />-->
+    <!--android:id="@+id/textView60"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="16dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="Saved"-->
+    <!--android:textSize="12sp"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintEnd_toEndOf="@+id/textView59"-->
+    <!--app:layout_constraintStart_toStartOf="@+id/textView59"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/textView59" />-->
 
     <!--<TextView-->
-        <!--android:id="@+id/textView61"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="8"-->
-        <!--android:textSize="18sp"-->
-        <!--app:layout_constraintEnd_toEndOf="@+id/bucksearned"-->
-        <!--app:layout_constraintStart_toStartOf="@+id/bucksearned"-->
-        <!--app:layout_constraintTop_toTopOf="@+id/textView59" />-->
+    <!--android:id="@+id/textView61"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="8"-->
+    <!--android:textSize="18sp"-->
+    <!--app:layout_constraintEnd_toEndOf="@+id/bucksearned"-->
+    <!--app:layout_constraintStart_toStartOf="@+id/bucksearned"-->
+    <!--app:layout_constraintTop_toTopOf="@+id/textView59" />-->
 
     <!--<TextView-->
-        <!--android:id="@+id/textView62"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Posted"-->
-        <!--android:textSize="12sp"-->
-        <!--app:layout_constraintEnd_toEndOf="@+id/textView61"-->
-        <!--app:layout_constraintStart_toStartOf="@+id/textView61"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/textView61" />-->
+    <!--android:id="@+id/textView62"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Posted"-->
+    <!--android:textSize="12sp"-->
+    <!--app:layout_constraintEnd_toEndOf="@+id/textView61"-->
+    <!--app:layout_constraintStart_toStartOf="@+id/textView61"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/textView61" />-->
 
     <!--<TextView-->
-        <!--android:id="@+id/textView64"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Completed"-->
-        <!--android:textSize="12sp"-->
-        <!--app:layout_constraintEnd_toEndOf="@+id/textView63"-->
-        <!--app:layout_constraintStart_toStartOf="@+id/textView63"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/textView63" />-->
+    <!--android:id="@+id/textView64"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Completed"-->
+    <!--android:textSize="12sp"-->
+    <!--app:layout_constraintEnd_toEndOf="@+id/textView63"-->
+    <!--app:layout_constraintStart_toStartOf="@+id/textView63"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/textView63" />-->
 
     <!--<TextView-->
-        <!--android:id="@+id/textView63"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="20"-->
-        <!--android:textSize="18sp"-->
-        <!--app:layout_constraintEnd_toEndOf="@+id/taskdone"-->
-        <!--app:layout_constraintStart_toStartOf="@+id/taskdone"-->
-        <!--app:layout_constraintTop_toTopOf="@+id/textView61" />-->
+    <!--android:id="@+id/textView63"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="20"-->
+    <!--android:textSize="18sp"-->
+    <!--app:layout_constraintEnd_toEndOf="@+id/taskdone"-->
+    <!--app:layout_constraintStart_toStartOf="@+id/taskdone"-->
+    <!--app:layout_constraintTop_toTopOf="@+id/textView61" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

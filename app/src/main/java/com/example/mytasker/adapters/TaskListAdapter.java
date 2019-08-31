@@ -44,6 +44,11 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskHolder> {
         notifyDataSetChanged();
     }
 
+    public void addItem(Task list) {
+        this.list.add(list);
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
         Drawable drawable;

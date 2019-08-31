@@ -45,6 +45,9 @@ public class HistoryTaskFrag extends Fragment implements TaskHolder.RecyclerView
         tasks = new ArrayList<>();
     }
 
+    public HistoryTaskFrag() {
+    }
+
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,

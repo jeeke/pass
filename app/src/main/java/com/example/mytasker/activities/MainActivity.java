@@ -139,9 +139,6 @@ public class MainActivity extends BaseActivity implements
             launchActivity(this, DashboardActivity.class);
             finish();
         }
-//        else {
-//            Toast.makeText(this, "No Signed In User", Toast.LENGTH_SHORT).show();
-//        }
     }
 
     @Override
@@ -157,4 +154,5 @@ public class MainActivity extends BaseActivity implements
             startActivity(intent);
         }
     }
+
 }

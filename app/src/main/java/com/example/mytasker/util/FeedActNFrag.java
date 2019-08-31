@@ -14,6 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.mytasker.R;
 import com.example.mytasker.holders.FeedHolder;
 import com.example.mytasker.models.Feed;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,7 +33,7 @@ public class FeedActNFrag {
     public FeedActNFrag() {
     }
 
-    public void callFireBase(FragmentActivity context, Query mQuery, SwipeRefreshLayout mSwipeRefreshLayout, RecyclerView mRecyclerView, boolean type, DatabaseReference mDatabase) {
+    public void callFireBase(FragmentActivity context, ShimmerFrameLayout shimmerContainer, Query mQuery, SwipeRefreshLayout mSwipeRefreshLayout, RecyclerView mRecyclerView, boolean type, DatabaseReference mDatabase) {
         mSwipeRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_red_light,
 
@@ -44,6 +45,7 @@ public class FeedActNFrag {
 
         //Initialize RecyclerView
         mRecyclerView.setHasFixedSize(true);
+
 
         LinearLayoutManager mManager = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(mManager);
@@ -62,6 +64,8 @@ public class FeedActNFrag {
 
         //Initialize Adapter
         mAdapter = new FirebaseRecyclerPagingAdapter<Feed, FeedHolder>(options) {
+
+
             @NonNull
             @Override
             public FeedHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -82,10 +86,16 @@ public class FeedActNFrag {
                 }, getUid());
             }
 
+            private int count = 4;
+
             @Override
             protected void onLoadingStateChanged(@NonNull LoadingState state) {
                 switch (state) {
                     case LOADING_INITIAL:
+                        mRecyclerView.animate().alpha(0.0f).start();
+                        shimmerContainer.animate().alpha(1.0f).start();
+                        shimmerContainer.startShimmer();
+                        break;
                     case LOADING_MORE:
                         // Do your loadingPng animation
                         mSwipeRefreshLayout.setRefreshing(true);
@@ -93,6 +103,10 @@ public class FeedActNFrag {
 
                     case LOADED:
                         // Stop Animation
+
+                        shimmerContainer.stopShimmer();
+                        shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                        mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
                         mSwipeRefreshLayout.setRefreshing(false);
                         break;
 
@@ -102,8 +116,13 @@ public class FeedActNFrag {
                         break;
 
                     case ERROR:
-                        retry();
-                        break;
+                        if (--count > 0) {
+                            retry();
+                        } else {
+                            shimmerContainer.stopShimmer();
+                            shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                            mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
+                        }
                 }
             }
 

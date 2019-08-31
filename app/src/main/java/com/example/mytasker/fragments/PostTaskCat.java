@@ -84,7 +84,6 @@ public class PostTaskCat extends Fragment {
             case R.id.task_tag:
                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme).setTitle("ADD TAG").setView(input)
                         .setPositiveButton("ADD", (dialog, which) -> {
-                            if (taskTags.isSafe(input.getText().toString()))
                                 taskTags.addChild(input.getText().toString());
                         })
                         .show();
@@ -95,7 +94,6 @@ public class PostTaskCat extends Fragment {
                 input.setPadding(pad, pad, pad, p);
                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme).setTitle("ADD MUST HAVES").setView(input)
                         .setPositiveButton("ADD", (dialog, which) -> {
-                            if (taskMustHaves.isSafe(input.getText().toString()))
                                 taskMustHaves.addChild(input.getText().toString());
                         })
                         .show();

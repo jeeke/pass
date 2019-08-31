@@ -3,6 +3,7 @@ package com.example.mytasker.chat;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.mytasker.activities.BaseActivity;
 import com.example.mytasker.chat.data.model.Dialog;
 import com.example.mytasker.chat.utils.AppUtils;
@@ -25,7 +26,7 @@ public abstract class DemoDialogsActivity extends BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setOnline("true");
-        imageLoader = (imageView, url, payload) -> Glide.with(DemoDialogsActivity.this).load(url).into(imageView);
+        imageLoader = (imageView, url, payload) -> Glide.with(DemoDialogsActivity.this).load(url).apply(RequestOptions.circleCropTransform()).into(imageView);
     }
 
     @Override

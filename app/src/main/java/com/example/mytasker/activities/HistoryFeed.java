@@ -16,15 +16,25 @@ public class HistoryFeed extends BaseActivity {
     private FeedActNFrag feedActNFrag;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    boolean from = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        Tools.initMinToolbar(this, "My Posts", false);
+        from = getIntent().getBooleanExtra("from", false);
+        String title;
+        Query mQuery;
+        if (from) {
+            title = "Portfolio";
+            mQuery = FirebaseDatabase.getInstance().getReference().child("Portfolios").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        } else {
+            title = "My Posts";
+            mQuery = FirebaseDatabase.getInstance().getReference().child("PrevFeeds").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        }
+        Tools.initMinToolbar(this, title, false);
         initViews();
-        Query mQuery = FirebaseDatabase.getInstance().getReference().child("PrevFeeds").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         feedActNFrag = new FeedActNFrag();
-        feedActNFrag.callFireBase(this, mQuery, mSwipeRefreshLayout, mRecyclerView, true, FirebaseDatabase.getInstance().getReference());
+        feedActNFrag.callFireBase(this, findViewById(R.id.shimmer_container), mQuery, mSwipeRefreshLayout, mRecyclerView, true, FirebaseDatabase.getInstance().getReference());
     }
 
     private void initViews() {

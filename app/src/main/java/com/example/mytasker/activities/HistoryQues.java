@@ -20,6 +20,7 @@ import com.example.mytasker.holders.QuestionHolder;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.Tools;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -34,6 +35,7 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
     private FirebaseRecyclerPagingAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ShimmerFrameLayout shimmerContainer;
     ProgressDialog dlg;
 
     @Override
@@ -43,6 +45,7 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
         Tools.initMinToolbar(this, "My Questions", false);
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = findViewById(R.id.recyclerView);
+        shimmerContainer = findViewById(R.id.shimmer_container);
         callFireBase();
     }
 
@@ -114,6 +117,9 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
             protected void onLoadingStateChanged(@NonNull LoadingState state) {
                 switch (state) {
                     case LOADING_INITIAL:
+                        mRecyclerView.animate().alpha(0.0f).start();
+                        shimmerContainer.animate().alpha(1.0f).start();
+                        shimmerContainer.startShimmer();
                     case LOADING_MORE:
                         // Do your loading animation
                         mSwipeRefreshLayout.setRefreshing(true);
@@ -121,6 +127,10 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
 
                     case LOADED:
                         // Stop Animation
+                        shimmerContainer.stopShimmer();
+                        shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                        mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
+                        mSwipeRefreshLayout.setRefreshing(false);
                         mSwipeRefreshLayout.setRefreshing(false);
                         break;
 
@@ -132,7 +142,11 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
                     case ERROR:
                         if (--retryCount > 0)
                             retry();
-                        break;
+                        else {
+                            shimmerContainer.stopShimmer();
+                            shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                            mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
+                        }
                 }
             }
 
@@ -155,7 +169,7 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
 
     @Override
     public void onClick(View view, Question question) {
-        Intent intent = new Intent(this,QuestionDetailActivity.class);
+        Intent intent = new Intent(this, QuestionDetailActivity.class);
         intent.putExtra("ques", question);
         intent.putExtra("from", true);
         startActivity(intent);

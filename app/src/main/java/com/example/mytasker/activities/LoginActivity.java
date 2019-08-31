@@ -1,6 +1,7 @@
 package com.example.mytasker.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,8 +18,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.Date;
-
-import static com.example.mytasker.util.Tools.launchActivity;
 
 public class LoginActivity extends BaseActivity {
 
@@ -104,8 +103,9 @@ public class LoginActivity extends BaseActivity {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "signInWithEmail:success");
                         dialog.dismiss();
-                        finish();
-                        launchActivity(LoginActivity.this, DashboardActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -128,7 +128,9 @@ public class LoginActivity extends BaseActivity {
                         if (task.isSuccessful()) {
                             dialog.dismiss();
                             Log.d(TAG, "User profile initiated.");
-                            launchActivity(LoginActivity.this, DashboardActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
                         }
                         dialog.dismiss();
                     });

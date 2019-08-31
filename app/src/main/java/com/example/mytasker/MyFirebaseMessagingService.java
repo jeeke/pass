@@ -27,6 +27,8 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
+import static com.example.mytasker.util.Contracts.dpToPx;
+
 public class MyFirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
@@ -87,8 +89,8 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
     }
 
 
-    int display_size = Math.round(64 * this.getResources().getDisplayMetrics().density);
     private BaseTarget target = new BaseTarget<Bitmap>() {
+        int display_size = dpToPx(64);
 
         @Override
         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {

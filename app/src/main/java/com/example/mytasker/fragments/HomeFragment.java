@@ -122,6 +122,10 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         call.enqueue(new Callback<RetrofitParser>() {
             @Override
             public void onResponse(Call<RetrofitParser> call, Response<RetrofitParser> response) {
+                shimmerContainer.stopShimmer();
+                shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                listView.animate().alpha(1.0f).setDuration(200).start();
+                swipeContainer.setRefreshing(false);
                 if (!response.isSuccessful()) {
                     Log.v("Code: ", String.valueOf(response.code()));
                     swipeContainer.setRefreshing(false);
@@ -129,13 +133,8 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
                 }
                 RetrofitParser details = response.body();
                 if (details != null) {
-                    NetworkCache.tasks = details.toTaskList();
+                    details.toTaskList(adapter, filterHelper.price[0], filterHelper.price[1], filterHelper.remote);
                 }
-                adapter.update(NetworkCache.tasks);
-                shimmerContainer.stopShimmer();
-                shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
-                listView.animate().alpha(1.0f).setDuration(200).start();
-                swipeContainer.setRefreshing(false);
             }
 
             @Override
@@ -156,7 +155,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     }
 
     private void checkCache() {
-        if (NetworkCache.questions != null) {
+        if (NetworkCache.tasks != null) {
             adapter.update(NetworkCache.tasks);
             shimmerContainer.animate().alpha(0.0f).start();
             swipeContainer.setRefreshing(false);
@@ -179,8 +178,8 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         swipeContainer.setOnRefreshListener(this::verifyNCall);
         checkCache();
         swipeContainer.setColorSchemeResources(
-                android.R.color.holo_orange_light,
-                android.R.color.holo_green_light);
+                R.color.orange,
+                R.color.green_A400);
         return v;
     }
 

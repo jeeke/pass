@@ -1,6 +1,5 @@
 package com.example.mytasker.chat;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -10,7 +9,6 @@ import androidx.annotation.Nullable;
 import com.example.mytasker.R;
 import com.example.mytasker.chat.data.model.Dialog;
 import com.example.mytasker.chat.data.model.DialogHelper;
-import com.example.mytasker.chat.data.model.Message;
 import com.example.mytasker.util.Tools;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -27,13 +25,11 @@ import java.util.ArrayList;
 public class DialogsActivity extends DemoDialogsActivity {
 
     private DatabaseReference mConvDatabase;
-//    private DatabaseReference mMessageDatabase;
-//    private DatabaseReference mUsersDatabase;
 
 
-    public static void open(Context context) {
-        context.startActivity(new Intent(context, DialogsActivity.class));
-    }
+//    public static void open(Context context) {
+//        context.startActivity(new Intent(context, DialogsActivity.class));
+//    }
 
     private DialogsList dialogsList;
 
@@ -52,9 +48,6 @@ public class DialogsActivity extends DemoDialogsActivity {
 
         mConvDatabase = FirebaseDatabase.getInstance().getReference().child("Chats").child(mCurrent_user_id);
         mConvDatabase.keepSynced(true);
-//        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-//        mMessageDatabase = FirebaseDatabase.getInstance().getReference().child("Messages").child(mCurrent_user_id);
-//        mUsersDatabase.keepSynced(true);
         queryFireBase();
 
     }
@@ -108,12 +101,12 @@ public class DialogsActivity extends DemoDialogsActivity {
     }
 
     //for example
-    private void onNewMessage(String dialogId, Message message) {
-        boolean isUpdated = dialogsAdapter.updateDialogWithMessage(dialogId, message);
-        if (!isUpdated) {
-            //Dialog with this ID doesn't exist, so you can create new Dialog or update all dialogs list
-        }
-    }
+//    private void onNewMessage(String dialogId, Message message) {
+//        boolean isUpdated = dialogsAdapter.updateDialogWithMessage(dialogId, message);
+//        if (!isUpdated) {
+//            //Dialog with this ID doesn't exist, so you can create new Dialog or update all dialogs list
+//        }
+//    }
 
     //for example
     private void onNewDialog(Dialog dialog) {

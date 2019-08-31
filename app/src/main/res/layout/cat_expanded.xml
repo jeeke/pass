@@ -146,10 +146,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:switchPadding="16dp"
+            android:fontFamily="@font/din"
             android:text="Remote Task"
+            android:paddingEnd="8dp"
+            android:textSize="18sp"
             android:textColor="?colorAccent"
-            app:layout_constraintBottom_toTopOf="@+id/radius_bar"
-            app:layout_constraintEnd_toEndOf="@+id/radius_bar" />
+            app:layout_constraintBottom_toTopOf="@+id/price_bar"
+            app:layout_constraintEnd_toEndOf="@+id/price_bar" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

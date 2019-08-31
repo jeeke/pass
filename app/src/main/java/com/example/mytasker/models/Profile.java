@@ -2,30 +2,42 @@ package com.example.mytasker.models;
 
 import java.util.ArrayList;
 
-public class Profile extends Message{
+public class Profile extends Message {
 
 
     private Rating byTasker, byPoster;
     private long t_done;
     private ArrayList<String> skills;
+    private String about;
 
     Profile() {
         t_done = 0;
         bucks = 0;
         t_posted = 0;
         skills = new ArrayList<>();
+        about = "A Hobbyist";
 
     }
 
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
     public void setByTasker(Rating byTasker) {
-        this.byTasker = byTasker;
+        if (byTasker == null) this.byTasker = new Rating();
+        else this.byTasker = byTasker;
     }
 
     private int bucks;
     private long t_posted;
 
     public void setByPoster(Rating byPoster) {
-        this.byPoster = byPoster;
+        if (byPoster == null) this.byPoster = new Rating();
+        else this.byPoster = byPoster;
     }
 
     public float getPosterRating() {

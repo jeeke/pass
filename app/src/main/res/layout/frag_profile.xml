@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
     <include layout="@layout/toolbar" />
 
     <ScrollView
@@ -22,20 +21,65 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="100dp">
-
             <include layout="@layout/profile_main" />
 
-            <include
-                android:id="@+id/detail"
-                layout="@layout/profile_person_detail" />
+
             <!--<View-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="8dp"-->
             <!--android:background="?android:attr/listDivider" />-->
 
-            <!--<include-->
-            <!--android:id="@+id/medals"-->
-            <!--layout="@layout/profile_medals" />-->
+            <include
+                android:id="@+id/detail"
+                layout="@layout/profile_person_detail" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="?android:attr/listDivider" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/about"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="About"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/edit_about"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:padding="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView9"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textView9"
+                    app:srcCompat="@drawable/ic_edit" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
@@ -56,22 +100,6 @@
             <include
                 android:id="@+id/stats"
                 layout="@layout/profile_stats" />
-
-
-            <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="8dp"-->
-            <!--android:background="?android:attr/listDivider" />-->
-
-
-            <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="8dp"-->
-            <!--android:background="?android:attr/listDivider" />-->
-
-            <!--<include-->
-            <!--layout="@layout/profile_reviews"-->
-            <!--tools:visibility="gone" />-->
 
         </LinearLayout>
     </ScrollView>

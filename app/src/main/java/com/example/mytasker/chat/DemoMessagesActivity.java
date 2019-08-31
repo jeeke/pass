@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.mytasker.R;
 import com.example.mytasker.activities.BaseActivity;
 import com.example.mytasker.chat.data.model.Message;
@@ -61,7 +62,7 @@ public abstract class DemoMessagesActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setOnline("true");
         initFireBase();
-        imageLoader = (imageView, url, payload) -> Glide.with(DemoMessagesActivity.this).load(url).into(imageView);
+        imageLoader = (imageView, url, payload) -> Glide.with(DemoMessagesActivity.this).load(url).apply(RequestOptions.circleCropTransform()).into(imageView);
         onLoadMore(0, 0);
     }
 
