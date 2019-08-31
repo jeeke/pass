@@ -1,126 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorPrimaryDark"
-    app:layoutDescription="@xml/dashboard_motion">
+    android:background="?colorPrimaryDark">
 
-    <ImageView
-        android:id="@+id/menu_icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        app:srcCompat="@drawable/ic_menu"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@null"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    </ImageView>
-
-    <ImageView
-        android:id="@+id/esselion"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/esselion" />
-
-
-    <ImageView
-        android:id="@+id/action_search"
-        style="@style/ImageIcon"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="16dp"
-        app:srcCompat="@drawable/ic_history"
-        app:layout_constraintTop_toTopOf="@+id/menu_icon"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/esselion"
-        app:layout_constraintEnd_toEndOf="@+id/esselion"
-        app:layout_constraintStart_toStartOf="@+id/esselion"
-        app:layout_constraintTop_toTopOf="@+id/esselion" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="32dp"
-        android:alpha="1.0"
-        android:orientation="vertical">
-
-        <!--<TextView-->
-            <!--android:id="@+id/my_tasks"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_margin="12dp"-->
-            <!--android:gravity="center"-->
-            <!--android:text="TASKS"-->
-            <!--android:textSize="17sp" />-->
-
-
-        <TextView
-            android:id="@+id/chats"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="8dp"
-            android:gravity="center"
-            android:text="CHATS"
-            android:textSize="17sp" />
-
-        <TextView
-            android:id="@+id/support"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="8dp"
-            android:gravity="center"
-            android:text="SUPPORT"
-            android:textSize="17sp" />
-        <!--<TextView-->
-            <!--android:id="@+id/my_posts"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_margin="8dp"-->
-            <!--android:gravity="center"-->
-            <!--android:text="ACTIVITIES"-->
-            <!--android:textSize="17sp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/my_ques"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_margin="12dp"-->
-            <!--android:text="QUESTIONS"-->
-            <!--android:textSize="17sp" />-->
-    </LinearLayout>
-
-    <View
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="4dp">
-    </View>
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/esselion" />
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/scrollable"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="4dp"
         app:layoutDescription="@xml/categories_motion"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_bar">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/list_head"
@@ -213,4 +124,4 @@
                 android:paddingBottom="100dp" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </androidx.constraintlayout.motion.widget.MotionLayout>
-</androidx.constraintlayout.motion.widget.MotionLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

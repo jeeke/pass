@@ -4,19 +4,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
-import com.example.mytasker.activities.HistoryTask;
+import com.example.mytasker.activities.HistoryFeed;
 import com.example.mytasker.activities.TaskDetailActivity;
 import com.example.mytasker.adapters.TaskListAdapter;
 import com.example.mytasker.holders.TaskHolder;
@@ -24,10 +27,11 @@ import com.example.mytasker.models.Task;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.RetrofitParser;
 import com.example.mytasker.util.FilterHelper;
-import com.example.mytasker.util.ToolbarHelper;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -37,6 +41,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import static com.example.mytasker.util.Tools.getRetrofit;
+import static com.example.mytasker.util.Tools.launchActivity;
 
 
 public class HomeFragment extends Fragment implements FilterHelper.FilterListener, TaskHolder.RecyclerViewClickListener {
@@ -44,6 +49,29 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
 
     public HomeFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_home, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_history) {
+            launchActivity((AppCompatActivity) getActivity(), HistoryFeed.class);
+        } else if (id == R.id.action_chats) {
+
+        }
+        return false;
     }
 
     private ShimmerFrameLayout shimmerContainer;
@@ -59,6 +87,12 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         swipeContainer = v.findViewById(R.id.swipe_refresh_layout);
     }
 
+
+    private void initToolbar(View v) {
+        Toolbar toolbar = v.findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    }
 
     private void verifyNCall() {
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -112,37 +146,20 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         });
     }
 
-//    private void callRetrofitHelper() {
-//        if (tasks != null) {
-//            shimmerContainer.setVisibility(View.GONE);
-//            adapter.update(tasks);
-//            listView.setAlpha(1.0f);
-//        } else {
-//            verifyNCall();
-//        }
-//    }
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     private FilterHelper filterHelper;
-    private ToolbarHelper toolbarHelper;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        toolbarHelper = new ToolbarHelper((AppCompatActivity) getActivity(), (MotionLayout) v, HistoryTask.class);
-        filterHelper = new FilterHelper(this, (MotionLayout) v);
+        initToolbar(v);
+        filterHelper = new FilterHelper(this, v.findViewById(R.id.scrollable));
         initViews(v);
         adapter = new TaskListAdapter(getContext(), this, new ArrayList<>(), false);
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
         swipeContainer.setOnRefreshListener(this::verifyNCall);
-//        callRetrofitHelper();
         verifyNCall();
         swipeContainer.setColorSchemeResources(
                 android.R.color.holo_orange_light,

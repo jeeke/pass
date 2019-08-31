@@ -34,7 +34,7 @@ public class FilterHelper {
         open = false;
         chipTitle = v.getContext().getResources().getStringArray(R.array.categ_names);
         tags = new ArrayList<>(Arrays.asList(chipTitle));
-        filter = v.findViewById(R.id.scrollable);
+        filter = v;
         v.findViewById(R.id.list_head).setOnClickListener(this::toggle);
         chipGroup = v.findViewById(R.id.chipGroup1);
         radiusBar = v.findViewById(R.id.radius_bar);
