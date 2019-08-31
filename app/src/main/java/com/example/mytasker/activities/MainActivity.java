@@ -1,12 +1,12 @@
 package com.example.mytasker.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.mytasker.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -29,35 +29,45 @@ public class MainActivity extends BaseActivity implements
 
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9001;
-    ProgressDialog dialog;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
 
+    SharedPreferences sp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Make sure this is before calling super.onCreate
+        setTheme(R.style.LightMode);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        dialog = new ProgressDialog(this);
-        dialog.setTitle("Logging you in, Please Wait....");
-        // Button listeners
-        findViewById(R.id.google).setOnClickListener(this);
-        findViewById(R.id.login).setOnClickListener(this);
-        findViewById(R.id.signup).setOnClickListener(this);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
+        sp = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
+        if (sp.getBoolean("showIntro", true)) {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putBoolean("showIntro", false);
+            editor.apply();
+            Intent intent = new Intent(this, IntroActivity.class); // Call the AppIntro java class
+            startActivity(intent);
+        } else {
+            setContentView(R.layout.activity_main);
+            findViewById(R.id.google).setOnClickListener(this);
+            findViewById(R.id.login).setOnClickListener(this);
+            findViewById(R.id.signup).setOnClickListener(this);
+        }
+
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -75,6 +85,8 @@ public class MainActivity extends BaseActivity implements
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setTitle("Logging You In, Please Wait....");
         dialog.show();
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -117,20 +129,19 @@ public class MainActivity extends BaseActivity implements
 //    }
 
     private void updateUI(FirebaseUser user) {
-//        hideProgressDialog();
         if (user != null) {
-            SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-            int pending_feedbacks = prefs.getInt("pending_feedbacks", 0);
+            int pending_feedbacks = sp.getInt("pending_feedbacks", 0);
             if (pending_feedbacks > 0) {
                 finish();
                 launchActivity(this, FeedbackByPosterActivity.class);
                 return;
             }
             launchActivity(this, DashboardActivity.class);
-        } else {
-            Toast.makeText(this, "No Signed In User", Toast.LENGTH_SHORT).show();
+            finish();
         }
-        dialog.dismiss();
+//        else {
+//            Toast.makeText(this, "No Signed In User", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     @Override
@@ -140,7 +151,7 @@ public class MainActivity extends BaseActivity implements
         if (i == R.id.google) {
             signIn();
         } else if (i == R.id.login) {
-            intent.putExtra("from", true);
+            intent.putExtra("from", false);
             startActivity(intent);
         } else if (i == R.id.signup) {
             startActivity(intent);

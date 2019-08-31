@@ -19,6 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/LightMode">
+        <activity android:name=".activities.IntroActivity" />Z
         <activity android:name=".activities.LoginActivity" />
         <!--
      Set custom default icon. This is used when no icon is set for incoming notification messages.
@@ -67,14 +68,6 @@
             android:name=".activities.HistoryFeed"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.AddSkill"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.mytasker.activities.DashboardActivity" />
-        </activity>
         <activity
             android:name=".activities.BidsListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -186,14 +179,13 @@
         <activity
             android:name=".activities.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
-
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">

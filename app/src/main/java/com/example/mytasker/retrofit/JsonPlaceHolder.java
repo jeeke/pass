@@ -43,9 +43,8 @@ public interface JsonPlaceHolder {
     Call<ArrayList<Answer>> getAnswers(@Query("ques_id") String id);
 
     @GET("ques-feed")
-    Call<RetrofitParser> getQuestions(@Query("loc") double[] loc,
-                                      @Query("radius") Integer radius,
-                                      @Query("tags") ArrayList<String> tags);
+    Call<RetrofitParser> getQuestions(@Query("lat") double lat,
+                                      @Query("lon") double lon);
 
     @GET("notifications")
     Call<NotificationList> getNotifications();

@@ -1,56 +1,70 @@
 package com.example.mytasker.models;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Profile extends Message{
 
-    Map rating;
-    private String on_time, on_budget, quality, behaviour, t_done;
-    private int bucks;
-    private long t_posted;
-    private ArrayList<String> skills, details;
+
+    private Rating byTasker, byPoster;
+    private long t_done;
+    private ArrayList<String> skills;
 
     Profile() {
-        on_budget = on_time = quality = behaviour = t_done = "0";
+        t_done = 0;
         bucks = 0;
         t_posted = 0;
         skills = new ArrayList<>();
-        details = new ArrayList<>();
 
     }
 
-    public String getOn_time() {
-        return on_time;
+    public void setByTasker(Rating byTasker) {
+        this.byTasker = byTasker;
     }
 
-    public void setOn_time(String on_time) {
-        this.on_time = on_time;
+    private int bucks;
+    private long t_posted;
+
+    public void setByPoster(Rating byPoster) {
+        this.byPoster = byPoster;
     }
 
-    public String getOn_budget() {
-        return on_budget;
+    public float getPosterRating() {
+        if (byTasker.task_rated != 0)
+            return (byTasker.r1 + byTasker.r2 + byTasker.r3) / (3 * byTasker.task_rated);
+        return 0;
     }
 
-    public void setOn_budget(String on_budget) {
-        this.on_budget = on_budget;
+    public float getTaskerRating() {
+        if (byPoster.task_rated != 0)
+            return (byPoster.r1 + byPoster.r2 + byPoster.r3) / (3 * byPoster.task_rated);
+        return 0;
     }
 
-    public String getQuality() {
-        return quality;
+    public int getR1() {
+        if (byPoster.task_rated != 0) {
+            return (int) (byTasker.r1 * 20 / byPoster.task_rated);
+        }
+        return 0;
     }
 
-    public void setQuality(String quality) {
-        this.quality = quality;
+    public int getR3() {
+        if (byPoster.task_rated != 0) {
+            return (int) (byTasker.r3 * 20 / byPoster.task_rated);
+        }
+        return 0;
     }
 
-    public String getBehaviour() {
-        return behaviour;
+    public int getR2() {
+        if (byPoster.task_rated != 0) {
+            return (int) (byTasker.r2 * 20 / byPoster.task_rated);
+        }
+        return 0;
     }
 
-    public void setBehaviour(String behaviour) {
-        this.behaviour = behaviour;
+    public void addSkill(String skill) {
+        this.skills.add(skill);
     }
+
 
     public long getT_posted() {
         return t_posted;
@@ -58,14 +72,6 @@ public class Profile extends Message{
 
     public void setT_posted(long t_posted) {
         this.t_posted = t_posted;
-    }
-
-    public String getT_done() {
-        return t_done;
-    }
-
-    public void setT_done(String t_done) {
-        this.t_done = t_done;
     }
 
     public int getBucks() {
@@ -80,16 +86,11 @@ public class Profile extends Message{
         return skills;
     }
 
-    public void setSkills(ArrayList<String> skills) {
-        this.skills = skills;
+    public long getT_done() {
+        return t_done;
     }
 
-    public ArrayList<String> getDetail() {
-        return details;
+    public void setT_done(long t_done) {
+        this.t_done = t_done;
     }
-
-    public void setDetail(ArrayList<String> details) {
-        this.details = details;
-    }
-
 }

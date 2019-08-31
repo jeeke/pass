@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:orientation="vertical"
+    app:cardCornerRadius="12dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lyt_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/question"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="32dp"
+            android:gravity="center"
+            android:text="This is a dummy post for the feed ui. Lorem ipsum dolar sit amet and the si of aler of anit final."
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider18" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout12"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/dotText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:text="ONGOING"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/dot"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginEnd="8dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/dotText"
+                app:layout_constraintEnd_toStartOf="@+id/dotText"
+                app:layout_constraintTop_toTopOf="@+id/dotText" />
+
+
+            <ImageView
+                android:id="@+id/poster_image"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/person" />
+            <!--</androidx.cardview.widget.CardView>-->
+
+
+            <TextView
+                android:id="@+id/poster_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Rakesh Pandey"
+                app:layout_constraintBottom_toTopOf="@+id/createdAt"
+                app:layout_constraintStart_toEndOf="@+id/poster_image"
+                app:layout_constraintTop_toTopOf="@+id/poster_image" />
+
+            <TextView
+                android:id="@+id/createdAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 min ago"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/poster_image"
+                app:layout_constraintStart_toStartOf="@+id/poster_name"
+                app:layout_constraintTop_toBottomOf="@+id/poster_name" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/divider18"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout12" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

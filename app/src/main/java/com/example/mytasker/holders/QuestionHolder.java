@@ -14,10 +14,12 @@ import com.example.mytasker.R;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.util.Contracts;
 
+import static com.example.mytasker.util.Tools.elapsedTime;
+
 public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private RecyclerViewClickListener mListener;
-    private TextView name, ques, noAns, dotText;
-    private View bg, dot;
+    private TextView name, ques, dotText, createdAt;
+    private View dot;
     private ImageView image;
     private Question question;
 
@@ -27,9 +29,10 @@ public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnCl
         itemView.setOnClickListener(this);
         image = itemView.findViewById(R.id.poster_image);
         name = itemView.findViewById(R.id.poster_name);
-        noAns = itemView.findViewById(R.id.noAnswers);
+        createdAt = itemView.findViewById(R.id.createdAt);
+//        noAns = itemView.findViewById(R.id.noAnswers);
         ques = itemView.findViewById(R.id.question);
-        bg = itemView.findViewById(R.id.lyt_parent);
+//        bg = itemView.findViewById(R.id.lyt_parent);
         dotText = itemView.findViewById(R.id.dotText);
         dot = itemView.findViewById(R.id.dot);
     }
@@ -46,12 +49,13 @@ public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnCl
     //TODO implement no of answers
 
     public void setItem(Question current, boolean type, Drawable drawable, Drawable drawable2, int c) {
-        bg.setBackground(drawable);
+//        bg.setBackground(drawable);
         question = current;
-        name.setText(current.getQues());
+        name.setText(current.getPosterName());
+        createdAt.setText(elapsedTime(current.getC_date()));
         ques.setText(current.getQues());
-        noAns.setText("");
-        Glide.with(image.getContext()).load(current.getPoster_image()).apply(new RequestOptions().placeholder(R.drawable.person)).into(image);
+//        noAns.setText("");
+        Glide.with(image.getContext()).load(current.getPoster_image()).apply(RequestOptions.circleCropTransform()).into(image);
         if (type) setStage(current.getStage(), drawable2, c);
         else dotText.setVisibility(View.GONE);
     }

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,8 +19,6 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.functions.FirebaseFunctionsException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,7 +95,7 @@ public class TaskDetailActivity extends BaseActivity {
         current = (Task) getIntent().getSerializableExtra("task");
         FROM = getIntent().getIntExtra("from", 0);
         if (current == null) finish();
-        setContentView(R.layout.activity_task_detail2);
+        setContentView(R.layout.activity_task_detail);
         initButton();
         Tools.initMinToolbar(this,"Task Details",false);
         findViewById(R.id.chat).setOnClickListener(v -> {
@@ -112,12 +111,19 @@ public class TaskDetailActivity extends BaseActivity {
         ((TextView)findViewById(R.id.taskTitle)).setText(current.getTitle());
         ((TextView)findViewById(R.id.taskDesc)).setText(current.getJob_des());
         ((TextView)findViewById(R.id.rewardValue)).setText(current.getCost()+"");
+        ((TextView) findViewById(R.id.taskDis)).setText(current.getDis() + "");
+        if (current.getDeadline() != null)
+            ((TextView) findViewById(R.id.deadline)).setText(current.getDeadline());
 //
         ChipGroup chipGroup = findViewById(R.id.tagGroup);
         ChipGroup mustGroup = findViewById(R.id.mustGroup);
-        String[] array = {"tech","hello","others","three","nothing"};
-        tagAdapter = new ChipAdapter(chipGroup,new ArrayList<>(Arrays.asList(array)));
-        mustAdapter = new ChipAdapter(mustGroup,new ArrayList<>(Arrays.asList(array)));
+        tagAdapter = new ChipAdapter(chipGroup, current.getTags());
+        mustAdapter = new ChipAdapter(mustGroup, current.getMusthaves());
+        if (current.getMusthaves().size() < 1) {
+            mustGroup.setVisibility(View.GONE);
+            findViewById(R.id.mustText).setVisibility(View.GONE);
+            findViewById(R.id.mustDivider).setVisibility(View.GONE);
+        }
     }
 
     private void markDone() {

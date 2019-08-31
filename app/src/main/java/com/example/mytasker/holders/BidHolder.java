@@ -24,12 +24,12 @@ public class BidHolder extends RecyclerView.ViewHolder implements View.OnClickLi
     public BidHolder(@NonNull View itemView, Listener listener) {
         super(itemView);
         mListener = listener;
-        name = itemView.findViewById(R.id.name);
+        name = itemView.findViewById(R.id.poster_name);
         desc = itemView.findViewById(R.id.desc);
         c_date = itemView.findViewById(R.id.c_date);
         contact = itemView.findViewById(R.id.second);
         price = itemView.findViewById(R.id.price);
-        avatar = itemView.findViewById(R.id.avatar);
+        avatar = itemView.findViewById(R.id.poster_image);
     }
 
     public void setItem(Bid bid) {

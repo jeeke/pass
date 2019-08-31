@@ -5,11 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mytasker.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,7 +20,7 @@ import java.util.Date;
 
 import static com.example.mytasker.util.Tools.launchActivity;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     private static final String TAG = "LOGIN_ACTIVITY";
     private static String[] avatars = {
@@ -40,7 +40,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_auth);
         boolean from = getIntent().getBooleanExtra("from", true);
         initViews(from);
     }

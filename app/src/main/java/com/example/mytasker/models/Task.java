@@ -24,8 +24,6 @@ public class Task extends Message implements Serializable {
     String job_des;
     @SerializedName("title")
     String title;
-    @SerializedName("address")
-    String address;
     @SerializedName("poster_name")
     String poster_name;
     @SerializedName("poster_avatar")
@@ -80,7 +78,6 @@ public class Task extends Message implements Serializable {
         map.put("job_des", job_des);
         map.put("title", title);
         map.put("cost", cost);
-        map.put("address", address);
         map.put("poster_id", poster_id);
         map.put("category", category);
         map.put("deadline", deadline);
@@ -106,11 +103,11 @@ public class Task extends Message implements Serializable {
         this.dis = dis;
     }
 
-    public void setC_date(long c_date) {
+    private void setC_date(long c_date) {
         this.c_date = c_date;
     }
 
-    public void setJob_des(String job_des) {
+    private void setJob_des(String job_des) {
         this.job_des = job_des;
     }
 
@@ -120,10 +117,6 @@ public class Task extends Message implements Serializable {
 
     public void setCost(Integer cost) {
         this.cost = cost;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public void setPoster_id(String poster_id) {
@@ -207,7 +200,6 @@ public class Task extends Message implements Serializable {
     public String getJob_des() {
         return job_des;
     }
-    public String getAddress() { return address; }
 
     public String getCategory() {
         return category;

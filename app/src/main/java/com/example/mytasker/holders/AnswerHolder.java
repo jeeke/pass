@@ -29,7 +29,7 @@ public class AnswerHolder extends RecyclerView.ViewHolder {
 //        this.mListener = listener;
 //        itemView.setOnClickListener(this);
 //        image = itemView.findViewById(R.id.poster_image);
-        name = itemView.findViewById(R.id.name);
+        name = itemView.findViewById(R.id.poster_name);
         ans = itemView.findViewById(R.id.answer);
 //        ques = itemView.findViewById(R.id.answer);
 //        bg = itemView.findViewById(R.id.lyt_parent);

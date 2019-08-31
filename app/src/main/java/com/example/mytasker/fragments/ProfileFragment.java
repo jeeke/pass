@@ -3,6 +3,7 @@ package com.example.mytasker.fragments;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -24,13 +26,13 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.mytasker.R;
-import com.example.mytasker.activities.AddSkill;
 import com.example.mytasker.activities.NotificationActivity;
 import com.example.mytasker.activities.SettingActivity;
 import com.example.mytasker.models.Profile;
+import com.example.mytasker.models.Rating;
 import com.example.mytasker.util.ChipAdapter;
-import com.example.mytasker.util.Contracts;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,51 +40,60 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.functions.FirebaseFunctionsException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
-import static com.example.mytasker.util.Contracts.ADD_SKILL_REQUEST;
 import static com.example.mytasker.util.Contracts.CODE_NOTIFICATION_ACTIVITY;
 import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
+import static com.example.mytasker.util.Contracts.dpToPx;
 
 public class ProfileFragment extends Fragment {
 
     private RatingBar taskerrating, posterrating;
     private TextView taskdone, taskposted, bucksearned;
-    private ProgressBar ontime, budget, behaviour, quality;
-    private TextView ontimet, behaviourt, qualityt, budgett;
+    private ProgressBar ontime, behaviour, quality;
+    private TextView ontimet, behaviourt, qualityt;
     private ChipGroup chipGroup;
-    ChipAdapter adapter;
+    private ChipAdapter adapter;
     private ProgressDialog dlg;
-    private ConstraintLayout constraintLayout,layout;
+    private ConstraintLayout constraintLayout, layout;
     private View divider;
     private Toolbar toolbar;
 
 
-    boolean mine;
+    private boolean mine;
+    private FirebaseUser mUser;
+    private DatabaseReference mDatabase;
     public ProfileFragment(boolean mine) {
         this.mine = mine;
     }
 
-    private void forMe(View v){
+    private void forMe(View v) {
         toolbar.setVisibility(View.VISIBLE);
         toolbar.setTitle("PROFILE");
-        TextView name = v.findViewById(R.id.name);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            name.setText(user.getDisplayName().toUpperCase());
+        TextView name = v.findViewById(R.id.poster_name);
+        if (mUser != null) {
+            name.setText(mUser.getDisplayName().toUpperCase());
 //            Toast.makeText(getContext(), user.getDisplayName(), Toast.LENGTH_SHORT).show();
         }
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
         imageView.setOnClickListener(v1 -> {
-            Intent intent = new Intent(getContext(), AddSkill.class);
-            getActivity().startActivityForResult(intent,ADD_SKILL_REQUEST);
+            EditText input = new EditText(getContext());
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            int pad = dpToPx(24);
+            int p = dpToPx(16);
+            input.setPadding(pad, pad, pad, p);
+            new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme).setTitle("ADD TAG").setView(input)
+                    .setPositiveButton("ADD", (dialog, which) -> {
+                        addSkill(input.getText().toString());
+                    })
+                    .show();
+            input.requestFocus();
         });
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,8 +106,10 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.frag_profile, container, false);
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         ImageView profileImage = v.findViewById(R.id.profile_image);
-        Glide.with(v.getContext()).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString()).into(profileImage);
+        Glide.with(v.getContext()).load(mUser.getPhotoUrl().toString()).into(profileImage);
         taskerrating = v.findViewById(R.id.taskerrating);
         posterrating = v.findViewById(R.id.posterating);
         taskdone = v.findViewById(R.id.taskdone);
@@ -108,8 +121,6 @@ public class ProfileFragment extends Fragment {
         behaviourt = v.findViewById(R.id.textViewbehaviour);
         quality = v.findViewById(R.id.progressquality);
         qualityt = v.findViewById(R.id.textViewquality);
-        budget = v.findViewById(R.id.progressbudget);
-        budgett = v.findViewById(R.id.textViewbudget);
         chipGroup = v.findViewById(R.id.skillschip);
         imageView = v.findViewById(R.id.addskill);
         dlg = new ProgressDialog(getContext());
@@ -151,59 +162,61 @@ public class ProfileFragment extends Fragment {
         inflater.inflate(R.menu.profile_menu, menu);
     }
 
-    public void callAPI() {
-        if (!adapter.isSafe(Contracts.added_skill)) {
-            Toast.makeText(getContext(), "Skill Already Exist", Toast.LENGTH_SHORT).show();
+    private void addSkill(String skill) {
+        if (!adapter.isSafe(skill)) {
+            Toast.makeText(getContext(), "Skill Already Exist or Empty", Toast.LENGTH_SHORT).show();
             return;
         }
         dlg.setTitle("Adding Skill...");
         dlg.show();
-        Map map = new HashMap();
-        map.put("skill", Contracts.added_skill);
-        Contracts.call(map, "addSkill").addOnCompleteListener(t -> {
-            dlg.dismiss();
-            if (!t.isSuccessful()) {
-                Exception e = t.getException();
-                if (e instanceof FirebaseFunctionsException) {
-                    FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
-                    FirebaseFunctionsException.Code code = ffe.getCode();
-                    Object details = ffe.getDetails();
-                    Log.e("tag", ffe + "\n" + code + "\n" + details);
-                }
-                Toast.makeText(getContext(), "Skill could not be added", Toast.LENGTH_SHORT).show();
-                Log.e("tag", e + "");
-                return;
-            }
-            Log.e("tag", t.getResult() + "");
-            adapter.addChild(Contracts.added_skill);
-            Toast.makeText(getContext(), "Skills Updated", Toast.LENGTH_SHORT).show();
-        });
+        mDatabase
+                .child("/Profiles/" + mUser.getUid() + "/Skills/" + skill).setValue(true)
+                .addOnCompleteListener(task -> {
+                    dlg.dismiss();
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(getContext(), "Skills could not be updated", Toast.LENGTH_SHORT).show();
+                    } else adapter.addChild(skill);
+                });
     }
 
-    private void setupmedals(ArrayList<String> medals) {
-
+    private void removeSkill(String skill) {
+        dlg.setTitle("Removing Skill...");
+        dlg.show();
+        mDatabase
+                .child("/Profiles/" + mUser.getUid() + "/Skills/" + skill).removeValue()
+                .addOnCompleteListener(task -> {
+                    dlg.dismiss();
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(getContext(), "Skill could not be removed", Toast.LENGTH_SHORT).show();
+                        adapter.addChild(skill);
+                    }
+                });
     }
 
     private void myapi() {
         dlg.setTitle("Getting Profile Info..");
         dlg.show();
-        DatabaseReference r = FirebaseDatabase.getInstance().getReference().child("Profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        DatabaseReference r = mDatabase.child("Profiles").child(mUser.getUid());
         r.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 r.removeEventListener(this);
                 dlg.dismiss();
                 Profile profile = snapshot.getValue(Profile.class);
+//                Log.e("\nP\nr\no\nf\ni\nl\ne\n",snapshot.toString());
                 if (profile != null) {
                     if (mine) imageView.setVisibility(View.VISIBLE);
-//                    taskerrating.setRating(profile.getTasker_rating());
-//                    posterrating.setRating(profile.getPoster_rating());
+                    profile.setByTasker(snapshot.child("Ratings/ByTasker").getValue(Rating.class));
+                    profile.setByPoster(snapshot.child("Ratings/ByPoster").getValue(Rating.class));
+                    for (DataSnapshot skill : snapshot.child("Skills").getChildren()) {
+                        profile.addSkill(skill.getKey());
+                    }
                     setupstats(profile);
                     setupskills(profile.getSkills());
-//                    setupmedals(profile.getMedals());
                     settupdetail(profile);
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 r.removeEventListener(this);
@@ -215,36 +228,38 @@ public class ProfileFragment extends Fragment {
     }
 
     private void settupdetail(Profile p) {
-        taskdone.setText(p.getT_done());
-        bucksearned.setText("$"+p.getBucks());
+        taskdone.setText(p.getT_done() + "");
+        bucksearned.setText("$" + p.getBucks());
         taskposted.setText(p.getT_posted() + "");
-
     }
 
     private void setupskills(ArrayList<String> skills) {
-        adapter = new ChipAdapter(chipGroup, skills);
+        adapter = new ChipAdapter(this::removeSkill, chipGroup, skills);
     }
 
     private void setupstats(Profile p) {
-        if (Integer.parseInt(p.getOn_time()) + Integer.parseInt(p.getOn_budget()) + Integer.parseInt(p.getQuality()) + Integer.parseInt(p.getBehaviour()) == 0) {
+        float rating = p.getPosterRating();
+        float rating2 = p.getTaskerRating();
+        if (rating + rating2 == 0) {
             constraintLayout.setVisibility(View.GONE);
             sugga.setVisibility(View.VISIBLE);
             layout.setVisibility(View.GONE);
             divider.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             divider.setVisibility(View.VISIBLE);
             constraintLayout.setVisibility(View.VISIBLE);
             layout.setVisibility(View.VISIBLE);
             sugga.setVisibility(View.GONE);
-            ontime.setProgress(Integer.parseInt(p.getOn_time()));
-            ontimet.setText(p.getOn_time()+"%");
-            budget.setProgress(Integer.parseInt(p.getOn_budget()));
-            budgett.setText(p.getOn_budget()+"%");
-            quality.setProgress(Integer.parseInt(p.getQuality()));
-            qualityt.setText(p.getQuality()+"%");
-            behaviour.setProgress(Integer.parseInt(p.getBehaviour()));
-            behaviourt.setText(p.getBehaviour()+"%");
+            posterrating.setRating(rating);
+            taskerrating.setRating(rating2);
+            int r1 = p.getR1(), r2 = p.getR2(), r3 = p.getR3();
+            ontime.setProgress(r1);
+            ontimet.setText(r1 + "%");
+            quality.setProgress(r2);
+            qualityt.setText(r2 + "%");
+            behaviour.setProgress(r3);
+            behaviourt.setText(r3 + "%");
         }
     }
+
 }

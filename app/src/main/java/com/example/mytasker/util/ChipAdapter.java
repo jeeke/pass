@@ -16,22 +16,17 @@ import static com.example.mytasker.util.Contracts.dpToPx;
 public class ChipAdapter {
     private ChipGroup parent;
     private ArrayList<String> list;
+    private OnChipRemovedListener mListener;
 
-    public ArrayList<String> getList() {
-        return list;
-    }
-    public ChipAdapter(ChipGroup parent, ArrayList<String> list){
+    public ChipAdapter(OnChipRemovedListener listener, ChipGroup parent, ArrayList<String> list) {
         this.parent = parent;
         this.list = list;
+        mListener = listener;
         initCatChips();
     }
 
-    private int Color(int c) {
-        TypedValue typedValue = new TypedValue();
-        TypedArray a = parent.getContext().obtainStyledAttributes(typedValue.data, new int[] { c});
-        int color = a.getColor(0, 0);
-        a.recycle();
-        return color;
+    public ArrayList<String> getList() {
+        return list;
     }
 
     private Chip createChip(Context context, String title) {
@@ -39,17 +34,38 @@ public class ChipAdapter {
         chip.setText(title);
         chip.setHeight(dpToPx(40));
         chip.setTextColor(Color(R.attr.colorAccent));
-        chip.setCloseIconVisible(true);
         chip.setClickable(false);
 //        chip.setCloseIconResource(R.drawable.ic_close);
         chip.setChipBackgroundColor(ColorStateList.valueOf(Color(R.attr.colorPrimary)));
         chip.setChipStrokeColor(ColorStateList.valueOf(parent.getContext().getResources().getColor(R.color.green_A400)));
         chip.setChipStrokeWidth(dpToPx(2));
-        chip.setOnCloseIconClickListener(v -> {
-            list.remove(title);
-            parent.removeView(chip);
-        });
+        if (mListener != null) {
+            chip.setCloseIconVisible(true);
+            chip.setOnCloseIconClickListener(v -> {
+                mListener.onChipRemoved(title);
+                list.remove(title);
+                parent.removeView(chip);
+            });
+        }
         return chip;
+    }
+
+    public ChipAdapter(ChipGroup parent, ArrayList<String> list) {
+        this.parent = parent;
+        this.list = list;
+        initCatChips();
+    }
+
+    private int Color(int c) {
+        TypedValue typedValue = new TypedValue();
+        TypedArray a = parent.getContext().obtainStyledAttributes(typedValue.data, new int[]{c});
+        int color = a.getColor(0, 0);
+        a.recycle();
+        return color;
+    }
+
+    public interface OnChipRemovedListener {
+        void onChipRemoved(String title);
     }
 
     private void initCatChips() {

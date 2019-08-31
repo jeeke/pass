@@ -28,7 +28,7 @@ public class FeedFragment extends Fragment {
 
     private void initToolbar(View v) {
         Toolbar toolbar = v.findViewById(R.id.toolbar);
-        toolbar.setTitle("FEED");
+        toolbar.setTitle("Events");
         toolbar.setTitleTextColor(getContext().getResources().getColor(R.color.blue_grey));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 //        Tools.setSystemBarColor(getActivity(), R.color.green_800);

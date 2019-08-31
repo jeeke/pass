@@ -21,8 +21,7 @@
             app:layout_constraintBottom_toTopOf="@+id/divider19"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title"
-            app:srcCompat="@drawable/feed_image" />
+            app:layout_constraintTop_toBottomOf="@+id/title" />
 
         <TextView
             android:id="@+id/title"
@@ -66,7 +65,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                    android:id="@+id/avatar"
+                android:id="@+id/poster_image"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                 app:srcCompat="@drawable/person" />
@@ -74,14 +73,14 @@
 
 
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/poster_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="Rakesh Pandey"
                 app:layout_constraintBottom_toTopOf="@+id/createdAt"
-                app:layout_constraintStart_toEndOf="@+id/avatar"
-                app:layout_constraintTop_toTopOf="@+id/avatar" />
+                app:layout_constraintStart_toEndOf="@+id/poster_image"
+                app:layout_constraintTop_toTopOf="@+id/poster_image" />
 
             <TextView
                 android:id="@+id/createdAt"
@@ -89,9 +88,9 @@
                 android:layout_height="wrap_content"
                 android:text="5 min ago"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/avatar"
-                app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/name" />
+                app:layout_constraintBottom_toBottomOf="@+id/poster_image"
+                app:layout_constraintStart_toStartOf="@+id/poster_name"
+                app:layout_constraintTop_toBottomOf="@+id/poster_name" />
 
             <!--<ImageView-->
             <!--android:id="@+id/imageView13"-->
@@ -173,7 +172,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title"
-            app:srcCompat="@drawable/feed_image"
             tools:srcCompat="@tools:sample/avatars">
 
             <ImageView

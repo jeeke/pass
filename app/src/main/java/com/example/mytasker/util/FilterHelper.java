@@ -21,22 +21,21 @@ public class FilterHelper {
     public ArrayList<String> tags;
     private String[] chipTitle;
     public int radius = 100;
-    private boolean remote = false;
     public int[] price = {0,100};
     public double[] loc = {25.0, 25.0};
     private MotionLayout filter;
     private boolean open;
     private RangeBar radiusBar, priceBar;
-    Switch remoteTask;
+    private Switch remoteTask;
     private ChipGroup chipGroup;
 
     public FilterHelper(FilterListener listener,MotionLayout v){
         this.listener = listener;
         open = false;
-        chipTitle = v.getContext().getResources().getStringArray(R.array.people_names);
+        chipTitle = v.getContext().getResources().getStringArray(R.array.categ_names);
         tags = new ArrayList<>(Arrays.asList(chipTitle));
         filter = v.findViewById(R.id.scrollable);
-        v.findViewById(R.id.filter).setOnClickListener(this::toggle);
+        v.findViewById(R.id.list_head).setOnClickListener(this::toggle);
         chipGroup = v.findViewById(R.id.chipGroup1);
         radiusBar = v.findViewById(R.id.radius_bar);
         priceBar = v.findViewById(R.id.price_bar);
@@ -70,7 +69,7 @@ public class FilterHelper {
             radius = radiusBar.getRightIndex() * (int) radiusBar.getTickInterval();
             price[0] = priceBar.getLeftIndex() * (int) priceBar.getTickInterval();
             price[1] = priceBar.getRightIndex() * (int) priceBar.getTickInterval();
-            remote = remoteTask.isActivated();
+            boolean remote = remoteTask.isActivated();
             listener.closedMenu();
             //Log.e("tags",tags.toString() + "\n" + radius + " "  + price[0] + " " + price[1]);
         }else{

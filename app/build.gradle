@@ -67,6 +67,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'com.github.AppIntro:AppIntro:5.1.0'
 
     //Picasso
 //    implementation "com.squareup.picasso:picasso:2.5.2"

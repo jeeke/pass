@@ -1,6 +1,7 @@
 package com.example.mytasker.util;
 
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -40,9 +41,9 @@ public class Tools {
 
     public static String formatCount(long count) {
         if (count > 1000000) {
-            return (count / 1000000) + "m";
+            return (count / 1000000) + "m+";
         } else if (count > 1000) {
-            return (count / 1000) + "k";
+            return (count / 1000) + "k+";
         } else return count + "";
     }
 
@@ -55,7 +56,8 @@ public class Tools {
 
 
     public static String elapsedTime(long cDate) {
-        long different = new Date().getTime() / 1000 - cDate;
+        Log.e("Elapsed Time", new Date().getTime() + "\n\n " + cDate);
+        long different = new Date().getTime() - cDate;
 
         long secondsInMilli = 1000;
         long minutesInMilli = secondsInMilli * 60;
@@ -77,11 +79,24 @@ public class Tools {
         long elapsedSeconds = different / secondsInMilli;
 
         String elapsed;
-        if (elapsedMonths != 0) elapsed = elapsedMonths + " months";
-        else if (elapsedDays != 0) elapsed = elapsedDays + " days";
-        else if (elapsedHours != 0) elapsed = elapsedHours + " hours";
-        else if (elapsedMinutes != 0) elapsed = elapsedMinutes + " minutes";
-        else elapsed = elapsedSeconds + " seconds";
+        long e;
+        if (elapsedMonths != 0) {
+            elapsed = elapsedMonths + " month";
+            e = elapsedMonths;
+        } else if (elapsedDays != 0) {
+            elapsed = elapsedDays + " day";
+            e = elapsedDays;
+        } else if (elapsedHours != 0) {
+            elapsed = elapsedHours + " hours";
+            e = elapsedHours;
+        } else if (elapsedMinutes != 0) {
+            elapsed = elapsedMinutes + " minute";
+            e = elapsedMinutes;
+        } else {
+            elapsed = elapsedSeconds + " second";
+            e = elapsedSeconds;
+        }
+        if (e > 1) elapsed += 's';
         return elapsed + " ago";
     }
 
@@ -104,7 +119,7 @@ public class Tools {
 //        context.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 
-    public static Retrofit getRetrofit(String token){
+    public static Retrofit getRetrofit(String token) {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();

@@ -14,6 +14,7 @@
         <item name="fontFamily">@font/din</item>
         <item name="ratingBarStyleSmall">@style/RatingBar</item>
     </style>
+
     <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
@@ -32,8 +33,14 @@
     </style>
 
     <style name="ButtonStyle">
-        <item name="android:textSize">18sp</item>
-        <item name="backgroundTint">?colorSecondary</item>
+        <!--<item name="android:padding">16dp</item>-->
+        <item name="android:paddingStart">32dp</item>
+        <item name="android:paddingEnd">32dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">@drawable/button_login</item>
+        <!--<item name="backgroundTint">?colorSecondary</item>-->
         <item name="android:textColor">?colorPrimary</item>
     </style>
 
@@ -54,6 +61,10 @@
 
     <style name="ImageIcon">
         <item name="tint">?attr/colorAccent</item>
+    </style>
+
+    <style name="SplashTheme" parent="LightMode">
+        <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
 

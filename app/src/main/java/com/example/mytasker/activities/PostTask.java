@@ -124,7 +124,7 @@ public class PostTask extends BaseActivity {
         } else {
             PostTaskExtra frag = (PostTaskExtra) fragment;
             reward = "" + frag.getReward();
-            deadline = "" + frag.getDate();
+            deadline = frag.getDate();
             if (reward.equals("")) {
                 Toast.makeText(this, "Please Enter Reward Value", Toast.LENGTH_SHORT).show();
             } else

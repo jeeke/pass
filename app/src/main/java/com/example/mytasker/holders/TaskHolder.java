@@ -21,7 +21,7 @@ public class TaskHolder extends RecyclerView.ViewHolder implements View.OnClickL
         super(itemView);
         this.mListener = listener;
         itemView.setOnClickListener(this);
-        name = itemView.findViewById(R.id.name);
+        name = itemView.findViewById(R.id.poster_name);
         price = itemView.findViewById(R.id.price);
         bg = itemView.findViewById(R.id.lyt_parent);
         dotText = itemView.findViewById(R.id.dotText);

@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 
 public class Contracts {
-    public static String added_skill="";
     public static final String[] TASK_DETAIL_BUTTONS = {"SHOW ALL BIDS","ASSIGNED TO ","DONE BY ",
             "ALREADY BID", "ASSIGNED", "COMPLETED"
     };
@@ -31,8 +30,6 @@ public class Contracts {
     public static String BASE_POST_URL = "https://sheltered-escarpment-49063.herokuapp.com/";
     public static int CODE_SETTINGS_ACTIVITY = 100;
     public static int CODE_NOTIFICATION_ACTIVITY = 101;
-    public static int PICK_IMAGE_REQUEST = 102;
-    public static int ADD_SKILL_REQUEST = 103;
 
     public static int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);

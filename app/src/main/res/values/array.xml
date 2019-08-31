@@ -1,31 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="people_names">
-        <item>Anyone</item>
-        <item>Electrician</item>
-        <item>Plumber</item>
-        <item>Teacher</item>
-        <item>Driver</item>
-        <item>Doctor</item>
+    <string-array name="categ_names">
+        <item>Miscellaneous</item>
+        <item>Bring Something</item>
+        <item>Borrow Something</item>
+        <item>Second Hand Buy and Sell</item>
+        <item>Bidhipur ke Kaam</item>
+        <item>Jalandhar City ke Kaam</item>
+        <item>Ride Sharing</item>
+        <item>Trips and Travel Plans</item>
+        <item>Movie Plans</item>
+        <item>Laptop Troubleshooting</item>
+        <item>Mobile Troubleshooting</item>
+        <item>Club Activities</item>
+        <item>Collect Donations</item>
+        <item>Doubt Solving</item>
+        <item>EG Sheets</item>
+        <item>Assignments</item>
     </string-array>
-
-    <integer-array name="people_images">
-        <item>@drawable/google</item>
-        <item>@drawable/google</item>
-        <item>@drawable/google</item>
-        <item>@drawable/google</item>
-        <item>@drawable/google</item>
-
-        <item>@drawable/google</item>
-        <item>@drawable/google</item>
-        <item>@drawable/google</item>
-        <item>@drawable/google</item>
-        <item>@drawable/google</item>
-
-        <item>@drawable/google</item>
-        <item>@drawable/google</item>
-        <item>@drawable/google</item>
-        <item>@drawable/google</item>
-        <item>@drawable/google</item>
-    </integer-array>
 </resources>

@@ -22,11 +22,11 @@ public class PostTaskExtra extends Fragment implements DatePickerDialog.OnDateSe
     //    Button btnDatePicker, btnTimePicker;
     private TextView txtDate;
     private DatePickerDialog dpd;
-    private long date;
     private Calendar c;
     private EditText reward;
+    private String date;
 
-    public long getDate() {
+    public String getDate() {
         return date;
     }
 
@@ -81,8 +81,8 @@ public class PostTaskExtra extends Fragment implements DatePickerDialog.OnDateSe
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, monthOfYear);
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        date = cal.getTime().getTime();
-        txtDate.setText(formatDate(date));
+        date = cal.getTime().getTime() + "";
+        txtDate.setText(formatDate(cal.getTime().getTime()));
     }
 
 }

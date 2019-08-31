@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -21,7 +20,6 @@ import com.example.mytasker.fragments.FeedFragment;
 import com.example.mytasker.fragments.HomeFragment;
 import com.example.mytasker.fragments.ProfileFragment;
 import com.example.mytasker.fragments.QuestionFragment;
-import com.example.mytasker.util.Contracts;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ServerValue;
 
@@ -111,11 +109,6 @@ public class DashboardActivity extends BaseActivity {
             finish();
 //            starterIntent.putExtra("theme", getThemeToLaunch());
             startActivity(starterIntent);
-        }
-
-        Log.e("AddedSkill", "Dash" + requestCode + " " + resultCode);
-        if (requestCode == Contracts.ADD_SKILL_REQUEST && resultCode == RESULT_OK) {
-            ((ProfileFragment) fragments[3]).callAPI();
         }
     }
 

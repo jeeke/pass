@@ -33,7 +33,7 @@ public class PostTaskCat extends Fragment {
     private String category = "";
     private TextView task_cat;
     private ChipAdapter taskTags, taskMustHaves;
-    private int which = -1;
+    private int which = 0;
 
     public String getTaskCat() {
         return category;
@@ -53,8 +53,10 @@ public class PostTaskCat extends Fragment {
         View view = inflater.inflate(R.layout.post_task_cat, container, false);
         task_cat = view.findViewById(R.id.task_cat);
         task_cat.setOnClickListener(this::click);
-        taskTags = new ChipAdapter(view.findViewById(R.id.task_tag_chips), new ArrayList<>());
-        taskMustHaves = new ChipAdapter(view.findViewById(R.id.task_must_chips), new ArrayList<>());
+        taskTags = new ChipAdapter(title -> {
+        }, view.findViewById(R.id.task_tag_chips), new ArrayList<>());
+        taskMustHaves = new ChipAdapter(title -> {
+        }, view.findViewById(R.id.task_must_chips), new ArrayList<>());
         view.findViewById(R.id.task_tag).setOnClickListener(this::click);
         view.findViewById(R.id.task_must_haves).setOnClickListener(this::click);
         return view;
@@ -70,7 +72,7 @@ public class PostTaskCat extends Fragment {
         switch (id) {
             case R.id.task_cat:
                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme)
-                        .setSingleChoiceItems(R.array.people_names, which, (dialog, which) -> {
+                        .setSingleChoiceItems(R.array.categ_names, which, (dialog, which) -> {
                         }).setTitle("Select Category")
                         .setPositiveButton("OK", (dialog, which) -> {
                             ListView lw = ((AlertDialog) dialog).getListView();

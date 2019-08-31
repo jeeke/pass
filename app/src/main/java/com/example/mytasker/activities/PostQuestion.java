@@ -1,22 +1,16 @@
 package com.example.mytasker.activities;
 
 import android.app.ProgressDialog;
-import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
-import com.badoualy.stepperindicator.StepperIndicator;
 import com.example.mytasker.R;
-import com.example.mytasker.fragments.PostQuesCat;
-import com.example.mytasker.fragments.PostQuesDetail;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.mytasker.util.Tools;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -32,59 +26,30 @@ import static com.example.mytasker.util.Tools.getRetrofit;
 
 public class PostQuestion extends BaseActivity {
 
-    StepperIndicator indicator;
-    FloatingActionButton fab;
-    int currentpage = 0;
-    Fragment fragment;
+    Button fab;
     ProgressDialog dlg;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        fab.setImageDrawable(getDrawable(R.drawable.post_done_anim));
-    }
+    TextView ques;
+    private String q;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post);
-        indicator = findViewById(R.id.stepperIndicator);
-        indicator.setStepCount(2);
-        fragment = new PostQuesCat();
-        loadFragment(fragment);
-        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Post Question");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.activity_post_ques);
+        Tools.initMinToolbar(this, "Post Question", false);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        fab = findViewById(R.id.floatingActionButton);
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(v -> verifyNCall());
+        ques = findViewById(R.id.question);
         dlg = new ProgressDialog(this);
         dlg.setTitle("Posting your question, Please Wait....");
     }
 
-    private void loadFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frameLayout, fragment);
-        transaction.commit();
-    }
-
-    public void loadNextFrag(View view) {
-        if (currentpage < 2) {
-            indicator.setCurrentStep(++currentpage);
-        }
-        if (currentpage == 1) {
-            fragment = new PostQuesDetail();
-//            fragment = new OrdersFrag();
-            loadFragment(fragment);
-            AnimatedVectorDrawable icon = (AnimatedVectorDrawable) fab.getDrawable();
-            icon.start();
-        } else {
-            //done
-            verifyNCall();
-        }
-    }
-
     private void verifyNCall() {
+        q = ques.getText().toString();
+        if (q.equals("")) {
+            Toast.makeText(this, "Please enter your question", Toast.LENGTH_SHORT).show();
+            return;
+        }
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         mUser.getIdToken(true)
                 .addOnCompleteListener(task -> {
@@ -103,22 +68,16 @@ public class PostQuestion extends BaseActivity {
         ArrayList<Double> loc = new ArrayList<>();
         loc.add(25.0);
         loc.add(25.0);
-        ArrayList<String> s = new ArrayList<>();
-        s.add("tech");
-        s.add("null");
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Date date = new Date();
         Question question = new Question(
                 date.getTime(),
-                ((PostQuesDetail) fragment).getQuestion(),
+                q,
                 user.getUid(),
                 user.getDisplayName(),
                 user.getPhotoUrl().toString(),
-                "tech",
-                null,
-                loc,
-                s
+                loc
         );
         Retrofit retrofit = getRetrofit(token);
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);

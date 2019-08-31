@@ -23,8 +23,8 @@ import com.like.LikeButton;
 import com.like.OnLikeListener;
 
 import static com.example.mytasker.util.Contracts.dpToPx;
+import static com.example.mytasker.util.Tools.elapsedTime;
 import static com.example.mytasker.util.Tools.formatCount;
-import static com.example.mytasker.util.Tools.formatDate;
 
 public class FeedHolder extends RecyclerView.ViewHolder {
     private TextView title, numLikes, name, date;
@@ -37,16 +37,16 @@ public class FeedHolder extends RecyclerView.ViewHolder {
         title = itemView.findViewById(R.id.title);
         numLikes = itemView.findViewById(R.id.numLikes);
         likeView = itemView.findViewById(R.id.likeView);
-        name = itemView.findViewById(R.id.name);
+        name = itemView.findViewById(R.id.poster_name);
         date = itemView.findViewById(R.id.createdAt);
-        avatar = itemView.findViewById(R.id.avatar);
+        avatar = itemView.findViewById(R.id.poster_image);
         image = itemView.findViewById(R.id.image);
     }
 
     public void setItem(Feed feed, View.OnClickListener likeClickListener, String uid) {
         numLikes.setText(formatCount(feed.getLikeCount()));
         name.setText(feed.getPoster_name());
-        date.setText(formatDate(feed.getC_date()));
+        date.setText(elapsedTime(feed.getC_date()));
         likeView.setLiked(feed.likes.containsKey(uid));
         likeView.setOnLikeListener(new OnLikeListener() {
             @Override

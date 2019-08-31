@@ -1,142 +1,269 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/grey_5"
-    android:fitsSystemWindows="true"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:background="@drawable/task_detail_bg">
 
-        <!--app:scrimVisibleHeightTrigger="180dp"-->
-        <!--app:scrimAnimationDuration="50"-->
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapseActionView"
+    <include layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?actionBarSize"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:contentScrim="?colorPrimaryDark"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:titleEnabled="false">
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout4"
-                android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/taskTitle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="?actionBarSize"
-                android:layout_marginEnd="48dp">
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:text="God saves his toughest battle for his best soldier"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout13"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?colorAccent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider9">
 
                 <TextView
-                    android:id="@+id/taskTitle"
-                    android:layout_width="0dp"
+                    android:id="@+id/rewardValue"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="48dp"
+                    android:layout_marginTop="16dp"
+                    android:text="$2500"
+                    android:textColor="?colorSecondary"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="God saves the toughest battles for his best soldiers" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.chip.ChipGroup
-                    app:chipSpacingVertical="8dp"
-                    android:id="@+id/tagGroup"
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/textView104"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="Reward"
+                    android:textColor="?colorPrimary"
+                    android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/taskTitle"
-                    app:layout_constraintStart_toStartOf="@+id/taskTitle"
-                    app:layout_constraintTop_toBottomOf="@+id/taskTitle" />
+                    app:layout_constraintEnd_toEndOf="@+id/rewardValue"
+                    app:layout_constraintStart_toStartOf="@+id/rewardValue"
+                    app:layout_constraintTop_toBottomOf="@+id/rewardValue" />
 
+                <TextView
+                    android:id="@+id/textView105"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="100"
+                    android:textColor="?colorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/taskDis"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/rewardValue"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView106"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Bids"
+                    android:textColor="?colorPrimary"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/textView105"
+                    app:layout_constraintStart_toStartOf="@+id/textView105"
+                    app:layout_constraintTop_toBottomOf="@+id/textView105" />
+
+                <TextView
+                    android:id="@+id/taskDis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="48dp"
+                    android:text=" 4.5 km"
+                    android:textColor="?colorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView108"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Distance"
+                    android:textColor="?colorPrimary"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/taskDis"
+                    app:layout_constraintStart_toStartOf="@+id/taskDis"
+                    app:layout_constraintTop_toBottomOf="@+id/taskDis" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:titleTextColor="?colorAccent">
+            <TextView
+                android:id="@+id/textView109"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="Description"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout13" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+            <TextView
+                android:id="@+id/taskDesc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:text="This is the description of the posted task.This is his first task and given by Prabhat Chand Sharma. The quick brown fox jumps over the lazy dog"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView109" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        app:srcCompat="@drawable/ic_back" />
+            <TextView
+                android:id="@+id/textView111"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="Till Date :"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/taskDesc" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="Task Details"
-                        android:textSize="20sp" />
+            <TextView
+                android:id="@+id/deadline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:text="Not Specified"
+                app:layout_constraintStart_toEndOf="@+id/textView111"
+                app:layout_constraintTop_toBottomOf="@+id/taskDesc" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="16dp"
-                        app:srcCompat="@mipmap/profile_fill"
-                        android:tint="?colorAccent" />
-                </LinearLayout>
-            </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/tagGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/taskTitle"
+                app:layout_constraintStart_toStartOf="@+id/taskTitle"
+                app:layout_constraintTop_toBottomOf="@+id/taskTitle" />
 
-    <androidx.core.widget.NestedScrollView
+            <View
+                android:id="@+id/divider9"
+                android:layout_width="0dp"
+                android:layout_height="8dp"
+                android:layout_marginTop="32dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tagGroup" />
+
+            <View
+                android:id="@+id/divider12"
+                android:layout_width="0dp"
+                android:layout_height="8dp"
+                android:layout_marginTop="24dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView111" />
+
+            <TextView
+                android:id="@+id/mustText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Must Haves"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider12" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/mustGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mustText" />
+
+            <View
+                android:id="@+id/mustDivider"
+                android:layout_width="0dp"
+                android:layout_height="8dp"
+                android:layout_marginTop="24dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mustGroup" />
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="Any Query/Issue?"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mustDivider" />
+
+            <TextView
+                android:id="@+id/chat"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="80dp"
+                android:drawableStart="@drawable/ic_chat"
+                android:drawablePadding="8dp"
+                android:padding="16dp"
+                android:text="Chat With Poster Now"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView26" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bid"
+        style="@style/ButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="BID NOW" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="36dp">
-
-            <include layout="@layout/task_detail_main" />
-
-            <include layout="@layout/task_detail_description" />
-
-            <include layout="@layout/task_detail_must_haves" />
-
-            <include layout="@layout/task_detail_attach" />
-
-            <include layout="@layout/task_detail_comments" />
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
-    <!--<androidx.appcompat.widget.Toolbar-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="bottom">-->
-    <!--<include layout="@layout/task_detail_bottombar" />-->
-    <!--</androidx.appcompat.widget.Toolbar>-->
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:backgroundTint="?colorAccent"
-        app:fabAlignmentMode="end"
-        app:hideOnScroll="true"
-        app:menu="@menu/task_detail_menu" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_share"
-        app:layout_anchor="@id/bottom_bar"
-        app:tint="#b0ffffff" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>

@@ -1,15 +1,17 @@
 package com.example.mytasker.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,14 +19,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
 import com.example.mytasker.activities.HistoryQues;
-import com.example.mytasker.activities.QuestionDetailActivity;
 import com.example.mytasker.adapters.QuestionAdapter;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.RetrofitParser;
-import com.example.mytasker.util.FilterHelper;
-import com.example.mytasker.util.ToolbarHelper;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -36,20 +34,42 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import static com.example.mytasker.util.Tools.getRetrofit;
+import static com.example.mytasker.util.Tools.launchActivity;
 
 
-public class QuestionFragment extends Fragment implements FilterHelper.FilterListener,QuestionAdapter.RecyclerViewClickListener{
+public class QuestionFragment extends Fragment {
 
-    private ShimmerFrameLayout shimmerContainer;
-    ArrayList<Question> questions;
+    private ArrayList<Question> questions;
 
     public QuestionFragment() {
+    }
+
+    private void initToolbar(View v) {
+        Toolbar toolbar = v.findViewById(R.id.toolbar);
+        toolbar.setTitle("Questions");
+        toolbar.setTitleTextColor(getContext().getResources().getColor(R.color.blue_grey));
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_history, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_history) {
+            launchActivity((AppCompatActivity) getActivity(), HistoryQues.class);
+        }
+        return false;
     }
 
 
@@ -66,21 +86,12 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
                 });
     }
 
-    FilterHelper filterHelper;
 
     private void callRetrofit(String token) {
-        shimmerContainer.startShimmer();
         Retrofit retrofit = getRetrofit(token);
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<RetrofitParser> call = jsonPlaceHolder.getQuestions(
-                filterHelper.loc,
-                filterHelper.radius,
-                filterHelper.tags);
-
-//        new double[]{25.0, 25.0},
-//                100,
-//                new String[]{"tech", "null"}
+        Call<RetrofitParser> call = jsonPlaceHolder.getQuestions(25, 25);
 
         call.enqueue(new Callback<RetrofitParser>() {
             @Override
@@ -95,10 +106,6 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
                     questions = details.toQuesList();
                 }
                 adapter.update(questions);
-
-                shimmerContainer.stopShimmer();
-                shimmerContainer.animate().alpha(0.0f).setDuration(500).start();
-                listView.animate().alpha(1.0f).setDuration(1000).start();
                 swipeContainer.setRefreshing(false);
             }
 
@@ -110,15 +117,6 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
         });
     }
 
-    private void callRetrofitHelper() {
-        if (questions != null) {
-            shimmerContainer.setVisibility(View.GONE);
-            adapter.update(questions);
-            listView.setAlpha(1.0f);
-        }else {
-            verifyNCall();
-        }
-    }
     private RecyclerView listView;
     private SwipeRefreshLayout swipeContainer;
     private QuestionAdapter adapter;
@@ -126,15 +124,13 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_question_list, container, false);
-        ToolbarHelper toolbarHelper = new ToolbarHelper((AppCompatActivity) getActivity(), (MotionLayout) v, HistoryQues.class);
-        filterHelper = new FilterHelper(this, (MotionLayout) v);
-        adapter = new QuestionAdapter(getContext(),this, new ArrayList<>(),false);
+        View v = inflater.inflate(R.layout.fragment_feed, container, false);
+        initToolbar(v);
         initViews(v);
         initListeners(v);
+        adapter = new QuestionAdapter(getActivity(), new ArrayList<>());
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
-        callRetrofitHelper();
         swipeContainer.setColorSchemeResources(
                 android.R.color.holo_red_light,
 
@@ -143,12 +139,13 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
                 android.R.color.holo_blue_bright,
 
                 android.R.color.holo_green_light);
+        swipeContainer.setRefreshing(true);
+        verifyNCall();
         return v;
     }
 
     private void initViews(View v) {
         listView = v.findViewById(R.id.list);
-        shimmerContainer = v.findViewById(R.id.shimmer_container);
         swipeContainer = v.findViewById(R.id.swipe_refresh_layout);
     }
 
@@ -156,15 +153,5 @@ public class QuestionFragment extends Fragment implements FilterHelper.FilterLis
         swipeContainer.setOnRefreshListener(this::verifyNCall);
     }
 
-    @Override
-    public void closedMenu() {
 
-    }
-
-    @Override
-    public void onClick(View view, int position) {
-        Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-        intent.putExtra("ques", questions.get(position));
-        startActivity(intent);
-    }
 }

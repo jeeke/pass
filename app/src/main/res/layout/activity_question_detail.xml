@@ -83,7 +83,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/edittext2"
+        android:background="@drawable/edittext_less_round"
         android:ems="10"
         android:hint="Type yout answer here"
         android:inputType="textMultiLine"
