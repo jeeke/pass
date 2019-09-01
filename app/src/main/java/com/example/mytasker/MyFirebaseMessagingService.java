@@ -91,7 +91,6 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
 
     private BaseTarget target = new BaseTarget<Bitmap>() {
         int display_size = dpToPx(64);
-
         @Override
         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
             sendNotification(resource);

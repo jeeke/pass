@@ -35,9 +35,9 @@ public class FeedActNFrag {
     public FeedActNFrag() {
     }
 
-    String uid = getUser().getUid();
+    private String uid = getUser().getUid();
 
-    public void callFireBase(FragmentActivity context, ShimmerFrameLayout shimmerContainer, Query mQuery, SwipeRefreshLayout mSwipeRefreshLayout, RecyclerView mRecyclerView, boolean type) {
+    public void callFireBase(FragmentActivity context, ShimmerFrameLayout shimmerContainer, Query mQuery, SwipeRefreshLayout mSwipeRefreshLayout, RecyclerView mRecyclerView, int type) {
         mSwipeRefreshLayout.setColorSchemeResources(
 
                 android.R.color.holo_blue_bright,

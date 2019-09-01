@@ -20,17 +20,11 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import java.util.Date;
 
 import static com.example.mytasker.util.Cache.getUser;
+import static com.example.mytasker.util.Contracts.avatars;
 
 public class LoginActivity extends BaseActivity {
 
     private static final String TAG = "LOGIN_ACTIVITY";
-    private static String[] avatars = {
-            "https://firebasestorage.googleapis.com/v0/b/mytasker-d3ef5.appspot.com/o/avatars%2Favatar6.png?alt=media&token=cf4d2845-bccf-43f4-826e-f4aac81c38cd",
-            "https://firebasestorage.googleapis.com/v0/b/mytasker-d3ef5.appspot.com/o/avatars%2Favatar4.png?alt=media&token=3d643200-a8cf-4614-a508-0438dcfde5b5",
-            "https://firebasestorage.googleapis.com/v0/b/mytasker-d3ef5.appspot.com/o/avatars%2Favatar3.png?alt=media&token=2e348dbe-a436-4670-9159-1948a77e2b12",
-            "https://firebasestorage.googleapis.com/v0/b/mytasker-d3ef5.appspot.com/o/avatars%2Favatar1.png?alt=media&token=2d22f9fb-f1b1-48a3-8dd8-c5b1f8946f2f",
-            "https://firebasestorage.googleapis.com/v0/b/mytasker-d3ef5.appspot.com/o/avatars%2Favatar6.png?alt=media&token=cf4d2845-bccf-43f4-826e-f4aac81c38cd"
-    };
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     EditText first, second, third;
     Button action;

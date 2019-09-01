@@ -19,7 +19,7 @@
         android:background="@drawable/bg_soft_orange">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView2"
+            android:id="@+id/profile_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -45,10 +45,10 @@
             android:gravity="center_vertical|start"
             android:text="Want my house cleaned"
             android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="@+id/cardView2"
+            app:layout_constraintBottom_toBottomOf="@+id/profile_image"
             app:layout_constraintEnd_toStartOf="@+id/price"
-            app:layout_constraintStart_toEndOf="@+id/cardView2"
-            app:layout_constraintTop_toTopOf="@+id/cardView2" />
+            app:layout_constraintStart_toEndOf="@+id/profile_image"
+            app:layout_constraintTop_toTopOf="@+id/profile_image" />
 
         <TextView
             android:id="@+id/price"

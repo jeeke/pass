@@ -1,5 +1,6 @@
 package com.example.mytasker.util;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
@@ -87,7 +88,7 @@ public class Tools {
             elapsed = elapsedDays + " day";
             e = elapsedDays;
         } else if (elapsedHours != 0) {
-            elapsed = elapsedHours + " hours";
+            elapsed = elapsedHours + " hour";
             e = elapsedHours;
         } else if (elapsedMinutes != 0) {
             elapsed = elapsedMinutes + " minute";
@@ -113,7 +114,7 @@ public class Tools {
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public static void launchActivity(AppCompatActivity context, Class className) {
+    public static void launchActivity(Activity context, Class className) {
         Intent intent = new Intent(context, className);
         context.startActivity(intent);
 //        context.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);

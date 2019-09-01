@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
     android:background="?colorPrimaryDark"
-    app:menu="@menu/menu_history"
     app:layout_collapseMode="pin"
     app:titleTextColor="?colorAccent"
     xmlns:app="http://schemas.android.com/apk/res-auto"

@@ -167,8 +167,8 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        initToolbar(v);
         filterHelper = new FilterHelper(this, v.findViewById(R.id.scrollable));
+        initToolbar(v);
         initViews(v);
         adapter = new TaskListAdapter(getContext(), this, new ArrayList<>(), false);
         listView.setAdapter(adapter);

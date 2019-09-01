@@ -66,7 +66,7 @@ public class FeedFragment extends Fragment {
         initViews(v);
         Query mQuery = getDatabase().child("Feeds");
         feedActNFrag = new FeedActNFrag();
-        feedActNFrag.callFireBase(getActivity(), v.findViewById(R.id.shimmer_container), mQuery, mSwipeRefreshLayout, mRecyclerView, false);
+        feedActNFrag.callFireBase(getActivity(), v.findViewById(R.id.shimmer_container), mQuery, mSwipeRefreshLayout, mRecyclerView, 0);
         mRecyclerView.setHasFixedSize(true);
         return v;
     }

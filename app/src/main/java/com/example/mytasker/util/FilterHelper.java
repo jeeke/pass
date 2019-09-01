@@ -38,7 +38,8 @@ public class FilterHelper {
         radiusBar = v.findViewById(R.id.radius_bar);
         priceBar = v.findViewById(R.id.price_bar);
         remoteTask = v.findViewById(R.id.remote_task);
-        adapter = new ChipAdapter(chipGroup, new ArrayList<>(Arrays.asList(chipTitle)), true);
+        tags = new ArrayList<>(Arrays.asList(chipTitle));
+        adapter = new ChipAdapter(chipGroup, tags, true);
     }
 
     private void toggle() {

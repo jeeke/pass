@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.mytasker.R;
+import com.example.mytasker.util.Cache;
 import com.example.mytasker.util.Tools;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -59,8 +60,12 @@ public class SettingActivity extends BaseActivity {
                         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
                         prefs.edit().putBoolean("token_changed", true).apply();
                         dialog.dismiss();
+                        Cache.mUser = null;
+                        Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+                        intent.putExtra("from", false);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                         finish();
-                        launchActivity(SettingActivity.this, MainActivity.class);
                     });
         });
         TextView name, contact, contactHead;

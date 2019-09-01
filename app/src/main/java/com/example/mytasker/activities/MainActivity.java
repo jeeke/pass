@@ -91,6 +91,7 @@ public class MainActivity extends BaseActivity implements
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
+                    dialog.dismiss();
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
@@ -101,7 +102,6 @@ public class MainActivity extends BaseActivity implements
                         Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                         updateUI();
                     }
-                    dialog.dismiss();
                 });
     }
 

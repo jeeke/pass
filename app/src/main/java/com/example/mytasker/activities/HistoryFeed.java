@@ -25,17 +25,18 @@ public class HistoryFeed extends BaseActivity {
         from = getIntent().getBooleanExtra("from", false);
         String title;
         Query mQuery;
+        feedActNFrag = new FeedActNFrag();
+        initViews();
         if (from) {
             title = "Portfolio";
             mQuery = getDatabase().child("Portfolios").child(getUser().getUid());
+            feedActNFrag.callFireBase(this, findViewById(R.id.shimmer_container), mQuery, mSwipeRefreshLayout, mRecyclerView, 2);
         } else {
             title = "My Posts";
             mQuery = getDatabase().child("PrevFeeds").child(getUser().getUid());
+            feedActNFrag.callFireBase(this, findViewById(R.id.shimmer_container), mQuery, mSwipeRefreshLayout, mRecyclerView, 1);
         }
         Tools.initMinToolbar(this, title, false);
-        initViews();
-        feedActNFrag = new FeedActNFrag();
-        feedActNFrag.callFireBase(this, findViewById(R.id.shimmer_container), mQuery, mSwipeRefreshLayout, mRecyclerView, true);
     }
 
     private void initViews() {

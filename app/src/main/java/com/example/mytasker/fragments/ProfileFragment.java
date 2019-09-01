@@ -26,7 +26,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.mytasker.R;
+import com.example.mytasker.activities.AvatarChooser;
 import com.example.mytasker.activities.HistoryFeed;
 import com.example.mytasker.activities.NotificationActivity;
 import com.example.mytasker.activities.SettingActivity;
@@ -35,6 +37,7 @@ import com.example.mytasker.models.Rating;
 import com.example.mytasker.util.ChipAdapter;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,10 +48,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static com.example.mytasker.util.Cache.getDatabase;
-import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Contracts.CODE_NOTIFICATION_ACTIVITY;
 import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
 import static com.example.mytasker.util.Contracts.dpToPx;
+import static com.example.mytasker.util.Tools.launchActivity;
 
 public class ProfileFragment extends Fragment {
 
@@ -116,10 +119,10 @@ public class ProfileFragment extends Fragment {
             intent.putExtra("from", true);
             startActivity(intent);
         });
-        mUser = getUser();
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
         mDatabase = getDatabase();
         ImageView profileImage = v.findViewById(R.id.profile_image);
-        Glide.with(v.getContext()).load(mUser.getPhotoUrl().toString()).into(profileImage);
+        Glide.with(v.getContext()).load(mUser.getPhotoUrl().toString()).apply(RequestOptions.circleCropTransform()).into(profileImage);
         taskerrating = v.findViewById(R.id.taskerrating);
         posterrating = v.findViewById(R.id.posterating);
         taskdone = v.findViewById(R.id.taskdone);
@@ -141,6 +144,7 @@ public class ProfileFragment extends Fragment {
         divider = v.findViewById(R.id.divider11);
         toolbar = v.findViewById(R.id.toolbar);
         aboutText = v.findViewById(R.id.about);
+        v.findViewById(R.id.avatar_edit).setOnClickListener(v13 -> launchActivity(getActivity(), AvatarChooser.class));
         v.findViewById(R.id.edit_about).setOnClickListener(v12 -> {
             EditText input = new EditText(getContext());
 //            input.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);

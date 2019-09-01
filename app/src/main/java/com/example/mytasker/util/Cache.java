@@ -16,7 +16,7 @@ public class Cache {
 
     public static ArrayList<Task> tasks;
     public static ArrayList<Question> questions;
-    private static FirebaseUser mUser;
+    public static FirebaseUser mUser;
     private static String token;
 
     public static void getToken(OnTokenReceivedListener listener) {

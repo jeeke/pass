@@ -31,9 +31,10 @@ public class FeedHolder extends RecyclerView.ViewHolder {
     private ImageView avatar, image;
     private LikeButton likeView;
 
-    public FeedHolder(@NonNull View itemView, boolean type) {
+    public FeedHolder(@NonNull View itemView, int type) {
         super(itemView);
-        if (type) itemView.findViewById(R.id.likeButton).setVisibility(View.GONE);
+        if (type > 0) itemView.findViewById(R.id.likeButton).setVisibility(View.GONE);
+        if (type != 2) itemView.findViewById(R.id.delete).setVisibility(View.GONE);
         title = itemView.findViewById(R.id.title);
         numLikes = itemView.findViewById(R.id.numLikes);
         likeView = itemView.findViewById(R.id.likeView);
