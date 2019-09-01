@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import static com.example.mytasker.MyFirebaseMessagingService.MY_PREFS_NAME;
+import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Tools.launchActivity;
 
 public class MainActivity extends BaseActivity implements
@@ -51,8 +52,7 @@ public class MainActivity extends BaseActivity implements
     protected void onResume() {
         super.onResume();
         sp = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        updateUI();
         if (sp.getBoolean("showIntro", true)) {
             SharedPreferences.Editor editor = sp.edit();
             editor.putBoolean("showIntro", false);
@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity implements
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
-                updateUI(null);
+                updateUI();
             }
         }
     }
@@ -94,13 +94,12 @@ public class MainActivity extends BaseActivity implements
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        updateUI(user);
+                        updateUI();
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
                         Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                        updateUI(null);
+                        updateUI();
                     }
                     dialog.dismiss();
                 });
@@ -128,7 +127,8 @@ public class MainActivity extends BaseActivity implements
 //                task -> updateUI(null));
 //    }
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI() {
+        FirebaseUser user = getUser();
         if (user != null) {
             int pending_feedbacks = sp.getInt("pending_feedbacks", 0);
             if (pending_feedbacks > 0) {

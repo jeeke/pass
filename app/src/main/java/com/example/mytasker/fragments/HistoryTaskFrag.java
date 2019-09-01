@@ -20,9 +20,7 @@ import com.example.mytasker.activities.TaskDetailActivity;
 import com.example.mytasker.holders.TaskHolder;
 import com.example.mytasker.models.Task;
 import com.example.mytasker.util.Contracts;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
 import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
@@ -30,9 +28,12 @@ import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
 import java.util.ArrayList;
 
+import static com.example.mytasker.util.Cache.getDatabase;
+import static com.example.mytasker.util.Cache.getUser;
+
 
 public class HistoryTaskFrag extends Fragment implements TaskHolder.RecyclerViewClickListener {
-    ArrayList<Task> tasks;
+    private ArrayList<Task> tasks;
     private int type;
     private FirebaseRecyclerPagingAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -60,9 +61,6 @@ public class HistoryTaskFrag extends Fragment implements TaskHolder.RecyclerView
 
     private void callFireBase() {
         mSwipeRefreshLayout.setColorSchemeResources(
-                android.R.color.holo_red_light,
-
-                android.R.color.holo_orange_light,
 
                 android.R.color.holo_blue_bright,
 
@@ -79,7 +77,7 @@ public class HistoryTaskFrag extends Fragment implements TaskHolder.RecyclerView
         if (type == 2) c = "AsTasker";
         else c = "AsPoster";
         //TODO remodel table to increase efficiency
-        Query mQuery = FirebaseDatabase.getInstance().getReference().child("PrevTasks").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(c);
+        Query mQuery = getDatabase().child("PrevTasks").child(getUser().getUid()).child(c);
         //Initialize PagedList Configuration
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)

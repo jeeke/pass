@@ -16,32 +16,22 @@ import java.util.Map;
 
 public class FeedbackByTaskerActivity extends BaseActivity {
 
-    RatingBar price,clearity,behaviour;
+    RatingBar price, clearity, behaviour;
+    boolean prevCallResolved = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback_tasker);
-        Tools.initMinToolbar(this,"Confirm Bid",false);
+        Tools.initMinToolbar(this, "Confirm Bid", false);
         findViewById(R.id.submit).setOnClickListener(v -> checkFields());
         initFields();
     }
 
-    private void initFields(){
+    private void initFields() {
         price = findViewById(R.id.ratingBar);
         clearity = findViewById(R.id.ratingBar2);
         behaviour = findViewById(R.id.ratingBar3);
-    }
-
-
-    private  void checkFields(){
-        float a =  price.getRating();
-        float b =  clearity.getRating();
-        float c =  behaviour.getRating();
-        if( a*b*c==0.0f){
-            Toast.makeText(this, "Please answer all questions", Toast.LENGTH_SHORT).show();
-        }else {
-            callRetrofit(a, b, c);
-        }
     }
 
     private void callRetrofit(float a, float b, float c) {
@@ -57,12 +47,25 @@ public class FeedbackByTaskerActivity extends BaseActivity {
         callAPI(map);
     }
 
+    private void checkFields() {
+        float a = price.getRating();
+        float b = clearity.getRating();
+        float c = behaviour.getRating();
+        if (a * b * c == 0.0f) {
+            Toast.makeText(this, "Please answer all questions", Toast.LENGTH_SHORT).show();
+        } else {
+            callRetrofit(a, b, c);
+        }
+    }
+
     private void callAPI(Map data) {
+        if (!prevCallResolved) return;
         ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle("Posting your feedback..");
         dlg.show();
 
         Contracts.call(data, "rate").addOnCompleteListener(t -> {
+            prevCallResolved = true;
             dlg.dismiss();
             if (!t.isSuccessful()) {
                 Exception e = t.getException();
@@ -80,5 +83,9 @@ public class FeedbackByTaskerActivity extends BaseActivity {
             Log.v("tag", t.getResult());
             Toast.makeText(this, "Rating Successful", Toast.LENGTH_SHORT).show();
         });
+        prevCallResolved = false;
+
     }
+
+
 }

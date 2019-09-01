@@ -11,7 +11,6 @@ import com.example.mytasker.R;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.util.Tools;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
@@ -22,6 +21,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static com.example.mytasker.util.Cache.getToken;
+import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Tools.getRetrofit;
 
 public class PostQuestion extends BaseActivity {
@@ -44,22 +45,16 @@ public class PostQuestion extends BaseActivity {
         dlg.setTitle("Posting your question, Please Wait....");
     }
 
+    private boolean prevCallResolved = true;
+
     private void verifyNCall() {
         q = ques.getText().toString();
         if (q.equals("")) {
             Toast.makeText(this, "Please enter your question", Toast.LENGTH_SHORT).show();
             return;
         }
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUser.getIdToken(true)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        postQuestion(task.getResult().getToken());
-                    } else {
-                        // Handle error -> task.getException();
-                        Toast.makeText(this, "Authentication Error!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        if (!prevCallResolved) return;
+        getToken(this::postQuestion);
     }
 
     public void postQuestion(String token) {
@@ -69,7 +64,7 @@ public class PostQuestion extends BaseActivity {
         loc.add(25.0);
         loc.add(25.0);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = getUser();
         Date date = new Date();
         Question question = new Question(
                 date.getTime(),
@@ -85,7 +80,7 @@ public class PostQuestion extends BaseActivity {
         call.enqueue(new Callback<Question>() {
             @Override
             public void onResponse(Call<Question> call, Response<Question> response) {
-
+                prevCallResolved = true;
                 dlg.dismiss();
                 Log.e("error", response.toString());
                 if (!response.isSuccessful()) {
@@ -98,9 +93,12 @@ public class PostQuestion extends BaseActivity {
 
             @Override
             public void onFailure(Call<Question> call, Throwable t) {
+                prevCallResolved = true;
                 Log.e("error", t.getMessage());
                 dlg.dismiss();
             }
         });
+        prevCallResolved = false;
+
     }
 }

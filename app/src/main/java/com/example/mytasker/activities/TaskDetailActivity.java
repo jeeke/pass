@@ -126,7 +126,9 @@ public class TaskDetailActivity extends BaseActivity {
         }
     }
 
+    boolean prevCallResolved = true;
     private void markDone() {
+        if (!prevCallResolved) return;
         ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle("Marking task..");
         dlg.show();
@@ -136,6 +138,7 @@ public class TaskDetailActivity extends BaseActivity {
         map.put("task_title", current.getTitle());
         map.put("price", current.getCost());
         Contracts.call(map, "taskDone").addOnCompleteListener(t -> {
+            prevCallResolved = true;
             dlg.dismiss();
             if (!t.isSuccessful()) {
                 Exception e = t.getException();
@@ -158,15 +161,18 @@ public class TaskDetailActivity extends BaseActivity {
             intent.putExtra("poster_id", current.getPoster_id());
             startActivity(intent);
         });
+        prevCallResolved = false;
     }
 
     private void cancelBid() {
+        if (!prevCallResolved) return;
         ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle("Cancelling your Bid..");
         dlg.show();
         Map map = new HashMap();
         map.put("t_id", current.getId());
         Contracts.call(map, "cancelBid").addOnCompleteListener(t -> {
+            prevCallResolved = true;
             dlg.dismiss();
             if (!t.isSuccessful()) {
                 Exception e = t.getException();
@@ -184,5 +190,6 @@ public class TaskDetailActivity extends BaseActivity {
             Log.e("tag", t.getResult() + "");
             Toast.makeText(this, "Bid Cancelled", Toast.LENGTH_SHORT).show();
         });
+        prevCallResolved = false;
     }
 }

@@ -21,13 +21,14 @@ import com.example.mytasker.models.Question;
 import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.Tools;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
 import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
 import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
+
+import static com.example.mytasker.util.Cache.getDatabase;
+import static com.example.mytasker.util.Cache.getUser;
 
 public class HistoryQues extends BaseActivity implements QuestionHolder.RecyclerViewClickListener {
 
@@ -51,9 +52,6 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
 
     private void callFireBase() {
         mSwipeRefreshLayout.setColorSchemeResources(
-                android.R.color.holo_red_light,
-
-                android.R.color.holo_orange_light,
 
                 android.R.color.holo_blue_bright,
 
@@ -67,7 +65,7 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
 
         //Initialize Database
         //TODO remodel table to increase efficiency
-        Query mQuery = FirebaseDatabase.getInstance().getReference().child("PrevQues").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        Query mQuery = getDatabase().child("PrevQues").child(getUser().getUid());
         //Initialize PagedList Configuration
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)

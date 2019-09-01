@@ -35,17 +35,17 @@ import com.example.mytasker.models.Rating;
 import com.example.mytasker.util.ChipAdapter;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static com.example.mytasker.util.Cache.getDatabase;
+import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Contracts.CODE_NOTIFICATION_ACTIVITY;
 import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
 import static com.example.mytasker.util.Contracts.dpToPx;
@@ -67,20 +67,18 @@ public class ProfileFragment extends Fragment {
     private boolean mine;
     private FirebaseUser mUser;
     private DatabaseReference mDatabase;
+
     public ProfileFragment(boolean mine) {
         this.mine = mine;
     }
 
-    TextView aboutText;
+    private TextView aboutText;
 
     private void forMe(View v) {
         toolbar.setVisibility(View.VISIBLE);
         toolbar.setTitle("PROFILE");
         TextView name = v.findViewById(R.id.poster_name);
-        if (mUser != null) {
-            name.setText(mUser.getDisplayName().toUpperCase());
-//            Toast.makeText(getContext(), user.getDisplayName(), Toast.LENGTH_SHORT).show();
-        }
+        name.setText(mUser.getDisplayName().toUpperCase());
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
         imageView.setOnClickListener(v1 -> {
@@ -118,8 +116,8 @@ public class ProfileFragment extends Fragment {
             intent.putExtra("from", true);
             startActivity(intent);
         });
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mUser = getUser();
+        mDatabase = getDatabase();
         ImageView profileImage = v.findViewById(R.id.profile_image);
         Glide.with(v.getContext()).load(mUser.getPhotoUrl().toString()).into(profileImage);
         taskerrating = v.findViewById(R.id.taskerrating);

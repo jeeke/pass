@@ -24,6 +24,7 @@ import static com.example.mytasker.MyFirebaseMessagingService.CHANNEL_ID;
 public abstract class BaseActivity extends AppCompatActivity implements ConnectionReceiver.ConnectionReceiverListener {
 
     private static final BroadcastReceiver MyReceiver = new ConnectionReceiver();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

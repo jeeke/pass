@@ -30,6 +30,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static com.example.mytasker.util.Cache.getToken;
 import static com.example.mytasker.util.Tools.getRetrofit;
 
 
@@ -42,26 +43,6 @@ public class PostTask extends BaseActivity {
     ProgressDialog dlg;
     String title, desc, category, reward, deadline;
     Fragment fragment;
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-//
-//            Uri uri = data.getData();
-//            Log.e("URI", String.valueOf(uri));
-//
-//            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-//
-//                ImageView imageView = findViewById(R.id.pickedImage);
-//                imageView.setImageBitmap(bitmap);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
     @Override
     protected void onResume() {
@@ -132,19 +113,11 @@ public class PostTask extends BaseActivity {
         }
     }
 
+    boolean prevCallResolved = true;
 
     private void verifyNCall() {
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        assert mUser != null;
-        mUser.getIdToken(true)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        postmytask(Objects.requireNonNull(task.getResult()).getToken());
-                    } else {
-                        // Handle error -> task.getException();
-                        Toast.makeText(this, "Authentication Error!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        if (!prevCallResolved) return;
+        getToken(this::postmytask);
     }
 
     public void postmytask(String token) {
@@ -178,7 +151,7 @@ public class PostTask extends BaseActivity {
         call.enqueue(new Callback<Task>() {
             @Override
             public void onResponse(Call<Task> call, Response<Task> response) {
-
+                prevCallResolved = true;
                 dlg.dismiss();
                 if (!response.isSuccessful()) {
                     Log.e("error", response.toString());
@@ -190,9 +163,11 @@ public class PostTask extends BaseActivity {
 
             @Override
             public void onFailure(Call<Task> call, Throwable t) {
+                prevCallResolved = true;
                 Log.e("error", t.getMessage());
                 dlg.dismiss();
             }
         });
+        prevCallResolved = false;
     }
 }

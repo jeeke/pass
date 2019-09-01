@@ -143,8 +143,6 @@ public class DashboardActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         starterIntent = getIntent();
         setOnline("true");
-//        int theme = starterIntent.getIntExtra("theme", R.style.LightMode);
-//        setTheme(theme);
         setContentView(R.layout.activity_dashboard);
         init();
         initFab();

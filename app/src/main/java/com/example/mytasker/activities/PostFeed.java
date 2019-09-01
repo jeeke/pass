@@ -17,10 +17,8 @@ import com.example.mytasker.R;
 import com.example.mytasker.models.Feed;
 import com.example.mytasker.util.Tools;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -30,6 +28,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import static com.example.mytasker.util.Cache.getDatabase;
+import static com.example.mytasker.util.Cache.getUser;
 
 public class PostFeed extends BaseActivity {
 
@@ -50,27 +51,9 @@ public class PostFeed extends BaseActivity {
     String imageURL;
     Uri mUri;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_feed);
-        Tools.initMinToolbar(this, "Create Post", false);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        mImage = findViewById(R.id.image);
-        findViewById(R.id.pick_image).setOnClickListener(v -> pickImage());
-        text = findViewById(R.id.text);
-        fab = findViewById(R.id.done);
-        checkBox = findViewById(R.id.checkBox);
-        fab.setOnClickListener(v -> {
-            onPortfolio = checkBox.isChecked();
-            if (mUri != null) {
-                uploadImage(mUri);
-            } else verifyNCall();
-        });
-    }
+    boolean prevCallResolved = true;
 
     private void uploadImage(Uri uri) {
-        fab.setClickable(false);
         dlg = new ProgressDialog(this);
         dlg.setTitle("Uploading Image...");
         dlg.show();
@@ -117,8 +100,26 @@ public class PostFeed extends BaseActivity {
 
     ProgressDialog dlg;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_post_feed);
+        Tools.initMinToolbar(this, "Create Post", false);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        mImage = findViewById(R.id.image);
+        findViewById(R.id.pick_image).setOnClickListener(v -> pickImage());
+        text = findViewById(R.id.text);
+        fab = findViewById(R.id.done);
+        checkBox = findViewById(R.id.checkBox);
+        fab.setOnClickListener(v -> {
+            if (!prevCallResolved) return;
+            onPortfolio = checkBox.isChecked();
+            if (mUri != null) {
+                uploadImage(mUri);
+            } else verifyNCall();
+        });
+    }
     private void verifyNCall() {
-//        Toast.makeText(this, imageURL, Toast.LENGTH_SHORT).show();
         if (text.getText().toString().equals("") && imageURL == null) {
             Toast.makeText(this, "Both Fields can not be empty", Toast.LENGTH_SHORT).show();
             return;
@@ -130,7 +131,7 @@ public class PostFeed extends BaseActivity {
     }
 
     public void postFeed() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = getUser();
         Date date = new Date();
         Feed feed = new Feed(
                 date.getTime(),
@@ -140,7 +141,7 @@ public class PostFeed extends BaseActivity {
                 imageURL,
                 text.getText().toString()
         );
-        DatabaseReference push = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference push = getDatabase();
         String key = push.child("Feeds").push().getKey();
 
         Map updateMap = new HashMap();
@@ -150,13 +151,14 @@ public class PostFeed extends BaseActivity {
         updateMap.put("PrevFeeds/" + user.getUid() + "/" + key, feed);
         push.updateChildren(updateMap).addOnCompleteListener(task -> {
             dlg.dismiss();
-            fab.setClickable(true);
             if (task.isSuccessful()) {
                 finish();
             } else {
                 Toast.makeText(PostFeed.this, "Feed could not be posted", Toast.LENGTH_SHORT).show();
             }
+            prevCallResolved = true;
         });
+        prevCallResolved = false;
     }
 
 

@@ -3,7 +3,7 @@ package com.example.mytasker.retrofit;
 import com.example.mytasker.adapters.TaskListAdapter;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.models.Task;
-import com.example.mytasker.util.NetworkCache;
+import com.example.mytasker.util.Cache;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,21 +14,21 @@ public class RetrofitParser {
     private ArrayList<String> taskStrings;
 
     public void toTaskList(TaskListAdapter adapter, int price0, int price1, boolean remote) {
-        NetworkCache.tasks = new ArrayList<>();
-        adapter.update(NetworkCache.tasks);
+        Cache.tasks = new ArrayList<>();
+        adapter.update(Cache.tasks);
         if (taskStrings.size() == 0) return;
         Task task = null;
         Gson g = new Gson();
         int cost = 0;
         int i = 0;
-        if (remote) {
+        if (true) {
             for (String s : taskStrings) {
                 if (i % 2 == 0) {
                     task = g.fromJson(s, Task.class);
                     cost = (int) task.getCost();
                     if ((cost <= price1) && (cost >= price0)) {
                         adapter.addItem(task);
-                        NetworkCache.tasks.add(task);
+                        Cache.tasks.add(task);
                     }
                 }
                 i++;
@@ -41,7 +41,7 @@ public class RetrofitParser {
                 } else if ((cost <= price1) && (cost >= price0)) {
                     task.setDis(s);
                     adapter.addItem(task);
-                    NetworkCache.tasks.add(task);
+                    Cache.tasks.add(task);
                 }
                 i++;
             }

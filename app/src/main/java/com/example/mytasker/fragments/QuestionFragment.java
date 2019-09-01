@@ -8,7 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -22,10 +21,8 @@ import com.example.mytasker.activities.HistoryQues;
 import com.example.mytasker.adapters.QuestionAdapter;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.RetrofitParser;
-import com.example.mytasker.util.NetworkCache;
+import com.example.mytasker.util.Cache;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -34,6 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static com.example.mytasker.util.Cache.getToken;
 import static com.example.mytasker.util.Tools.getRetrofit;
 import static com.example.mytasker.util.Tools.launchActivity;
 
@@ -78,27 +76,23 @@ public class QuestionFragment extends Fragment {
         shimmerContainer.stopShimmer();
     }
 
+    private boolean prevCallResolved = true;
+
     private void verifyNCall() {
-        listView.animate().alpha(0.0f).start();
-        shimmerContainer.animate().alpha(1.0f).start();
+        if (!prevCallResolved) return;
+        listView.animate().alpha(0.0f).setDuration(0).start();
+        shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
         shimmerContainer.startShimmer();
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUser.getIdToken(true)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        callRetrofit(task.getResult().getToken());
-                    } else {
-                        // Handle error -> task.getException();
-                        Toast.makeText(getContext(), "Authentication Error!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        getToken(this::callRetrofit);
+
     }
 
     private void checkCache() {
-        if (NetworkCache.questions != null) {
-            adapter.update(NetworkCache.questions);
+        if (Cache.questions != null) {
+            adapter.update(Cache.questions);
+            listView.animate().alpha(1.0f).setDuration(100).start();
+            shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
             swipeContainer.setRefreshing(false);
-            shimmerContainer.animate().alpha(0.0f).start();
         } else verifyNCall();
     }
 
@@ -115,6 +109,7 @@ public class QuestionFragment extends Fragment {
         call.enqueue(new Callback<RetrofitParser>() {
             @Override
             public void onResponse(Call<RetrofitParser> call, Response<RetrofitParser> response) {
+                prevCallResolved = true;
                 if (!response.isSuccessful()) {
                     Log.e("Code: ", response.toString());
                     return;
@@ -122,24 +117,26 @@ public class QuestionFragment extends Fragment {
                 RetrofitParser details = response.body();
 
                 if (details != null) {
-                    NetworkCache.questions = details.toQuesList();
+                    Cache.questions = details.toQuesList();
                 }
-                adapter.update(NetworkCache.questions);
+                adapter.update(Cache.questions);
                 shimmerContainer.stopShimmer();
-                shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
-                listView.animate().alpha(1.0f).setDuration(200).start();
+                shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+                listView.animate().alpha(1.0f).setDuration(100).start();
                 swipeContainer.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<RetrofitParser> call, Throwable t) {
+                prevCallResolved = true;
                 Log.e("error ", t.getMessage());
-                swipeContainer.setRefreshing(false);
                 shimmerContainer.stopShimmer();
-                shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
-                listView.animate().alpha(1.0f).setDuration(200).start();
+                shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+                listView.animate().alpha(1.0f).setDuration(100).start();
+                swipeContainer.setRefreshing(false);
             }
         });
+        prevCallResolved = false;
     }
 
     @Override

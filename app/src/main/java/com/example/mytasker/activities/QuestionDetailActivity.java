@@ -27,7 +27,6 @@ import com.example.mytasker.models.Answer;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.util.Tools;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -35,6 +34,8 @@ import com.google.firebase.database.Query;
 import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
 import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
 import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
+
+import static com.example.mytasker.util.Cache.getUser;
 
 public class QuestionDetailActivity extends BaseActivity {
 
@@ -48,9 +49,6 @@ public class QuestionDetailActivity extends BaseActivity {
 
     private void callFireBase() {
         mSwipeRefreshLayout.setColorSchemeResources(
-                android.R.color.holo_red_light,
-
-                android.R.color.holo_orange_light,
 
                 android.R.color.holo_blue_bright,
 
@@ -132,6 +130,8 @@ public class QuestionDetailActivity extends BaseActivity {
     }
 
 
+    boolean prevCallResolved = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,31 +146,29 @@ public class QuestionDetailActivity extends BaseActivity {
         name.setText(current.getPosterName());
         ques.setText(current.getQues());
         Glide.with(this).load(current.getPoster_image()).apply(new RequestOptions().placeholder(R.drawable.person)).into(image);
-        Tools.initMinToolbar(this,"Answers",false);
+        Tools.initMinToolbar(this, "Answers", false);
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = findViewById(R.id.recyclerView);
         callFireBase();
         fab = findViewById(R.id.submit_answer);
         answer = findViewById(R.id.editText);
         fab.setOnClickListener(v -> {
-            if(answer.getText().toString().equals(""))
+            if (answer.getText().toString().equals(""))
                 Toast.makeText(QuestionDetailActivity.this, "Enter valid answer", Toast.LENGTH_SHORT).show();
-            else{
+            else {
                 submitAnswer();
             }
         });
     }
 
     private void submitAnswer() {
-//        ProgressDialog dlg = new ProgressDialog(this);
-//        dlg.setTitle("Posting your Answer..");
-//        dlg.show();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (!prevCallResolved) return;
+        FirebaseUser user = getUser();
         if (user != null) {
             Answer ans = new Answer(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), current.getPoster_id(), answer.getText().toString());
             FirebaseDatabase.getInstance().getReference().child("Answers")
                     .child(current.getId()).push().setValue(ans).addOnCompleteListener(task -> {
-//            dlg.dismiss();
+                prevCallResolved = true;
                 if (task.isSuccessful()) {
                     answer.setText("");
                     mAdapter.refresh();
@@ -180,6 +178,7 @@ public class QuestionDetailActivity extends BaseActivity {
                     Toast.makeText(this, "Posting error", Toast.LENGTH_SHORT).show();
                 }
             });
+            prevCallResolved = false;
         }
     }
 

@@ -15,7 +15,6 @@ import com.example.mytasker.R;
 import com.example.mytasker.holders.FeedHolder;
 import com.example.mytasker.models.Feed;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +25,9 @@ import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
 import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
 import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
+import static com.example.mytasker.util.Cache.getDatabase;
+import static com.example.mytasker.util.Cache.getUser;
+
 public class FeedActNFrag {
 
     public FirebaseRecyclerPagingAdapter<Feed, FeedHolder> mAdapter;
@@ -33,11 +35,10 @@ public class FeedActNFrag {
     public FeedActNFrag() {
     }
 
-    public void callFireBase(FragmentActivity context, ShimmerFrameLayout shimmerContainer, Query mQuery, SwipeRefreshLayout mSwipeRefreshLayout, RecyclerView mRecyclerView, boolean type, DatabaseReference mDatabase) {
-        mSwipeRefreshLayout.setColorSchemeResources(
-                android.R.color.holo_red_light,
+    String uid = getUser().getUid();
 
-                android.R.color.holo_orange_light,
+    public void callFireBase(FragmentActivity context, ShimmerFrameLayout shimmerContainer, Query mQuery, SwipeRefreshLayout mSwipeRefreshLayout, RecyclerView mRecyclerView, boolean type) {
+        mSwipeRefreshLayout.setColorSchemeResources(
 
                 android.R.color.holo_blue_bright,
 
@@ -78,12 +79,12 @@ public class FeedActNFrag {
                                             @NonNull Feed model) {
                 final DatabaseReference postRef = getRef(position);
                 holder.setItem(model, likeView -> {
-                    DatabaseReference globalFeedRef = mDatabase.child("Feeds").child(postRef.getKey());
-                    DatabaseReference userFeedRef = mDatabase.child("PrevFeeds").child(model.getPoster_id()).child(postRef.getKey());
+                    DatabaseReference globalFeedRef = getDatabase().child("Feeds").child(postRef.getKey());
+                    DatabaseReference userFeedRef = getDatabase().child("PrevFeeds").child(model.getPoster_id()).child(postRef.getKey());
                     // Run two transactions
                     onlikeClicked(globalFeedRef);
                     onlikeClicked(userFeedRef);
-                }, getUid());
+                }, uid);
             }
 
             private int count = 4;
@@ -92,8 +93,8 @@ public class FeedActNFrag {
             protected void onLoadingStateChanged(@NonNull LoadingState state) {
                 switch (state) {
                     case LOADING_INITIAL:
-                        mRecyclerView.animate().alpha(0.0f).start();
-                        shimmerContainer.animate().alpha(1.0f).start();
+                        mRecyclerView.animate().alpha(0.0f).setDuration(0).start();
+                        shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
                         shimmerContainer.startShimmer();
                         break;
                     case LOADING_MORE:
@@ -103,10 +104,9 @@ public class FeedActNFrag {
 
                     case LOADED:
                         // Stop Animation
-
                         shimmerContainer.stopShimmer();
-                        shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
-                        mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
+                        shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+                        mRecyclerView.animate().alpha(1.0f).setDuration(100).start();
                         mSwipeRefreshLayout.setRefreshing(false);
                         break;
 
@@ -119,9 +119,10 @@ public class FeedActNFrag {
                         if (--count > 0) {
                             retry();
                         } else {
+                            mSwipeRefreshLayout.setRefreshing(false);
                             shimmerContainer.stopShimmer();
-                            shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
-                            mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
+                            shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+                            mRecyclerView.animate().alpha(1.0f).setDuration(100).start();
                         }
                 }
             }
@@ -147,15 +148,14 @@ public class FeedActNFrag {
                 if (p == null) {
                     return Transaction.success(mutableData);
                 }
-
-                if (p.likes.containsKey(getUid())) {
+                if (p.likes.containsKey(uid)) {
                     // Unlike the Feed and remove self from likes
                     p.likeCount = p.likeCount - 1;
-                    p.likes.remove(getUid());
+                    p.likes.remove(uid);
                 } else {
                     // like the Feed and add self to likes
                     p.likeCount = p.likeCount + 1;
-                    p.likes.put(getUid(), true);
+                    p.likes.put(uid, true);
                 }
                 // Set value and report transaction success
                 mutableData.setValue(p);
@@ -171,10 +171,6 @@ public class FeedActNFrag {
         });
 
 
-    }
-
-    public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
 }

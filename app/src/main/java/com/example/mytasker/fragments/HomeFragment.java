@@ -9,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -27,11 +26,9 @@ import com.example.mytasker.holders.TaskHolder;
 import com.example.mytasker.models.Task;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.RetrofitParser;
+import com.example.mytasker.util.Cache;
 import com.example.mytasker.util.FilterHelper;
-import com.example.mytasker.util.NetworkCache;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,6 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static com.example.mytasker.util.Cache.getToken;
 import static com.example.mytasker.util.Tools.getRetrofit;
 import static com.example.mytasker.util.Tools.launchActivity;
 
@@ -94,20 +92,16 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
+
+    private boolean prevCallResolved = true;
+
     private void verifyNCall() {
-        listView.animate().alpha(0.0f).start();
-        shimmerContainer.animate().alpha(1.0f).start();
+        if (!prevCallResolved) return;
+        listView.animate().alpha(0.0f).setDuration(0).start();
+        shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
         shimmerContainer.startShimmer();
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUser.getIdToken(true)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        callRetrofit(task.getResult().getToken());
-                    } else {
-                        // Handle error -> task.getException();
-                        Toast.makeText(getContext(), "Authentication Error!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        getToken(this::callRetrofit);
+
     }
 
     private void callRetrofit(String token) {
@@ -122,9 +116,10 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         call.enqueue(new Callback<RetrofitParser>() {
             @Override
             public void onResponse(Call<RetrofitParser> call, Response<RetrofitParser> response) {
+                prevCallResolved = true;
                 shimmerContainer.stopShimmer();
-                shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
-                listView.animate().alpha(1.0f).setDuration(200).start();
+                shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+                listView.animate().alpha(1.0f).setDuration(100).start();
                 swipeContainer.setRefreshing(false);
                 if (!response.isSuccessful()) {
                     Log.v("Code: ", String.valueOf(response.code()));
@@ -140,12 +135,14 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
             @Override
             public void onFailure(Call<RetrofitParser> call, Throwable t) {
                 Log.e("error ", t.getMessage());
+                prevCallResolved = true;
                 shimmerContainer.stopShimmer();
-                shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
-                listView.animate().alpha(1.0f).setDuration(200).start();
+                shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+                listView.animate().alpha(1.0f).setDuration(100).start();
                 swipeContainer.setRefreshing(false);
             }
         });
+        prevCallResolved = false;
     }
 
     @Override
@@ -155,9 +152,10 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     }
 
     private void checkCache() {
-        if (NetworkCache.tasks != null) {
-            adapter.update(NetworkCache.tasks);
-            shimmerContainer.animate().alpha(0.0f).start();
+        if (Cache.tasks != null) {
+            adapter.update(Cache.tasks);
+            listView.animate().alpha(1.0f).setDuration(100).start();
+            shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
             swipeContainer.setRefreshing(false);
         } else verifyNCall();
     }

@@ -76,12 +76,17 @@ public class FeedbackByPosterActivity extends BaseActivity {
         }
     }
 
+    boolean prevCallResolved = true;
+
     private void callAPI(Map data) {
+        if (!prevCallResolved) return;
         ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle("Posting your feedback..");
         dlg.show();
 
         Contracts.call(data, "rate").addOnCompleteListener(t -> {
+            prevCallResolved = true;
+
             dlg.dismiss();
             if (!t.isSuccessful()) {
                 Exception e = t.getException();
@@ -105,5 +110,7 @@ public class FeedbackByPosterActivity extends BaseActivity {
             Log.v("tag", t.getResult());
             Toast.makeText(this, "Rating Successful", Toast.LENGTH_SHORT).show();
         });
+        prevCallResolved = false;
+
     }
 }

@@ -19,6 +19,8 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.Date;
 
+import static com.example.mytasker.util.Cache.getUser;
+
 public class LoginActivity extends BaseActivity {
 
     private static final String TAG = "LOGIN_ACTIVITY";
@@ -46,6 +48,20 @@ public class LoginActivity extends BaseActivity {
         initViews(from);
     }
 
+    boolean prevCallResolved = true;
+
+    private void initViews(boolean from) {
+        second = findViewById(R.id.second);
+        third = findViewById(R.id.third);
+        action = findViewById(R.id.action_button);
+        first = findViewById(R.id.first);
+        action.setOnClickListener(v -> checkFields(from));
+        if (!from) {
+            first.setVisibility(View.GONE);
+            action.setText("LOG IN");
+        }
+    }
+
     private void checkFields(boolean from) {
         dialog = new ProgressDialog(this);
         email = second.getText().toString();
@@ -53,8 +69,7 @@ public class LoginActivity extends BaseActivity {
         name = first.getText().toString();
         if (from && name.equals("")) {
             Toast.makeText(this, "Please Enter Your Name", Toast.LENGTH_SHORT).show();
-        }
-        else if (email.equals("") || !email.contains("@") || !email.contains("."))
+        } else if (email.equals("") || !email.contains("@") || !email.contains("."))
             Toast.makeText(this, "Please Enter Valid Email", Toast.LENGTH_SHORT).show();
         else if (password.length() < 8)
             Toast.makeText(this, "Password can not be less than 8 characters", Toast.LENGTH_SHORT).show();
@@ -69,19 +84,9 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private void initViews(boolean from) {
-        second = findViewById(R.id.second);
-        third = findViewById(R.id.third);
-        action = findViewById(R.id.action_button);
-        first = findViewById(R.id.first);
-        action.setOnClickListener(v -> checkFields(from));
-        if (!from) {
-            first.setVisibility(View.GONE);
-            action.setText("LOG IN");
-        }
-    }
-
     private void signUp() {
+        if (!prevCallResolved) return;
+        prevCallResolved = false;
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -94,12 +99,15 @@ public class LoginActivity extends BaseActivity {
                                 Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
+                    prevCallResolved = true;
                 });
     }
 
     private void login() {
+        if (!prevCallResolved) return;
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
+                    prevCallResolved = true;
                     if (task.isSuccessful()) {
                         Log.d(TAG, "signInWithEmail:success");
                         dialog.dismiss();
@@ -114,10 +122,12 @@ public class LoginActivity extends BaseActivity {
                         dialog.dismiss();
                     }
                 });
+        prevCallResolved = false;
     }
 
     private void initProfile() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (!prevCallResolved) return;
+        FirebaseUser user = getUser();
         if (user != null) {
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
@@ -125,6 +135,7 @@ public class LoginActivity extends BaseActivity {
                     .build();
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(task -> {
+                        prevCallResolved = true;
                         if (task.isSuccessful()) {
                             dialog.dismiss();
                             Log.d(TAG, "User profile initiated.");
@@ -134,6 +145,7 @@ public class LoginActivity extends BaseActivity {
                         }
                         dialog.dismiss();
                     });
+            prevCallResolved = false;
         }
         dialog.dismiss();
     }

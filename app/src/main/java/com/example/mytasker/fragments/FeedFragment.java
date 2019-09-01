@@ -17,9 +17,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.mytasker.R;
 import com.example.mytasker.activities.HistoryFeed;
 import com.example.mytasker.util.FeedActNFrag;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import static com.example.mytasker.util.Cache.getDatabase;
 import static com.example.mytasker.util.Tools.launchActivity;
 
 public class FeedFragment extends Fragment {
@@ -64,9 +64,9 @@ public class FeedFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_feed, container, false);
         initToolbar(v);
         initViews(v);
-        Query mQuery = FirebaseDatabase.getInstance().getReference().child("Feeds");
+        Query mQuery = getDatabase().child("Feeds");
         feedActNFrag = new FeedActNFrag();
-        feedActNFrag.callFireBase(getActivity(), v.findViewById(R.id.shimmer_container), mQuery, mSwipeRefreshLayout, mRecyclerView, false, FirebaseDatabase.getInstance().getReference());
+        feedActNFrag.callFireBase(getActivity(), v.findViewById(R.id.shimmer_container), mQuery, mSwipeRefreshLayout, mRecyclerView, false);
         mRecyclerView.setHasFixedSize(true);
         return v;
     }

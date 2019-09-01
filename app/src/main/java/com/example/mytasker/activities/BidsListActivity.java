@@ -22,10 +22,7 @@ import com.example.mytasker.models.Task;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.util.Tools;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
 import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
@@ -39,6 +36,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static com.example.mytasker.util.Cache.getDatabase;
+import static com.example.mytasker.util.Cache.getToken;
 import static com.example.mytasker.util.Tools.getRetrofit;
 
 public class BidsListActivity extends BaseActivity implements BidHolder.Listener {
@@ -48,27 +47,26 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
     SwipeRefreshLayout mSwipeRefreshLayout;
     private Task task;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        task = (Task) getIntent().getSerializableExtra("task");
-        if (task == null) finish();
-        setContentView(R.layout.activity_list);
-        Tools.initMinToolbar(this,"ALL BIDS",false);
-        initViews();
-        callFireBase();
-    }
+    private boolean prevCallResolved = true;
 
     private void initViews() {
         mRecyclerView = findViewById(R.id.recyclerView);
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        task = (Task) getIntent().getSerializableExtra("task");
+        if (task == null) finish();
+        setContentView(R.layout.activity_list);
+        Tools.initMinToolbar(this, "ALL BIDS", false);
+        initViews();
+        callFireBase();
+    }
+
     private void callFireBase() {
         mSwipeRefreshLayout.setColorSchemeResources(
-                android.R.color.holo_red_light,
-
-                android.R.color.holo_orange_light,
 
                 android.R.color.holo_blue_bright,
 
@@ -81,7 +79,7 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
         mRecyclerView.setLayoutManager(mManager);
 
         //Initialize Database
-        Query mQuery = FirebaseDatabase.getInstance().getReference().child("Bids").child(task.getId());
+        Query mQuery = getDatabase().child("Bids").child(task.getId());
 
         //Initialize PagedList Configuration
         PagedList.Config config = new PagedList.Config.Builder()
@@ -153,18 +151,10 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
         mSwipeRefreshLayout.setOnRefreshListener(() -> mAdapter.refresh());
     }
 
-
     private void verifyNCall(String tasker_id) {
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUser.getIdToken(true)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        callRetrofit(task.getResult().getToken(), tasker_id);
-                    } else {
-                        // Handle error -> task.getException();
-                        Toast.makeText(this, "Authentication Error!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        if (prevCallResolved) {
+            getToken(token -> callRetrofit(token, tasker_id));
+        }
     }
 
     private void callRetrofit(String token, String tasker_id) {
@@ -181,6 +171,7 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
         call.enqueue(new Callback<Message>() {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
+                prevCallResolved = true;
                 dlg.dismiss();
                 if (!response.isSuccessful()) {
                     Log.v("Code: ", response.code() + " Message: " + response.body());
@@ -191,11 +182,13 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
+                prevCallResolved = true;
                 Log.e("error ", t.getMessage());
                 dlg.dismiss();
                 Toast.makeText(BidsListActivity.this, "Task couldn't be assigned", Toast.LENGTH_SHORT).show();
             }
         });
+        prevCallResolved = false;
     }
 
 //    TODO why we save tasks separately if we are saving in prev tasks
