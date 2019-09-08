@@ -19,6 +19,12 @@ public class Cache {
     public static FirebaseUser mUser;
     private static String token;
 
+    public static void emptyCache() {
+        token = null;
+        mUser = null;
+        tasks = null;
+        questions = null;
+    }
     public static void getToken(OnTokenReceivedListener listener) {
         if (token == null) {
             getUser().getIdToken(true)
@@ -26,6 +32,7 @@ public class Cache {
                         if (task.isSuccessful()) {
                             token = task.getResult().getToken();
                         } else {
+                            token = "null";
                             Log.e("Cache getToken Error", "Token could not be fetched");
                         }
                         listener.onTokenReceived(token);

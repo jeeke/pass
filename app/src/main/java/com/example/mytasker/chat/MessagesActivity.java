@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import com.example.mytasker.R;
 import com.example.mytasker.chat.data.model.DialogHelper;
 import com.example.mytasker.chat.data.model.MessageHelper;
-import com.example.mytasker.chat.utils.AppUtils;
 import com.example.mytasker.util.Tools;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -64,7 +63,6 @@ public class MessagesActivity extends DemoMessagesActivity
 
             }
         });
-
         MessageInput input = findViewById(R.id.input);
         input.setInputListener(this);
         input.setTypingListener(this);
@@ -104,7 +102,7 @@ public class MessagesActivity extends DemoMessagesActivity
         super.messagesAdapter.enableSelectionMode(this);
         super.messagesAdapter.setLoadMoreListener(this);
         super.messagesAdapter.registerViewClickListener(R.id.messageUserAvatar,
-                (view, message) -> AppUtils.showToast(MessagesActivity.this,
+                (view, message) -> Tools.showToast(MessagesActivity.this,
                         message.getUser().getName() + " avatar click",
                         false));
         this.messagesList.setAdapter(super.messagesAdapter);

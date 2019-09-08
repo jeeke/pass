@@ -1,24 +1,16 @@
 package com.example.mytasker.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.mytasker.R;
-import com.example.mytasker.util.Cache;
 import com.example.mytasker.util.Tools;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import static com.example.mytasker.MyFirebaseMessagingService.MY_PREFS_NAME;
 import static com.example.mytasker.util.Tools.launchActivity;
 
 
@@ -45,28 +37,12 @@ public class SettingActivity extends BaseActivity {
         findViewById(R.id.textView69).setOnClickListener((View v) -> launchActivity(this, TandC.class));
         findViewById(R.id.textView58).setOnClickListener((View v) -> launchActivity(this, ContactUs.class));
         findViewById(R.id.logout).setOnClickListener(v -> {
-            ProgressDialog dialog = new ProgressDialog(SettingActivity.this);
-            dialog.setTitle("Logging out, Please Wait....");
-            dialog.show();
-            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(getString(R.string.default_web_client_id))
-                    .requestEmail()
-                    .build();
-            GoogleSignIn.getClient(this, gso).signOut().addOnCompleteListener(this,
-                    task -> {
-                        FirebaseAuth.getInstance().signOut();
-                        DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
-                        mUserRef.child("device_token").setValue(null);
-                        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-                        prefs.edit().putBoolean("token_changed", true).apply();
-                        dialog.dismiss();
-                        Cache.mUser = null;
-                        Intent intent = new Intent(SettingActivity.this, MainActivity.class);
-                        intent.putExtra("from", false);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
-                    });
+//            ProgressDialog dialog = new ProgressDialog(SettingActivity.this);
+//            dialog.setTitle("Logging out, Please Wait....");
+//            dialog.show();
+//            dialog.dismiss();
+            MainActivity.signOut(this);
+            finish();
         });
         TextView name, contact, contactHead;
         name = findViewById(R.id.textView85);

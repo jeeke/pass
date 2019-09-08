@@ -87,14 +87,6 @@ public class ChipAdapter {
         return chip;
     }
 
-//    private int Color(int c) {
-//        TypedValue typedValue = new TypedValue();
-//        TypedArray a = parent.getContext().obtainStyledAttributes(typedValue.data, new int[]{c});
-//        int color = a.getColor(0, 0);
-//        a.recycle();
-//        return color;
-//    }
-
     public interface OnChipRemovedListener {
         void onChipRemoved(String title);
     }

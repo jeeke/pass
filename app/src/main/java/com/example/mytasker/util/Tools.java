@@ -1,14 +1,20 @@
 package com.example.mytasker.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.mytasker.R;
 import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +24,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.content.Context.MODE_PRIVATE;
+import static com.example.mytasker.MyFirebaseMessagingService.MY_PREFS_NAME;
 
 public class Tools {
 //    public static void displayImageRound(final Context ctx, final ImageView img, @DrawableRes int drawable) {
@@ -138,6 +147,44 @@ public class Tools {
                 .addConverterFactory(new NullOnEmptyConverterFactory())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+    }
+
+    public static void setToken(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        setOnline("true");
+        boolean changed = prefs.getBoolean("token_changed", true);
+        if (changed) {
+            FirebaseUser currentUser = Cache.getUser();
+            String token = prefs.getString("token", "0");
+            DatabaseReference mUserRef = Cache.getDatabase().child("Users").child(currentUser.getUid()).child("device_token");
+            mUserRef.setValue(token).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    prefs.edit().putBoolean("token_changed", false).apply();
+                }
+            });
+        }
+    }
+
+    public static void removeToken(Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putBoolean("token_changed", true).apply();
+        Cache.getDatabase().child("Users").child(Cache.getUser().getUid()).child("device_token").removeValue();
+    }
+
+    public static void setOnline(Object online) {
+        FirebaseUser currentUser = Cache.getUser();
+        if (currentUser != null) {
+            DatabaseReference mUserRef = Cache.getDatabase().child("Users").child(currentUser.getUid());
+            mUserRef.child("online").setValue(online);
+        }
+    }
+
+    public static void showToast(Context context, @StringRes int text, boolean isLong) {
+        showToast(context, context.getString(text), isLong);
+    }
+
+    public static void showToast(Context context, String text, boolean isLong) {
+        Toast.makeText(context, text, isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.mytasker.R;
+import com.example.mytasker.util.Cache;
+import com.example.mytasker.util.Tools;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -110,14 +112,30 @@ public class MainActivity extends BaseActivity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-//    private void signOut() {
-//        // Firebase sign out
-//        mAuth.signOut();
-//
-//        // Google sign out
-//        mGoogleSignInClient.signOut().addOnCompleteListener(this,
-//                task -> updateUI(null));
-//    }
+    public static void signOut(Context context) {
+        //remove token firebase
+        Tools.removeToken(context);
+
+        // Firebase sign out
+        FirebaseAuth.getInstance().signOut();
+
+        // Google sign out
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(context.getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(context, gso);
+        mGoogleSignInClient.signOut();
+
+        //Empty cache
+        Cache.emptyCache();
+
+        //redirect to login screen
+        Intent intent = new Intent(context, MainActivity.class);
+//        intent.putExtra("from", false);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
+    }
 
 //    private void revokeAccess() {
 //        // Firebase sign out
@@ -130,12 +148,13 @@ public class MainActivity extends BaseActivity implements
     private void updateUI() {
         FirebaseUser user = getUser();
         if (user != null) {
-            int pending_feedbacks = sp.getInt("pending_feedbacks", 0);
-            if (pending_feedbacks > 0) {
-                finish();
-                launchActivity(this, FeedbackByPosterActivity.class);
-                return;
-            }
+//            TODO handle pending feedbacks
+//            int pending_feedbacks = sp.getInt("pending_feedbacks", 0);
+//            if (pending_feedbacks > 0) {
+//                finish();
+//                launchActivity(this, FeedbackByPosterActivity.class);
+//                return;
+//            }
             launchActivity(this, DashboardActivity.class);
             finish();
         }

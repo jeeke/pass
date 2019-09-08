@@ -3,15 +3,16 @@ package com.example.mytasker.models;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Question extends Message implements Serializable {
     @SerializedName("poster_image")
     private String poster_image;
     @SerializedName("id")
     private String id;
-    @SerializedName("loc")
-    private ArrayList<Double> location;
+    @SerializedName("lon")
+    private Double lon;
+    @SerializedName("lat")
+    private Double lat;
 
     public Question() {
     }
@@ -39,11 +40,12 @@ public class Question extends Message implements Serializable {
     private int done;
 
     // For Post use constructor that shoud be send to server !!
-    public Question(long c_date, String ques, String poster_id, String poster_name, String poster_image, ArrayList<Double> location) {
+    public Question(long c_date, String ques, String poster_id, String poster_name, String poster_image, Double lon, Double lat) {
         this.c_date = c_date;
         this.poster_id = poster_id;
         this.poster_name = poster_name;
-        this.location = location;
+        this.lon = lon;
+        this.lat = lat;
         this.poster_image = poster_image;
         this.ques = ques;
     }

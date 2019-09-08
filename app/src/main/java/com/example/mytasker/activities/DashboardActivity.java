@@ -24,10 +24,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ServerValue;
 
 import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
-import static com.example.mytasker.util.Contracts.setOnline;
 import static com.example.mytasker.util.Tools.launchActivity;
+import static com.example.mytasker.util.Tools.setOnline;
+import static com.example.mytasker.util.Tools.setToken;
 
-public class DashboardActivity extends BaseActivity {
+public class DashboardActivity extends LocationActivity {
 
     ImageView bhome, bqna, bfeed, bprofile;
     ImageView prevbselection;
@@ -142,7 +143,7 @@ public class DashboardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         starterIntent = getIntent();
-        setOnline("true");
+        setToken(this);
         setContentView(R.layout.activity_dashboard);
         init();
         initFab();

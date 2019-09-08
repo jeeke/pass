@@ -6,14 +6,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.mytasker.activities.BaseActivity;
 import com.example.mytasker.chat.data.model.Dialog;
-import com.example.mytasker.chat.utils.AppUtils;
+import com.example.mytasker.util.Tools;
 import com.google.firebase.database.ServerValue;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
 import org.jetbrains.annotations.Nullable;
 
-import static com.example.mytasker.util.Contracts.setOnline;
+import static com.example.mytasker.util.Tools.setOnline;
 
 public abstract class DemoDialogsActivity extends BaseActivity
         implements DialogsListAdapter.OnDialogClickListener<Dialog>,
@@ -37,7 +37,7 @@ public abstract class DemoDialogsActivity extends BaseActivity
 
     @Override
     public void onDialogLongClick(Dialog dialog) {
-        AppUtils.showToast(
+        Tools.showToast(
                 this,
                 dialog.getDialogName(),
                 false);

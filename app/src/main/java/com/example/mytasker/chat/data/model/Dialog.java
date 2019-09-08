@@ -63,6 +63,6 @@ public class Dialog implements IDialog<Message> {
 
     @Override
     public int getUnreadCount() {
-        return unreadCount;
+        return -1;
     }
 }

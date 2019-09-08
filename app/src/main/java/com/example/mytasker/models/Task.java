@@ -3,6 +3,7 @@ package com.example.mytasker.models;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,15 +35,17 @@ public class Task extends Message implements Serializable {
     String category;
     @SerializedName("deadline")
     String deadline;
-    @SerializedName("loc")
-    ArrayList<Double> location;
+    @SerializedName("lon")
+    Double lon;
+    @SerializedName("lat")
+    Double lat;
     @SerializedName("tags")
     ArrayList<String> tags;
     @SerializedName("must_haves")
     ArrayList<String> musthaves;
 
     // For Post use constructor that shoud be send to server !!
-    public Task(String poster_id, String poster_name, String poster_avatar, long c_date, String job_des, String title, float cost, String category, String deadline, ArrayList<Double> location, ArrayList<String> tags, ArrayList<String> musthaves, boolean remote) {
+    public Task(String poster_id, String poster_name, String poster_avatar, long c_date, String job_des, String title, float cost, String category, String deadline, Double lat, Double lon, ArrayList<String> tags, ArrayList<String> musthaves, boolean remote) {
         this.c_date = c_date;
         this.poster_avatar = poster_avatar;
         this.poster_name = poster_name;
@@ -52,21 +55,13 @@ public class Task extends Message implements Serializable {
         this.poster_id = poster_id;
         this.category = category;
         this.deadline = deadline;
-        this.location = location;
+        this.lon = lon;
+        this.lat = lat;
         this.tags = tags;
         this.remote = remote;
         this.musthaves = musthaves;
     }
 
-//    public static Task fromMap(Map<String, String> map) {
-//        Task task = new Task();
-//        task.setStage(Integer.parseInt(map.get("stage")));
-//        task.setC_date(Long.parseLong(map.get("c_date")));
-//        task.setPoster_avatar(map.get("poster_avatar"));
-//        task.setJob_des(map.get("job_des"));
-//        task.setPoster_name(map.get("poster_name"));
-//        return task;
-//    }
 
     Map toMap() {
         Map map = new HashMap();
@@ -81,7 +76,8 @@ public class Task extends Message implements Serializable {
         map.put("poster_id", poster_id);
         map.put("category", category);
         map.put("deadline", deadline);
-        map.put("loc", location);
+        map.put("lon", lon);
+        map.put("lat", lat);
         map.put("tags", tags);
         map.put("remote", remote);
         map.put("must_haves", musthaves);
@@ -93,6 +89,8 @@ public class Task extends Message implements Serializable {
     }
 
     public Task() {
+        musthaves = new ArrayList<>();
+        tags = new ArrayList<>();
     }
 
     public String getDis() {
@@ -100,6 +98,14 @@ public class Task extends Message implements Serializable {
     }
 
     public void setDis(String dis) {
+        DecimalFormat value = new DecimalFormat("#.#");
+        float d = Float.parseFloat(dis);
+        if (d < 1.0) {
+            d = d * 1000;
+            dis = value.format(d) + 'm';
+        } else {
+            dis = value.format(d) + "km";
+        }
         this.dis = dis;
     }
 
@@ -137,14 +143,6 @@ public class Task extends Message implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public ArrayList<Double> getLocation() {
-        return location;
-    }
-
-    public void setLocation(ArrayList<Double> location) {
-        this.location = location;
     }
 
     public ArrayList<String> getMusthaves() {

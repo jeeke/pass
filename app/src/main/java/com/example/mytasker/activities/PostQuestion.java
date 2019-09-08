@@ -13,7 +13,6 @@ import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.util.Tools;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import retrofit2.Call;
@@ -25,7 +24,7 @@ import static com.example.mytasker.util.Cache.getToken;
 import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Tools.getRetrofit;
 
-public class PostQuestion extends BaseActivity {
+public class PostQuestion extends LocationActivity implements LocationActivity.Listener {
 
     Button fab;
     ProgressDialog dlg;
@@ -39,7 +38,14 @@ public class PostQuestion extends BaseActivity {
         Tools.initMinToolbar(this, "Post Question", false);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         fab = findViewById(R.id.fab);
-        fab.setOnClickListener(v -> verifyNCall());
+        fab.setOnClickListener(v -> {
+            if (q.equals("")) {
+                Toast.makeText(this, "Please enter your question", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            setListener(this);
+            getLocation();
+        });
         ques = findViewById(R.id.question);
         dlg = new ProgressDialog(this);
         dlg.setTitle("Posting your question, Please Wait....");
@@ -47,23 +53,8 @@ public class PostQuestion extends BaseActivity {
 
     private boolean prevCallResolved = true;
 
-    private void verifyNCall() {
-        q = ques.getText().toString();
-        if (q.equals("")) {
-            Toast.makeText(this, "Please enter your question", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!prevCallResolved) return;
-        getToken(this::postQuestion);
-    }
-
     public void postQuestion(String token) {
         dlg.show();
-        //result.setText("sending");
-        ArrayList<Double> loc = new ArrayList<>();
-        loc.add(25.0);
-        loc.add(25.0);
-
         FirebaseUser user = getUser();
         Date date = new Date();
         Question question = new Question(
@@ -72,7 +63,8 @@ public class PostQuestion extends BaseActivity {
                 user.getUid(),
                 user.getDisplayName(),
                 user.getPhotoUrl().toString(),
-                loc
+                lon,
+                lat
         );
         Retrofit retrofit = getRetrofit(token);
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
@@ -100,5 +92,11 @@ public class PostQuestion extends BaseActivity {
         });
         prevCallResolved = false;
 
+    }
+
+    @Override
+    public void onLocationFetched() {
+        if (!prevCallResolved) return;
+        getToken(this::postQuestion);
     }
 }

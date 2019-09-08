@@ -13,7 +13,7 @@ import com.example.mytasker.R;
 import com.example.mytasker.activities.BaseActivity;
 import com.example.mytasker.chat.data.model.Message;
 import com.example.mytasker.chat.data.model.MessageHelper;
-import com.example.mytasker.chat.utils.AppUtils;
+import com.example.mytasker.util.Tools;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import static com.example.mytasker.util.Contracts.setOnline;
+import static com.example.mytasker.util.Tools.setOnline;
 
 
 public abstract class DemoMessagesActivity extends BaseActivity
@@ -103,7 +103,7 @@ public abstract class DemoMessagesActivity extends BaseActivity
         super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.action_copy) {
             messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
-            AppUtils.showToast(this, R.string.copied_message, true);
+            Tools.showToast(this, R.string.copied_message, true);
         }
         return true;
     }

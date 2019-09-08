@@ -3,110 +3,151 @@ package com.example.mytasker.activities;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
+import android.view.ViewGroup;
 
-import androidx.appcompat.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
-import com.example.mytasker.adapters.NotificationAdapter;
-import com.example.mytasker.retrofit.JsonPlaceHolder;
-import com.example.mytasker.retrofit.NotificationList;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.mytasker.holders.NotificationHolder;
+import com.example.mytasker.models.Notification;
+import com.example.mytasker.util.Tools;
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
+import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
+import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
-import java.util.ArrayList;
+import static com.example.mytasker.util.Cache.getDatabase;
+import static com.example.mytasker.util.Cache.getUser;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+public class NotificationActivity extends BaseActivity implements NotificationHolder.RecyclerViewClickListener {
 
-import static com.example.mytasker.util.Tools.getRetrofit;
 
-public class NotificationActivity extends BaseActivity implements NotificationAdapter.RecyclerViewClickListener {
-
+    private FirebaseRecyclerPagingAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ShimmerFrameLayout shimmerContainer;
     ProgressDialog dlg;
-    RecyclerView listView;
-    NotificationAdapter adapter;
-    SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notification);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Notifications");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        swipeContainer = findViewById(R.id.swipe_refresh_layout);
-        listView = findViewById(R.id.list_notification);
-
-        dlg = new ProgressDialog(this);
-        dlg.setTitle("Fetching notifications, Please Wait....");
-        adapter = new NotificationAdapter(this, new ArrayList<>());
-        listView.setAdapter(adapter);
-        listView.setLayoutManager(new LinearLayoutManager(this));
-        swipeContainer.setOnRefreshListener(this::verifyNCall);
-        verifyNCall();
+        setContentView(R.layout.activity_list);
+        Tools.initMinToolbar(this, "Notifications", false);
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        mRecyclerView = findViewById(R.id.recyclerView);
+        shimmerContainer = findViewById(R.id.shimmer_container);
+        callFireBase();
     }
 
+    private void callFireBase() {
+        mSwipeRefreshLayout.setColorSchemeResources(
 
-    private void verifyNCall() {
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUser.getIdToken(true)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        callRetrofit(task.getResult().getToken());
-                    } else {
-                        // Handle error -> task.getException();
-                        Toast.makeText(NotificationActivity.this, "Authentication Error!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-    private void callRetrofit(String token) {
-//        dlg.show();
-        Retrofit retrofit = getRetrofit(token);
+                android.R.color.holo_blue_bright,
 
-        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<NotificationList> call = jsonPlaceHolder.getNotifications();
+                android.R.color.holo_green_light);
 
-        call.enqueue(new Callback<NotificationList>() {
+        //Initialize RecyclerView
+        mRecyclerView.setHasFixedSize(true);
 
+        LinearLayoutManager mManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mManager);
 
+        //Initialize Database
+        //TODO remodel table to increase efficiency
+        Query mQuery = getDatabase().child("/Notifications").child(getUser().getUid());
+        //Initialize PagedList Configuration
+        PagedList.Config config = new PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setPrefetchDistance(5)
+                .setPageSize(10)
+                .build();
+        //Initialize FirebasePagingOptions
+        DatabasePagingOptions<Notification> options = new DatabasePagingOptions.Builder<Notification>()
+                .setLifecycleOwner(this)
+                .setQuery(mQuery, config, Notification.class)
+                .build();
+        //Initialize Adapter
+        mAdapter = new FirebaseRecyclerPagingAdapter<Notification, NotificationHolder>(options) {
+
+            private int retryCount = 4;
+
+            @NonNull
             @Override
-            public void onResponse(Call<NotificationList> call, Response<NotificationList> response) {
-                if (!response.isSuccessful()) {
-                    Log.v("Code: ", String.valueOf(response.code()));
-                    return;
-                }
-                NotificationList details = response.body();
-
-
-                if (details != null) {
-                    adapter.update(details.getNotifications());
-                }
-
-                dlg.dismiss();
-//                listView.animate().alpha(1.0f).setDuration(1000).start();
-                swipeContainer.setRefreshing(false);
+            public NotificationHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                return new NotificationHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_notification, parent, false), NotificationActivity.this);
             }
 
             @Override
-            public void onFailure(Call<NotificationList> call, Throwable t) {
-                Log.e("error ", t.getMessage());
-                dlg.dismiss();
-                swipeContainer.setRefreshing(false);
+            protected void onBindViewHolder(@NonNull NotificationHolder holder,
+                                            int position,
+                                            @NonNull Notification model) {
+                holder.setItem(model);
             }
-        });
+
+            @Override
+            protected void onLoadingStateChanged(@NonNull LoadingState state) {
+                switch (state) {
+                    case LOADING_INITIAL:
+                        mRecyclerView.animate().alpha(0.0f).start();
+                        shimmerContainer.animate().alpha(1.0f).start();
+                        shimmerContainer.startShimmer();
+                        break;
+                    case LOADING_MORE:
+                        // Do your loading animation
+                        mSwipeRefreshLayout.setRefreshing(true);
+                        break;
+
+                    case LOADED:
+                        // Stop Animation
+                        shimmerContainer.stopShimmer();
+                        shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                        mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        break;
+
+                    case FINISHED:
+                        //Reached end of Data set
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        break;
+
+                    case ERROR:
+                        if (--retryCount > 0)
+                            retry();
+                        else {
+                            shimmerContainer.stopShimmer();
+                            shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                            mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
+                        }
+                }
+            }
+
+            @Override
+            protected void onError(@NonNull DatabaseError databaseError) {
+                super.onError(databaseError);
+                mSwipeRefreshLayout.setRefreshing(false);
+                Log.e("Error", databaseError.toString());
+                databaseError.toException().printStackTrace();
+            }
+        };
+
+        //Set Adapter to RecyclerView
+        mRecyclerView.setAdapter(mAdapter);
+
+        //Set listener to SwipeRefreshLayout for refresh action
+        mSwipeRefreshLayout.setOnRefreshListener(() -> mAdapter.refresh());
     }
 
     @Override
-    public void onClick(View view, int position) {
+    public void onClick(View view, Notification notification) {
+        startActivity(notification.getForegroundIntent(this));
     }
 }

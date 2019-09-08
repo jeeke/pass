@@ -94,6 +94,7 @@ public class TaskDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         current = (Task) getIntent().getSerializableExtra("task");
         FROM = getIntent().getIntExtra("from", 0);
+
         if (current == null) finish();
         setContentView(R.layout.activity_task_detail);
         initButton();

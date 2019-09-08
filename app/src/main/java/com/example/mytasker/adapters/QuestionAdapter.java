@@ -31,7 +31,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionHolder> implem
     @NonNull
     @Override
     public QuestionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new QuestionHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_question2, parent, false), this);
+        return new QuestionHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_question, parent, false), this);
     }
 
 

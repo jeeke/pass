@@ -45,13 +45,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public void onBindViewHolder(@NonNull holder holder, int position) {
-//        View v = holder.itemView.findViewById(R.id.lyt_parent);
+        View v = holder.itemView;
     }
 
     @Override
     public int getItemCount() {
 //        TODO
-        return 20;
+        return list.size();
     }
 
     public class holder extends RecyclerView.ViewHolder implements View.OnClickListener {

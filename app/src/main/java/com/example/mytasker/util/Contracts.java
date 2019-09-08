@@ -4,10 +4,6 @@ import android.content.res.Resources;
 
 import com.example.mytasker.R;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.functions.FirebaseFunctions;
 
 import java.util.Map;
@@ -31,7 +27,6 @@ public class Contracts {
             "https://firebasestorage.googleapis.com/v0/b/mytasker-d3ef5.appspot.com/o/avatars%2Favatar1.png?alt=media&token=2d22f9fb-f1b1-48a3-8dd8-c5b1f8946f2f",
             "https://firebasestorage.googleapis.com/v0/b/mytasker-d3ef5.appspot.com/o/avatars%2Favatar6.png?alt=media&token=cf4d2845-bccf-43f4-826e-f4aac81c38cd"
     };
-    public static String BASE_GET_URL = "https://sheltered-escarpment-49063.herokuapp.com/";
     public static OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -44,13 +39,12 @@ public class Contracts {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
+
     public static int pxToDp(int px) {
         return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
-    //        public static String BASE_POST_URL;
-//    public static String BASE_GET_URL = BASE_POST_URL = "https://0643318c.ngrok.io";
-    //=  "https://2a61d6f5.ngrok.io";
+    //    static String BASE_POST_URL = "https://bae70d07.ngrok.io";
     static String BASE_POST_URL = "https://sheltered-escarpment-49063.herokuapp.com/";
 
     private Contracts() {
@@ -71,11 +65,5 @@ public class Contracts {
                 });
     }
 
-    public static void setOnline(Object online) {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getUid());
-            mUserRef.child("online").setValue(online);
-        }
-    }
+
 }

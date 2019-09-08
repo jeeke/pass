@@ -85,7 +85,7 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
             @NonNull
             @Override
             public QuestionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return new QuestionHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_question2, parent, false), HistoryQues.this);
+                return new QuestionHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_question, parent, false), HistoryQues.this);
             }
 
             @Override
@@ -118,6 +118,7 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
                         mRecyclerView.animate().alpha(0.0f).start();
                         shimmerContainer.animate().alpha(1.0f).start();
                         shimmerContainer.startShimmer();
+                        break;
                     case LOADING_MORE:
                         // Do your loading animation
                         mSwipeRefreshLayout.setRefreshing(true);

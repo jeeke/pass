@@ -21,6 +21,7 @@ import com.example.mytasker.models.Message;
 import com.example.mytasker.models.Task;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.util.Tools;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -46,12 +47,14 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
     RecyclerView mRecyclerView;
     SwipeRefreshLayout mSwipeRefreshLayout;
     private Task task;
+    private ShimmerFrameLayout shimmerContainer;
 
     private boolean prevCallResolved = true;
 
     private void initViews() {
         mRecyclerView = findViewById(R.id.recyclerView);
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        shimmerContainer = findViewById(R.id.shimmer_container);
     }
 
     @Override
@@ -115,6 +118,10 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
             protected void onLoadingStateChanged(@NonNull LoadingState state) {
                 switch (state) {
                     case LOADING_INITIAL:
+                        mRecyclerView.animate().alpha(0.0f).start();
+                        shimmerContainer.animate().alpha(1.0f).start();
+                        shimmerContainer.startShimmer();
+                        break;
                     case LOADING_MORE:
                         // Do your loading animation
                         mSwipeRefreshLayout.setRefreshing(true);
@@ -122,6 +129,10 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
 
                     case LOADED:
                         // Stop Animation
+                        shimmerContainer.stopShimmer();
+                        shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                        mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
+                        mSwipeRefreshLayout.setRefreshing(false);
                         mSwipeRefreshLayout.setRefreshing(false);
                         break;
 
@@ -132,6 +143,11 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
 
                     case ERROR:
                         if (--retryCount > 0) retry();
+                        else {
+                            shimmerContainer.stopShimmer();
+                            shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                            mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
+                        }
                         break;
                 }
             }
@@ -140,6 +156,7 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
             protected void onError(@NonNull DatabaseError databaseError) {
                 super.onError(databaseError);
                 mSwipeRefreshLayout.setRefreshing(false);
+                Log.e("Error", databaseError.toString());
                 databaseError.toException().printStackTrace();
             }
         };

@@ -19,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
 import com.example.mytasker.activities.HistoryTask;
+import com.example.mytasker.activities.LocationActivity;
 import com.example.mytasker.activities.TaskDetailActivity;
 import com.example.mytasker.adapters.TaskListAdapter;
 import com.example.mytasker.chat.DialogsActivity;
@@ -67,9 +68,9 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_history) {
-            launchActivity((AppCompatActivity) getActivity(), HistoryTask.class);
+            launchActivity(getActivity(), HistoryTask.class);
         } else if (id == R.id.action_chats) {
-            launchActivity((AppCompatActivity) getActivity(), DialogsActivity.class);
+            launchActivity(getActivity(), DialogsActivity.class);
         }
         return false;
     }
@@ -95,21 +96,29 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
 
     private boolean prevCallResolved = true;
 
+    private Double lat, lon;
+
     private void verifyNCall() {
+        LocationActivity activity = (LocationActivity) getActivity();
+        activity.setListener(() -> {
+            lat = activity.lat;
+            lon = activity.lon;
+            getToken(HomeFragment.this::callRetrofit);
+        });
+        activity.getLocation();
+    }
+
+    private void callRetrofit(String token) {
         if (!prevCallResolved) return;
         listView.animate().alpha(0.0f).setDuration(0).start();
         shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
         shimmerContainer.startShimmer();
-        getToken(this::callRetrofit);
-
-    }
-
-    private void callRetrofit(String token) {
         Retrofit retrofit = getRetrofit(token);
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
         Call<RetrofitParser> call = jsonPlaceHolder.getTasks(
-                filterHelper.loc,
-                filterHelper.radius,
+                lat,
+                lon,
+                100,
                 filterHelper.tags
         );
 

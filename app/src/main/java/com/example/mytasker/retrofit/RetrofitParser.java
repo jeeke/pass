@@ -21,7 +21,7 @@ public class RetrofitParser {
         Gson g = new Gson();
         int cost = 0;
         int i = 0;
-        if (true) {
+        if (false) {
             for (String s : taskStrings) {
                 if (i % 2 == 0) {
                     task = g.fromJson(s, Task.class);

@@ -34,7 +34,7 @@ import static com.example.mytasker.util.Cache.getToken;
 import static com.example.mytasker.util.Tools.getRetrofit;
 
 
-public class PostTask extends BaseActivity {
+public class PostTask extends LocationActivity implements LocationActivity.Listener {
 
     StepperIndicator indicator;
     FloatingActionButton fab;
@@ -104,30 +104,20 @@ public class PostTask extends BaseActivity {
             }
         } else {
             PostTaskExtra frag = (PostTaskExtra) fragment;
-            reward = "" + frag.getReward();
+            reward = frag.getReward();
             deadline = frag.getDate();
             if (reward.equals("")) {
                 Toast.makeText(this, "Please Enter Reward Value", Toast.LENGTH_SHORT).show();
             } else
-                verifyNCall();
+                setListener(this);
+            super.getLocation();
         }
     }
 
     boolean prevCallResolved = true;
 
-    private void verifyNCall() {
-        if (!prevCallResolved) return;
-        getToken(this::postmytask);
-    }
-
     public void postmytask(String token) {
         dlg.show();
-        ArrayList<String> strings = new ArrayList<>();
-        strings.add("tech");
-        strings.add("null");
-        ArrayList<Double> doubles = new ArrayList<>(2);
-        doubles.add(25.0);
-        doubles.add(25.0);
         Date date = new Date();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -141,7 +131,8 @@ public class PostTask extends BaseActivity {
                 Float.parseFloat(reward),
                 category,
                 deadline,
-                doubles,
+                lat,
+                lon,
                 tags,
                 mustHaves,
                 false);
@@ -169,5 +160,11 @@ public class PostTask extends BaseActivity {
             }
         });
         prevCallResolved = false;
+    }
+
+    @Override
+    public void onLocationFetched() {
+        if (!prevCallResolved) return;
+        getToken(this::postmytask);
     }
 }

@@ -18,6 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
 import com.example.mytasker.activities.HistoryQues;
+import com.example.mytasker.activities.LocationActivity;
 import com.example.mytasker.adapters.QuestionAdapter;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.retrofit.RetrofitParser;
@@ -78,14 +79,22 @@ public class QuestionFragment extends Fragment {
 
     private boolean prevCallResolved = true;
 
+    private Double lat, lon;
     private void verifyNCall() {
         if (!prevCallResolved) return;
         listView.animate().alpha(0.0f).setDuration(0).start();
         shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
         shimmerContainer.startShimmer();
-        getToken(this::callRetrofit);
+        LocationActivity activity = (LocationActivity) getActivity();
+        activity.setListener(() -> {
+            lat = activity.lat;
+            lon = activity.lon;
+            getToken(QuestionFragment.this::callRetrofit);
+
+        });
 
     }
+
 
     private void checkCache() {
         if (Cache.questions != null) {
@@ -104,7 +113,7 @@ public class QuestionFragment extends Fragment {
         Retrofit retrofit = getRetrofit(token);
 
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<RetrofitParser> call = jsonPlaceHolder.getQuestions(25, 25);
+        Call<RetrofitParser> call = jsonPlaceHolder.getQuestions(lat, lon);
 
         call.enqueue(new Callback<RetrofitParser>() {
             @Override

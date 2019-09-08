@@ -6,13 +6,6 @@ public class Rating {
     float r3;
     int task_rated;
 
-    Rating() {
-        r1 = 0;
-        r2 = 0;
-        r3 = 0;
-        task_rated = 0;
-    }
-
     public void setR1(float r1) {
         this.r1 = r1;
     }
@@ -27,5 +20,13 @@ public class Rating {
 
     public void setTask_rated(int task_rated) {
         this.task_rated = task_rated;
+    }
+
+
+    public Rating() {
+        r1 = 0;
+        r2 = 0;
+        r3 = 0;
+        task_rated = 0;
     }
 }

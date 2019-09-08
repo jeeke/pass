@@ -30,8 +30,8 @@ public class PostTaskExtra extends Fragment implements DatePickerDialog.OnDateSe
         return date;
     }
 
-    public float getReward() {
-        return Float.parseFloat(reward.getText().toString());
+    public String getReward() {
+        return reward.getText().toString();
     }
 
     public PostTaskExtra() {
