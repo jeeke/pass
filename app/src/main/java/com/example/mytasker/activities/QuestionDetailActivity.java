@@ -142,14 +142,8 @@ public class QuestionDetailActivity extends BaseActivity {
         mSwipeRefreshLayout.setOnRefreshListener(() -> mAdapter.refresh());
     }
 
-
     boolean prevCallResolved = true;
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,15 +200,18 @@ public class QuestionDetailActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         if (from)
             getMenuInflater().inflate(R.menu.delete_menu, menu);
-        return from;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_delete && from) {
+        int id = item.getItemId();
+        if (id == R.id.action_delete && from) {
             verifyNCall();
+        } else if (id == android.R.id.home) {
+            finish();
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private void closeKeyboard() {

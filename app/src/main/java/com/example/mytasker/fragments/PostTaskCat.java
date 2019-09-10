@@ -73,7 +73,12 @@ public class PostTaskCat extends Fragment {
             case R.id.task_cat:
                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme)
                         .setSingleChoiceItems(R.array.categ_names, which, (dialog, which) -> {
-                        }).setTitle("Select Category")
+                        }).setTitle("Select Category").setOnDismissListener((dialog) -> {
+                    ListView lw = ((AlertDialog) dialog).getListView();
+                    PostTaskCat.this.which = lw.getCheckedItemPosition();
+                    category = (String) lw.getAdapter().getItem(PostTaskCat.this.which);
+                    task_cat.setText(category);
+                })
                         .setPositiveButton("OK", (dialog, which) -> {
                             ListView lw = ((AlertDialog) dialog).getListView();
                             PostTaskCat.this.which = lw.getCheckedItemPosition();
@@ -84,7 +89,7 @@ public class PostTaskCat extends Fragment {
             case R.id.task_tag:
                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme).setTitle("ADD TAG").setView(input)
                         .setPositiveButton("ADD", (dialog, which) -> {
-                                taskTags.addChild(input.getText().toString());
+                            taskTags.addChild(input.getText().toString());
                         })
                         .show();
                 input.requestFocus();
@@ -94,7 +99,7 @@ public class PostTaskCat extends Fragment {
                 input.setPadding(pad, pad, pad, p);
                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme).setTitle("ADD MUST HAVES").setView(input)
                         .setPositiveButton("ADD", (dialog, which) -> {
-                                taskMustHaves.addChild(input.getText().toString());
+                            taskMustHaves.addChild(input.getText().toString());
                         })
                         .show();
                 input.requestFocus();

@@ -49,16 +49,25 @@ public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnCl
     //TODO implement no of answers
 
     public void setItem(Question current, boolean type, Drawable drawable, Drawable drawable2, int c) {
-//        bg.setBackground(drawable);
         question = current;
-        name.setText(current.getPosterName());
-        createdAt.setText(elapsedTime(current.getC_date()));
+        TextView elapsed = itemView.findViewById(R.id.elapsed_time);
+        View profile = itemView.findViewById(R.id.action_profile);
         ques.setText(current.getQues());
-        itemView.findViewById(R.id.action_profile).setOnClickListener(this);
-//        noAns.setText("");
-        Glide.with(image.getContext()).load(current.getPoster_image()).apply(RequestOptions.circleCropTransform()).into(image);
-        if (type) setStage(current.getStage(), drawable2, c);
-        else dotText.setVisibility(View.GONE);
+        if (type) {
+            profile.setVisibility(View.INVISIBLE);
+            setStage(current.getStage(), drawable2, c);
+            elapsed.setText(elapsedTime(current.getC_date()));
+        } else {
+            Glide.with(image.getContext())
+                    .load(current.getPoster_image())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(image);
+            createdAt.setText(elapsedTime(current.getC_date()));
+            profile.setOnClickListener(this);
+            elapsed.setVisibility(View.GONE);
+            name.setText(current.getPosterName());
+            dotText.setVisibility(View.GONE);
+        }
     }
 
     private void setStage(int stage, Drawable drawable, int c) {

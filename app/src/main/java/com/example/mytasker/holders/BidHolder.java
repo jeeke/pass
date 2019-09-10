@@ -20,7 +20,7 @@ public class BidHolder extends RecyclerView.ViewHolder implements View.OnClickLi
     private Listener mListener;
     private String tasker_id, tasker_name, tasker_avatar;
     //TODO confirm assign and resign button
-//    private static final int BUTTON_ASSIGN = R.id.assign;
+//    private static pass_splash int BUTTON_ASSIGN = R.id.assign;
 
     public BidHolder(@NonNull View itemView, Listener listener) {
         super(itemView);

@@ -56,14 +56,14 @@ public class FeedHolder extends RecyclerView.ViewHolder {
             public void liked(LikeButton likeButton) {
                 feed.setLikeCount(feed.getLikeCount() + 1);
                 numLikes.setText(formatCount(feed.getLikeCount()));
-                listener.onClick(null);
+                listener.onClick(likeButton);
             }
 
             @Override
             public void unLiked(LikeButton likeButton) {
                 feed.setLikeCount(feed.getLikeCount() - 1);
                 numLikes.setText(formatCount(feed.getLikeCount()));
-                listener.onClick(null);
+                listener.onClick(likeButton);
             }
         });
         itemView.findViewById(R.id.likeButton).setOnClickListener(v -> {

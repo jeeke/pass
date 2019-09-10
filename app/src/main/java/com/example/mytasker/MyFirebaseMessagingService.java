@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -29,8 +30,8 @@ import static com.example.mytasker.util.Contracts.dpToPx;
 public class MyFirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
-    public static final String CHANNEL_ID = "123";
-    public static final String MY_PREFS_NAME = "MyTasker";
+    public static final String CHANNEL_ID = "7312";
+    public static final String MY_PREFS_NAME = "PASS";
 
     @Override
     public void onNewToken(@NotNull String token) {
@@ -72,10 +73,9 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
                 .setStyle(inboxStyle)
                 .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
                 .setGroup(GROUP_KEY_NOTIFICATION)
-//                .setStyle(new NotificationCompat.BigTextStyle())
-//                .setColor(ContextCompat.getColor(this, R.color.orange))
+                .setStyle(new NotificationCompat.BigTextStyle())
+                .setColor(ContextCompat.getColor(this, R.color.orange))
                 .setAutoCancel(true);
-//                .setStyle(new NotificationCompat.BigTextStyle()
 //                        .bigText("Much longer text that cannot fit one line..."))
         //GROUPING will not work if auto cancel of
         notificationManager.notify("MY TASKER", id++, builder.build());

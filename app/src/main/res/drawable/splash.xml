@@ -3,7 +3,7 @@
     android:opacity="opaque">
     <item android:drawable="?colorPrimaryDark" />
     <item>
-        <animated-vector
+        <bitmap
             android:gravity="center"
             android:src="@drawable/pass_avd" />
     </item>

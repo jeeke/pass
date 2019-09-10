@@ -29,7 +29,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.example.mytasker.MyFirebaseMessagingService.MY_PREFS_NAME;
 
 public class Tools {
-//    public static void displayImageRound(final Context ctx, final ImageView img, @DrawableRes int drawable) {
+//    public static void displayImageRound(pass_splash Context ctx, pass_splash ImageView img, @DrawableRes int drawable) {
 //        try {
 //            Glide.with(ctx).asBitmap().load(drawable).apply(RequestOptions.centerCropTransform()).into(new BitmapImageViewTarget(img) {
 //                @Override
@@ -115,9 +115,6 @@ public class Tools {
         if (zeroElevation) {
             toolbar.setElevation(0f);
         }
-//        Drawable drawable = activity.getDrawable(R.drawable.ic_back);
-//        drawable.setTint(Color.parseColor("#80ffffff"));
-//        toolbar.setNavigationIcon(drawable);
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setTitle(title);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
