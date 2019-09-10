@@ -92,20 +92,6 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
             protected void onBindViewHolder(@NonNull QuestionHolder holder,
                                             int position,
                                             @NonNull Question model) {
-//                Drawable drawable;
-//                switch (position % 4) {
-//                    case 0:
-//                        drawable = getDrawable(R.drawable.bg_soft_orange);
-//                        break;
-//                    case 1:
-//                        drawable = getDrawable(R.drawable.bg_orange);
-//                        break;
-//                    case 2:
-//                        drawable = getDrawable(R.drawable.bg_green);
-//                        break;
-//                    default:
-//                        drawable = getDrawable(R.drawable.bg_blue);
-//                }
                 Drawable drawable2 = (getDrawable(R.drawable.notification_dot_indicator));
                 int c = getResources().getColor(Contracts.TASK_STAGE_COLORS[model.getStage()]);
                 holder.setItem(model, true, null, drawable2, c);

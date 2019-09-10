@@ -1,6 +1,7 @@
 package com.example.mytasker.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -211,11 +212,20 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
 //    TODO why we save tasks separately if we are saving in prev tasks
 
     @Override
-    public void onClick(View v, String tasker_id) {
-        new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
-                .setTitle("ASSIGN TASK")
-                .setMessage("Do you want to assign the task to this bid ?")
-                .setPositiveButton("YES, ASSIGN", (dialog, which) -> verifyNCall(tasker_id))
-                .show();
+    public void onClick(View v, String tasker_id, String tasker_name, String tasker_avatar) {
+        if (v.getId() == R.id.assign) {
+
+            new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+                    .setTitle("ASSIGN TASK")
+                    .setMessage("Do you want to assign the task to this bid ?")
+                    .setPositiveButton("YES, ASSIGN", (dialog, which) -> verifyNCall(tasker_id))
+                    .show();
+        } else {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("id", tasker_id);
+            intent.putExtra("name", tasker_name);
+            intent.putExtra("avatar", tasker_avatar);
+            startActivity(intent);
+        }
     }
 }

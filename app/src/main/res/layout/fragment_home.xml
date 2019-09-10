@@ -19,9 +19,9 @@
         <ImageView
             android:id="@+id/logo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/esselion" />
+            android:src="@drawable/ic_pass_small" />
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.constraintlayout.motion.widget.MotionLayout

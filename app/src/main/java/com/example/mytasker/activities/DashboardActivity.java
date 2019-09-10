@@ -23,12 +23,13 @@ import com.example.mytasker.fragments.QuestionFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ServerValue;
 
+import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
 import static com.example.mytasker.util.Tools.launchActivity;
 import static com.example.mytasker.util.Tools.setOnline;
 import static com.example.mytasker.util.Tools.setToken;
 
-public class DashboardActivity extends LocationActivity {
+public class DashboardActivity extends LocationActivity implements ProfileFragment.ActivityListener {
 
     ImageView bhome, bqna, bfeed, bprofile;
     ImageView prevbselection;
@@ -197,10 +198,30 @@ public class DashboardActivity extends LocationActivity {
                 loadFragment(fragments[1]);
                 return selected ? R.mipmap.qna_fill : R.mipmap.qna;
             case R.id.profile:
-                fragments[3] = fragments[3] == null ? new ProfileFragment(true) : fragments[3];
+                fragments[3] = fragments[3] == null ? new ProfileFragment() : fragments[3];
                 loadFragment(fragments[3]);
                 return selected ? R.mipmap.profile_fill : R.mipmap.profile;
         }
         return 0;
+    }
+
+    @Override
+    public boolean getMine() {
+        return true;
+    }
+
+    @Override
+    public String getUId() {
+        return getUser().getUid();
+    }
+
+    @Override
+    public String getUName() {
+        return getUser().getDisplayName();
+    }
+
+    @Override
+    public String getImageUrl() {
+        return getUser().getPhotoUrl().toString();
     }
 }

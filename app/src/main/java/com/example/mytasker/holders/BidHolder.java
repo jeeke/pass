@@ -18,7 +18,7 @@ public class BidHolder extends RecyclerView.ViewHolder implements View.OnClickLi
     private ImageView avatar;
     private TextView desc, name, c_date, contact, price;
     private Listener mListener;
-    private String tasker_id;
+    private String tasker_id, tasker_name, tasker_avatar;
     //TODO confirm assign and resign button
 //    private static final int BUTTON_ASSIGN = R.id.assign;
 
@@ -35,10 +35,13 @@ public class BidHolder extends RecyclerView.ViewHolder implements View.OnClickLi
 
     public void setItem(Bid bid) {
         itemView.findViewById(R.id.assign).setOnClickListener(this);
+        itemView.setOnClickListener(this);
+        tasker_name = bid.getName();
+        tasker_avatar = bid.getAvatar();
         name.setText(bid.getName());
         desc.setText(bid.getDes() + "");
         c_date.setText(elapsedTime(Long.parseLong(bid.getC_date())));
-        price.setText("$" + bid.getPrice());
+        price.setText("₹" + bid.getPrice());
 //        Toast.makeText(itemView.getContext(),  Toast.LENGTH_SHORT).show();
         this.tasker_id = bid.getId();
         if (bid.getAvatar() != null)
@@ -47,10 +50,10 @@ public class BidHolder extends RecyclerView.ViewHolder implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        mListener.onClick(v, tasker_id);
+        mListener.onClick(v, tasker_id, tasker_name, tasker_avatar);
     }
 
     public interface Listener {
-        void onClick(View v, String tasker_id);
+        void onClick(View v, String tasker_id, String tasker_name, String tasker_avatar);
     }
 }

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -24,7 +26,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.mytasker.R;
 import com.example.mytasker.holders.AnswerHolder;
 import com.example.mytasker.models.Answer;
+import com.example.mytasker.models.Message;
 import com.example.mytasker.models.Question;
+import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.util.Tools;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,7 +39,14 @@ import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
 import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
 import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+import static com.example.mytasker.util.Cache.getToken;
 import static com.example.mytasker.util.Cache.getUser;
+import static com.example.mytasker.util.Tools.getRetrofit;
 
 public class QuestionDetailActivity extends BaseActivity {
 
@@ -46,6 +57,8 @@ public class QuestionDetailActivity extends BaseActivity {
     EditText answer;
     FloatingActionButton fab;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    boolean from = false;
 
     private void callFireBase() {
         mSwipeRefreshLayout.setColorSchemeResources(
@@ -133,13 +146,20 @@ public class QuestionDetailActivity extends BaseActivity {
     boolean prevCallResolved = true;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_question_detail);
+
         current = (Question) getIntent().getSerializableExtra("ques");
-        boolean from = getIntent().getBooleanExtra("from", false);
+        from = getIntent().getBooleanExtra("from", false);
         if (from) ((EditText) findViewById(R.id.editText)).setHint("Type Some Comment Here");
         if (current == null) finish();
-        setContentView(R.layout.activity_question_detail);
         TextView name = findViewById(R.id.person_name);
         TextView ques = findViewById(R.id.question);
         ImageView image = findViewById(R.id.person);
@@ -182,6 +202,20 @@ public class QuestionDetailActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (from)
+            getMenuInflater().inflate(R.menu.delete_menu, menu);
+        return from;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_delete && from) {
+            verifyNCall();
+        }
+        return true;
+    }
 
     private void closeKeyboard() {
         View view = this.getCurrentFocus();
@@ -189,5 +223,41 @@ public class QuestionDetailActivity extends BaseActivity {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    private void verifyNCall() {
+        if (!prevCallResolved) return;
+        dlg = new ProgressDialog(this);
+        dlg.setTitle("Deleting Question...");
+        dlg.show();
+        getToken(QuestionDetailActivity.this::callRetrofit);
+    }
+
+    private void callRetrofit(String token) {
+        Retrofit retrofit = getRetrofit(token);
+        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
+        Call<Message> call = jsonPlaceHolder.deleteQues(current.getId(), current.getC_date());
+        call.enqueue(new Callback<Message>() {
+            @Override
+            public void onResponse(Call<Message> call, Response<Message> response) {
+                prevCallResolved = true;
+                dlg.dismiss();
+                if (!response.isSuccessful()) {
+                    Log.e("Code: ", response.toString());
+                    Toast.makeText(QuestionDetailActivity.this, "Couldn't delete Question", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(QuestionDetailActivity.this, "Deleted Question Successfully", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Message> call, Throwable t) {
+                prevCallResolved = true;
+                dlg.dismiss();
+                Log.e("error ", t.getMessage());
+            }
+        });
+        prevCallResolved = false;
     }
 }

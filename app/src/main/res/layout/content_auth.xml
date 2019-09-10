@@ -84,6 +84,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/esselion" />
+        app:srcCompat="@drawable/ic_pass_small" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

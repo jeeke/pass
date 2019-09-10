@@ -1,6 +1,7 @@
 package com.example.mytasker.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -37,8 +38,6 @@ import com.example.mytasker.models.Rating;
 import com.example.mytasker.util.ChipAdapter;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,47 +65,70 @@ public class ProfileFragment extends Fragment {
     private View divider;
     private Toolbar toolbar;
 
-
-    private boolean mine;
-    private FirebaseUser mUser;
+    private ActivityListener mListener;
     private DatabaseReference mDatabase;
-
-    public ProfileFragment(boolean mine) {
-        this.mine = mine;
-    }
 
     private TextView aboutText;
 
-    private void forMe(View v) {
-        toolbar.setVisibility(View.VISIBLE);
-        toolbar.setTitle("PROFILE");
-        TextView name = v.findViewById(R.id.poster_name);
-        name.setText(mUser.getDisplayName().toUpperCase());
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        setHasOptionsMenu(true);
-        imageView.setOnClickListener(v1 -> {
-            EditText input = new EditText(getContext());
-            input.setInputType(InputType.TYPE_CLASS_TEXT);
-            int pad = dpToPx(24);
-            int p = dpToPx(16);
-            input.setPadding(pad, pad, pad, p);
-            new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme).setTitle("ADD TAG").setView(input)
-                    .setPositiveButton("ADD", (dialog, which) -> {
-                        addSkill(input.getText().toString());
-                    })
-                    .show();
-            input.requestFocus();
-        });
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mListener = (ActivityListener) getActivity();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
-    private ImageView imageView, sugga;
+    private void forMe(View v, boolean mine) {
 
-    public ProfileFragment() {
+        TextView name = v.findViewById(R.id.poster_name);
+        name.setText(mListener.getUName().toUpperCase());
+        View editAvatar = v.findViewById(R.id.avatar_edit);
+        View editAbout = v.findViewById(R.id.edit_about);
+        if (mine) {
+            toolbar.setVisibility(View.VISIBLE);
+            toolbar.setTitle("PROFILE");
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            setHasOptionsMenu(true);
+            imageView.setOnClickListener(v1 -> {
+                EditText input = new EditText(getContext());
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                int pad = dpToPx(24);
+                int p = dpToPx(16);
+                input.setPadding(pad, pad, pad, p);
+                new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme).setTitle("ADD TAG").setView(input)
+                        .setPositiveButton("ADD", (dialog, which) -> {
+                            addSkill(input.getText().toString());
+                        })
+                        .show();
+                input.requestFocus();
+            });
+            editAvatar.setOnClickListener(v13 -> launchActivity(getActivity(), AvatarChooser.class));
+            editAbout.setOnClickListener(v12 -> {
+                EditText input = new EditText(getContext());
+//            input.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
+                input.setGravity(Gravity.START);
+                input.setHeight(dpToPx(200));
+                int pad = dpToPx(24);
+                int p = dpToPx(16);
+                input.setPadding(pad, pad, pad, p);
+                new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme).setTitle("EDIT ABOUT").setView(input)
+                        .setPositiveButton("SAVE", (dialog, which) -> {
+                            saveAbout(input.getText().toString());
+                        })
+                        .show();
+                input.requestFocus();
+            });
+        } else {
+            editAvatar.setVisibility(View.GONE);
+            editAbout.setVisibility(View.GONE);
+            imageView.setVisibility(View.GONE);
+            toolbar.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -119,10 +141,11 @@ public class ProfileFragment extends Fragment {
             intent.putExtra("from", true);
             startActivity(intent);
         });
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
+
         mDatabase = getDatabase();
         ImageView profileImage = v.findViewById(R.id.profile_image);
-        Glide.with(v.getContext()).load(mUser.getPhotoUrl().toString()).apply(RequestOptions.circleCropTransform()).into(profileImage);
+        Glide.with(v.getContext()).load(mListener.getImageUrl())
+                .apply(RequestOptions.circleCropTransform()).into(profileImage);
         taskerrating = v.findViewById(R.id.taskerrating);
         posterrating = v.findViewById(R.id.posterating);
         taskdone = v.findViewById(R.id.taskdone);
@@ -144,38 +167,49 @@ public class ProfileFragment extends Fragment {
         divider = v.findViewById(R.id.divider11);
         toolbar = v.findViewById(R.id.toolbar);
         aboutText = v.findViewById(R.id.about);
-        v.findViewById(R.id.avatar_edit).setOnClickListener(v13 -> launchActivity(getActivity(), AvatarChooser.class));
-        v.findViewById(R.id.edit_about).setOnClickListener(v12 -> {
-            EditText input = new EditText(getContext());
-//            input.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
-            input.setGravity(Gravity.START);
-            input.setHeight(dpToPx(200));
-            int pad = dpToPx(24);
-            int p = dpToPx(16);
-            input.setPadding(pad, pad, pad, p);
-            new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme).setTitle("EDIT ABOUT").setView(input)
-                    .setPositiveButton("SAVE", (dialog, which) -> {
-                        saveAbout(input.getText().toString());
-                    })
-                    .show();
-            input.requestFocus();
-        });
-        if (mine) forMe(v);
-        myapi();
+        forMe(v, mListener.getMine());
         adapter = new ChipAdapter(this::removeSkill, chipGroup, new ArrayList<>());
+        myapi();
         return v;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    private ImageView imageView, sugga;
+
+    public ProfileFragment() {
     }
 
     private void saveAbout(String about) {
         dlg.setTitle("Saving...");
         dlg.show();
         mDatabase
-                .child("/Profiles/" + mUser.getUid() + "/about").setValue(about)
+                .child("/Profiles/" + mListener.getUId() + "/about").setValue(about)
                 .addOnCompleteListener(task -> {
                     dlg.dismiss();
                     if (!task.isSuccessful()) {
                         Toast.makeText(getContext(), "Could not be updated", Toast.LENGTH_SHORT).show();
                     } else aboutText.setText(about);
+                });
+    }
+
+    private void addSkill(String skill) {
+        if (!adapter.isSafe(skill)) {
+            Toast.makeText(getContext(), "Skill Already Exist or Empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        dlg.setTitle("Adding Skill...");
+        dlg.show();
+        mDatabase
+                .child("/Profiles/" + mListener.getUId() + "/Skills/" + skill).setValue(true)
+                .addOnCompleteListener(task -> {
+                    dlg.dismiss();
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(getContext(), "Skills could not be updated", Toast.LENGTH_SHORT).show();
+                    } else adapter.addChild(skill);
                 });
     }
 
@@ -201,28 +235,11 @@ public class ProfileFragment extends Fragment {
         inflater.inflate(R.menu.profile_menu, menu);
     }
 
-    private void addSkill(String skill) {
-        if (!adapter.isSafe(skill)) {
-            Toast.makeText(getContext(), "Skill Already Exist or Empty", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        dlg.setTitle("Adding Skill...");
-        dlg.show();
-        mDatabase
-                .child("/Profiles/" + mUser.getUid() + "/Skills/" + skill).setValue(true)
-                .addOnCompleteListener(task -> {
-                    dlg.dismiss();
-                    if (!task.isSuccessful()) {
-                        Toast.makeText(getContext(), "Skills could not be updated", Toast.LENGTH_SHORT).show();
-                    } else adapter.addChild(skill);
-                });
-    }
-
     private void removeSkill(String skill) {
         dlg.setTitle("Removing Skill...");
         dlg.show();
         mDatabase
-                .child("/Profiles/" + mUser.getUid() + "/Skills/" + skill).removeValue()
+                .child("/Profiles/" + mListener.getUId() + "/Skills/" + skill).removeValue()
                 .addOnCompleteListener(task -> {
                     dlg.dismiss();
                     if (!task.isSuccessful()) {
@@ -235,13 +252,13 @@ public class ProfileFragment extends Fragment {
     private void myapi() {
         dlg.setTitle("Getting Profile Info..");
         dlg.show();
-        DatabaseReference r = mDatabase.child("Profiles").child(mUser.getUid());
+        DatabaseReference r = mDatabase.child("Profiles").child(mListener.getUId());
         r.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 r.removeEventListener(this);
                 dlg.dismiss();
-                if (mine) imageView.setVisibility(View.VISIBLE);
+//                if (mine) imageView.setVisibility(View.VISIBLE);
                 Profile profile = snapshot.getValue(Profile.class);
 //                Log.e("\nP\nr\no\nf\ni\nl\ne\n",snapshot.toString());
                 if (profile != null) {
@@ -269,8 +286,18 @@ public class ProfileFragment extends Fragment {
 
     private void settupdetail(Profile p) {
         taskdone.setText(p.getT_done() + "");
-        bucksearned.setText("$" + p.getBucks());
+        bucksearned.setText("₹" + p.getBucks());
         taskposted.setText(p.getT_posted() + "");
+    }
+
+    public interface ActivityListener {
+        boolean getMine();
+
+        String getUId();
+
+        String getUName();
+
+        String getImageUrl();
     }
 
     private void setupskills(ArrayList<String> skills) {

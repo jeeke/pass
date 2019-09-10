@@ -92,7 +92,7 @@ public class QuestionFragment extends Fragment {
             getToken(QuestionFragment.this::callRetrofit);
 
         });
-
+        activity.getLocation();
     }
 
 

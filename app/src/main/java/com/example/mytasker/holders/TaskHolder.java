@@ -41,7 +41,7 @@ public class TaskHolder extends RecyclerView.ViewHolder implements View.OnClickL
         bg.setBackground(drawable);
         task = current;
         name.setText(current.getTitle());
-        price.setText("$" + current.getCost());
+        price.setText("₹" + current.getCost());
         if (type) setStage(current.getStage(), drawable2, c);
         else dotText.setVisibility(View.GONE);
     }

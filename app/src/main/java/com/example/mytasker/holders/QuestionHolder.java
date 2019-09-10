@@ -54,6 +54,7 @@ public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnCl
         name.setText(current.getPosterName());
         createdAt.setText(elapsedTime(current.getC_date()));
         ques.setText(current.getQues());
+        itemView.findViewById(R.id.action_profile).setOnClickListener(this);
 //        noAns.setText("");
         Glide.with(image.getContext()).load(current.getPoster_image()).apply(RequestOptions.circleCropTransform()).into(image);
         if (type) setStage(current.getStage(), drawable2, c);

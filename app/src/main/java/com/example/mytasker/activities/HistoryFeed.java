@@ -7,36 +7,21 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
 import com.example.mytasker.util.FeedActNFrag;
-import com.example.mytasker.util.Tools;
-import com.google.firebase.database.Query;
-
-import static com.example.mytasker.util.Cache.getDatabase;
-import static com.example.mytasker.util.Cache.getUser;
 
 public class HistoryFeed extends BaseActivity {
     private FeedActNFrag feedActNFrag;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     boolean from = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         from = getIntent().getBooleanExtra("from", false);
-        String title;
-        Query mQuery;
         feedActNFrag = new FeedActNFrag();
         initViews();
-        if (from) {
-            title = "Portfolio";
-            mQuery = getDatabase().child("Portfolios").child(getUser().getUid());
-            feedActNFrag.callFireBase(this, findViewById(R.id.shimmer_container), mQuery, mSwipeRefreshLayout, mRecyclerView, 2);
-        } else {
-            title = "My Posts";
-            mQuery = getDatabase().child("PrevFeeds").child(getUser().getUid());
-            feedActNFrag.callFireBase(this, findViewById(R.id.shimmer_container), mQuery, mSwipeRefreshLayout, mRecyclerView, 1);
-        }
-        Tools.initMinToolbar(this, title, false);
+        feedActNFrag.callFireBase(this, findViewById(R.id.shimmer_container), from, mSwipeRefreshLayout, mRecyclerView, 2, null);
     }
 
     private void initViews() {

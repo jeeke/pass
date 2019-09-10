@@ -3,8 +3,8 @@
     android:opacity="opaque">
     <item android:drawable="?colorPrimaryDark" />
     <item>
-        <bitmap
+        <animated-vector
             android:gravity="center"
-            android:src="@drawable/ic_launcher_round" />
+            android:src="@drawable/pass_avd" />
     </item>
 </layer-list>

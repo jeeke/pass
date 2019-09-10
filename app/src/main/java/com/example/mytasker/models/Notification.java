@@ -104,7 +104,7 @@ public class Notification {
                 Intent intent2 = new Intent(context, MessagesActivity.class);
 //                Message message = new Gson().fromJson(Config.map.get("ques"), Question.class);
                 intent2.putExtra("id", senderId);
-                intent2.putExtra("name", title);
+                intent2.putExtra("name", fetchTitle().toString());
                 intent2.putExtra("avatar", image);
                 stackBuilder.addNextIntent(intent2);
                 break;

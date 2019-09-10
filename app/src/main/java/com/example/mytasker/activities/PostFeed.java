@@ -143,7 +143,7 @@ public class PostFeed extends BaseActivity {
         );
         DatabaseReference push = getDatabase();
         String key = push.child("Feeds").push().getKey();
-
+        feed.setId(key);
         Map updateMap = new HashMap();
         updateMap.put("Feeds/" + key, feed);
         if (onPortfolio)

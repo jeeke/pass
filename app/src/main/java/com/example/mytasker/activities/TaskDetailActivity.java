@@ -3,6 +3,7 @@ package com.example.mytasker.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,14 +26,14 @@ import java.util.Map;
 import static com.example.mytasker.util.Tools.launchActivity;
 
 public class TaskDetailActivity extends BaseActivity {
-    ChipAdapter tagAdapter,mustAdapter;
+    ChipAdapter tagAdapter, mustAdapter;
     public int FROM = 0;
 
     Task current;
 
     private void initButton() {
         Button action = findViewById(R.id.bid);
-        if(FROM==0) {
+        if (FROM == 0) {
             action.setOnClickListener(v -> {
                 Intent intent = new Intent(this, BidConfirm.class);
                 intent.putExtra("task", current);
@@ -42,11 +43,13 @@ public class TaskDetailActivity extends BaseActivity {
             return;
         }
         int stage = current.getStage();
-        FROM = ((FROM -1) * 3) + stage + 1;
-        String title = Contracts.TASK_DETAIL_BUTTONS[FROM-1];
-        switch (FROM ){
+        FROM = ((FROM - 1) * 3) + stage + 1;
+        String title = Contracts.TASK_DETAIL_BUTTONS[FROM - 1];
+        switch (FROM) {
 //          Poster stages
             case 1:
+                findViewById(R.id.query).setVisibility(View.GONE);
+                findViewById(R.id.mustDivider).setVisibility(View.GONE);
                 action.setOnClickListener(v -> {
                     Intent intent = new Intent(this, BidsListActivity.class);
                     intent.putExtra("task", current);
@@ -54,12 +57,16 @@ public class TaskDetailActivity extends BaseActivity {
                 });
                 break;
             case 2:
+                findViewById(R.id.mustDivider).setVisibility(View.GONE);
+                findViewById(R.id.query).setVisibility(View.GONE);
                 title += current.getPoster_name().split(" (?!.* )")[0];
-                action.setOnClickListener(v -> launchActivity(this,ProfileActivity.class));
+                action.setOnClickListener(v -> launchActivity(this, ProfileActivity.class));
                 break;
             case 3:
+                findViewById(R.id.mustDivider).setVisibility(View.GONE);
+                findViewById(R.id.query).setVisibility(View.GONE);
                 title += current.getPoster_name().split(" (?!.* )")[0];
-                action.setOnClickListener(v -> launchActivity(this,ProfileActivity.class));
+                action.setOnClickListener(v -> launchActivity(this, ProfileActivity.class));
                 break;
 //          Tasker Stages
             case 4:
@@ -98,20 +105,30 @@ public class TaskDetailActivity extends BaseActivity {
         if (current == null) finish();
         setContentView(R.layout.activity_task_detail);
         initButton();
-        Tools.initMinToolbar(this,"Task Details",false);
+        Tools.initMinToolbar(this, "Task Details", false);
         findViewById(R.id.chat).setOnClickListener(v -> {
-            Toast.makeText(this, current.getPoster_id(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, current.getPoster_id(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MessagesActivity.class);
-            intent.putExtra("id",current.getPoster_id());
-            intent.putExtra("name",current.getPoster_name());
-            intent.putExtra("avatar",current.getPoster_avatar());
+            intent.putExtra("id", current.getPoster_id());
+            intent.putExtra("name", current.getPoster_name());
+            intent.putExtra("avatar", current.getPoster_avatar());
+            startActivity(intent);
+            finish();
+        });
+        TextView name = findViewById(R.id.poster_name);
+        name.setText(Html.fromHtml("Task By:  <b>" + current.getPoster_name().toUpperCase() + "</b>"));
+        name.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("id", current.getPoster_id());
+            intent.putExtra("name", current.getPoster_name());
+            intent.putExtra("avatar", current.getPoster_avatar());
             startActivity(intent);
             finish();
         });
 
-        ((TextView)findViewById(R.id.taskTitle)).setText(current.getTitle());
-        ((TextView)findViewById(R.id.taskDesc)).setText(current.getJob_des());
-        ((TextView)findViewById(R.id.rewardValue)).setText(current.getCost()+"");
+        ((TextView) findViewById(R.id.taskTitle)).setText(current.getTitle());
+        ((TextView) findViewById(R.id.taskDesc)).setText(current.getJob_des());
+        ((TextView) findViewById(R.id.rewardValue)).setText(current.getCost() + "");
         ((TextView) findViewById(R.id.taskDis)).setText(current.getDis() + "");
         if (current.getDeadline() != null)
             ((TextView) findViewById(R.id.deadline)).setText(current.getDeadline());
@@ -128,6 +145,7 @@ public class TaskDetailActivity extends BaseActivity {
     }
 
     boolean prevCallResolved = true;
+
     private void markDone() {
         if (!prevCallResolved) return;
         ProgressDialog dlg = new ProgressDialog(this);

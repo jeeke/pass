@@ -56,14 +56,14 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskHolder> {
             case 0:
                 drawable = context.getDrawable(R.drawable.bg_soft_orange);
                 break;
-            case 1:
-                drawable = context.getDrawable(R.drawable.bg_orange);
-                break;
             case 2:
                 drawable = context.getDrawable(R.drawable.bg_green);
                 break;
-            default:
+            case 1:
                 drawable = context.getDrawable(R.drawable.bg_blue);
+                break;
+            default:
+                drawable = context.getDrawable(R.drawable.bg_orange);
         }
         Drawable drawable2 = (context.getDrawable(R.drawable.notification_dot_indicator));
         int c = context.getResources().getColor(Contracts.TASK_STAGE_COLORS[list.get(position).getStage()]);

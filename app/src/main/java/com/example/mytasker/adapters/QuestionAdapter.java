@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mytasker.R;
+import com.example.mytasker.activities.ProfileActivity;
 import com.example.mytasker.activities.QuestionDetailActivity;
 import com.example.mytasker.holders.QuestionHolder;
 import com.example.mytasker.models.Question;
@@ -55,9 +56,17 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionHolder> implem
 
     @Override
     public void onClick(View view, Question question) {
-        Intent intent = new Intent(mActivity, QuestionDetailActivity.class);
-        intent.putExtra("ques", question);
-        mActivity.startActivity(intent);
+        if (view.getId() == R.id.action_profile) {
+            Intent intent = new Intent(mActivity, ProfileActivity.class);
+            intent.putExtra("id", question.getPoster_id());
+            intent.putExtra("name", question.getPosterName());
+            intent.putExtra("avatar", question.getPoster_image());
+            mActivity.startActivity(intent);
+        } else {
+            Intent intent = new Intent(mActivity, QuestionDetailActivity.class);
+            intent.putExtra("ques", question);
+            mActivity.startActivity(intent);
+        }
     }
 }
 

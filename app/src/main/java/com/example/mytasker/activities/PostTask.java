@@ -131,8 +131,10 @@ public class PostTask extends LocationActivity implements LocationActivity.Liste
                 Float.parseFloat(reward),
                 category,
                 deadline,
-                lat,
-                lon,
+//                lat,
+//                lon,
+                25.0,
+                25.0,
                 tags,
                 mustHaves,
                 false);

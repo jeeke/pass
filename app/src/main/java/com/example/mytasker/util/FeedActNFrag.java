@@ -1,10 +1,12 @@
 package com.example.mytasker.util;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mytasker.R;
+import com.example.mytasker.activities.ProfileActivity;
 import com.example.mytasker.holders.FeedHolder;
 import com.example.mytasker.models.Feed;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -25,8 +28,12 @@ import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
 import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
 import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.example.mytasker.util.Cache.getDatabase;
 import static com.example.mytasker.util.Cache.getUser;
+import static com.example.mytasker.util.Tools.showToast;
 
 public class FeedActNFrag {
 
@@ -37,7 +44,7 @@ public class FeedActNFrag {
 
     private String uid = getUser().getUid();
 
-    public void callFireBase(FragmentActivity context, ShimmerFrameLayout shimmerContainer, Query mQuery, SwipeRefreshLayout mSwipeRefreshLayout, RecyclerView mRecyclerView, int type) {
+    public void callFireBase(FragmentActivity context, ShimmerFrameLayout shimmerContainer, boolean from, SwipeRefreshLayout mSwipeRefreshLayout, RecyclerView mRecyclerView, int type, Query mQuery) {
         mSwipeRefreshLayout.setColorSchemeResources(
 
                 android.R.color.holo_blue_bright,
@@ -46,7 +53,14 @@ public class FeedActNFrag {
 
         //Initialize RecyclerView
         mRecyclerView.setHasFixedSize(true);
-
+        if (mQuery == null)
+            if (from) {
+                Tools.initMinToolbar((AppCompatActivity) context, "Portfolio", false);
+                mQuery = getDatabase().child("Portfolios").child(getUser().getUid());
+            } else {
+                Tools.initMinToolbar((AppCompatActivity) context, "My Posts", false);
+                mQuery = getDatabase().child("PrevFeeds").child(getUser().getUid());
+            }
 
         LinearLayoutManager mManager = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(mManager);
@@ -77,13 +91,33 @@ public class FeedActNFrag {
             protected void onBindViewHolder(@NonNull FeedHolder holder,
                                             int position,
                                             @NonNull Feed model) {
-                final DatabaseReference postRef = getRef(position);
-                holder.setItem(model, likeView -> {
-                    DatabaseReference globalFeedRef = getDatabase().child("Feeds").child(postRef.getKey());
-                    DatabaseReference userFeedRef = getDatabase().child("PrevFeeds").child(model.getPoster_id()).child(postRef.getKey());
-                    // Run two transactions
-                    onlikeClicked(globalFeedRef);
-                    onlikeClicked(userFeedRef);
+                holder.setItem(model, v -> {
+                    if (v.getId() == R.id.action_profile) {
+                        Intent intent = new Intent(context, ProfileActivity.class);
+                        intent.putExtra("id", model.getPoster_id());
+                        intent.putExtra("name", model.getPoster_name());
+                        intent.putExtra("avatar", model.getPoster_avatar());
+                        context.startActivity(intent);
+                    } else if (v.getId() == R.id.action_delete) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("Portfolios/" + getUser().getUid() + '/' + model.getId(), null);
+                        if (!from) {
+                            map.put("Feeds/" + model.getId(), null);
+                            map.put("PrevFeeds/" + getUser().getUid() + '/' + model.getId(), null);
+                        }
+                        getDatabase().updateChildren(map).addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                showToast(context, "Deleted Successfully", false);
+                            } else showToast(context, "Could not be deleted", false);
+                        });
+                    } else {
+                        final DatabaseReference postRef = getRef(position);
+                        DatabaseReference globalFeedRef = getDatabase().child("Feeds").child(postRef.getKey());
+                        DatabaseReference userFeedRef = getDatabase().child("PrevFeeds").child(model.getPoster_id()).child(postRef.getKey());
+                        // Run two transactions
+                        onlikeClicked(globalFeedRef);
+                        onlikeClicked(userFeedRef);
+                    }
                 }, uid);
             }
 
@@ -172,5 +206,4 @@ public class FeedActNFrag {
 
 
     }
-
 }

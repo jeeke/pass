@@ -1,5 +1,6 @@
 package com.example.mytasker.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.mytasker.R;
 import com.example.mytasker.activities.BaseActivity;
+import com.example.mytasker.activities.ProfileActivity;
 import com.example.mytasker.chat.data.model.Message;
 import com.example.mytasker.chat.data.model.MessageHelper;
 import com.example.mytasker.util.Tools;
@@ -57,6 +59,8 @@ public abstract class DemoMessagesActivity extends BaseActivity
         return true;
     }
 
+    boolean emptyData = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,11 +83,6 @@ public abstract class DemoMessagesActivity extends BaseActivity
     public void onLoadMore(int page, int totalItemsCount) {
         loadMessages();
     }
-    @Override
-    public void onSelectionChanged(int count) {
-        this.selectionCount = count;
-        menu.findItem(R.id.action_copy).setVisible(count > 0);
-    }
 
 
     protected DatabaseReference mRootRef;
@@ -99,13 +98,10 @@ public abstract class DemoMessagesActivity extends BaseActivity
     protected String mChatUName;
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        if (item.getItemId() == R.id.action_copy) {
-            messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
-            Tools.showToast(this, R.string.copied_message, true);
-        }
-        return true;
+    public void onSelectionChanged(int count) {
+        this.selectionCount = count;
+        menu.findItem(R.id.action_profile).setVisible(true);
+        menu.findItem(R.id.action_copy).setVisible(count > 0);
     }
 
     private void initFireBase() {
@@ -114,16 +110,35 @@ public abstract class DemoMessagesActivity extends BaseActivity
         mChatUId = getIntent().getStringExtra("id");
         mChatUName = getIntent().getStringExtra("name");
         mChatAvatar = getIntent().getStringExtra("avatar");
-//           TODO online indicator to true
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_copy) {
+            messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
+            Tools.showToast(this, R.string.copied_message, true);
+        } else {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("id", mChatUId);
+            intent.putExtra("name", mChatUName);
+            intent.putExtra("avatar", mChatAvatar);
+            startActivity(intent);
+//            finish();
+        }
+        return true;
     }
 
     private void loadMessages() {
         messageQuery = mRootRef.child("Messages").child(mCurrentUser.getUid()).
                 child(mChatUId).orderByKey().limitToLast(PAGE_COUNT);
-        if (!firstLoad) messageQuery = messageQuery.endAt(topKey);
-        messageQuery.addValueEventListener(new ValueEventListener() {
+        if ((!firstLoad) && (!emptyData)) {
+            messageQuery = messageQuery.endAt(topKey);
+        }
+        messageQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) emptyData = true;
                 ArrayList<Message> messages = new ArrayList<>();
                 boolean firstElement = true;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -138,6 +153,8 @@ public abstract class DemoMessagesActivity extends BaseActivity
                 messagesAdapter.addToEnd(messages, false);
                 messageQuery.removeEventListener(this);
             }
+
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 

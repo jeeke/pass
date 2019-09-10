@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.mytasker.R;
@@ -28,7 +28,7 @@ public class PostQuestion extends LocationActivity implements LocationActivity.L
 
     Button fab;
     ProgressDialog dlg;
-    TextView ques;
+    EditText ques;
     private String q;
 
     @Override
@@ -39,6 +39,7 @@ public class PostQuestion extends LocationActivity implements LocationActivity.L
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
+            q = ques.getText().toString();
             if (q.equals("")) {
                 Toast.makeText(this, "Please enter your question", Toast.LENGTH_SHORT).show();
                 return;
@@ -47,13 +48,13 @@ public class PostQuestion extends LocationActivity implements LocationActivity.L
             getLocation();
         });
         ques = findViewById(R.id.question);
-        dlg = new ProgressDialog(this);
-        dlg.setTitle("Posting your question, Please Wait....");
     }
 
     private boolean prevCallResolved = true;
 
     public void postQuestion(String token) {
+        dlg = new ProgressDialog(this);
+        dlg.setTitle("Posting your question, Please Wait....");
         dlg.show();
         FirebaseUser user = getUser();
         Date date = new Date();

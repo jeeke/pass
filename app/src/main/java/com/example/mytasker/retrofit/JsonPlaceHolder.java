@@ -15,8 +15,18 @@ import retrofit2.http.Query;
 
 public interface JsonPlaceHolder {
 
+
     @POST("createTask")
     Call<Task> createTask(@Body Task task);
+
+    @POST("deleteTask")
+    Call<Message> deleteTask(@Query("tid") String tid,
+                             @Query("c_date") long c_date,
+                             @Query("category") String category);
+
+    @POST("deleteQues")
+    Call<Message> deleteQues(@Query("qid") String qid,
+                             @Query("c_date") long c_date);
 
     @POST("createQues")
     Call<Question> createQuestion(@Body Question question);

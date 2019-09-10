@@ -38,7 +38,7 @@
             app:layout_constraintTop_toBottomOf="@+id/divider18" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout12"
+            android:id="@+id/action_profile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +59,7 @@
             <!--app:layout_constraintTop_toTopOf="parent">-->
 
             <ImageView
-                android:id="@+id/delete"
+                android:id="@+id/action_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
@@ -200,7 +200,7 @@
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout12" />
+            app:layout_constraintTop_toBottomOf="@+id/action_profile" />
 
         <View
             android:id="@+id/divider19"

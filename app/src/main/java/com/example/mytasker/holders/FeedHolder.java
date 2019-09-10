@@ -34,7 +34,7 @@ public class FeedHolder extends RecyclerView.ViewHolder {
     public FeedHolder(@NonNull View itemView, int type) {
         super(itemView);
         if (type > 0) itemView.findViewById(R.id.likeButton).setVisibility(View.GONE);
-        if (type != 2) itemView.findViewById(R.id.delete).setVisibility(View.GONE);
+        if (type != 2) itemView.findViewById(R.id.action_delete).setVisibility(View.GONE);
         title = itemView.findViewById(R.id.title);
         numLikes = itemView.findViewById(R.id.numLikes);
         likeView = itemView.findViewById(R.id.likeView);
@@ -44,24 +44,26 @@ public class FeedHolder extends RecyclerView.ViewHolder {
         image = itemView.findViewById(R.id.image);
     }
 
-    public void setItem(Feed feed, View.OnClickListener likeClickListener, String uid) {
+    public void setItem(Feed feed, View.OnClickListener listener, String uid) {
         numLikes.setText(formatCount(feed.getLikeCount()));
         name.setText(feed.getPoster_name());
         date.setText(elapsedTime(feed.getC_date()));
+        itemView.findViewById(R.id.action_profile).setOnClickListener(listener);
+        itemView.findViewById(R.id.action_delete).setOnClickListener(listener);
         likeView.setLiked(feed.likes.containsKey(uid));
         likeView.setOnLikeListener(new OnLikeListener() {
             @Override
             public void liked(LikeButton likeButton) {
                 feed.setLikeCount(feed.getLikeCount() + 1);
                 numLikes.setText(formatCount(feed.getLikeCount()));
-                likeClickListener.onClick(null);
+                listener.onClick(null);
             }
 
             @Override
             public void unLiked(LikeButton likeButton) {
                 feed.setLikeCount(feed.getLikeCount() - 1);
                 numLikes.setText(formatCount(feed.getLikeCount()));
-                likeClickListener.onClick(null);
+                listener.onClick(null);
             }
         });
         itemView.findViewById(R.id.likeButton).setOnClickListener(v -> {

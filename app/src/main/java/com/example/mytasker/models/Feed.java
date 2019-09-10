@@ -7,6 +7,9 @@ import java.util.Map;
 
 @IgnoreExtraProperties
 public class Feed {
+
+
+    private String id;
     private long c_date;
     private String poster_id;
     private String poster_name;
@@ -16,6 +19,13 @@ public class Feed {
     public Map<String, Boolean> likes = new HashMap<>();
     private String text;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
     public long getC_date() {
         return c_date;
     }
