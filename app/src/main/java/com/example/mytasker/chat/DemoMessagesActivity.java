@@ -70,6 +70,12 @@ public abstract class DemoMessagesActivity extends BaseActivity
         setOnline("true");
         initFireBase();
         imageLoader = (imageView, url, payload) -> Glide.with(DemoMessagesActivity.this).load(url).apply(RequestOptions.circleCropTransform()).into(imageView);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bar = findViewById(R.id.progress_bar);
         onLoadMore(0, 0);
     }
 
@@ -82,8 +88,10 @@ public abstract class DemoMessagesActivity extends BaseActivity
         }
     }
 
+
     @Override
     public void onLoadMore(int page, int totalItemsCount) {
+        bar.setVisibility(View.VISIBLE);
         loadMessages();
     }
 
@@ -117,19 +125,19 @@ public abstract class DemoMessagesActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.action_copy) {
             messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
             showSnackBar(this, getString(R.string.copied_message));
-        } else {
+            return true;
+        } else if (item.getItemId() == R.id.action_profile) {
             Intent intent = new Intent(this, ProfileActivity.class);
             intent.putExtra("id", mChatUId);
             intent.putExtra("name", mChatUName);
             intent.putExtra("avatar", mChatAvatar);
             startActivity(intent);
-//            finish();
+            return true;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadMessages() {

@@ -42,22 +42,23 @@ public class DialogsActivity extends DemoDialogsActivity {
         setContentView(R.layout.activity_dialogs);
         Tools.initMinToolbar(this, "CHATS");
         bar = findViewById(R.id.progress_bar);
-        bar.setVisibility(View.VISIBLE);
         dialogsList = findViewById(R.id.dialogsList);
-        initAdapter();
-
-
         //TODO Firebase rules
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bar.setVisibility(View.VISIBLE);
+        initAdapter();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String mCurrent_user_id = mAuth.getCurrentUser().getUid();
-
         mConvDatabase = FirebaseDatabase.getInstance().getReference().child("Chats").child(mCurrent_user_id);
         mConvDatabase.keepSynced(true);
         queryFireBase();
-
     }
 
-    private void queryFireBase(){
+    private void queryFireBase() {
         Query conversationQuery = mConvDatabase.orderByChild("lastActivity");
         conversationQuery.addChildEventListener(new ChildEventListener() {
             @Override
@@ -92,9 +93,9 @@ public class DialogsActivity extends DemoDialogsActivity {
     @Override
     public void onDialogClick(Dialog dialog) {
         Intent intent = new Intent(this, MessagesActivity.class);
-        intent.putExtra("id",dialog.getId());
-        intent.putExtra("name",dialog.getDialogName());
-        intent.putExtra("avatar",dialog.getDialogPhoto());
+        intent.putExtra("id", dialog.getId());
+        intent.putExtra("name", dialog.getDialogName());
+        intent.putExtra("avatar", dialog.getDialogPhoto());
         startActivity(intent);
     }
 

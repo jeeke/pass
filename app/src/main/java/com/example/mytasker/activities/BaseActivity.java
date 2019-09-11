@@ -61,6 +61,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         }
     }
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

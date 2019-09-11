@@ -2,7 +2,6 @@ package com.example.mytasker.chat;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,9 +33,6 @@ public class MessagesActivity extends DemoMessagesActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
         Tools.initMinToolbar(this, super.mChatUName);
-        bar = findViewById(R.id.progress_bar);
-        bar.setVisibility(View.VISIBLE);
-
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
         mRootRef.child("Messages").child(mCurrentUser.getUid()).
