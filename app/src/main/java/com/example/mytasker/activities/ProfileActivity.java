@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.mytasker.R;
 import com.example.mytasker.fragments.ProfileFragment;
-import com.example.mytasker.util.Tools;
 
 public class ProfileActivity extends BaseActivity implements ProfileFragment.ActivityListener {
 
@@ -18,7 +17,6 @@ public class ProfileActivity extends BaseActivity implements ProfileFragment.Act
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        Tools.initMinToolbar(this, "Profile");
         Intent intent = getIntent();
         uid = intent.getStringExtra("id");
         name = intent.getStringExtra("name");

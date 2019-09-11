@@ -147,7 +147,10 @@ public class QuestionDetailActivity extends BaseActivity {
         ImageView image = findViewById(R.id.person);
         name.setText(current.getPosterName());
         ques.setText(current.getQues());
-        Glide.with(this).load(current.getPoster_image()).apply(new RequestOptions().placeholder(R.drawable.person)).into(image);
+        Glide.with(this).load(current.getPoster_image())
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.person)
+                        .circleCrop()).into(image);
         Tools.initMinToolbar(this, "Answers");
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = findViewById(R.id.recyclerView);

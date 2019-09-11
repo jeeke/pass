@@ -7,6 +7,7 @@
     tools:context=".activities.FeedbackByTaskerActivity">
 
     <include
+        android:id="@+id/include6"
         layout="@layout/toolbar" />
 
     <TextView
@@ -18,7 +19,7 @@
         android:text="1. Was the task worth price?"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/include6" />
 
     <RatingBar
         android:id="@+id/ratingBar"
@@ -93,11 +94,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ratingBar2" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/submit"
         style="@style/ButtonStyle"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="64dp"
         android:layout_marginEnd="16dp"

@@ -28,6 +28,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.mytasker.R;
+import com.example.mytasker.Server;
 import com.example.mytasker.activities.AvatarChooser;
 import com.example.mytasker.activities.BaseActivity;
 import com.example.mytasker.activities.HistoryFeed;
@@ -35,8 +36,8 @@ import com.example.mytasker.activities.NotificationActivity;
 import com.example.mytasker.activities.SettingActivity;
 import com.example.mytasker.models.Profile;
 import com.example.mytasker.models.Rating;
+import com.example.mytasker.util.Cache;
 import com.example.mytasker.util.ChipAdapter;
-import com.example.mytasker.util.Server;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DataSnapshot;
@@ -77,6 +78,7 @@ public class ProfileFragment extends Fragment {
         mListener = (ActivityListener) getActivity();
     }
 
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -91,16 +93,45 @@ public class ProfileFragment extends Fragment {
         return activity.server;
     }
 
+    private ImageView profileImage;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    private ImageView imageView, sugga;
+
+    public ProfileFragment() {
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent;
+        if (item.getItemId() == R.id.setting) {
+            intent = new Intent(getContext(), SettingActivity.class);
+            getActivity().startActivityForResult(intent, CODE_SETTINGS_ACTIVITY);
+//            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+            return true;
+        } else {
+            intent = new Intent(getContext(), NotificationActivity.class);
+            getActivity().startActivityForResult(intent, CODE_NOTIFICATION_ACTIVITY);
+//            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+            return true;
+        }
+    }
+
     private void forMe(View v, boolean mine) {
 
         TextView name = v.findViewById(R.id.poster_name);
         name.setText(mListener.getUName().toUpperCase());
         View editAvatar = v.findViewById(R.id.avatar_edit);
         View editAbout = v.findViewById(R.id.edit_about);
+        toolbar.setTitle("PROFILE");
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
         if (mine) {
-            toolbar.setVisibility(View.VISIBLE);
-            toolbar.setTitle("PROFILE");
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             setHasOptionsMenu(true);
             imageView.setOnClickListener(v1 -> {
                 EditText input = new EditText(getContext());
@@ -140,45 +171,18 @@ public class ProfileFragment extends Fragment {
                 input.requestFocus();
             });
         } else {
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             editAvatar.setVisibility(View.GONE);
             editAbout.setVisibility(View.GONE);
             imageView.setVisibility(View.GONE);
-            toolbar.setVisibility(View.GONE);
         }
 
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    private ImageView imageView, sugga;
-
-    public ProfileFragment() {
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Intent intent;
-        if (item.getItemId() == R.id.setting) {
-            intent = new Intent(getContext(), SettingActivity.class);
-            getActivity().startActivityForResult(intent, CODE_SETTINGS_ACTIVITY);
-//            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-            return true;
-        } else {
-            intent = new Intent(getContext(), NotificationActivity.class);
-            getActivity().startActivityForResult(intent, CODE_NOTIFICATION_ACTIVITY);
-//            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-            return true;
-        }
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.profile_menu, menu);
+        if (mListener.getMine()) inflater.inflate(R.menu.profile_menu, menu);
     }
 
     @Override
@@ -192,10 +196,8 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
+        profileImage = v.findViewById(R.id.profile_image);
         mDatabase = getDatabase();
-        ImageView profileImage = v.findViewById(R.id.profile_image);
-        Glide.with(v.getContext()).load(mListener.getImageUrl())
-                .apply(RequestOptions.circleCropTransform()).into(profileImage);
         taskerrating = v.findViewById(R.id.taskerrating);
         posterrating = v.findViewById(R.id.posterating);
         taskdone = v.findViewById(R.id.taskdone);
@@ -222,12 +224,27 @@ public class ProfileFragment extends Fragment {
             if (server != null) server.removeSkill(title, mListener.getUId());
         }, chipGroup, new ArrayList<>());
         swipeRefreshLayout = v.findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setOnRefreshListener(this::myapi);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            myapi();
+        });
         myapi();
         return v;
     }
 
+    private void updateProfileImage() {
+        if (mListener.getMine()) {
+            Cache.mUser = null;
+            Cache.getUser().getPhotoUrl();
+            Glide.with(Objects.requireNonNull(getContext())).load(mListener.getImageUrl())
+                    .apply(RequestOptions.circleCropTransform()).into(profileImage);
+        } else {
+            Glide.with(Objects.requireNonNull(getContext())).load(mListener.getImageUrl())
+                    .apply(RequestOptions.circleCropTransform()).into(profileImage);
+        }
+    }
+
     private void myapi() {
+        updateProfileImage();
 //        swipeRefreshLayout.setRefreshing(false);
 //        progressBar.setVisibility(View.VISIBLE);
         DatabaseReference r = mDatabase.child("Profiles").child(mListener.getUId());

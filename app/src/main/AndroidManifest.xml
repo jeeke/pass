@@ -191,7 +191,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".util.Server" />
+        <service android:name=".Server" />
     </application>
 
 </manifest>

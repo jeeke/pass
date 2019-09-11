@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,6 +51,7 @@ public abstract class DemoMessagesActivity extends BaseActivity
     private static String topKey;
     boolean firstLoad = true;
     private Query messageQuery;
+    public ProgressBar bar;
 
 
     @Override
@@ -152,6 +155,7 @@ public abstract class DemoMessagesActivity extends BaseActivity
                 }
                 messagesAdapter.addToEnd(messages, false);
                 messageQuery.removeEventListener(this);
+                bar.setVisibility(View.GONE);
             }
 
 

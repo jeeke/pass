@@ -1,4 +1,4 @@
-package com.example.mytasker.util;
+package com.example.mytasker;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -12,15 +12,16 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 
-import com.example.mytasker.R;
 import com.example.mytasker.models.Feed;
 import com.example.mytasker.models.Message;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.models.Task;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
+import com.example.mytasker.util.Contracts;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,14 +53,22 @@ public class Server extends Service {
 
     private String imageUrl;
 
+    static ProgressDialog dialog;
+
     public static void setServerCallCompleteListener(ServerCallCompleteListener listener) {
+        if (listener == null) dialog = null;
         mListener = listener;
     }
 
     private void showProgressBar() {
+        Activity activity = ((Activity) mListener);
+        ProgressBar progressBar = activity.findViewById(R.id.progress_bar);
         if (mListener != null) {
-            Activity activity = (Activity) mListener;
-            ((Activity) mListener).findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
+            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+            else {
+                dialog = new ProgressDialog(activity);
+                dialog.show();
+            }
         }
     }
 
@@ -70,6 +79,7 @@ public class Server extends Service {
             } else {
                 mListener.onServerCallFailure(titleNeg, retryListener);
             }
+        if (dialog != null) dialog.dismiss();
         //TODO send notification
         //not for auth actions
     }

@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +25,8 @@ import androidx.core.app.ActivityCompat;
 
 import com.example.mytasker.MyApplication;
 import com.example.mytasker.R;
+import com.example.mytasker.Server;
 import com.example.mytasker.broadcastReceivers.ConnectionReceiver;
-import com.example.mytasker.util.Server;
 
 import static com.example.mytasker.MyFirebaseMessagingService.CHANNEL_ID;
 import static com.example.mytasker.util.Tools.showSnackBar;
@@ -42,6 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         super.onPause();
         Server.setServerCallCompleteListener(null);
     }
+
     boolean prevCallResolved = true;
 
     public static void checkPermission(Activity context) {
@@ -170,7 +172,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
 
     @Override
     public void onServerCallFailure(String title, Server.OnRetryListener retryListener) {
-        findViewById(R.id.progress_bar).setVisibility(View.GONE);
+        ProgressBar progressBar = findViewById(R.id.progress_bar);
+        if (progressBar != null) progressBar.setVisibility(View.GONE);
         prevCallResolved = true;
         showSnackBar(findViewById(android.R.id.content), title, retryListener);
     }

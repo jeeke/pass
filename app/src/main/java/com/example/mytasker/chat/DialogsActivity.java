@@ -2,6 +2,8 @@ package com.example.mytasker.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,12 +34,15 @@ public class DialogsActivity extends DemoDialogsActivity {
 //    }
 
     private DialogsList dialogsList;
+    private ProgressBar bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialogs);
         Tools.initMinToolbar(this, "CHATS");
+        bar = findViewById(R.id.progress_bar);
+        bar.setVisibility(View.VISIBLE);
         dialogsList = findViewById(R.id.dialogsList);
         initAdapter();
 
@@ -59,6 +64,7 @@ public class DialogsActivity extends DemoDialogsActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Dialog dialog = dataSnapshot.getValue(DialogHelper.class).toDialog();
                 onNewDialog(dialog);
+                bar.setVisibility(View.GONE);
             }
 
             @Override

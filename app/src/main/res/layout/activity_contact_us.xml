@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <include
-        android:id="@+id/toolbar"
+        android:id="@+id/include4"
         layout="@layout/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,7 @@
         app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/include4">
 
         <ImageView
             android:layout_width="match_parent"
@@ -121,23 +121,22 @@
         android:layout_height="100dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:ems="10"
         android:background="?colorPrimaryDark"
-        android:inputType="textMultiLine|textCapSentences"
-        android:hint="Type your message here"
+        android:ems="10"
         android:gravity="start|top"
+        android:hint="Type your message here"
+        android:inputType="textMultiLine|textCapSentences"
+        android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textView103"
         app:layout_constraintTop_toBottomOf="@+id/textView103" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button7"
-        android:minWidth="150dp"
-        android:layout_width="wrap_content"
-        android:textColor="?colorAccent"
+        style="@style/ButtonStyle"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:textSize="18sp"
+        android:layout_width="0dp"
         android:text="SEND FEEDBACK"
         app:layout_constraintTop_toBottomOf="@id/editText5"
         app:layout_constraintEnd_toEndOf="@id/editText5"
