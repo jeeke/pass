@@ -20,7 +20,7 @@ public class SettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        Tools.initMinToolbar(this, "SETTINGS", false);
+        Tools.initMinToolbar(this, "SETTINGS");
         initViews();
 
     }
@@ -37,10 +37,6 @@ public class SettingActivity extends BaseActivity {
         findViewById(R.id.textView69).setOnClickListener((View v) -> launchActivity(this, TandC.class));
         findViewById(R.id.textView58).setOnClickListener((View v) -> launchActivity(this, ContactUs.class));
         findViewById(R.id.logout).setOnClickListener(v -> {
-//            ProgressDialog dialog = new ProgressDialog(SettingActivity.this);
-//            dialog.setTitle("Logging out, Please Wait....");
-//            dialog.show();
-//            dialog.dismiss();
             MainActivity.signOut(this);
             finish();
         });

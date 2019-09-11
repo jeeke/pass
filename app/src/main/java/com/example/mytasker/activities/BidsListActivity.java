@@ -1,6 +1,5 @@
 package com.example.mytasker.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,9 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.mytasker.R;
 import com.example.mytasker.holders.BidHolder;
 import com.example.mytasker.models.Bid;
-import com.example.mytasker.models.Message;
 import com.example.mytasker.models.Task;
-import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.util.Tools;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -29,18 +26,8 @@ import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
 import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
 import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-
 import static com.example.mytasker.util.Cache.getDatabase;
 import static com.example.mytasker.util.Cache.getToken;
-import static com.example.mytasker.util.Tools.getRetrofit;
-import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class BidsListActivity extends BaseActivity implements BidHolder.Listener {
 
@@ -49,8 +36,6 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
     SwipeRefreshLayout mSwipeRefreshLayout;
     private Task task;
     private ShimmerFrameLayout shimmerContainer;
-
-    private boolean prevCallResolved = true;
 
     private void initViews() {
         mRecyclerView = findViewById(R.id.recyclerView);
@@ -64,7 +49,7 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
         task = (Task) getIntent().getSerializableExtra("task");
         if (task == null) finish();
         setContentView(R.layout.activity_list);
-        Tools.initMinToolbar(this, "ALL BIDS", false);
+        Tools.initMinToolbar(this, "ALL BIDS");
         initViews();
         callFireBase();
     }
@@ -170,44 +155,11 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
     }
 
     private void verifyNCall(String tasker_id) {
-        if (prevCallResolved) {
-            getToken(token -> callRetrofit(token, tasker_id));
+        if (prevCallResolved && server != null) {
+            getToken(token -> server.assignTsk(token, tasker_id, task));
         }
     }
 
-    private void callRetrofit(String token, String tasker_id) {
-        ProgressDialog dlg = new ProgressDialog(this);
-        dlg.setTitle("Assigning Task...");
-        dlg.show();
-        Retrofit retrofit = getRetrofit(token);
-        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Map map = new HashMap();
-        map.put("task", task);
-        map.put("tasker_id", tasker_id);
-        Call<Message> call = jsonPlaceHolder.assignTask(map);
-
-        call.enqueue(new Callback<Message>() {
-            @Override
-            public void onResponse(Call<Message> call, Response<Message> response) {
-                prevCallResolved = true;
-                dlg.dismiss();
-                if (!response.isSuccessful()) {
-                    Log.v("Code: ", response.code() + " Message: " + response.body());
-                    showSnackBar(BidsListActivity.this, "Task couldn't be assigned");
-                } else
-                    showSnackBar(BidsListActivity.this, "Task assigned successfully");
-            }
-
-            @Override
-            public void onFailure(Call<Message> call, Throwable t) {
-                prevCallResolved = true;
-                Log.e("error ", t.getMessage());
-                dlg.dismiss();
-                showSnackBar(BidsListActivity.this, "Task couldn't be assigned");
-            }
-        });
-        prevCallResolved = false;
-    }
 
 //    TODO why we save tasks separately if we are saving in prev tasks
 

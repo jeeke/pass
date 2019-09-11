@@ -20,7 +20,7 @@ public class LocationActivity extends BaseActivity {
 
     public static int REQUEST_LOCATION = 176;
     public Double lat, lon;
-    private Listener mListener;
+    private LocationListener mLocationListener;
     private FusedLocationProviderClient fusedLocationClient;
 
     @Override
@@ -42,8 +42,8 @@ public class LocationActivity extends BaseActivity {
         }
     }
 
-    public void setListener(Listener mListener) {
-        this.mListener = mListener;
+    public void setLocationListener(LocationListener mLocationListener) {
+        this.mLocationListener = mLocationListener;
     }
 
     public void getLocation() {
@@ -59,13 +59,13 @@ public class LocationActivity extends BaseActivity {
                         if (location != null) {
                             lon = location.getLongitude();
                             lat = location.getLatitude();
-                            mListener.onLocationFetched();
+                            mLocationListener.onLocationFetched();
                         } else showSnackBar(LocationActivity.this, "Location can't be fetched");
                     });
         }
     }
 
-    public interface Listener {
+    public interface LocationListener {
         void onLocationFetched();
     }
 }

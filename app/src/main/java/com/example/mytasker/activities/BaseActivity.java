@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
@@ -33,7 +34,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
 
     private static final BroadcastReceiver MyReceiver = new ConnectionReceiver();
     private static final int REQUEST_PERMISSIONS = 177;
-    Server server;
+
+    public Server server;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Server.setServerCallCompleteListener(null);
+    }
     boolean prevCallResolved = true;
 
     public static void checkPermission(Activity context) {
@@ -119,7 +127,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         super.onStart();
         registerReceiver(MyReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         MyApplication.getInstance().setConnectionListener(this);
-        Server.setListener(this);
+        Server.setServerCallCompleteListener(this);
         Intent intent = new Intent(this, Server.class);
         startService(intent);
         bindService(intent, connection, 0);
@@ -154,24 +162,18 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     }
 
     @Override
-    public void onCallComplete(boolean success, int method) {
+    public void onServerCallSuccess(String title) {
+        findViewById(R.id.progress_bar).setVisibility(View.GONE);
         prevCallResolved = true;
-        String title = "";
-        switch (method) {
-            case 1:
-                if (success) title = "Image Updated Successfully";
-                else title = "Image Couldn't be updated";
-                break;
-            case 2:
-                if (success) title = "Bidding Successful";
-                else title = "Bidding Unsuccessful";
-                break;
-            case 3:
-                if (success) title = "Password Changed";
-                else title = "Password couldn't be changed";
-                break;
-        }
         showSnackBar(findViewById(android.R.id.content), title);
     }
+
+    @Override
+    public void onServerCallFailure(String title, Server.OnRetryListener retryListener) {
+        findViewById(R.id.progress_bar).setVisibility(View.GONE);
+        prevCallResolved = true;
+        showSnackBar(findViewById(android.R.id.content), title, retryListener);
+    }
+
 
 }

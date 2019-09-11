@@ -125,16 +125,6 @@
                 android:value="com.example.mytasker.activities.SettingActivity" />
         </activity>
         <activity
-            android:name=".activities.SearchActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_activity_search"
-            android:parentActivityName=".activities.DashboardActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.mytasker.activities.DashboardActivity" />
-        </activity>
-        <activity
             android:name=".activities.NotificationActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_notification"

@@ -18,7 +18,7 @@ public class ProfileActivity extends BaseActivity implements ProfileFragment.Act
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        Tools.initMinToolbar(this,"Profile",false);
+        Tools.initMinToolbar(this, "Profile");
         Intent intent = getIntent();
         uid = intent.getStringExtra("id");
         name = intent.getStringExtra("name");

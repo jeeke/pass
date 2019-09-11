@@ -40,7 +40,7 @@ public class NotificationActivity extends BaseActivity implements NotificationHo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        Tools.initMinToolbar(this, "Notifications", false);
+        Tools.initMinToolbar(this, "Notifications");
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = findViewById(R.id.recyclerView);
         shimmerContainer = findViewById(R.id.shimmer_container);

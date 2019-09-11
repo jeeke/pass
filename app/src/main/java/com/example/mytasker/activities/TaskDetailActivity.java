@@ -1,10 +1,8 @@
 package com.example.mytasker.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,13 +15,8 @@ import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.Tools;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.functions.FirebaseFunctionsException;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.example.mytasker.util.Tools.launchActivity;
-import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class TaskDetailActivity extends BaseActivity {
     ChipAdapter tagAdapter, mustAdapter;
@@ -73,7 +66,10 @@ public class TaskDetailActivity extends BaseActivity {
                 action.setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
                         .setTitle("CANCEL BID")
                         .setMessage("Do you want to cancel bid on this task?")
-                        .setPositiveButton("YES, CANCEL NOW", (dialog, which) -> cancelBid())
+                        .setPositiveButton("YES, CANCEL NOW", (dialog, which) -> {
+                            if (prevCallResolved && server != null)
+                                server.cancelBid(current.getId());
+                        })
                         .show());
 
                 break;
@@ -82,7 +78,7 @@ public class TaskDetailActivity extends BaseActivity {
                         .setTitle("")
                         .setMessage("This task has been assigned to you.")
                         .setPositiveButton("Mark As Done", (dialog, which) -> {
-                            markDone();
+                            if (prevCallResolved && server != null) server.taskDone(current);
                         })
 //                (dialog, which) -> launchActivity(this,FeedbackByTaskerActivity.class))
 //                        .setNegativeButton("Resign Task",null)
@@ -105,7 +101,7 @@ public class TaskDetailActivity extends BaseActivity {
         if (current == null) finish();
         setContentView(R.layout.activity_task_detail);
         initButton();
-        Tools.initMinToolbar(this, "Task Details", false);
+        Tools.initMinToolbar(this, "Task Details");
         findViewById(R.id.chat).setOnClickListener(v -> {
             Intent intent = new Intent(this, MessagesActivity.class);
             intent.putExtra("id", current.getPoster_id());
@@ -145,69 +141,4 @@ public class TaskDetailActivity extends BaseActivity {
 
     boolean prevCallResolved = true;
 
-    private void markDone() {
-        if (!prevCallResolved) return;
-        ProgressDialog dlg = new ProgressDialog(this);
-        dlg.setTitle("Marking task..");
-        dlg.show();
-        Map map = new HashMap();
-        map.put("p_id", current.getPoster_id());
-        map.put("task_id", current.getId());
-        map.put("task_title", current.getTitle());
-        map.put("price", current.getCost());
-        Contracts.call(map, "taskDone").addOnCompleteListener(t -> {
-            prevCallResolved = true;
-            dlg.dismiss();
-            if (!t.isSuccessful()) {
-                Exception e = t.getException();
-                if (e instanceof FirebaseFunctionsException) {
-                    FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
-                    FirebaseFunctionsException.Code code = ffe.getCode();
-                    Object details = ffe.getDetails();
-                    Log.e("tag", ffe + "\n" + code + "\n" + details);
-                }
-                showSnackBar(this, "Could not be marked");
-                Log.e("tag", e + "");
-                return;
-            }
-            finish();
-            Log.e("tag", t.getResult() + "");
-            showSnackBar(this, "Task Done Successfully");
-            Intent intent = new Intent(this, FeedbackByTaskerActivity.class);
-            intent.putExtra("task_id", current.getId());
-            intent.putExtra("task_title", current.getTitle());
-            intent.putExtra("poster_id", current.getPoster_id());
-            startActivity(intent);
-        });
-        prevCallResolved = false;
-    }
-
-    private void cancelBid() {
-        if (!prevCallResolved) return;
-        ProgressDialog dlg = new ProgressDialog(this);
-        dlg.setTitle("Cancelling your Bid..");
-        dlg.show();
-        Map map = new HashMap();
-        map.put("t_id", current.getId());
-        Contracts.call(map, "cancelBid").addOnCompleteListener(t -> {
-            prevCallResolved = true;
-            dlg.dismiss();
-            if (!t.isSuccessful()) {
-                Exception e = t.getException();
-                if (e instanceof FirebaseFunctionsException) {
-                    FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
-                    FirebaseFunctionsException.Code code = ffe.getCode();
-                    Object details = ffe.getDetails();
-                    Log.e("tag", ffe + "\n" + code + "\n" + details);
-                }
-                showSnackBar(this, "Bid could not be cancelled");
-                Log.e("tag", e + "");
-                return;
-            }
-            finish();
-            Log.e("tag", t.getResult() + "");
-            showSnackBar(this, "Bid cancelled");
-        });
-        prevCallResolved = false;
-    }
 }

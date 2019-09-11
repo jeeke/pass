@@ -55,10 +55,10 @@ public class FeedActNFrag {
         mRecyclerView.setHasFixedSize(true);
         if (mQuery == null)
             if (from) {
-                Tools.initMinToolbar((AppCompatActivity) context, "Portfolio", false);
+                Tools.initMinToolbar((AppCompatActivity) context, "Portfolio");
                 mQuery = getDatabase().child("Portfolios").child(getUser().getUid());
             } else {
-                Tools.initMinToolbar((AppCompatActivity) context, "My Posts", false);
+                Tools.initMinToolbar((AppCompatActivity) context, "My Posts");
                 mQuery = getDatabase().child("PrevFeeds").child(getUser().getUid());
             }
 

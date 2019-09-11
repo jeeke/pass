@@ -43,7 +43,7 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        Tools.initMinToolbar(this, "My Questions", false);
+        Tools.initMinToolbar(this, "My Questions");
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = findViewById(R.id.recyclerView);
         shimmerContainer = findViewById(R.id.shimmer_container);

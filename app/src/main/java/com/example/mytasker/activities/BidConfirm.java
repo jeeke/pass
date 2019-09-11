@@ -24,7 +24,7 @@ public class BidConfirm extends BaseActivity {
         task = (Task) getIntent().getSerializableExtra("task");
         if (task == null) finish();
         setContentView(R.layout.activity_bid_confirm);
-        Tools.initMinToolbar(this, "Confirm Bid", false);
+        Tools.initMinToolbar(this, "Confirm Bid");
         findViewById(R.id.confirm_bid).setOnClickListener(v -> checkFields());
         initFields();
     }

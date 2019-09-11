@@ -100,7 +100,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
 
     private void verifyNCall() {
         LocationActivity activity = (LocationActivity) getActivity();
-        activity.setListener(() -> {
+        activity.setLocationListener(() -> {
             lat = activity.lat;
             lon = activity.lon;
             getToken(HomeFragment.this::callRetrofit);

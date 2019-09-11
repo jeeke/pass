@@ -6,7 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".activities.AvatarChooser">
 
-    <include layout="@layout/toolbar" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -18,7 +23,7 @@
         app:layout_constraintBottom_toTopOf="@+id/update_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/include" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/update_image"

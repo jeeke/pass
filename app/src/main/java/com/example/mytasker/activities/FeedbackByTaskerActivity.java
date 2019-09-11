@@ -20,7 +20,7 @@ public class FeedbackByTaskerActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback_tasker);
-        Tools.initMinToolbar(this, "Confirm Bid", false);
+        Tools.initMinToolbar(this, "Confirm Bid");
         findViewById(R.id.submit).setOnClickListener(v -> checkFields());
         initFields();
     }

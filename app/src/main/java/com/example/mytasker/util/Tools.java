@@ -110,11 +110,8 @@ public class Tools {
         return elapsed + " ago";
     }
 
-    public static void initMinToolbar(AppCompatActivity activity, String title, boolean zeroElevation) {
+    public static void initMinToolbar(AppCompatActivity activity, String title) {
         Toolbar toolbar = activity.findViewById(R.id.toolbar);
-        if (zeroElevation) {
-            toolbar.setElevation(0f);
-        }
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setTitle(title);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -182,6 +179,18 @@ public class Tools {
 
     public static void showSnackBar(View view, String mes) {
         Snackbar.make(view, mes, Snackbar.LENGTH_SHORT).show();
+    }
+
+    public static void showSnackBar(Activity activity, String mes, Server.OnRetryListener retryListener) {
+        Snackbar.make(activity.findViewById(android.R.id.content)
+                , mes, Snackbar.LENGTH_SHORT)
+                .setAction("RETRY", v -> retryListener.retryTask()).show();
+    }
+
+    public static void showSnackBar(View view, String mes, Server.OnRetryListener retryListener) {
+        Snackbar.make(view, mes,
+                Snackbar.LENGTH_SHORT)
+                .setAction("RETRY", v -> retryListener.retryTask()).show();
     }
 
 }

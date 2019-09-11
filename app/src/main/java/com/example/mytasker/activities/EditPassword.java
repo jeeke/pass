@@ -15,7 +15,7 @@ public class EditPassword extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_password);
-        Tools.initMinToolbar(this, "Edit Password", false);
+        Tools.initMinToolbar(this, "Edit Password");
         initFields();
     }
 

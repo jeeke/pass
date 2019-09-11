@@ -37,7 +37,7 @@ public class DialogsActivity extends DemoDialogsActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialogs);
-        Tools.initMinToolbar(this,"CHATS",false);
+        Tools.initMinToolbar(this, "CHATS");
         dialogsList = findViewById(R.id.dialogsList);
         initAdapter();
 

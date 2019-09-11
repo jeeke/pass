@@ -1,6 +1,5 @@
 package com.example.mytasker.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,17 +23,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.mytasker.R;
 import com.example.mytasker.activities.AvatarChooser;
+import com.example.mytasker.activities.BaseActivity;
 import com.example.mytasker.activities.HistoryFeed;
 import com.example.mytasker.activities.NotificationActivity;
 import com.example.mytasker.activities.SettingActivity;
 import com.example.mytasker.models.Profile;
 import com.example.mytasker.models.Rating;
 import com.example.mytasker.util.ChipAdapter;
+import com.example.mytasker.util.Server;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DataSnapshot;
@@ -60,7 +62,6 @@ public class ProfileFragment extends Fragment {
     private TextView ontimet, behaviourt, qualityt;
     private ChipGroup chipGroup;
     private ChipAdapter adapter;
-    private ProgressDialog dlg;
     private ConstraintLayout constraintLayout, layout;
     private View divider;
     private Toolbar toolbar;
@@ -82,6 +83,14 @@ public class ProfileFragment extends Fragment {
         mListener = null;
     }
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar progressBar;
+
+    private Server getServer() {
+        BaseActivity activity = (BaseActivity) getActivity();
+        return activity.server;
+    }
+
     private void forMe(View v, boolean mine) {
 
         TextView name = v.findViewById(R.id.poster_name);
@@ -101,7 +110,13 @@ public class ProfileFragment extends Fragment {
                 input.setPadding(pad, pad, pad, p);
                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme).setTitle("ADD TAG").setView(input)
                         .setPositiveButton("ADD", (dialog, which) -> {
-                            addSkill(input.getText().toString());
+                            String skill = input.getText().toString();
+                            if (!adapter.isSafe(skill)) {
+                                showSnackBar(getActivity(), "Skill Already Exist or Empty");
+                                return;
+                            }
+                            Server server = getServer();
+                            if (server != null) server.addSkill(skill, mListener.getUId());
                         })
                         .show();
                 input.requestFocus();
@@ -117,7 +132,9 @@ public class ProfileFragment extends Fragment {
                 input.setPadding(pad, pad, pad, p);
                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()), R.style.AlertDialogTheme).setTitle("EDIT ABOUT").setView(input)
                         .setPositiveButton("SAVE", (dialog, which) -> {
-                            saveAbout(input.getText().toString());
+                            Server server = getServer();
+                            if (server != null)
+                                server.saveAbout(input.getText().toString(), mListener.getUId());
                         })
                         .show();
                 input.requestFocus();
@@ -129,6 +146,39 @@ public class ProfileFragment extends Fragment {
             toolbar.setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    private ImageView imageView, sugga;
+
+    public ProfileFragment() {
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent;
+        if (item.getItemId() == R.id.setting) {
+            intent = new Intent(getContext(), SettingActivity.class);
+            getActivity().startActivityForResult(intent, CODE_SETTINGS_ACTIVITY);
+//            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+            return true;
+        } else {
+            intent = new Intent(getContext(), NotificationActivity.class);
+            getActivity().startActivityForResult(intent, CODE_NOTIFICATION_ACTIVITY);
+//            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+            return true;
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.profile_menu, menu);
     }
 
     @Override
@@ -159,105 +209,34 @@ public class ProfileFragment extends Fragment {
         qualityt = v.findViewById(R.id.textViewquality);
         chipGroup = v.findViewById(R.id.skillschip);
         imageView = v.findViewById(R.id.addskill);
-        dlg = new ProgressDialog(getContext());
-        dlg.setTitle("Getting Profile Info..");
         constraintLayout = v.findViewById(R.id.layoutstats);
         sugga = v.findViewById(R.id.sugga);
         layout = v.findViewById(R.id.layoutrating);
         divider = v.findViewById(R.id.divider11);
         toolbar = v.findViewById(R.id.toolbar);
         aboutText = v.findViewById(R.id.about);
+        progressBar = v.findViewById(R.id.progress_bar);
         forMe(v, mListener.getMine());
-        adapter = new ChipAdapter(this::removeSkill, chipGroup, new ArrayList<>());
+        adapter = new ChipAdapter(title -> {
+            Server server = getServer();
+            if (server != null) server.removeSkill(title, mListener.getUId());
+        }, chipGroup, new ArrayList<>());
+        swipeRefreshLayout = v.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this::myapi);
         myapi();
         return v;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    private ImageView imageView, sugga;
-
-    public ProfileFragment() {
-    }
-
-    private void saveAbout(String about) {
-        dlg.setTitle("Saving...");
-        dlg.show();
-        mDatabase
-                .child("/Profiles/" + mListener.getUId() + "/about").setValue(about)
-                .addOnCompleteListener(task -> {
-                    dlg.dismiss();
-                    if (!task.isSuccessful()) {
-                        showSnackBar(getActivity(), "Could not be updated");
-                    } else aboutText.setText(about);
-                });
-    }
-
-    private void addSkill(String skill) {
-        if (!adapter.isSafe(skill)) {
-            showSnackBar(getActivity(), "Skill Already Exist or Empty");
-            return;
-        }
-        dlg.setTitle("Adding Skill...");
-        dlg.show();
-        mDatabase
-                .child("/Profiles/" + mListener.getUId() + "/Skills/" + skill).setValue(true)
-                .addOnCompleteListener(task -> {
-                    dlg.dismiss();
-                    if (!task.isSuccessful()) {
-                        showSnackBar(getActivity(), "Skills could not be updated");
-                    } else adapter.addChild(skill);
-                });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Intent intent;
-        if (item.getItemId() == R.id.setting) {
-            intent = new Intent(getContext(), SettingActivity.class);
-            getActivity().startActivityForResult(intent, CODE_SETTINGS_ACTIVITY);
-//            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-            return true;
-        } else {
-            intent = new Intent(getContext(), NotificationActivity.class);
-            getActivity().startActivityForResult(intent, CODE_NOTIFICATION_ACTIVITY);
-//            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-            return true;
-        }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.profile_menu, menu);
-    }
-
-    private void removeSkill(String skill) {
-        dlg.setTitle("Removing Skill...");
-        dlg.show();
-        mDatabase
-                .child("/Profiles/" + mListener.getUId() + "/Skills/" + skill).removeValue()
-                .addOnCompleteListener(task -> {
-                    dlg.dismiss();
-                    if (!task.isSuccessful()) {
-                        showSnackBar(getActivity(), "Skill could not be removed");
-                        adapter.addChild(skill);
-                    }
-                });
-    }
-
     private void myapi() {
-        dlg.setTitle("Getting Profile Info..");
-        dlg.show();
+//        swipeRefreshLayout.setRefreshing(false);
+//        progressBar.setVisibility(View.VISIBLE);
         DatabaseReference r = mDatabase.child("Profiles").child(mListener.getUId());
         r.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 r.removeEventListener(this);
-                dlg.dismiss();
+                progressBar.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
 //                if (mine) imageView.setVisibility(View.VISIBLE);
                 Profile profile = snapshot.getValue(Profile.class);
 //                Log.e("\nP\nr\no\nf\ni\nl\ne\n",snapshot.toString());
@@ -277,7 +256,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 r.removeEventListener(this);
-                dlg.dismiss();
+//                progressBar.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
                 showSnackBar(getActivity(), "Something went wrong, Try later ");
                 Log.e("error", databaseError.toString());
             }
@@ -301,7 +281,10 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setupskills(ArrayList<String> skills) {
-        adapter = new ChipAdapter(this::removeSkill, chipGroup, skills);
+        adapter = new ChipAdapter(title -> {
+            Server server = getServer();
+            if (server != null) server.removeSkill(title, mListener.getUId());
+        }, chipGroup, skills);
     }
 
     private void setupstats(Profile p) {

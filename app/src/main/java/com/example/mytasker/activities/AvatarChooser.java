@@ -2,7 +2,6 @@ package com.example.mytasker.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,7 +43,7 @@ public class AvatarChooser extends BaseActivity implements AvatarAdapter.Recycle
         mRecyclerView = findViewById(R.id.recyclerView);
         adapter = new AvatarAdapter(this);
         mRecyclerView.setAdapter(adapter);
-        Tools.initMinToolbar(this, "EDIT IMAGE", false);
+        Tools.initMinToolbar(this, "EDIT IMAGE");
     }
 
     @Override
@@ -56,12 +55,10 @@ public class AvatarChooser extends BaseActivity implements AvatarAdapter.Recycle
             else if (pickedPosition == -1)
                 showSnackBar(this, "Please pick an image");
             else if (pickedPosition != 0) {
-                server.updateImage(null, null, Contracts.avatars[pickedPosition - 1]);
+                server.updateImage(Contracts.avatars[pickedPosition - 1], null, null);
                 prevCallResolved = false;
             } else {
-                mImage.setDrawingCacheEnabled(true);
-                mImage.buildDrawingCache();
-                server.updateImage(mUri, ((BitmapDrawable) mImage.getDrawable()).getBitmap(), null);
+                server.updateImage(null, mUri, mImage);
                 prevCallResolved = false;
             }
         });

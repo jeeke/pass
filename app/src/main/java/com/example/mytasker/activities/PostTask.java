@@ -1,9 +1,7 @@
 package com.example.mytasker.activities;
 
-import android.app.ProgressDialog;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.fragment.app.Fragment;
@@ -15,32 +13,24 @@ import com.example.mytasker.fragments.PostTaskCat;
 import com.example.mytasker.fragments.PostTaskDetail;
 import com.example.mytasker.fragments.PostTaskExtra;
 import com.example.mytasker.models.Task;
-import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-
 import static com.example.mytasker.util.Cache.getToken;
-import static com.example.mytasker.util.Tools.getRetrofit;
+import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Tools.showSnackBar;
 
 
-public class PostTask extends LocationActivity implements LocationActivity.Listener {
+public class PostTask extends LocationActivity implements LocationActivity.LocationListener {
 
     StepperIndicator indicator;
     FloatingActionButton fab;
     ArrayList<String> tags, mustHaves;
     int currentPage = 1;
-    ProgressDialog dlg;
     String title, desc, category, reward, deadline;
     Fragment fragment;
 
@@ -62,8 +52,6 @@ public class PostTask extends LocationActivity implements LocationActivity.Liste
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         fab = findViewById(R.id.floatingActionButton);
-        dlg = new ProgressDialog(this);
-        dlg.setTitle("Posting your task, Please Wait....");
     }
 
     private void loadFragment(Fragment fragment) {
@@ -105,64 +93,34 @@ public class PostTask extends LocationActivity implements LocationActivity.Liste
             if (reward.equals("")) {
                 showSnackBar(this, "Please Enter Reward Value");
             } else
-                setListener(this);
+                setLocationListener(this);
             super.getLocation();
         }
     }
 
-    boolean prevCallResolved = true;
-
-    public void postmytask(String token) {
-        dlg.show();
-        Date date = new Date();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        Task task = new Task(
-                user.getUid(),
-                user.getDisplayName(),
-                user.getPhotoUrl().toString(),
-                date.getTime(),
-                desc,
-                title,
-                Float.parseFloat(reward),
-                category,
-                deadline,
-                lat,
-                lon,
-//                25.0,
-//                25.0,
-                tags,
-                mustHaves,
-                false);
-        Retrofit retrofit = getRetrofit(token);
-        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        Call<Task> call = jsonPlaceHolder.createTask(task);
-        call.enqueue(new Callback<Task>() {
-            @Override
-            public void onResponse(Call<Task> call, Response<Task> response) {
-                prevCallResolved = true;
-                dlg.dismiss();
-                if (!response.isSuccessful()) {
-                    Log.e("error", response.toString());
-                    return;
-                }
-                finish();
-                overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
-            }
-
-            @Override
-            public void onFailure(Call<Task> call, Throwable t) {
-                prevCallResolved = true;
-                Log.e("error", t.getMessage());
-                dlg.dismiss();
-            }
-        });
-        prevCallResolved = false;
-    }
-
     @Override
     public void onLocationFetched() {
-        if (!prevCallResolved) return;
-        getToken(this::postmytask);
+        if (!prevCallResolved || server == null) return;
+        getToken(token -> {
+            Date date = new Date();
+            FirebaseUser user = getUser();
+            Task task = new Task(
+                    user.getUid(),
+                    user.getDisplayName(),
+                    user.getPhotoUrl().toString(),
+                    date.getTime(),
+                    desc,
+                    title,
+                    Float.parseFloat(reward),
+                    category,
+                    deadline,
+                    lat,
+                    lon,
+                    tags,
+                    mustHaves,
+                    false);
+            server.postTask(token, task);
+        });
+        prevCallResolved = false;
     }
 }

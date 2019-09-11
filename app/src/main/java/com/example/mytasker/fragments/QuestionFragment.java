@@ -86,7 +86,7 @@ public class QuestionFragment extends Fragment {
         shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
         shimmerContainer.startShimmer();
         LocationActivity activity = (LocationActivity) getActivity();
-        activity.setListener(() -> {
+        activity.setLocationListener(() -> {
             lat = activity.lat;
             lon = activity.lon;
             getToken(QuestionFragment.this::callRetrofit);

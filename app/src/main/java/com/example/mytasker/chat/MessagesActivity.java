@@ -32,7 +32,7 @@ public class MessagesActivity extends DemoMessagesActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
-        Tools.initMinToolbar(this, super.mChatUName, false);
+        Tools.initMinToolbar(this, super.mChatUName);
 
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();

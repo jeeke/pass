@@ -84,7 +84,7 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
         if (fabActivated) {
             angle = 0f;
             Animator anim = ViewAnimationUtils.createCircularReveal(fabExpanded, centerX, centerY, endRadius, startRadius);
-            anim.setDuration(300);
+            anim.setDuration(100);
             anim.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -98,7 +98,7 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
             angle = 45f;
             fabExpanded.setVisibility(View.VISIBLE);
             Animator anim = ViewAnimationUtils.createCircularReveal(fabExpanded, centerX, centerY, startRadius, endRadius);
-            anim.setDuration(500);
+            anim.setDuration(300);
             anim.start();
             fabActivated = true;
         }
@@ -107,7 +107,7 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
         ViewCompat.animate(v).
                 rotation(angle).
                 withLayer().
-                setDuration(500).
+                setDuration(300).
                 setInterpolator(interpolator).
                 start();
     }
