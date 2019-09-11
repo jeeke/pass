@@ -45,7 +45,7 @@ public class AvatarAdapter extends RecyclerView.Adapter<AvatarAdapter.holder> {
     public void onBindViewHolder(@NonNull holder holder, int position) {
         ImageView image = (ImageView) holder.itemView;
         if (position == 0) {
-            if (drawable == null) image.setImageResource(R.drawable.ic_edit);
+            if (drawable == null) image.setImageResource(R.drawable.ic_gallery);
             else image.setImageDrawable(drawable);
         } else Glide.with(image.getContext())
                 .load(list.get(position - 1))

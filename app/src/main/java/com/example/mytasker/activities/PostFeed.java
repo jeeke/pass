@@ -10,27 +10,20 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.mytasker.R;
-import com.example.mytasker.models.Feed;
 import com.example.mytasker.util.Tools;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
-import static com.example.mytasker.util.Cache.getDatabase;
-import static com.example.mytasker.util.Cache.getUser;
+import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class PostFeed extends BaseActivity {
 
@@ -82,12 +75,12 @@ public class PostFeed extends BaseActivity {
 //            int progress = (int) ((100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
 //            progressBar.setProgress(progress);
         }).addOnPausedListener(taskSnapshot -> {
-            Toast.makeText(this, "Image couldn't be uploaded", Toast.LENGTH_SHORT).show();
+            showSnackBar(this, "Image couldn't be uploaded");
             uploadTask.cancel();
         }).addOnFailureListener(exception -> {
             dlg.dismiss();
             // Handle unsuccessful uploads
-            Toast.makeText(this, "Image couldn't be uploaded", Toast.LENGTH_SHORT).show();
+            showSnackBar(this, "Image couldn't be uploaded");
         }).addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl().addOnSuccessListener(uri1 -> {
             // Handle successful uploads on complete
 //            progressBar.setVisibility(View.GONE);
@@ -121,7 +114,7 @@ public class PostFeed extends BaseActivity {
     }
     private void verifyNCall() {
         if (text.getText().toString().equals("") && imageURL == null) {
-            Toast.makeText(this, "Both Fields can not be empty", Toast.LENGTH_SHORT).show();
+            showSnackBar(this, "Both Fields can not be empty");
             return;
         }
         dlg = new ProgressDialog(this);
@@ -131,34 +124,7 @@ public class PostFeed extends BaseActivity {
     }
 
     public void postFeed() {
-        FirebaseUser user = getUser();
-        Date date = new Date();
-        Feed feed = new Feed(
-                date.getTime(),
-                user.getUid(),
-                user.getDisplayName(),
-                user.getPhotoUrl().toString(),
-                imageURL,
-                text.getText().toString()
-        );
-        DatabaseReference push = getDatabase();
-        String key = push.child("Feeds").push().getKey();
-        feed.setId(key);
-        Map updateMap = new HashMap();
-        updateMap.put("Feeds/" + key, feed);
-        if (onPortfolio)
-            updateMap.put("Portfolios/" + user.getUid() + "/" + key, feed);
-        updateMap.put("PrevFeeds/" + user.getUid() + "/" + key, feed);
-        push.updateChildren(updateMap).addOnCompleteListener(task -> {
-            dlg.dismiss();
-            if (task.isSuccessful()) {
-                finish();
-            } else {
-                Toast.makeText(PostFeed.this, "Feed could not be posted", Toast.LENGTH_SHORT).show();
-            }
-            prevCallResolved = true;
-        });
-        prevCallResolved = false;
+
     }
 
 

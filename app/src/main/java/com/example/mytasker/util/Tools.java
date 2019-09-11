@@ -5,14 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
 
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.mytasker.R;
 import com.example.mytasker.retrofit.NullOnEmptyConverterFactory;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
@@ -176,12 +176,12 @@ public class Tools {
         }
     }
 
-    public static void showToast(Context context, @StringRes int text, boolean isLong) {
-        showToast(context, context.getString(text), isLong);
+    public static void showSnackBar(Activity activity, String mes) {
+        Snackbar.make(activity.findViewById(android.R.id.content), mes, Snackbar.LENGTH_SHORT).show();
     }
 
-    public static void showToast(Context context, String text, boolean isLong) {
-        Toast.makeText(context, text, isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
+    public static void showSnackBar(View view, String mes) {
+        Snackbar.make(view, mes, Snackbar.LENGTH_SHORT).show();
     }
 
 }

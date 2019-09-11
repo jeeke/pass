@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.paging.PagedList;
@@ -41,6 +40,7 @@ import retrofit2.Retrofit;
 import static com.example.mytasker.util.Cache.getDatabase;
 import static com.example.mytasker.util.Cache.getToken;
 import static com.example.mytasker.util.Tools.getRetrofit;
+import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class BidsListActivity extends BaseActivity implements BidHolder.Listener {
 
@@ -193,9 +193,9 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
                 dlg.dismiss();
                 if (!response.isSuccessful()) {
                     Log.v("Code: ", response.code() + " Message: " + response.body());
-                    Toast.makeText(BidsListActivity.this, "Task couldn't be assigned", Toast.LENGTH_SHORT).show();
+                    showSnackBar(BidsListActivity.this, "Task couldn't be assigned");
                 } else
-                    Toast.makeText(BidsListActivity.this, "Task assigned successfully", Toast.LENGTH_SHORT).show();
+                    showSnackBar(BidsListActivity.this, "Task assigned successfully");
             }
 
             @Override
@@ -203,7 +203,7 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
                 prevCallResolved = true;
                 Log.e("error ", t.getMessage());
                 dlg.dismiss();
-                Toast.makeText(BidsListActivity.this, "Task couldn't be assigned", Toast.LENGTH_SHORT).show();
+                showSnackBar(BidsListActivity.this, "Task couldn't be assigned");
             }
         });
         prevCallResolved = false;

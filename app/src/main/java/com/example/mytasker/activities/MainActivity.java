@@ -17,7 +17,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,6 +25,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import static com.example.mytasker.MyFirebaseMessagingService.MY_PREFS_NAME;
 import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Tools.launchActivity;
+import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class MainActivity extends BaseActivity implements
         View.OnClickListener {
@@ -101,7 +101,7 @@ public class MainActivity extends BaseActivity implements
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                        showSnackBar(this, "Authentication Failed.");
                         updateUI();
                     }
                 });

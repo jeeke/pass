@@ -101,10 +101,6 @@ public class MessagesActivity extends DemoMessagesActivity
         super.messagesAdapter = new MessagesListAdapter<>(mCurrentUser.getUid(), super.imageLoader);
         super.messagesAdapter.enableSelectionMode(this);
         super.messagesAdapter.setLoadMoreListener(this);
-        super.messagesAdapter.registerViewClickListener(R.id.messageUserAvatar,
-                (view, message) -> Tools.showToast(MessagesActivity.this,
-                        message.getUser().getName() + " avatar click",
-                        false));
         this.messagesList.setAdapter(super.messagesAdapter);
     }
 

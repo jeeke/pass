@@ -15,7 +15,6 @@ import com.example.mytasker.activities.BaseActivity;
 import com.example.mytasker.activities.ProfileActivity;
 import com.example.mytasker.chat.data.model.Message;
 import com.example.mytasker.chat.data.model.MessageHelper;
-import com.example.mytasker.util.Tools;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import static com.example.mytasker.util.Tools.setOnline;
+import static com.example.mytasker.util.Tools.showSnackBar;
 
 
 public abstract class DemoMessagesActivity extends BaseActivity
@@ -117,7 +117,7 @@ public abstract class DemoMessagesActivity extends BaseActivity
         super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.action_copy) {
             messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
-            Tools.showToast(this, R.string.copied_message, true);
+            showSnackBar(this, getString(R.string.copied_message));
         } else {
             Intent intent = new Intent(this, ProfileActivity.class);
             intent.putExtra("id", mChatUId);

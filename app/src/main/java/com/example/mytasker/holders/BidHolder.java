@@ -42,7 +42,6 @@ public class BidHolder extends RecyclerView.ViewHolder implements View.OnClickLi
         desc.setText(bid.getDes() + "");
         c_date.setText(elapsedTime(Long.parseLong(bid.getC_date())));
         price.setText("₹" + bid.getPrice());
-//        Toast.makeText(itemView.getContext(),  Toast.LENGTH_SHORT).show();
         this.tasker_id = bid.getId();
         if (bid.getAvatar() != null)
             Glide.with(avatar.getContext()).load(bid.getAvatar()).apply(RequestOptions.circleCropTransform()).into(avatar);

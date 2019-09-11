@@ -33,7 +33,7 @@ import java.util.Map;
 
 import static com.example.mytasker.util.Cache.getDatabase;
 import static com.example.mytasker.util.Cache.getUser;
-import static com.example.mytasker.util.Tools.showToast;
+import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class FeedActNFrag {
 
@@ -107,8 +107,8 @@ public class FeedActNFrag {
                         }
                         getDatabase().updateChildren(map).addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                showToast(context, "Deleted Successfully", false);
-                            } else showToast(context, "Could not be deleted", false);
+                                showSnackBar(context, "Deleted Successfully");
+                            } else showSnackBar(context, "Could not be deleted");
                         });
                     } else {
                         final DatabaseReference postRef = getRef(position);

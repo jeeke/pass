@@ -13,7 +13,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.paging.PagedList;
@@ -47,6 +46,7 @@ import retrofit2.Retrofit;
 import static com.example.mytasker.util.Cache.getToken;
 import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Tools.getRetrofit;
+import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class QuestionDetailActivity extends BaseActivity {
 
@@ -168,7 +168,7 @@ public class QuestionDetailActivity extends BaseActivity {
         answer = findViewById(R.id.editText);
         fab.setOnClickListener(v -> {
             if (answer.getText().toString().equals(""))
-                Toast.makeText(QuestionDetailActivity.this, "Enter valid answer", Toast.LENGTH_SHORT).show();
+                showSnackBar(QuestionDetailActivity.this, "Enter valid answer");
             else {
                 submitAnswer();
             }
@@ -187,9 +187,9 @@ public class QuestionDetailActivity extends BaseActivity {
                     answer.setText("");
                     mAdapter.refresh();
                     closeKeyboard();
-                    Toast.makeText(this, "Posted", Toast.LENGTH_SHORT).show();
+                    showSnackBar(this, "Posted");
                 } else {
-                    Toast.makeText(this, "Posting error", Toast.LENGTH_SHORT).show();
+                    showSnackBar(this, "Posting error");
                 }
             });
             prevCallResolved = false;
@@ -241,9 +241,9 @@ public class QuestionDetailActivity extends BaseActivity {
                 dlg.dismiss();
                 if (!response.isSuccessful()) {
                     Log.e("Code: ", response.toString());
-                    Toast.makeText(QuestionDetailActivity.this, "Couldn't delete Question", Toast.LENGTH_SHORT).show();
+                    showSnackBar(QuestionDetailActivity.this, "Couldn't delete Question");
                 } else {
-                    Toast.makeText(QuestionDetailActivity.this, "Deleted Question Successfully", Toast.LENGTH_SHORT).show();
+                    showSnackBar(QuestionDetailActivity.this, "Deleted Question Successfully");
 
                 }
             }

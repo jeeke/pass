@@ -1,18 +1,15 @@
 package com.example.mytasker.activities;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RatingBar;
-import android.widget.Toast;
 
 import com.example.mytasker.R;
-import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.Tools;
-import com.google.firebase.functions.FirebaseFunctionsException;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class FeedbackByTaskerActivity extends BaseActivity {
 
@@ -44,47 +41,20 @@ public class FeedbackByTaskerActivity extends BaseActivity {
         map.put("by", "Tasker");
         map.put("user_id", getIntent().getStringExtra("poster_id"));
         map.put("task_id", getIntent().getStringExtra("task_id"));
-        callAPI(map);
+        server.rate(map);
     }
 
     private void checkFields() {
         float a = price.getRating();
         float b = clearity.getRating();
         float c = behaviour.getRating();
-        if (a * b * c == 0.0f) {
-            Toast.makeText(this, "Please answer all questions", Toast.LENGTH_SHORT).show();
+        if (!prevCallResolved || server == null)
+            showSnackBar(this, "Error, Please try later");
+        else if (a * b * c == 0.0f) {
+            showSnackBar(this, "Please answer all questions");
         } else {
             callRetrofit(a, b, c);
         }
-    }
-
-    private void callAPI(Map data) {
-        if (!prevCallResolved) return;
-        ProgressDialog dlg = new ProgressDialog(this);
-        dlg.setTitle("Posting your feedback..");
-        dlg.show();
-
-        Contracts.call(data, "rate").addOnCompleteListener(t -> {
-            prevCallResolved = true;
-            dlg.dismiss();
-            if (!t.isSuccessful()) {
-                Exception e = t.getException();
-                if (e instanceof FirebaseFunctionsException) {
-                    FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
-                    FirebaseFunctionsException.Code code = ffe.getCode();
-                    Object details = ffe.getDetails();
-                    Log.e("tag", ffe + "\n" + code + "\n" + details);
-                }
-                Toast.makeText(this, "Rating Unsuccessful", Toast.LENGTH_SHORT).show();
-                Log.e("tag", e + "");
-                return;
-            }
-            finish();
-            Log.v("tag", t.getResult());
-            Toast.makeText(this, "Rating Successful", Toast.LENGTH_SHORT).show();
-        });
-        prevCallResolved = false;
-
     }
 
 

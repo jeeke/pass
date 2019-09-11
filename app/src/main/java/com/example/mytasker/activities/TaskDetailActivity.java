@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.mytasker.R;
 import com.example.mytasker.chat.MessagesActivity;
@@ -24,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.mytasker.util.Tools.launchActivity;
+import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class TaskDetailActivity extends BaseActivity {
     ChipAdapter tagAdapter, mustAdapter;
@@ -107,7 +107,6 @@ public class TaskDetailActivity extends BaseActivity {
         initButton();
         Tools.initMinToolbar(this, "Task Details", false);
         findViewById(R.id.chat).setOnClickListener(v -> {
-//            Toast.makeText(this, current.getPoster_id(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MessagesActivity.class);
             intent.putExtra("id", current.getPoster_id());
             intent.putExtra("name", current.getPoster_name());
@@ -167,13 +166,13 @@ public class TaskDetailActivity extends BaseActivity {
                     Object details = ffe.getDetails();
                     Log.e("tag", ffe + "\n" + code + "\n" + details);
                 }
-                Toast.makeText(this, "Could not be marked", Toast.LENGTH_SHORT).show();
+                showSnackBar(this, "Could not be marked");
                 Log.e("tag", e + "");
                 return;
             }
             finish();
             Log.e("tag", t.getResult() + "");
-            Toast.makeText(this, "Task Done Successfully", Toast.LENGTH_SHORT).show();
+            showSnackBar(this, "Task Done Successfully");
             Intent intent = new Intent(this, FeedbackByTaskerActivity.class);
             intent.putExtra("task_id", current.getId());
             intent.putExtra("task_title", current.getTitle());
@@ -201,13 +200,13 @@ public class TaskDetailActivity extends BaseActivity {
                     Object details = ffe.getDetails();
                     Log.e("tag", ffe + "\n" + code + "\n" + details);
                 }
-                Toast.makeText(this, "Bid could not be cancelled", Toast.LENGTH_SHORT).show();
+                showSnackBar(this, "Bid could not be cancelled");
                 Log.e("tag", e + "");
                 return;
             }
             finish();
             Log.e("tag", t.getResult() + "");
-            Toast.makeText(this, "Bid Cancelled", Toast.LENGTH_SHORT).show();
+            showSnackBar(this, "Bid cancelled");
         });
         prevCallResolved = false;
     }

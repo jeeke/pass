@@ -112,4 +112,9 @@ public class DialogsActivity extends DemoDialogsActivity {
     private void onNewDialog(Dialog dialog) {
         dialogsAdapter.addItem(dialog);
     }
+
+    @Override
+    public void onDialogLongClick(Dialog dialog) {
+
+    }
 }

@@ -1,26 +1,17 @@
 package com.example.mytasker.activities;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.mytasker.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 
-import java.util.Date;
-
-import static com.example.mytasker.util.Cache.getUser;
-import static com.example.mytasker.util.Contracts.avatars;
+import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class LoginActivity extends BaseActivity {
 
@@ -61,86 +52,19 @@ public class LoginActivity extends BaseActivity {
         email = second.getText().toString();
         password = third.getText().toString();
         name = first.getText().toString();
-        if (from && name.equals("")) {
-            Toast.makeText(this, "Please Enter Your Name", Toast.LENGTH_SHORT).show();
+
+        if (!prevCallResolved || server == null)
+            showSnackBar(this, "Error, Please try later");
+        else if (from && name.equals("")) {
+            showSnackBar(this, "Please Enter Your Name");
         } else if (email.equals("") || !email.contains("@") || !email.contains("."))
-            Toast.makeText(this, "Please Enter Valid Email", Toast.LENGTH_SHORT).show();
+            showSnackBar(this, "Please Enter Valid Email");
         else if (password.length() < 8)
-            Toast.makeText(this, "Password can not be less than 8 characters", Toast.LENGTH_SHORT).show();
+            showSnackBar(this, "Password can not be less than 8 characters");
         else if (from) {
-            dialog.setTitle("Creating your account,Please Wait...");
-            dialog.show();
-            signUp();
+            server.signUp(name, email, password);
         } else {
-            dialog.setTitle("Logging you in,Please Wait...");
-            dialog.show();
-            login();
+            server.login(email, password);
         }
-    }
-
-    private void signUp() {
-        if (!prevCallResolved) return;
-        prevCallResolved = false;
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "createUserWithEmail:success");
-                        initProfile();
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(LoginActivity.this, "SignUp failed.",
-                                Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-                    prevCallResolved = true;
-                });
-    }
-
-    private void login() {
-        if (!prevCallResolved) return;
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    prevCallResolved = true;
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "signInWithEmail:success");
-                        dialog.dismiss();
-                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-                });
-        prevCallResolved = false;
-    }
-
-    private void initProfile() {
-        if (!prevCallResolved) return;
-        FirebaseUser user = getUser();
-        if (user != null) {
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(name)
-                    .setPhotoUri(Uri.parse(avatars[(int) (new Date().getTime() % 6)]))
-                    .build();
-            user.updateProfile(profileUpdates)
-                    .addOnCompleteListener(task -> {
-                        prevCallResolved = true;
-                        if (task.isSuccessful()) {
-                            dialog.dismiss();
-                            Log.d(TAG, "User profile initiated.");
-                            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }
-                        dialog.dismiss();
-                    });
-            prevCallResolved = false;
-        }
-        dialog.dismiss();
     }
 }

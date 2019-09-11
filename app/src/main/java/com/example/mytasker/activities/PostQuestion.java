@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.mytasker.R;
 import com.example.mytasker.models.Question;
@@ -23,6 +22,7 @@ import retrofit2.Retrofit;
 import static com.example.mytasker.util.Cache.getToken;
 import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Tools.getRetrofit;
+import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class PostQuestion extends LocationActivity implements LocationActivity.Listener {
 
@@ -41,7 +41,7 @@ public class PostQuestion extends LocationActivity implements LocationActivity.L
         fab.setOnClickListener(v -> {
             q = ques.getText().toString();
             if (q.equals("")) {
-                Toast.makeText(this, "Please enter your question", Toast.LENGTH_SHORT).show();
+                showSnackBar(this, "Please enter your question");
                 return;
             }
             setListener(this);

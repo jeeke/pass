@@ -8,11 +8,12 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
-import com.example.mytasker.util.Tools;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
 import org.jetbrains.annotations.NotNull;
+
+import static com.example.mytasker.util.Tools.showSnackBar;
 
 @SuppressLint("Registered")
 public class LocationActivity extends BaseActivity {
@@ -36,7 +37,8 @@ public class LocationActivity extends BaseActivity {
             if (grantResults.length == 1
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLocation();
-            } else Tools.showToast(this, "Please give the location permission", false);
+            } else
+                showSnackBar(this, "Please give the location permission");
         }
     }
 
@@ -58,7 +60,7 @@ public class LocationActivity extends BaseActivity {
                             lon = location.getLongitude();
                             lat = location.getLatitude();
                             mListener.onLocationFetched();
-                        } else Tools.showToast(this, "Location can't be fetched, false", false);
+                        } else showSnackBar(LocationActivity.this, "Location can't be fetched");
                     });
         }
     }

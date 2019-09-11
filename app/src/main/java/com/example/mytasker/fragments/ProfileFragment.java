@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,6 +50,7 @@ import static com.example.mytasker.util.Contracts.CODE_NOTIFICATION_ACTIVITY;
 import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
 import static com.example.mytasker.util.Contracts.dpToPx;
 import static com.example.mytasker.util.Tools.launchActivity;
+import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class ProfileFragment extends Fragment {
 
@@ -191,14 +191,14 @@ public class ProfileFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     dlg.dismiss();
                     if (!task.isSuccessful()) {
-                        Toast.makeText(getContext(), "Could not be updated", Toast.LENGTH_SHORT).show();
+                        showSnackBar(getActivity(), "Could not be updated");
                     } else aboutText.setText(about);
                 });
     }
 
     private void addSkill(String skill) {
         if (!adapter.isSafe(skill)) {
-            Toast.makeText(getContext(), "Skill Already Exist or Empty", Toast.LENGTH_SHORT).show();
+            showSnackBar(getActivity(), "Skill Already Exist or Empty");
             return;
         }
         dlg.setTitle("Adding Skill...");
@@ -208,7 +208,7 @@ public class ProfileFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     dlg.dismiss();
                     if (!task.isSuccessful()) {
-                        Toast.makeText(getContext(), "Skills could not be updated", Toast.LENGTH_SHORT).show();
+                        showSnackBar(getActivity(), "Skills could not be updated");
                     } else adapter.addChild(skill);
                 });
     }
@@ -243,7 +243,7 @@ public class ProfileFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     dlg.dismiss();
                     if (!task.isSuccessful()) {
-                        Toast.makeText(getContext(), "Skill could not be removed", Toast.LENGTH_SHORT).show();
+                        showSnackBar(getActivity(), "Skill could not be removed");
                         adapter.addChild(skill);
                     }
                 });
@@ -278,7 +278,7 @@ public class ProfileFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {
                 r.removeEventListener(this);
                 dlg.dismiss();
-                Toast.makeText(getContext(), "Something went wrong, Try later ", Toast.LENGTH_SHORT).show();
+                showSnackBar(getActivity(), "Something went wrong, Try later ");
                 Log.e("error", databaseError.toString());
             }
         });

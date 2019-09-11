@@ -5,7 +5,6 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -32,6 +31,7 @@ import retrofit2.Retrofit;
 
 import static com.example.mytasker.util.Cache.getToken;
 import static com.example.mytasker.util.Tools.getRetrofit;
+import static com.example.mytasker.util.Tools.showSnackBar;
 
 
 public class PostTask extends LocationActivity implements LocationActivity.Listener {
@@ -79,10 +79,8 @@ public class PostTask extends LocationActivity implements LocationActivity.Liste
             tags = frag.getTaskTags();
             mustHaves = frag.getTaskMustHaves();
             if (category.equals("")) {
-                Toast.makeText(this, "Please select category for the task", Toast.LENGTH_SHORT).show();
-            } else if (tags.size() < 3)
-                Toast.makeText(this, "Please add minimum 3 tags", Toast.LENGTH_SHORT).show();
-            else {
+                showSnackBar(this, "Please select the task type");
+            } else {
                 fragment = new PostTaskDetail();
                 loadFragment(fragment);
                 indicator.setCurrentStep(currentPage++);
@@ -92,9 +90,7 @@ public class PostTask extends LocationActivity implements LocationActivity.Liste
             title = frag.getTitle();
             desc = frag.getDesc();
             if (title.equals("")) {
-                Toast.makeText(this, "Please enter task title", Toast.LENGTH_SHORT).show();
-            } else if (desc.equals("")) {
-                Toast.makeText(this, "Please enter task description", Toast.LENGTH_SHORT).show();
+                showSnackBar(this, "Please enter task title");
             } else {
                 fragment = new PostTaskExtra();
                 loadFragment(fragment);
@@ -107,7 +103,7 @@ public class PostTask extends LocationActivity implements LocationActivity.Liste
             reward = frag.getReward();
             deadline = frag.getDate();
             if (reward.equals("")) {
-                Toast.makeText(this, "Please Enter Reward Value", Toast.LENGTH_SHORT).show();
+                showSnackBar(this, "Please Enter Reward Value");
             } else
                 setListener(this);
             super.getLocation();

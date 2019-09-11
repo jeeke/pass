@@ -5,14 +5,17 @@ import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,13 +24,17 @@ import androidx.core.app.ActivityCompat;
 import com.example.mytasker.MyApplication;
 import com.example.mytasker.R;
 import com.example.mytasker.broadcastReceivers.ConnectionReceiver;
+import com.example.mytasker.util.Server;
 
 import static com.example.mytasker.MyFirebaseMessagingService.CHANNEL_ID;
+import static com.example.mytasker.util.Tools.showSnackBar;
 
-public abstract class BaseActivity extends AppCompatActivity implements ConnectionReceiver.ConnectionReceiverListener {
+public abstract class BaseActivity extends AppCompatActivity implements ConnectionReceiver.ConnectionReceiverListener, Server.ServerCallCompleteListener {
 
     private static final BroadcastReceiver MyReceiver = new ConnectionReceiver();
     private static final int REQUEST_PERMISSIONS = 177;
+    Server server;
+    boolean prevCallResolved = true;
 
     public static void checkPermission(Activity context) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_NETWORK_STATE)
@@ -51,16 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         checkPermission(this);
     }
 
-    @Override
-    public void onNetworkConnectionChanged(boolean isConnected) {
-        if (!isConnected) {
-            //show a No Internet Alert or Dialog
-            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-            setContentView(R.layout.error_page);
-            Button click = findViewById(R.id.retry);
-            click.setOnClickListener(v -> checkConnection());
-        }
-    }
+    boolean mBound = false;
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -74,33 +72,59 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // register connection status listener
-        registerReceiver(MyReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        MyApplication.getInstance().setConnectionListener(this);
-    }
+    private ServiceConnection connection = new ServiceConnection() {
 
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            server = ((Server.ServerBinder) service).getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mBound = false;
+        }
+    };
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (!isConnected) {
+            //show a No Internet Alert or Dialog
+            setContentView(R.layout.error_page);
+            showSnackBar(this, "No Internet Connection");
+            Button click = findViewById(R.id.retry);
+            click.setOnClickListener(v -> checkConnection());
+        }
+    }
 
     private void checkConnection() {
         boolean isConnected = ConnectionReceiver.isConnected();
         if (isConnected) {
-            //show a No Internet Alert or Dialog
             finish();
             startActivity(getIntent());
-//            Toast.makeText(this, "Internet Connected Alive", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         unregisterReceiver(MyReceiver);
+        unbindService(connection);
+        mBound = false;
     }
 
-
-//    @Override
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver(MyReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        MyApplication.getInstance().setConnectionListener(this);
+        Server.setListener(this);
+        Intent intent = new Intent(this, Server.class);
+        startService(intent);
+        bindService(intent, connection, 0);
+    }
+    //    @Override
 //    public void finish() {
 //        super.finish();
 //        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
@@ -128,4 +152,26 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onCallComplete(boolean success, int method) {
+        prevCallResolved = true;
+        String title = "";
+        switch (method) {
+            case 1:
+                if (success) title = "Image Updated Successfully";
+                else title = "Image Couldn't be updated";
+                break;
+            case 2:
+                if (success) title = "Bidding Successful";
+                else title = "Bidding Unsuccessful";
+                break;
+            case 3:
+                if (success) title = "Password Changed";
+                else title = "Password couldn't be changed";
+                break;
+        }
+        showSnackBar(findViewById(android.R.id.content), title);
+    }
+
 }
