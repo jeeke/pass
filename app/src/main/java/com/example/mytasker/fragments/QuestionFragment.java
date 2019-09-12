@@ -88,7 +88,7 @@ public class QuestionFragment extends Fragment {
                 shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
                 getToken(token -> callRetrofit(token, lon, lat), getActivity());
 
-            }
+            } else swipeContainer.setRefreshing(false);
         });
         activity.getLocation();
     }

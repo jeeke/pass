@@ -103,8 +103,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
                 listView.animate().alpha(0.0f).setDuration(0).start();
                 shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
                 getToken(token -> callRetrofit(token, lon, lat), getActivity());
-
-            }
+            } else swipeContainer.setRefreshing(false);
         });
         activity.getLocation();
     }
