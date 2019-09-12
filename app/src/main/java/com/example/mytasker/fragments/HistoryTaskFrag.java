@@ -77,7 +77,7 @@ public class HistoryTaskFrag extends Fragment implements TaskHolder.RecyclerView
         if (type == 2) c = "AsTasker";
         else c = "AsPoster";
         //TODO remodel table to increase efficiency
-        Query mQuery = getDatabase().child("PrevTasks").child(getUser().getUid()).child(c);
+        Query mQuery = getDatabase().child("PrevTasks").child(getUser(getActivity()).getUid()).child(c);
         //Initialize PagedList Configuration
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)

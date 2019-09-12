@@ -62,7 +62,7 @@ public class NotificationActivity extends BaseActivity implements NotificationHo
 
         //Initialize Database
         //TODO remodel table to increase efficiency
-        Query mQuery = getDatabase().child("/Notifications").child(getUser().getUid());
+        Query mQuery = getDatabase().child("/Notifications").child(getUser(this).getUid());
         //Initialize PagedList Configuration
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)

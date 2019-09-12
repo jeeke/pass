@@ -1,5 +1,6 @@
 package com.example.mytasker.activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import static com.example.mytasker.MyFirebaseMessagingService.MY_PREFS_NAME;
-import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Tools.launchActivity;
 import static com.example.mytasker.util.Tools.showSnackBar;
 
@@ -112,7 +112,7 @@ public class MainActivity extends BaseActivity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    public static void signOut(Context context) {
+    public static void signOut(Activity context) {
         //remove token firebase
         Tools.removeToken(context);
 
@@ -146,7 +146,7 @@ public class MainActivity extends BaseActivity implements
 //    }
 
     private void updateUI() {
-        FirebaseUser user = getUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
 //            TODO handle pending feedbacks
 //            int pending_feedbacks = sp.getInt("pending_feedbacks", 0);

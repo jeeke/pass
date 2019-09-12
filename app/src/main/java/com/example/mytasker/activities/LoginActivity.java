@@ -47,6 +47,12 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onServerCallSuccess(String title) {
+        super.onServerCallSuccess(title);
+        finish();
+    }
+
     private void checkFields(boolean from) {
         dialog = new ProgressDialog(this);
         email = second.getText().toString();

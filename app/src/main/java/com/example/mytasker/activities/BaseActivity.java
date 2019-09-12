@@ -38,11 +38,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
 
     public Server server;
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Server.setServerCallCompleteListener(null);
-    }
 
     boolean prevCallResolved = true;
 
@@ -117,17 +112,22 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         }
     }
 
+    ProgressBar progressBar;
+
     @Override
     protected void onStop() {
         super.onStop();
         unregisterReceiver(MyReceiver);
         unbindService(connection);
         mBound = false;
+//TODO resolve this issue
+//        Server.setServerCallCompleteListener(null);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        progressBar = findViewById(R.id.progress_bar);
         registerReceiver(MyReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         MyApplication.getInstance().setConnectionListener(this);
         Server.setServerCallCompleteListener(this);
@@ -164,17 +164,24 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         return super.onOptionsItemSelected(item);
     }
 
+    public void showProgressBar(boolean visibility) {
+        if (progressBar != null)
+            if (visibility) progressBar.setVisibility(View.VISIBLE);
+            else progressBar.setVisibility(View.GONE);
+    }
+
     @Override
     public void onServerCallSuccess(String title) {
-        findViewById(R.id.progress_bar).setVisibility(View.GONE);
+        if (title != null) {
+            showSnackBar(findViewById(android.R.id.content), title);
+        }
+        showProgressBar(false);
         prevCallResolved = true;
-        showSnackBar(findViewById(android.R.id.content), title);
     }
 
     @Override
     public void onServerCallFailure(String title, Server.OnRetryListener retryListener) {
-        ProgressBar progressBar = findViewById(R.id.progress_bar);
-        if (progressBar != null) progressBar.setVisibility(View.GONE);
+        showProgressBar(false);
         prevCallResolved = true;
         showSnackBar(findViewById(android.R.id.content), title, retryListener);
     }

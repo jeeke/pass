@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.PostTask">
     <include layout="@layout/toolbar" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/done"
         android:layout_width="wrap_content"
@@ -18,11 +19,6 @@
         app:backgroundTint="?colorSecondary"
         app:fabSize="normal"
         app:tint="?colorPrimary" />
-    <!--<ProgressBar-->
-    <!--android:id="@+id/progress"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:visibility="invisible"/>-->
 
     <ScrollView
         android:layout_width="match_parent"

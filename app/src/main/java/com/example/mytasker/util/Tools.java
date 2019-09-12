@@ -1,7 +1,6 @@
 package com.example.mytasker.util;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -144,12 +143,12 @@ public class Tools {
                 .build();
     }
 
-    public static void setToken(Context context) {
+    public static void setToken(Activity context) {
         SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        setOnline("true");
+        setOnline(context, "true");
         boolean changed = prefs.getBoolean("token_changed", true);
         if (changed) {
-            FirebaseUser currentUser = Cache.getUser();
+            FirebaseUser currentUser = Cache.getUser(context);
             String token = prefs.getString("token", "0");
             DatabaseReference mUserRef = Cache.getDatabase().child("Users").child(currentUser.getUid()).child("device_token");
             mUserRef.setValue(token).addOnCompleteListener(task -> {
@@ -160,14 +159,14 @@ public class Tools {
         }
     }
 
-    public static void removeToken(Context context) {
+    public static void removeToken(Activity context) {
         SharedPreferences.Editor editor = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         editor.putBoolean("token_changed", true).apply();
-        Cache.getDatabase().child("Users").child(Cache.getUser().getUid()).child("device_token").removeValue();
+        Cache.getDatabase().child("Users").child(Cache.getUser(context).getUid()).child("device_token").removeValue();
     }
 
-    public static void setOnline(Object online) {
-        FirebaseUser currentUser = Cache.getUser();
+    public static void setOnline(Activity activity, Object online) {
+        FirebaseUser currentUser = Cache.getUser(activity);
         if (currentUser != null) {
             DatabaseReference mUserRef = Cache.getDatabase().child("Users").child(currentUser.getUid());
             mUserRef.child("online").setValue(online);

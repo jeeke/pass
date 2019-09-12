@@ -44,7 +44,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import static com.example.mytasker.util.Cache.getDatabase;
-import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Contracts.avatars;
 import static com.example.mytasker.util.Tools.getRetrofit;
 
@@ -62,8 +61,8 @@ public class Server extends Service {
 
     private void showProgressBar() {
         Activity activity = ((Activity) mListener);
-        ProgressBar progressBar = activity.findViewById(R.id.progress_bar);
         if (mListener != null) {
+            ProgressBar progressBar = activity.findViewById(R.id.progress_bar);
             if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
             else {
                 dialog = new ProgressDialog(activity);
@@ -75,11 +74,15 @@ public class Server extends Service {
     private void notifyListener(boolean success, String titlePos, String titleNeg, OnRetryListener retryListener) {
         if (mListener != null)
             if (success) {
-                mListener.onServerCallSuccess(titlePos);
+                if (dialog != null) {
+                    dialog.dismiss();
+                    dialog = null;
+                    mListener.onServerCallSuccess(null);
+                } else mListener.onServerCallSuccess(titlePos);
             } else {
+                if (dialog != null) dialog.dismiss();
                 mListener.onServerCallFailure(titleNeg, retryListener);
             }
-        if (dialog != null) dialog.dismiss();
         //TODO send notification
         //not for auth actions
     }
@@ -127,14 +130,13 @@ public class Server extends Service {
     }
 
     //method 1
-    public void updateImage(String url, Uri uri, ImageView image) {
+    public void updateImage(FirebaseUser user, String url, Uri uri, ImageView image) {
         showProgressBar();
         imageUrl = url;
-        final OnRetryListener retry = () -> updateImage(imageUrl, uri, image);
+        final OnRetryListener retry = () -> updateImage(user, imageUrl, uri, image);
         if (url == null) {
             uploadImage(success -> {
                 if (success) {
-                    FirebaseUser user = getUser();
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                             .setPhotoUri(Uri.parse(imageUrl))
                             .build();
@@ -148,7 +150,6 @@ public class Server extends Service {
                 }
             }, uri, image);
         } else {
-            FirebaseUser user = getUser();
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setPhotoUri(Uri.parse(url))
                     .build();
@@ -170,10 +171,9 @@ public class Server extends Service {
     }
 
     //method 3
-    public void editPassword(String password, String newPassword) {
+    public void editPassword(FirebaseUser user, String password, String newPassword) {
         showProgressBar();
-        final OnRetryListener retry = () -> editPassword(password, newPassword);
-        FirebaseUser user = getUser();
+        final OnRetryListener retry = () -> editPassword(user, password, newPassword);
         AuthCredential credential = EmailAuthProvider
                 .getCredential(user.getEmail(), password);
         user.reauthenticate(credential)
@@ -208,16 +208,19 @@ public class Server extends Service {
     }
 
     private void initProfile(String name) {
-        FirebaseUser user = getUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
-                    .setPhotoUri(Uri.parse(avatars[(int) (new Date().getTime() % 6)]))
+                    .setPhotoUri(Uri.parse(avatars[(new Random().nextInt() % 5)]))
                     .build();
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(task ->
                             notifyListener(task.isSuccessful(), "SignUp Successful",
                                     "SignUp Unsuccessful", () -> initProfile(name)));
+        } else {
+            notifyListener(false, "",
+                    "SignUp Unsuccessful", () -> initProfile(name));
         }
     }
 
@@ -236,12 +239,11 @@ public class Server extends Service {
     }
 
     //Method 7
-    public void postFeed(boolean onPortfolio, String text, ImageView image, Uri uri, String url) {
+    public void postFeed(FirebaseUser user, boolean onPortfolio, String text, ImageView image, Uri uri, String url) {
         showProgressBar();
         imageUrl = url;
-        final OnRetryListener retry = () -> postFeed(onPortfolio, text, image, uri, imageUrl);
-        if (imageUrl != null) {
-            FirebaseUser user = getUser();
+        final OnRetryListener retry = () -> postFeed(user, onPortfolio, text, image, uri, imageUrl);
+        if (uri == null || imageUrl != null) {
             Date date = new Date();
             Feed feed = new Feed(
                     date.getTime(),
@@ -269,9 +271,8 @@ public class Server extends Service {
     }
 
     //Method 8
-    public void postQuestion(String token, String q, double lon, double lat) {
+    public void postQuestion(FirebaseUser user, String token, String q, double lon, double lat) {
         showProgressBar();
-        FirebaseUser user = getUser();
         Date date = new Date();
         Question question = new Question(
                 date.getTime(),
@@ -291,7 +292,7 @@ public class Server extends Service {
                 notifyListener(response.isSuccessful(),
                         "Question Posted",
                         "Couldn't Post Question", () ->
-                                postQuestion(token, q, lon, lat));
+                                postQuestion(user, token, q, lon, lat));
             }
 
             @Override
@@ -299,7 +300,7 @@ public class Server extends Service {
                 notifyListener(false,
                         "",
                         "Couldn't Post Question", () ->
-                                postQuestion(token, q, lon, lat));
+                                postQuestion(user, token, q, lon, lat));
             }
         });
     }
@@ -445,6 +446,7 @@ public class Server extends Service {
         void onServerCallSuccess(String title);
 
         void onServerCallFailure(String title, OnRetryListener retryListener);
+
     }
 
     private interface OnInternalCallCompleteListener {

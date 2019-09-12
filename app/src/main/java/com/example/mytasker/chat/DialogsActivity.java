@@ -6,19 +6,18 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.example.mytasker.R;
 import com.example.mytasker.chat.data.model.Dialog;
 import com.example.mytasker.chat.data.model.DialogHelper;
 import com.example.mytasker.util.Tools;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
@@ -50,7 +49,6 @@ public class DialogsActivity extends DemoDialogsActivity {
     protected void onStart() {
         super.onStart();
         bar.setVisibility(View.VISIBLE);
-        initAdapter();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String mCurrent_user_id = mAuth.getCurrentUser().getUid();
         mConvDatabase = FirebaseDatabase.getInstance().getReference().child("Chats").child(mCurrent_user_id);
@@ -60,34 +58,54 @@ public class DialogsActivity extends DemoDialogsActivity {
 
     private void queryFireBase() {
         Query conversationQuery = mConvDatabase.orderByChild("lastActivity");
-        conversationQuery.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Dialog dialog = dataSnapshot.getValue(DialogHelper.class).toDialog();
-                onNewDialog(dialog);
-                bar.setVisibility(View.GONE);
-            }
+        conversationQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                             @Override
+                                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                 ArrayList<Dialog> dialogs = new ArrayList<>();
+                                                                 for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                                                     dialogs.add(data.getValue(DialogHelper.class).toDialog());
+                                                                 }
+                                                                 bar.setVisibility(View.GONE);
+                                                                 if (dialogs.isEmpty()) {
+                                                                     findViewById(R.id.sugga).setVisibility(View.VISIBLE);
+                                                                 } else initAdapter(dialogs);
+                                                             }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                                             @Override
+                                                             public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
+                                                             }
+                                                         }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//                new ValueEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                Dialog dialog = dataSnapshot.getValue(DialogHelper.class).toDialog();
+//                onNewDialog(dialog);
+//                bar.setVisibility(View.GONE);
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        }
+        );
     }
 
     @Override
@@ -99,9 +117,9 @@ public class DialogsActivity extends DemoDialogsActivity {
         startActivity(intent);
     }
 
-    private void initAdapter() {
+    private void initAdapter(ArrayList<Dialog> dialogs) {
         super.dialogsAdapter = new DialogsListAdapter<>(super.imageLoader);
-        super.dialogsAdapter.setItems(new ArrayList<>());
+        super.dialogsAdapter.setItems(dialogs);
         super.dialogsAdapter.setOnDialogClickListener(this);
         super.dialogsAdapter.setOnDialogLongClickListener(this);
         dialogsList.setAdapter(super.dialogsAdapter);

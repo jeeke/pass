@@ -24,14 +24,14 @@ public abstract class DemoDialogsActivity extends BaseActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setOnline("true");
+        setOnline(this, "true");
         imageLoader = (imageView, url, payload) -> Glide.with(DemoDialogsActivity.this).load(url).apply(RequestOptions.circleCropTransform()).into(imageView);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        setOnline(ServerValue.TIMESTAMP);
+        setOnline(this, ServerValue.TIMESTAMP);
     }
 
 }

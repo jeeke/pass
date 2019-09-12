@@ -156,7 +156,7 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
 
     private void verifyNCall(String tasker_id) {
         if (prevCallResolved && server != null) {
-            getToken(token -> server.assignTsk(token, tasker_id, task));
+            getToken(token -> server.assignTsk(token, tasker_id, task), this);
         }
     }
 

@@ -37,8 +37,10 @@ public class LocationActivity extends BaseActivity {
             if (grantResults.length == 1
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLocation();
-            } else
+            } else {
                 showSnackBar(this, "Please give the location permission");
+                mLocationListener.onLocationFetched(false, -1, -1);
+            }
         }
     }
 
@@ -47,7 +49,9 @@ public class LocationActivity extends BaseActivity {
     }
 
     public void getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (lon != null && lat != null) {
+            mLocationListener.onLocationFetched(true, lon, lat);
+        } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             // Check Permissions Now
             ActivityCompat.requestPermissions(this,
@@ -59,13 +63,13 @@ public class LocationActivity extends BaseActivity {
                         if (location != null) {
                             lon = location.getLongitude();
                             lat = location.getLatitude();
-                            mLocationListener.onLocationFetched();
+                            mLocationListener.onLocationFetched(true, lon, lat);
                         } else showSnackBar(LocationActivity.this, "Location can't be fetched");
                     });
         }
     }
 
     public interface LocationListener {
-        void onLocationFetched();
+        void onLocationFetched(boolean success, double lon, double lat);
     }
 }

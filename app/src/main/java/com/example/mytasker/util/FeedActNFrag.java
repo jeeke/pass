@@ -42,9 +42,10 @@ public class FeedActNFrag {
     public FeedActNFrag() {
     }
 
-    private String uid = getUser().getUid();
+    private String uid;
 
     public void callFireBase(FragmentActivity context, ShimmerFrameLayout shimmerContainer, boolean from, SwipeRefreshLayout mSwipeRefreshLayout, RecyclerView mRecyclerView, int type, Query mQuery) {
+        uid = getUser(context).getUid();
         mSwipeRefreshLayout.setColorSchemeResources(
 
                 android.R.color.holo_blue_bright,
@@ -56,10 +57,10 @@ public class FeedActNFrag {
         if (mQuery == null)
             if (from) {
                 Tools.initMinToolbar((AppCompatActivity) context, "Portfolio");
-                mQuery = getDatabase().child("Portfolios").child(getUser().getUid());
+                mQuery = getDatabase().child("Portfolios").child(getUser(context).getUid());
             } else {
                 Tools.initMinToolbar((AppCompatActivity) context, "My Posts");
-                mQuery = getDatabase().child("PrevFeeds").child(getUser().getUid());
+                mQuery = getDatabase().child("PrevFeeds").child(getUser(context).getUid());
             }
 
         LinearLayoutManager mManager = new LinearLayoutManager(context);
@@ -100,10 +101,10 @@ public class FeedActNFrag {
                         context.startActivity(intent);
                     } else if (v.getId() == R.id.action_delete) {
                         Map<String, Object> map = new HashMap<>();
-                        map.put("Portfolios/" + getUser().getUid() + '/' + model.getId(), null);
+                        map.put("Portfolios/" + getUser(context).getUid() + '/' + model.getId(), null);
                         if (!from) {
                             map.put("Feeds/" + model.getId(), null);
-                            map.put("PrevFeeds/" + getUser().getUid() + '/' + model.getId(), null);
+                            map.put("PrevFeeds/" + getUser(context).getUid() + '/' + model.getId(), null);
                         }
                         getDatabase().updateChildren(map).addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {

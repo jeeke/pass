@@ -99,28 +99,29 @@ public class PostTask extends LocationActivity implements LocationActivity.Locat
     }
 
     @Override
-    public void onLocationFetched() {
-        if (!prevCallResolved || server == null) return;
-        getToken(token -> {
-            Date date = new Date();
-            FirebaseUser user = getUser();
-            Task task = new Task(
-                    user.getUid(),
-                    user.getDisplayName(),
-                    user.getPhotoUrl().toString(),
-                    date.getTime(),
-                    desc,
-                    title,
-                    Float.parseFloat(reward),
-                    category,
-                    deadline,
-                    lat,
-                    lon,
-                    tags,
-                    mustHaves,
-                    false);
-            server.postTask(token, task);
-        });
-        prevCallResolved = false;
+    public void onLocationFetched(boolean success, double lon, double lat) {
+        if (success && prevCallResolved && server != null) {
+            getToken(token -> {
+                Date date = new Date();
+                FirebaseUser user = getUser(PostTask.this);
+                Task task = new Task(
+                        user.getUid(),
+                        user.getDisplayName(),
+                        user.getPhotoUrl().toString(),
+                        date.getTime(),
+                        desc,
+                        title,
+                        Float.parseFloat(reward),
+                        category,
+                        deadline,
+                        lat,
+                        lon,
+                        tags,
+                        mustHaves,
+                        false);
+                server.postTask(token, task);
+            }, this);
+            prevCallResolved = false;
+        }
     }
 }

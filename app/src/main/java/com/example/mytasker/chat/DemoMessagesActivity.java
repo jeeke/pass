@@ -67,7 +67,7 @@ public abstract class DemoMessagesActivity extends BaseActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setOnline("true");
+        setOnline(this, "true");
         initFireBase();
         imageLoader = (imageView, url, payload) -> Glide.with(DemoMessagesActivity.this).load(url).apply(RequestOptions.circleCropTransform()).into(imageView);
     }
@@ -101,7 +101,7 @@ public abstract class DemoMessagesActivity extends BaseActivity
     @Override
     protected void onStop() {
         super.onStop();
-        setOnline(ServerValue.TIMESTAMP);
+        setOnline(this, ServerValue.TIMESTAMP);
     }
 
     protected String mChatUId;

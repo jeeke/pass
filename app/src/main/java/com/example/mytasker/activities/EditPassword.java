@@ -7,6 +7,7 @@ import android.widget.EditText;
 import com.example.mytasker.R;
 import com.example.mytasker.util.Tools;
 
+import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class EditPassword extends BaseActivity {
@@ -40,7 +41,7 @@ public class EditPassword extends BaseActivity {
         } else if (newPassword.length() < 8) {
             showSnackBar(this, "Password less than 8 characters!");
         } else {
-            server.editPassword(password, newPassword);
+            server.editPassword(getUser(this), password, newPassword);
             prevCallResolved = false;
         }
     }

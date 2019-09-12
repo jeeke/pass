@@ -168,12 +168,13 @@ public class QuestionDetailActivity extends BaseActivity {
 
     private void submitAnswer() {
         if (!prevCallResolved) return;
-        FirebaseUser user = getUser();
+        FirebaseUser user = getUser(this);
         if (user != null) {
             Answer ans = new Answer(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), current.getPoster_id(), answer.getText().toString());
             FirebaseDatabase.getInstance().getReference().child("Answers")
                     .child(current.getId()).push().setValue(ans).addOnCompleteListener(task -> {
                 prevCallResolved = true;
+                showProgressBar(false);
                 if (task.isSuccessful()) {
                     answer.setText("");
                     mAdapter.refresh();
@@ -215,7 +216,7 @@ public class QuestionDetailActivity extends BaseActivity {
 
     private void verifyNCall() {
         if (!prevCallResolved || server == null) ;
-        getToken(token -> server.deleteQuestion(token, current.getC_date(), current.getId()));
+        getToken(token -> server.deleteQuestion(token, current.getC_date(), current.getId()), this);
         prevCallResolved = false;
     }
 

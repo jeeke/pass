@@ -1,7 +1,10 @@
 package com.example.mytasker.util;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 
+import com.example.mytasker.activities.MainActivity;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.models.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,9 +28,10 @@ public class Cache {
         tasks = null;
         questions = null;
     }
-    public static void getToken(OnTokenReceivedListener listener) {
+
+    public static void getToken(OnTokenReceivedListener listener, Activity activity) {
         if (token == null) {
-            getUser().getIdToken(true)
+            getUser(activity).getIdToken(true)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             token = task.getResult().getToken();
@@ -41,9 +45,13 @@ public class Cache {
             listener.onTokenReceived(token);
     }
 
-    public static FirebaseUser getUser() {
+    public static FirebaseUser getUser(Activity context) {
         if (mUser == null) {
             mUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (mUser == null) {
+                context.startActivity(new Intent(context, MainActivity.class));
+                context.finish();
+            }
         }
         return mUser;
     }

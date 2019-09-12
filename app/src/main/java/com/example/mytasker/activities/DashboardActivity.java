@@ -137,7 +137,7 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     @Override
     protected void onStop() {
         super.onStop();
-        setOnline(ServerValue.TIMESTAMP);
+        setOnline(this, ServerValue.TIMESTAMP);
     }
 
     @Override
@@ -176,14 +176,14 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     public void bselected(View v) {
         ImageView current = (ImageView) v;
         if (v.getId() != prevbselection.getId()) {
-            prevbselection.setImageResource(toogleImage(prevbselection.getId(), false));
-            current.setImageResource(toogleImage(current.getId(), true));
+            prevbselection.setImageResource(toggleImage(prevbselection.getId(), false));
+            current.setImageResource(toggleImage(current.getId(), true));
             prevbselection = current;
         }
     }
 
 
-    private int toogleImage(int id, boolean selected) {
+    private int toggleImage(int id, boolean selected) {
         switch (id) {
             case R.id.home:
                 fragments[0] = fragments[0] == null ? new HomeFragment() : fragments[0];
@@ -212,16 +212,16 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
 
     @Override
     public String getUId() {
-        return getUser().getUid();
+        return getUser(this).getUid();
     }
 
     @Override
     public String getUName() {
-        return getUser().getDisplayName();
+        return getUser(this).getDisplayName();
     }
 
     @Override
     public String getImageUrl() {
-        return getUser().getPhotoUrl().toString();
+        return getUser(this).getPhotoUrl().toString();
     }
 }

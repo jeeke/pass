@@ -8,6 +8,7 @@ import com.example.mytasker.R;
 import com.example.mytasker.util.Tools;
 
 import static com.example.mytasker.util.Cache.getToken;
+import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class PostQuestion extends LocationActivity implements LocationActivity.LocationListener {
@@ -36,9 +37,10 @@ public class PostQuestion extends LocationActivity implements LocationActivity.L
     }
 
     @Override
-    public void onLocationFetched() {
-        if (!prevCallResolved && server == null) ;
-        else getToken(token -> server.postQuestion(token, q, lon, lat));
-        prevCallResolved = false;
+    public void onLocationFetched(boolean success, double lon, double lat) {
+        if (success && prevCallResolved && server != null) {
+            getToken(token -> server.postQuestion(getUser(this), token, q, lon, lat), this);
+            prevCallResolved = false;
+        }
     }
 }

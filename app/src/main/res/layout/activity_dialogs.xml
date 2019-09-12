@@ -1,4 +1,4 @@
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,8 +8,16 @@
 
     <com.stfalcon.chatkit.dialogs.DialogsList
         android:id="@+id/dialogsList"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp"/>
+        android:layout_marginTop="?actionBarSize" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/sugga"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/sugga"
+        android:visibility="gone" />
+
+</FrameLayout>

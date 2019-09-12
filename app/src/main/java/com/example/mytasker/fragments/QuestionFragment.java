@@ -79,18 +79,16 @@ public class QuestionFragment extends Fragment {
 
     private boolean prevCallResolved = true;
 
-    private Double lat, lon;
     private void verifyNCall() {
         if (!prevCallResolved) return;
-        listView.animate().alpha(0.0f).setDuration(0).start();
-        shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
-        shimmerContainer.startShimmer();
         LocationActivity activity = (LocationActivity) getActivity();
-        activity.setLocationListener(() -> {
-            lat = activity.lat;
-            lon = activity.lon;
-            getToken(QuestionFragment.this::callRetrofit);
+        activity.setLocationListener((success, lon, lat) -> {
+            if (success) {
+                listView.animate().alpha(0.0f).setDuration(0).start();
+                shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
+                getToken(token -> callRetrofit(token, lon, lat), getActivity());
 
+            }
         });
         activity.getLocation();
     }
@@ -109,12 +107,10 @@ public class QuestionFragment extends Fragment {
     private SwipeRefreshLayout swipeContainer;
     private QuestionAdapter adapter;
 
-    private void callRetrofit(String token) {
+    private void callRetrofit(String token, double lon, double lat) {
         Retrofit retrofit = getRetrofit(token);
-
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
         Call<RetrofitParser> call = jsonPlaceHolder.getQuestions(lat, lon);
-
         call.enqueue(new Callback<RetrofitParser>() {
             @Override
             public void onResponse(Call<RetrofitParser> call, Response<RetrofitParser> response) {
@@ -154,7 +150,7 @@ public class QuestionFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_feed, container, false);
         initToolbar(v);
         initViews(v);
-        initListeners(v);
+        shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
         adapter = new QuestionAdapter(getActivity(), new ArrayList<>());
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -166,6 +162,7 @@ public class QuestionFragment extends Fragment {
                 android.R.color.holo_blue_bright,
 
                 android.R.color.holo_green_light);
+        swipeContainer.setOnRefreshListener(this::verifyNCall);
         swipeContainer.setRefreshing(true);
         checkCache();
         return v;
@@ -176,10 +173,5 @@ public class QuestionFragment extends Fragment {
         swipeContainer = v.findViewById(R.id.swipe_refresh_layout);
         shimmerContainer = v.findViewById(R.id.shimmer_container);
     }
-
-    private void initListeners(View v) {
-        swipeContainer.setOnRefreshListener(this::verifyNCall);
-    }
-
 
 }

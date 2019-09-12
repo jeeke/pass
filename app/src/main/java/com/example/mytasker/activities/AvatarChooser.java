@@ -21,6 +21,7 @@ import com.example.mytasker.adapters.AvatarAdapter;
 import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.Tools;
 
+import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class AvatarChooser extends BaseActivity implements AvatarAdapter.RecyclerViewClickListener {
@@ -55,10 +56,10 @@ public class AvatarChooser extends BaseActivity implements AvatarAdapter.Recycle
             else if (pickedPosition == -1)
                 showSnackBar(this, "Please pick an image");
             else if (pickedPosition != 0) {
-                server.updateImage(Contracts.avatars[pickedPosition - 1], null, null);
+                server.updateImage(getUser(this), Contracts.avatars[pickedPosition - 1], null, null);
                 prevCallResolved = false;
             } else {
-                server.updateImage(null, mUri, mImage);
+                server.updateImage(getUser(this), null, mUri, mImage);
                 prevCallResolved = false;
             }
         });

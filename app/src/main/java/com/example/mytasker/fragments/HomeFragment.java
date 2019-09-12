@@ -96,22 +96,21 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
 
     private boolean prevCallResolved = true;
 
-    private Double lat, lon;
-
     private void verifyNCall() {
         LocationActivity activity = (LocationActivity) getActivity();
-        activity.setLocationListener(() -> {
-            lat = activity.lat;
-            lon = activity.lon;
-            getToken(HomeFragment.this::callRetrofit);
+        activity.setLocationListener((success, lon, lat) -> {
+            if (success) {
+                listView.animate().alpha(0.0f).setDuration(0).start();
+                shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
+                getToken(token -> callRetrofit(token, lon, lat), getActivity());
+
+            }
         });
         activity.getLocation();
     }
 
-    private void callRetrofit(String token) {
+    private void callRetrofit(String token, double lon, double lat) {
         if (!prevCallResolved) return;
-        listView.animate().alpha(0.0f).setDuration(0).start();
-        shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
         shimmerContainer.startShimmer();
         Retrofit retrofit = getRetrofit(token);
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
@@ -179,6 +178,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         filterHelper = new FilterHelper(this, v.findViewById(R.id.scrollable));
         initToolbar(v);
         initViews(v);
+        shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
         adapter = new TaskListAdapter(getContext(), this, new ArrayList<>(), false);
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));

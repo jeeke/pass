@@ -14,6 +14,7 @@ import com.example.mytasker.util.Tools;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.UploadTask;
 
+import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class PostFeed extends BaseActivity {
@@ -55,7 +56,8 @@ public class PostFeed extends BaseActivity {
         if (!prevCallResolved && server == null) ;
         else if (text.getText().toString().equals("") && mUri == null)
             showSnackBar(this, "Both Fields can not be empty");
-        else server.postFeed(onPortfolio, text.getText().toString(), mImage, mUri, null);
+        else
+            server.postFeed(getUser(this), onPortfolio, text.getText().toString(), mImage, mUri, null);
     }
 
 
