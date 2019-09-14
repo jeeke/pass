@@ -90,7 +90,7 @@ public class ProfileFragment extends Fragment {
 
     private Server getServer() {
         BaseActivity activity = (BaseActivity) getActivity();
-        return activity.server;
+        return activity != null ? activity.server : null;
     }
 
     private ImageView profileImage;
@@ -196,39 +196,42 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.frag_profile, container, false);
-        profileImage = v.findViewById(R.id.profile_image);
-        mDatabase = getDatabase();
-        taskerrating = v.findViewById(R.id.taskerrating);
-        posterrating = v.findViewById(R.id.posterating);
-        taskdone = v.findViewById(R.id.taskdone);
-        taskposted = v.findViewById(R.id.taskposted);
-        bucksearned = v.findViewById(R.id.bucksearned);
-        ontime = v.findViewById(R.id.progressontime);
-        ontimet = v.findViewById(R.id.textViewontime);
-        behaviour = v.findViewById(R.id.progressbehaviour);
-        behaviourt = v.findViewById(R.id.textViewbehaviour);
-        quality = v.findViewById(R.id.progressquality);
-        qualityt = v.findViewById(R.id.textViewquality);
-        chipGroup = v.findViewById(R.id.skillschip);
-        imageView = v.findViewById(R.id.addskill);
-        constraintLayout = v.findViewById(R.id.layoutstats);
-        sugga = v.findViewById(R.id.sugga);
-        layout = v.findViewById(R.id.layoutrating);
-        divider = v.findViewById(R.id.divider11);
-        toolbar = v.findViewById(R.id.toolbar);
-        aboutText = v.findViewById(R.id.about);
-        progressBar = v.findViewById(R.id.progress_bar);
-        forMe(v, mListener.getMine());
-        adapter = new ChipAdapter(title -> {
-            Server server = getServer();
-            if (server != null) server.removeSkill(title, mListener.getUId());
-        }, chipGroup, new ArrayList<>());
-        swipeRefreshLayout = v.findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
+        try {
+            profileImage = v.findViewById(R.id.profile_image);
+            mDatabase = getDatabase();
+            taskerrating = v.findViewById(R.id.taskerrating);
+            posterrating = v.findViewById(R.id.posterating);
+            taskdone = v.findViewById(R.id.taskdone);
+            taskposted = v.findViewById(R.id.taskposted);
+            bucksearned = v.findViewById(R.id.bucksearned);
+            ontime = v.findViewById(R.id.progressontime);
+            ontimet = v.findViewById(R.id.textViewontime);
+            behaviour = v.findViewById(R.id.progressbehaviour);
+            behaviourt = v.findViewById(R.id.textViewbehaviour);
+            quality = v.findViewById(R.id.progressquality);
+            qualityt = v.findViewById(R.id.textViewquality);
+            chipGroup = v.findViewById(R.id.skillschip);
+            imageView = v.findViewById(R.id.addskill);
+            constraintLayout = v.findViewById(R.id.layoutstats);
+            sugga = v.findViewById(R.id.sugga);
+            layout = v.findViewById(R.id.layoutrating);
+            divider = v.findViewById(R.id.divider11);
+            toolbar = v.findViewById(R.id.toolbar);
+            aboutText = v.findViewById(R.id.about);
+            progressBar = v.findViewById(R.id.progress_bar);
+            forMe(v, mListener.getMine());
+            adapter = new ChipAdapter(title -> {
+                Server server = getServer();
+                if (server != null) server.removeSkill(title, mListener.getUId());
+            }, chipGroup, new ArrayList<>());
+            swipeRefreshLayout = v.findViewById(R.id.swipe_refresh_layout);
+            swipeRefreshLayout.setOnRefreshListener(this::myapi);
             myapi();
-        });
-        myapi();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return v;
+
     }
 
     private void updateProfileImage() {
@@ -245,28 +248,30 @@ public class ProfileFragment extends Fragment {
 
     private void myapi() {
         updateProfileImage();
-//        swipeRefreshLayout.setRefreshing(false);
-//        progressBar.setVisibility(View.VISIBLE);
         DatabaseReference r = mDatabase.child("Profiles").child(mListener.getUId());
         r.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                r.removeEventListener(this);
-                progressBar.setVisibility(View.GONE);
-                swipeRefreshLayout.setRefreshing(false);
+                try {
+                    r.removeEventListener(this);
+                    progressBar.setVisibility(View.GONE);
+                    swipeRefreshLayout.setRefreshing(false);
 //                if (mine) imageView.setVisibility(View.VISIBLE);
-                Profile profile = snapshot.getValue(Profile.class);
+                    Profile profile = snapshot.getValue(Profile.class);
 //                Log.e("\nP\nr\no\nf\ni\nl\ne\n",snapshot.toString());
-                if (profile != null) {
-                    profile.setByTasker(snapshot.child("Ratings/ByTasker").getValue(Rating.class));
-                    profile.setByPoster(snapshot.child("Ratings/ByPoster").getValue(Rating.class));
-                    for (DataSnapshot skill : snapshot.child("Skills").getChildren()) {
-                        profile.addSkill(skill.getKey());
+                    if (profile != null) {
+                        profile.setByTasker(snapshot.child("Ratings/ByTasker").getValue(Rating.class));
+                        profile.setByPoster(snapshot.child("Ratings/ByPoster").getValue(Rating.class));
+                        for (DataSnapshot skill : snapshot.child("Skills").getChildren()) {
+                            profile.addSkill(skill.getKey());
+                        }
+                        aboutText.setText(profile.getAbout());
+                        setupstats(profile);
+                        setupskills(profile.getSkills());
+                        settupdetail(profile);
                     }
-                    aboutText.setText(profile.getAbout());
-                    setupstats(profile);
-                    setupskills(profile.getSkills());
-                    settupdetail(profile);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
