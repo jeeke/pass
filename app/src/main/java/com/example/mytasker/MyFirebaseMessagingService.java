@@ -109,17 +109,15 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
 
     private void notificationHandler(Map<String, String> map) {
         Notification notification = new Notification(map);
-        FirebaseDatabase.getInstance()
-                .getReference()
-                .child("/Notifications/" + FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .push().setValue(notification).addOnCompleteListener(task -> {
-            getImage(notification);
-        });
+        if (!(notification.getType() == 4)) {
+            FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("/Notifications/" + FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .push().setValue(notification.toMap()).addOnCompleteListener(task -> getImage(notification));
+        } else getImage(notification);
 //        TODO handle default case notification
 
     }
-
-
 
 
 }

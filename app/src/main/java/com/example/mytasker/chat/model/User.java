@@ -1,4 +1,4 @@
-package com.example.mytasker.chat.data.model;
+package com.example.mytasker.chat.model;
 
 import com.stfalcon.chatkit.commons.models.IUser;
 
@@ -7,23 +7,11 @@ import java.util.Map;
 
 public class User implements IUser {
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
     private String id;
     private String name;
     private String avatar;
 
-    public User(){
+    public User() {
     }
 
     public User(String id, String name, String avatar) {
@@ -38,9 +26,17 @@ public class User implements IUser {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -48,11 +44,15 @@ public class User implements IUser {
         return avatar;
     }
 
-    public Map toMap(){
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public Map toMap() {
         Map map = new HashMap();
-        map.put("id",id);
-        map.put("name",name);
-        map.put("avatar",avatar);
+        map.put("id", id);
+        map.put("name", name);
+        map.put("avatar", avatar);
         return map;
     }
 

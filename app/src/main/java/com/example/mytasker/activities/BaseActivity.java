@@ -171,7 +171,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     }
 
     @Override
-    public void onServerCallSuccess(String title) {
+    public void onServerCallSuccess(int methodId, String title) {
         if (title != null) {
             showSnackBar(findViewById(android.R.id.content), title);
         }
@@ -180,7 +180,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     }
 
     @Override
-    public void onServerCallFailure(String title, Server.OnRetryListener retryListener) {
+    public void onServerCallFailure(int methodId, String title, Server.OnRetryListener retryListener) {
         showProgressBar(false);
         prevCallResolved = true;
         showSnackBar(findViewById(android.R.id.content), title, retryListener);

@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -27,7 +26,7 @@ import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 import static com.example.mytasker.util.Cache.getDatabase;
 import static com.example.mytasker.util.Cache.getUser;
 
-public class NotificationActivity extends BaseActivity implements NotificationHolder.RecyclerViewClickListener {
+public class NotificationActivity extends BaseActivity {
 
 
     private FirebaseRecyclerPagingAdapter mAdapter;
@@ -82,7 +81,7 @@ public class NotificationActivity extends BaseActivity implements NotificationHo
             @NonNull
             @Override
             public NotificationHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return new NotificationHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_notification, parent, false), NotificationActivity.this);
+                return new NotificationHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_notification, parent, false));
             }
 
             @Override
@@ -146,8 +145,4 @@ public class NotificationActivity extends BaseActivity implements NotificationHo
         mSwipeRefreshLayout.setOnRefreshListener(() -> mAdapter.refresh());
     }
 
-    @Override
-    public void onClick(View view, Notification notification) {
-        startActivity(notification.getForegroundIntent(this));
-    }
 }

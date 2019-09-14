@@ -106,7 +106,7 @@ public class ChipAdapter {
     }
 
     public void addChild(String title) {
-        String[] values = title.split(",");
+        String[] values = title.split("[\\s,]+");
         for (String x : values) {
             if (isSafe(x)) {
                 list.add(x);

@@ -55,5 +55,9 @@ public class BidConfirm extends BaseActivity {
         }
     }
 
-
+    @Override
+    public void onServerCallSuccess(int methodId, String title) {
+        super.onServerCallSuccess(methodId, title);
+        finish();
+    }
 }

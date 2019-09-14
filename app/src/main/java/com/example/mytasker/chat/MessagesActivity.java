@@ -7,8 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.mytasker.R;
-import com.example.mytasker.chat.data.model.DialogHelper;
-import com.example.mytasker.chat.data.model.MessageHelper;
+import com.example.mytasker.chat.model.DialogHelper;
+import com.example.mytasker.chat.model.Message;
+import com.example.mytasker.chat.model.MessageHelper;
 import com.example.mytasker.util.Tools;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -39,7 +40,8 @@ public class MessagesActivity extends DemoMessagesActivity
                 child(mChatUId).orderByChild("createdAt").startAt(new Date().getTime() + "").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    messagesAdapter.addToStart(dataSnapshot.getValue(MessageHelper.class).toMessage(), true);
+                Message message = dataSnapshot.getValue(MessageHelper.class).toMessage();
+                messagesAdapter.addToStart(message, true);
             }
 
             @Override
@@ -73,13 +75,20 @@ public class MessagesActivity extends DemoMessagesActivity
         uid = mCurrentUser.getUid();
         name = mCurrentUser.getDisplayName();
         avatar = mCurrentUser.getPhotoUrl().toString();
-        MessageHelper messageHelper = new MessageHelper(mCurrentUser, input.toString());
         String current_user_ref = "Messages/" + uid + "/" + mChatUId;
         String chat_user_ref = "Messages/" + mChatUId + "/" + uid;
+        Map messageUserMap = new HashMap();
+
+        if (messagesAdapter.getItemCount() == 0) {
+            MessageHelper messageHelper1 = new MessageHelper(mCurrentUser, "Welcome to Pass!");
+            messageUserMap.put(current_user_ref + "/" +
+                    mRootRef.child(current_user_ref).push().getKey(), messageHelper1.toMap());
+            messageUserMap.put(chat_user_ref + "/" +
+                    mRootRef.child(current_user_ref).push().getKey(), messageHelper1.toMap());
+        }
+        MessageHelper messageHelper = new MessageHelper(mCurrentUser, input.toString());
         DatabaseReference user_message_push = mRootRef.child(current_user_ref).push();
         String push_id = user_message_push.getKey();
-        Map messageUserMap = new HashMap();
-//        messagesAdapter.addToStart(messageHelper.toMessage(),true);
         DialogHelper dialogHelperMe = new DialogHelper(mChatUId, mChatUName, mChatAvatar, 0, null, input.toString());
         DialogHelper dialogHelperHim = new DialogHelper(uid, name, avatar, 0, null, input.toString());
         //TODO update and make all the queries in one by putting them in mUpdatemap

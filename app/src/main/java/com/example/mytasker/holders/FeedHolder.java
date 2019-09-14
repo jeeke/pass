@@ -44,7 +44,8 @@ public class FeedHolder extends RecyclerView.ViewHolder {
         image = itemView.findViewById(R.id.image);
     }
 
-    public void setItem(Feed feed, View.OnClickListener listener, String uid) {
+    public void setItem(Feed feed, View.OnClickListener listener, String uid, boolean mine) {
+        if (!mine) itemView.findViewById(R.id.action_delete).setVisibility(View.GONE);
         numLikes.setText(formatCount(feed.getLikeCount()));
         name.setText(feed.getPoster_name());
         date.setText(elapsedTime(feed.getC_date()));

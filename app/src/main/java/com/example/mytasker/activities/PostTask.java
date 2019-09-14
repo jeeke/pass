@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.example.mytasker.R;
+import com.example.mytasker.Server;
 import com.example.mytasker.fragments.PostTaskCat;
 import com.example.mytasker.fragments.PostTaskDetail;
 import com.example.mytasker.fragments.PostTaskExtra;
@@ -123,5 +124,11 @@ public class PostTask extends LocationActivity implements LocationActivity.Locat
             }, this);
             prevCallResolved = false;
         }
+    }
+
+    @Override
+    public void onServerCallSuccess(int methodId, String title) {
+        super.onServerCallSuccess(methodId, title);
+        if (methodId == Server.SERVER_POST_TASK) finish();
     }
 }

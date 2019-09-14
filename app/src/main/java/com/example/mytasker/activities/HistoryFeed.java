@@ -13,15 +13,20 @@ public class HistoryFeed extends BaseActivity {
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     boolean from = false;
+    boolean mine = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         from = getIntent().getBooleanExtra("from", false);
+        mine = getIntent().getBooleanExtra("mine", false);
+        String uid = getIntent().getStringExtra("uid");
         feedActNFrag = new FeedActNFrag();
         initViews();
-        feedActNFrag.callFireBase(this, findViewById(R.id.shimmer_container), from, mSwipeRefreshLayout, mRecyclerView, 2, null);
+        feedActNFrag.callFireBase(uid, mine, this,
+                findViewById(R.id.shimmer_container), from, mSwipeRefreshLayout,
+                mRecyclerView, 2, null);
     }
 
     private void initViews() {

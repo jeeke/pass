@@ -86,4 +86,10 @@ public class PostFeed extends BaseActivity {
             ((TextView) findViewById(R.id.add_image)).setText("Edit Image");
         }
     }
+
+    @Override
+    public void onServerCallSuccess(int methodId, String title) {
+        super.onServerCallSuccess(methodId, title);
+        finish();
+    }
 }

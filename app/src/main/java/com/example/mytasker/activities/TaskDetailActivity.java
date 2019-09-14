@@ -16,7 +16,7 @@ import com.example.mytasker.util.Tools;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import static com.example.mytasker.util.Tools.launchActivity;
+import static com.example.mytasker.Server.SERVER_TASK_DONE;
 
 public class TaskDetailActivity extends BaseActivity {
     ChipAdapter tagAdapter, mustAdapter;
@@ -53,13 +53,28 @@ public class TaskDetailActivity extends BaseActivity {
                 findViewById(R.id.mustDivider).setVisibility(View.GONE);
                 findViewById(R.id.query).setVisibility(View.GONE);
                 title += current.getPoster_name().split(" (?!.* )")[0];
-                action.setOnClickListener(v -> launchActivity(this, ProfileActivity.class));
+                action.setOnClickListener(v -> {
+                    Intent intent = new Intent(this, ProfileActivity.class);
+                    intent.putExtra("id", current.getPoster_id());
+                    intent.putExtra("name", current.getPoster_name());
+                    intent.putExtra("avatar", current.getPoster_avatar());
+                    startActivity(intent);
+//                            finish();
+                });
                 break;
             case 3:
                 findViewById(R.id.mustDivider).setVisibility(View.GONE);
                 findViewById(R.id.query).setVisibility(View.GONE);
-                title += current.getPoster_name().split(" (?!.* )")[0];
-                action.setOnClickListener(v -> launchActivity(this, ProfileActivity.class));
+                title += current.getPoster_name().split("(?!.* )")[0];
+                action.setOnClickListener(v -> {
+                    Intent intent = new Intent(this, ProfileActivity.class);
+                    intent.putExtra("id", current.getPoster_id());
+                    intent.putExtra("name", current.getPoster_name());
+                    intent.putExtra("avatar", current.getPoster_avatar());
+                    startActivity(intent);
+//                            finish();
+                });
+//                        .setOnClickListener(v -> launchActivity(this, ProfileActivity.class));
                 break;
 //          Tasker Stages
             case 4:
@@ -141,4 +156,16 @@ public class TaskDetailActivity extends BaseActivity {
 
     boolean prevCallResolved = true;
 
+    @Override
+    public void onServerCallSuccess(int methodId, String title) {
+        super.onServerCallSuccess(methodId, title);
+        if (methodId == SERVER_TASK_DONE) {
+            Intent intent = new Intent(this, FeedbackByTaskerActivity.class);
+            intent.putExtra("task_id", current.getId());
+            intent.putExtra("task_title", current.getTitle());
+            intent.putExtra("poster_id", current.getPoster_id());
+            startActivity(intent);
+            finish();
+        }
+    }
 }

@@ -50,7 +50,22 @@ import static com.example.mytasker.util.Tools.getRetrofit;
 public class Server extends Service {
 
 
-    private String imageUrl;
+    public static int SERVER_UPDATE_IMAGE = 1110;
+    public static int SERVER_POST_BID = 1111;
+    public static int SERVER_EDIT_PASSWORD = 1112;
+    public static int SERVER_RATE = 1113;
+    public static int SERVER_SIGNUP = 1114;
+    public static int SERVER_LOGIN = 1115;
+    public static int SERVER_POST_FEED = 1116;
+    public static int SERVER_POST_TASK = 1117;
+    public static int SERVER_POST_QUESTION = 1118;
+    public static int SERVER_DELETE_QUESTION = 1119;
+    public static int SERVER_ASSIGN_TASK = 1120;
+    public static int SERVER_CANCEL_BID = 1121;
+    public static int SERVER_TASK_DONE = 1122;
+    public static int SERVER_SAVE_ABOUT = 1123;
+    public static int SERVER_ADD_SKILL = 1124;
+    public static int SERVER_REMOVE_SKILL = 1125;
 
     static ProgressDialog dialog;
 
@@ -71,17 +86,17 @@ public class Server extends Service {
         }
     }
 
-    private void notifyListener(boolean success, String titlePos, String titleNeg, OnRetryListener retryListener) {
+    private void notifyListener(boolean success, int methodId, String titlePos, String titleNeg, OnRetryListener retryListener) {
         if (mListener != null)
             if (success) {
                 if (dialog != null) {
                     dialog.dismiss();
                     dialog = null;
-                    mListener.onServerCallSuccess(null);
-                } else mListener.onServerCallSuccess(titlePos);
+                    mListener.onServerCallSuccess(methodId, null);
+                } else mListener.onServerCallSuccess(methodId, titlePos);
             } else {
                 if (dialog != null) dialog.dismiss();
-                mListener.onServerCallFailure(titleNeg, retryListener);
+                mListener.onServerCallFailure(methodId, titleNeg, retryListener);
             }
         //TODO send notification
         //not for auth actions
@@ -111,15 +126,12 @@ public class Server extends Service {
         uploadTask.addOnProgressListener(taskSnapshot -> {
         }).addOnPausedListener(taskSnapshot -> {
             uploadTask.cancel();
-            imageUrl = null;
-            listener.onCallComplete(false);
+            listener.onCallComplete(false, null);
         }).addOnFailureListener(exception -> {
             uploadTask.cancel();
-            imageUrl = null;
-            listener.onCallComplete(false);
+            listener.onCallComplete(false, null);
         }).addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl().addOnSuccessListener(uri1 -> {
-            imageUrl = uri1.toString();
-            listener.onCallComplete(true);
+            listener.onCallComplete(true, uri1.toString());
         }));
     }
 
@@ -132,10 +144,9 @@ public class Server extends Service {
     //method 1
     public void updateImage(FirebaseUser user, String url, Uri uri, ImageView image) {
         showProgressBar();
-        imageUrl = url;
-        final OnRetryListener retry = () -> updateImage(user, imageUrl, uri, image);
+        final OnRetryListener retry = () -> updateImage(user, url, uri, image);
         if (url == null) {
-            uploadImage(success -> {
+            uploadImage((success, imageUrl) -> {
                 if (success) {
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                             .setPhotoUri(Uri.parse(imageUrl))
@@ -143,10 +154,15 @@ public class Server extends Service {
                     user.updateProfile(profileUpdates)
                             .addOnCompleteListener(task ->
                                     notifyListener(task.isSuccessful(),
+                                            SERVER_UPDATE_IMAGE,
                                             "Profile Picture Updated",
                                             "Couldn't Update Picture", retry));
                 } else {
-                    notifyListener(false, "", "Picture couldn't be Uploaded", retry);
+                    notifyListener(false,
+                            SERVER_UPDATE_IMAGE,
+                            "",
+                            "Picture couldn't be Uploaded",
+                            retry);
                 }
             }, uri, image);
         } else {
@@ -156,6 +172,7 @@ public class Server extends Service {
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(task ->
                             notifyListener(task.isSuccessful(),
+                                    SERVER_UPDATE_IMAGE,
                                     "Profile Picture Updated",
                                     "Couldn't Update Picture", retry));
         }
@@ -166,7 +183,10 @@ public class Server extends Service {
         showProgressBar();
         Contracts.call(bid, "bid").addOnCompleteListener(t -> {
             notifyListener(t.isSuccessful(),
-                    "Bidding Successful", "Bidding Unsuccessful", () -> postBid(bid));
+                    SERVER_POST_BID,
+                    "Bidding Successful",
+                    "Bidding Unsuccessful",
+                    () -> postBid(bid));
         });
     }
 
@@ -179,9 +199,12 @@ public class Server extends Service {
         user.reauthenticate(credential)
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful())
-                        notifyListener(false, "", "Authentication Error", retry);
+                        notifyListener(false, SERVER_EDIT_PASSWORD,
+                                "", "Authentication Error", retry);
                     else user.updatePassword(newPassword)
-                            .addOnCompleteListener(task1 -> notifyListener(task1.isSuccessful(), "Password Updated", "Password Updating Unsuccessful", retry));
+                            .addOnCompleteListener(task1 -> notifyListener(task1.isSuccessful(),
+                                    SERVER_EDIT_PASSWORD, "Password Updated",
+                                    "Password Updating Unsuccessful", retry));
                 });
     }
 
@@ -189,7 +212,8 @@ public class Server extends Service {
     public void rate(Map data) {
         showProgressBar();
         Contracts.call(data, "rate").addOnCompleteListener(t -> {
-            notifyListener(t.isSuccessful(), "Rating Successful", "Rating Unsuccessful", () -> rate(data));
+            notifyListener(t.isSuccessful(), SERVER_RATE,
+                    "Rating Successful", "Rating Unsuccessful", () -> rate(data));
         });
 
     }
@@ -202,7 +226,7 @@ public class Server extends Service {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         initProfile(name);
-                    } else notifyListener(false, "",
+                    } else notifyListener(false, SERVER_SIGNUP, "",
                             "SignUp Unsuccessful", () -> signUp(name, email, password));
                 });
     }
@@ -216,10 +240,10 @@ public class Server extends Service {
                     .build();
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(task ->
-                            notifyListener(task.isSuccessful(), "SignUp Successful",
+                            notifyListener(task.isSuccessful(), SERVER_SIGNUP, "SignUp Successful",
                                     "SignUp Unsuccessful", () -> initProfile(name)));
         } else {
-            notifyListener(false, "",
+            notifyListener(false, SERVER_SIGNUP, "",
                     "SignUp Unsuccessful", () -> initProfile(name));
         }
     }
@@ -229,43 +253,45 @@ public class Server extends Service {
         showProgressBar();
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
-//                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        startActivity(intent);
                     notifyListener(task.isSuccessful(),
+                            SERVER_LOGIN,
                             "Login Successful",
                             "Login Unsuccessful", () -> login(email, password));
                 });
     }
 
+    private void postFeedHelper(FirebaseUser user, boolean onPortfolio, String url, String text, OnRetryListener retry) {
+        Date date = new Date();
+        Feed feed = new Feed(
+                date.getTime(),
+                user.getUid(),
+                user.getDisplayName(),
+                user.getPhotoUrl().toString(),
+                url,
+                text
+        );
+        DatabaseReference push = getDatabase();
+        String key = push.child("Feeds").push().getKey();
+        feed.setId(key);
+        Map updateMap = new HashMap();
+        updateMap.put("Feeds/" + key, feed);
+        if (onPortfolio)
+            updateMap.put("Portfolios/" + user.getUid() + "/" + key, feed);
+        updateMap.put("PrevFeeds/" + user.getUid() + "/" + key, feed);
+        push.updateChildren(updateMap).addOnCompleteListener(task -> {
+            notifyListener(task.isSuccessful(), SERVER_POST_FEED,
+                    "Feed Posted", "Couldn't Post Feed", retry);
+        });
+    }
+
     //Method 7
     public void postFeed(FirebaseUser user, boolean onPortfolio, String text, ImageView image, Uri uri, String url) {
         showProgressBar();
-        imageUrl = url;
-        final OnRetryListener retry = () -> postFeed(user, onPortfolio, text, image, uri, imageUrl);
-        if (uri == null || imageUrl != null) {
-            Date date = new Date();
-            Feed feed = new Feed(
-                    date.getTime(),
-                    user.getUid(),
-                    user.getDisplayName(),
-                    user.getPhotoUrl().toString(),
-                    imageUrl,
-                    text
-            );
-            DatabaseReference push = getDatabase();
-            String key = push.child("Feeds").push().getKey();
-            feed.setId(key);
-            Map updateMap = new HashMap();
-            updateMap.put("Feeds/" + key, feed);
-            if (onPortfolio)
-                updateMap.put("Portfolios/" + user.getUid() + "/" + key, feed);
-            updateMap.put("PrevFeeds/" + user.getUid() + "/" + key, feed);
-            push.updateChildren(updateMap).addOnCompleteListener(task -> {
-                notifyListener(task.isSuccessful(), "Feed Posted", "Couldn't Post Feed", retry);
-            });
+        final OnRetryListener retry = () -> postFeed(user, onPortfolio, text, image, uri, url);
+        if (uri == null || url != null) {
+            postFeedHelper(user, onPortfolio, url, text, retry);
         } else {
-            uploadImage(success -> retry.retryTask(), uri, image);
+            uploadImage((success, imageUrl) -> postFeedHelper(user, onPortfolio, imageUrl, text, retry), uri, image);
         }
 
     }
@@ -290,6 +316,7 @@ public class Server extends Service {
             @Override
             public void onResponse(Call<Question> call, Response<Question> response) {
                 notifyListener(response.isSuccessful(),
+                        SERVER_POST_QUESTION,
                         "Question Posted",
                         "Couldn't Post Question", () ->
                                 postQuestion(user, token, q, lon, lat));
@@ -298,6 +325,7 @@ public class Server extends Service {
             @Override
             public void onFailure(Call<Question> call, Throwable t) {
                 notifyListener(false,
+                        SERVER_POST_QUESTION,
                         "",
                         "Couldn't Post Question", () ->
                                 postQuestion(user, token, q, lon, lat));
@@ -314,6 +342,7 @@ public class Server extends Service {
             @Override
             public void onResponse(Call<Task> call, Response<Task> response) {
                 notifyListener(response.isSuccessful(),
+                        SERVER_POST_TASK,
                         "Task Posted",
                         "Couldn't Post Task", () ->
                                 postTask(token, tsk));
@@ -322,6 +351,7 @@ public class Server extends Service {
             @Override
             public void onFailure(Call<Task> call, Throwable t) {
                 notifyListener(false,
+                        SERVER_POST_TASK,
                         "",
                         "Couldn't Post Task", () ->
                                 postTask(token, tsk));
@@ -337,19 +367,23 @@ public class Server extends Service {
         call.enqueue(new Callback<Message>() {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
+                notifyListener(response.isSuccessful(), SERVER_DELETE_QUESTION,
+                        "Question Deleted", "Couldn't Delete Question",
+                        () -> deleteQuestion(token, c_date, id));
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
+                Log.e("error ", t.getMessage());
+                notifyListener(false, SERVER_DELETE_QUESTION,
+                        "", "Couldn't Delete Question",
+                        () -> deleteQuestion(token, c_date, id));
             }
         });
     }
 
     public void assignTsk(String token, String tasker_id, Task task) {
         showProgressBar();
-        ProgressDialog dlg = new ProgressDialog(this);
-        dlg.setTitle("Assigning Task...");
-        dlg.show();
         Retrofit retrofit = getRetrofit(token);
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
         Map map = new HashMap();
@@ -360,15 +394,18 @@ public class Server extends Service {
         call.enqueue(new Callback<Message>() {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
-                notifyListener(response.isSuccessful(), "Task Assigned", "Couldn't Assign Task", () -> {
-                    assignTsk(token, tasker_id, task);
-                });
+                notifyListener(response.isSuccessful(), SERVER_ASSIGN_TASK,
+                        "Task Assigned", "Couldn't Assign Task",
+                        () -> assignTsk(token, tasker_id, task));
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
                 Log.e("error ", t.getMessage());
-                notifyListener(false, "Task Assigned", "Couldn't Assign Task", () -> {
+                notifyListener(false,
+                        SERVER_ASSIGN_TASK,
+                        "Task Assigned",
+                        "Couldn't Assign Task", () -> {
                     assignTsk(token, tasker_id, task);
                 });
             }
@@ -379,9 +416,9 @@ public class Server extends Service {
         showProgressBar();
         Map map = new HashMap();
         map.put("t_id", tid);
-        Contracts.call(map, "cancelBid").addOnCompleteListener(t -> {
-            notifyListener(t.isSuccessful(), "Bid Cancelled", "Couldn't Cancel Bid", () -> cancelBid(tid));
-        });
+        Contracts.call(map, "cancelBid").addOnCompleteListener(t -> notifyListener(t.isSuccessful(),
+                SERVER_CANCEL_BID,
+                "Bid Cancelled", "Couldn't Cancel Bid", () -> cancelBid(tid)));
     }
 
     public void taskDone(Task current) {
@@ -392,17 +429,8 @@ public class Server extends Service {
         map.put("task_title", current.getTitle());
         map.put("price", current.getCost());
         Contracts.call(map, "taskDone").addOnCompleteListener(t -> {
-            notifyListener(t.isSuccessful(), "Task Done", "Couldn't Mark Task", new OnRetryListener() {
-                @Override
-                public void retryTask() {
-                    taskDone(current);
-                }
-            });
-//            Intent intent = new Intent(this, FeedbackByTaskerActivity.class);
-//            intent.putExtra("task_id", current.getId());
-//            intent.putExtra("task_title", current.getTitle());
-//            intent.putExtra("poster_id", current.getPoster_id());
-//            startActivity(intent);
+            notifyListener(t.isSuccessful(), SERVER_TASK_DONE, "Task Done",
+                    "Couldn't Mark Task", () -> taskDone(current));
         });
         //TODO rating task done
     }
@@ -413,6 +441,7 @@ public class Server extends Service {
                 .child("/Profiles/" + uid + "/about").setValue(about)
                 .addOnCompleteListener(task -> {
                     notifyListener(task.isSuccessful(),
+                            SERVER_SAVE_ABOUT,
                             "Updated About",
                             "Couldn't Update About", () -> saveAbout(about, uid));
                 });
@@ -423,6 +452,7 @@ public class Server extends Service {
         getDatabase()
                 .child("/Profiles/" + uid + "/Skills/" + skill).setValue(true)
                 .addOnCompleteListener(t -> notifyListener(t.isSuccessful(),
+                        SERVER_ADD_SKILL,
                         "Added Skill",
                         "Skill Removed", () -> addSkill(skill, uid)));
     }
@@ -433,8 +463,10 @@ public class Server extends Service {
                 .child("/Profiles/" + uid + "/Skills/" + skill).removeValue()
                 .addOnCompleteListener(task -> {
                     notifyListener(task.isSuccessful(),
+                            SERVER_REMOVE_SKILL,
                             "Skill Removed",
-                            "Couldn't Remove Skill", () -> removeSkill(skill, uid));
+                            "Couldn't Remove Skill",
+                            () -> removeSkill(skill, uid));
                 });
     }
 
@@ -443,14 +475,14 @@ public class Server extends Service {
     }
 
     public interface ServerCallCompleteListener {
-        void onServerCallSuccess(String title);
+        void onServerCallSuccess(int methodId, String title);
 
-        void onServerCallFailure(String title, OnRetryListener retryListener);
+        void onServerCallFailure(int methodId, String title, OnRetryListener retryListener);
 
     }
 
     private interface OnInternalCallCompleteListener {
-        void onCallComplete(boolean success);
+        void onCallComplete(boolean success, String url);
     }
 
     public class ServerBinder extends Binder {

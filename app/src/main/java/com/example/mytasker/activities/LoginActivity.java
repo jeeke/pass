@@ -1,6 +1,7 @@
 package com.example.mytasker.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import com.example.mytasker.R;
 import com.google.firebase.auth.FirebaseAuth;
 
+import static com.example.mytasker.Server.SERVER_LOGIN;
 import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class LoginActivity extends BaseActivity {
@@ -48,9 +50,13 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    public void onServerCallSuccess(String title) {
-        super.onServerCallSuccess(title);
-        finish();
+    public void onServerCallSuccess(int methodId, String title) {
+        super.onServerCallSuccess(methodId, title);
+        if (methodId == SERVER_LOGIN) {
+            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
     }
 
     private void checkFields(boolean from) {

@@ -1,5 +1,6 @@
 package com.example.mytasker.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,7 +21,7 @@ import com.example.mytasker.util.FeedActNFrag;
 import com.google.firebase.database.Query;
 
 import static com.example.mytasker.util.Cache.getDatabase;
-import static com.example.mytasker.util.Tools.launchActivity;
+import static com.example.mytasker.util.Cache.getUser;
 
 public class FeedFragment extends Fragment {
     public FeedFragment() {
@@ -51,7 +52,10 @@ public class FeedFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_history) {
-            launchActivity((AppCompatActivity) getActivity(), HistoryFeed.class);
+            Intent intent = new Intent(getContext(), HistoryFeed.class);
+            intent.putExtra("uid", getUser(getActivity()).getUid());
+            intent.putExtra("mine", true);
+            startActivity(intent);
         }
         return false;
     }
@@ -66,7 +70,7 @@ public class FeedFragment extends Fragment {
         initViews(v);
         Query mQuery = getDatabase().child("Feeds");
         feedActNFrag = new FeedActNFrag();
-        feedActNFrag.callFireBase(getActivity(), v.findViewById(R.id.shimmer_container), false, mSwipeRefreshLayout, mRecyclerView, 0, mQuery);
+        feedActNFrag.callFireBase(getUser(getActivity()).getUid(), false, getActivity(), v.findViewById(R.id.shimmer_container), false, mSwipeRefreshLayout, mRecyclerView, 0, mQuery);
         mRecyclerView.setHasFixedSize(true);
         return v;
     }

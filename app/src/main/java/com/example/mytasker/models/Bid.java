@@ -21,25 +21,25 @@ public class Bid {
         return map;
     }
 
-    public static Bid fromMap(Map<String, String> map) {
-        Bid bid = new Bid();
-        bid.setId(map.get("id"));
-        bid.setName(map.get("name"));
-        bid.setAvatar(map.get("avatar"));
-        bid.setPrice(map.get("price"));
-        bid.setDes(map.get("des"));
-        bid.setC_date(map.get("c_date"));
-        bid.setAssigned(map.get("assigned"));
-        return bid;
-    }
+//    public static Bid fromMap(Map<String, String> map) {
+//        Bid bid = new Bid();
+//        bid.setId(map.get("id"));
+//        bid.setName(map.get("name"));
+//        bid.setAvatar(map.get("avatar"));
+//        bid.setPrice(map.get("price"));
+//        bid.setDes(map.get("des"));
+//        bid.setC_date(map.get("c_date"));
+//        bid.setAssigned(map.get("assigned"));
+//        return bid;
+//    }
 
     public String isAssigned() {
         return assigned;
     }
 
 
-    public void setAssigned(String assigned) {
-        this.assigned = assigned;
+    public void setAssigned(boolean assigned) {
+        this.assigned = assigned + "";
     }
 
     public String getId() {

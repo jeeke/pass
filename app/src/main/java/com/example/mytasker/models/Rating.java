@@ -1,10 +1,10 @@
 package com.example.mytasker.models;
 
 public class Rating {
-    float r1;
-    float r2;
-    float r3;
-    int task_rated;
+    public float r1;
+    public float r2;
+    public float r3;
+    public int task_rated;
 
     public void setR1(float r1) {
         this.r1 = r1;

@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.mytasker.util.Cache.getDatabase;
-import static com.example.mytasker.util.Cache.getUser;
 import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class FeedActNFrag {
@@ -42,10 +41,10 @@ public class FeedActNFrag {
     public FeedActNFrag() {
     }
 
-    private String uid;
-
-    public void callFireBase(FragmentActivity context, ShimmerFrameLayout shimmerContainer, boolean from, SwipeRefreshLayout mSwipeRefreshLayout, RecyclerView mRecyclerView, int type, Query mQuery) {
-        uid = getUser(context).getUid();
+    public void callFireBase(String uid, boolean mine, FragmentActivity context, ShimmerFrameLayout shimmerContainer,
+                             boolean from, SwipeRefreshLayout mSwipeRefreshLayout,
+                             RecyclerView mRecyclerView, int type, Query mQuery) {
+//        uid = getUser(context).getUid();
         mSwipeRefreshLayout.setColorSchemeResources(
 
                 android.R.color.holo_blue_bright,
@@ -57,10 +56,10 @@ public class FeedActNFrag {
         if (mQuery == null)
             if (from) {
                 Tools.initMinToolbar((AppCompatActivity) context, "Portfolio");
-                mQuery = getDatabase().child("Portfolios").child(getUser(context).getUid());
+                mQuery = getDatabase().child("Portfolios").child(uid);
             } else {
                 Tools.initMinToolbar((AppCompatActivity) context, "My Posts");
-                mQuery = getDatabase().child("PrevFeeds").child(getUser(context).getUid());
+                mQuery = getDatabase().child("PrevFeeds").child(uid);
             }
 
         LinearLayoutManager mManager = new LinearLayoutManager(context);
@@ -101,10 +100,10 @@ public class FeedActNFrag {
                         context.startActivity(intent);
                     } else if (v.getId() == R.id.action_delete) {
                         Map<String, Object> map = new HashMap<>();
-                        map.put("Portfolios/" + getUser(context).getUid() + '/' + model.getId(), null);
+                        map.put("Portfolios/" + uid + '/' + model.getId(), null);
                         if (!from) {
                             map.put("Feeds/" + model.getId(), null);
-                            map.put("PrevFeeds/" + getUser(context).getUid() + '/' + model.getId(), null);
+                            map.put("PrevFeeds/" + uid + '/' + model.getId(), null);
                         }
                         getDatabase().updateChildren(map).addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -116,10 +115,10 @@ public class FeedActNFrag {
                         DatabaseReference globalFeedRef = getDatabase().child("Feeds").child(postRef.getKey());
                         DatabaseReference userFeedRef = getDatabase().child("PrevFeeds").child(model.getPoster_id()).child(postRef.getKey());
                         // Run two transactions
-                        onlikeClicked(globalFeedRef);
-                        onlikeClicked(userFeedRef);
+                        onlikeClicked(globalFeedRef, uid);
+                        onlikeClicked(userFeedRef, uid);
                     }
-                }, uid);
+                }, uid, mine);
             }
 
             private int count = 4;
@@ -175,7 +174,7 @@ public class FeedActNFrag {
         mSwipeRefreshLayout.setOnRefreshListener(mAdapter::refresh);
     }
 
-    private void onlikeClicked(DatabaseReference FeedRef) {
+    private void onlikeClicked(DatabaseReference FeedRef, String uid) {
         FeedRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {

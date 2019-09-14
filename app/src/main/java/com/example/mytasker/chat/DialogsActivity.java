@@ -8,8 +8,8 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 
 import com.example.mytasker.R;
-import com.example.mytasker.chat.data.model.Dialog;
-import com.example.mytasker.chat.data.model.DialogHelper;
+import com.example.mytasker.chat.model.Dialog;
+import com.example.mytasker.chat.model.DialogHelper;
 import com.example.mytasker.util.Tools;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;

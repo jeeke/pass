@@ -15,8 +15,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.mytasker.R;
 import com.example.mytasker.activities.BaseActivity;
 import com.example.mytasker.activities.ProfileActivity;
-import com.example.mytasker.chat.data.model.Message;
-import com.example.mytasker.chat.data.model.MessageHelper;
+import com.example.mytasker.chat.model.Message;
+import com.example.mytasker.chat.model.MessageHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -91,8 +91,10 @@ public abstract class DemoMessagesActivity extends BaseActivity
 
     @Override
     public void onLoadMore(int page, int totalItemsCount) {
-        bar.setVisibility(View.VISIBLE);
-        loadMessages();
+        if (!emptyData) {
+            bar.setVisibility(View.VISIBLE);
+            loadMessages();
+        }
     }
 
 

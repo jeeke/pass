@@ -1,4 +1,4 @@
-package com.example.mytasker.chat.data.model;
+package com.example.mytasker.chat.model;
 
 import com.google.firebase.database.ServerValue;
 
@@ -19,12 +19,26 @@ public class DialogHelper {
 
     private String text;
 
-    public Map toMap(){
+    public DialogHelper(String uid, String name, String avatar, int unreadCount, Long lastActivity, String text) {
+        this.uid = uid;
+        this.name = name;
+        this.avatar = avatar;
+        this.unreadCount = unreadCount;
+        this.lastActivity = lastActivity;
+        this.text = text;
+        init();
+    }
+
+    public DialogHelper() {
+        init();
+    }
+
+    public Map toMap() {
         Map map = new HashMap();
-        map.put("text",text);
-        map.put("uid",uid);
-        map.put("name",name);
-        map.put("avatar",avatar);
+        map.put("text", text);
+        map.put("uid", uid);
+        map.put("name", name);
+        map.put("avatar", avatar);
         map.put("unreadCount", 1);
         map.put("lastActivity", ServerValue.TIMESTAMP);
         return map;
@@ -62,7 +76,6 @@ public class DialogHelper {
         this.unreadCount = unreadCount;
     }
 
-
     public String getText() {
         return text;
     }
@@ -71,30 +84,14 @@ public class DialogHelper {
         this.text = text;
     }
 
-    private void init(){
+    private void init() {
         lastActivity = new Date().getTime();
     }
 
-    public DialogHelper(String uid, String name, String avatar, int unreadCount, Long lastActivity, String text) {
-        this.uid = uid;
-        this.name = name;
-        this.avatar = avatar;
-        this.unreadCount = unreadCount;
-        this.lastActivity = lastActivity;
-        this.text = text;
-        init();
-    }
-
-
-
-    public DialogHelper(){
-        init();
-    }
-
-    public Dialog toDialog(){
-        Dialog dialog = new Dialog(uid,avatar,name,unreadCount);
+    public Dialog toDialog() {
+        Dialog dialog = new Dialog(uid, avatar, name, unreadCount);
         ArrayList<User> users = new ArrayList<>();
-        User user = new User(uid,name,"default");
+        User user = new User(uid, name, "default");
         users.add(user);
         dialog.setUsers(users);
 

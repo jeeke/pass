@@ -18,6 +18,7 @@ import com.example.mytasker.chat.DialogsActivity;
 import com.example.mytasker.chat.MessagesActivity;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Notification {
@@ -25,17 +26,28 @@ public class Notification {
     public String content;
     public String title;
     public String image;
-    public int type;
-    public Task task;
-    public Question ques;
-    public String senderId;
-    public String taskId;
-    public String taskerId;
-    public String taskTitle;
+    private int type;
+    private Task task;
+    private Question ques;
+    private String senderId;
+    private String taskId;
+    private String taskerId;
+    private String taskTitle;
 
     Notification() {
     }
 
+    public Map toMap() {
+        Map map = new HashMap();
+        map.put("content", content);
+        map.put("title", title);
+        map.put("image", image);
+        return map;
+    }
+
+    public int getType() {
+        return this.type;
+    }
     public Notification(Map<String, String> data) {
         String type = data.get("type");
         this.type = Integer.parseInt(type == null ? "-1" : type);
@@ -102,7 +114,6 @@ public class Notification {
                 Intent intent1 = new Intent(context, DialogsActivity.class);
                 stackBuilder.addNextIntent(intent1);
                 Intent intent2 = new Intent(context, MessagesActivity.class);
-//                Message message = new Gson().fromJson(Config.map.get("ques"), Question.class);
                 intent2.putExtra("id", senderId);
                 intent2.putExtra("name", fetchTitle().toString());
                 intent2.putExtra("avatar", image);
@@ -115,45 +126,45 @@ public class Notification {
         return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    public Intent getForegroundIntent(Context context) {
-        Intent intent = null;
-        switch (type) {
-            case 0: {
-                intent = new Intent(context, BidsListActivity.class);
-                intent.putExtra("task", task);
-                break;
-            }
-            case 1: {
-                intent = new Intent(context, TaskDetailActivity.class);
-                intent.putExtra("task", task);
-                intent.putExtra("from", 2);
-                break;
-            }
-            case 2: {
-                intent = new Intent(context, FeedbackByPosterActivity.class);
-                intent.putExtra("tasker_id", taskerId);
-                intent.putExtra("task_title", taskTitle);
-                intent.putExtra("task_id", taskId);
-                break;
-            }
-            case 3: {
-                intent = new Intent(context, QuestionDetailActivity.class);
-                intent.putExtra("ques", ques);
-                break;
-
-            }
-            case 4: {
-                intent = new Intent(context, MessagesActivity.class);
-                intent.putExtra("id", senderId);
-                intent.putExtra("name", title);
-                intent.putExtra("avatar", image);
-                break;
-
-            }
-            default:
-        }
-        return intent;
-    }
+//    public Intent getForegroundIntent(Context context) {
+//        Intent intent = null;
+//        switch (type) {
+//            case 0: {
+//                intent = new Intent(context, BidsListActivity.class);
+//                intent.putExtra("task", task);
+//                break;
+//            }
+//            case 1: {
+//                intent = new Intent(context, TaskDetailActivity.class);
+//                intent.putExtra("task", task);
+//                intent.putExtra("from", 2);
+//                break;
+//            }
+//            case 2: {
+//                intent = new Intent(context, FeedbackByPosterActivity.class);
+//                intent.putExtra("tasker_id", taskerId);
+//                intent.putExtra("task_title", taskTitle);
+//                intent.putExtra("task_id", taskId);
+//                break;
+//            }
+//            case 3: {
+//                intent = new Intent(context, QuestionDetailActivity.class);
+//                intent.putExtra("ques", ques);
+//                break;
+//
+//            }
+//            case 4: {
+//                intent = new Intent(context, MessagesActivity.class);
+//                intent.putExtra("id", senderId);
+//                intent.putExtra("name", title);
+//                intent.putExtra("avatar", image);
+//                break;
+//
+//            }
+//            default:
+//        }
+//        return intent;
+//    }
 
 
 }

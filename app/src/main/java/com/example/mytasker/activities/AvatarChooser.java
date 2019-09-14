@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.mytasker.R;
+import com.example.mytasker.Server;
 import com.example.mytasker.adapters.AvatarAdapter;
 import com.example.mytasker.util.Contracts;
 import com.example.mytasker.util.Tools;
@@ -111,4 +112,9 @@ public class AvatarChooser extends BaseActivity implements AvatarAdapter.Recycle
         }
     }
 
+    @Override
+    public void onServerCallSuccess(int methodId, String title) {
+        super.onServerCallSuccess(methodId, title);
+        if (methodId == Server.SERVER_UPDATE_IMAGE) finish();
+    }
 }

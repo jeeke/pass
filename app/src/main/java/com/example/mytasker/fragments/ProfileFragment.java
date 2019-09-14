@@ -123,12 +123,18 @@ public class ProfileFragment extends Fragment {
     }
 
     private void forMe(View v, boolean mine) {
-
         TextView name = v.findViewById(R.id.poster_name);
         name.setText(mListener.getUName().toUpperCase());
         View editAvatar = v.findViewById(R.id.avatar_edit);
         View editAbout = v.findViewById(R.id.edit_about);
         toolbar.setTitle("PROFILE");
+        v.findViewById(R.id.portfolio).setOnClickListener(v1 -> {
+            Intent intent = new Intent(getContext(), HistoryFeed.class);
+            intent.putExtra("from", true);
+            intent.putExtra("mine", mine);
+            intent.putExtra("uid", mListener.getUId());
+            startActivity(intent);
+        });
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         if (mine) {
@@ -190,12 +196,6 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.frag_profile, container, false);
-        v.findViewById(R.id.portfolio).setOnClickListener(v1 -> {
-            Intent intent = new Intent(getContext(), HistoryFeed.class);
-            intent.putExtra("from", true);
-            startActivity(intent);
-        });
-
         profileImage = v.findViewById(R.id.profile_image);
         mDatabase = getDatabase();
         taskerrating = v.findViewById(R.id.taskerrating);
