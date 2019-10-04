@@ -18,6 +18,7 @@ import com.example.mytasker.chat.DialogsActivity;
 import com.example.mytasker.chat.MessagesActivity;
 import com.google.gson.Gson;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,21 +34,11 @@ public class Notification {
     private String taskId;
     private String taskerId;
     private String taskTitle;
+    private Long sort_id;
 
     Notification() {
     }
 
-    public Map toMap() {
-        Map map = new HashMap();
-        map.put("content", content);
-        map.put("title", title);
-        map.put("image", image);
-        return map;
-    }
-
-    public int getType() {
-        return this.type;
-    }
     public Notification(Map<String, String> data) {
         String type = data.get("type");
         this.type = Integer.parseInt(type == null ? "-1" : type);
@@ -58,6 +49,8 @@ public class Notification {
         taskerId = data.get("tasker_id");
         taskTitle = data.get("task_title");
         taskId = data.get("task_id");
+        sort_id = Long.valueOf(data.get("sort_id"));
+
 
         String task = data.get("task");
         if (task != null)
@@ -66,6 +59,19 @@ public class Notification {
         task = data.get("ques");
         if (task != null)
             ques = new Gson().fromJson(task, Question.class);
+    }
+
+    public int getType() {
+        return this.type;
+    }
+
+    public Map toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("content", content);
+        map.put("title", title);
+        map.put("image", image);
+        map.put("sort_id", -new Date().getTime());
+        return map;
     }
 
     public Spanned fetchTitle() {

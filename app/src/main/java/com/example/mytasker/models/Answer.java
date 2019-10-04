@@ -2,6 +2,8 @@ package com.example.mytasker.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 public class Answer extends Message{
     @SerializedName("replier_name")
     private String replier_name;
@@ -13,6 +15,8 @@ public class Answer extends Message{
     private String replier_avatar;
     @SerializedName("asker_id")
     private String asker_id;
+    @SerializedName("sort_id")
+    private Long sort_id;
 
     public Answer(String replier_id, String replier_name, String replier_avatar, String asker_id, String answer) {
         this.replier_name = replier_name;
@@ -20,6 +24,7 @@ public class Answer extends Message{
         this.answer = answer;
         this.replier_avatar = replier_avatar;
         this.asker_id = asker_id;
+        sort_id = -new Date().getTime();
     }
 
     public Answer() {

@@ -1,5 +1,6 @@
 package com.example.mytasker.models;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,12 +13,14 @@ public class Bid {
     private String des;
     private String price;
     private String assigned;
+    private Long sort_id;
 
     public static Map toMap(int price, Task task, String message) {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("task", task.toMap());
         map.put("price", price);
         map.put("des", message);
+        map.put("sort_id", -new Date().getTime());
         return map;
     }
 

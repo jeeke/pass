@@ -113,7 +113,7 @@ public abstract class DemoMessagesActivity extends BaseActivity
     @Override
     public void onSelectionChanged(int count) {
         this.selectionCount = count;
-        menu.findItem(R.id.action_profile).setVisible(true);
+        menu.findItem(R.id.action_profile).setVisible(mChatAvatar != null);
         menu.findItem(R.id.action_copy).setVisible(count > 0);
     }
 

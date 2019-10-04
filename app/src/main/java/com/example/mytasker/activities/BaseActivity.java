@@ -85,6 +85,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                                        IBinder service) {
             server = ((Server.ServerBinder) service).getService();
             mBound = true;
+            server.fetchLocation();
         }
 
         @Override
@@ -97,7 +98,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     public void onNetworkConnectionChanged(boolean isConnected) {
         if (!isConnected) {
             //show a No Internet Alert or Dialog
-            setContentView(R.layout.error_page);
+            setContentView(R.layout.no_internet);
             showSnackBar(this, "No Internet Connection");
             Button click = findViewById(R.id.retry);
             click.setOnClickListener(v -> checkConnection());

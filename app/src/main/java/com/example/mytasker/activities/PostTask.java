@@ -1,6 +1,7 @@
 package com.example.mytasker.activities;
 
 import android.graphics.drawable.AnimatedVectorDrawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 
@@ -93,15 +94,15 @@ public class PostTask extends LocationActivity implements LocationActivity.Locat
             deadline = frag.getDate();
             if (reward.equals("")) {
                 showSnackBar(this, "Please Enter Reward Value");
-            } else
-                setLocationListener(this);
-            super.getLocation();
+            } else {
+                server.getLocation(this);
+            }
         }
     }
 
     @Override
-    public void onLocationFetched(boolean success, double lon, double lat) {
-        if (success && prevCallResolved && server != null) {
+    public void onLocationFetched(Location location) {
+        if (prevCallResolved && server != null) {
             getToken(token -> {
                 Date date = new Date();
                 FirebaseUser user = getUser(PostTask.this);
@@ -115,8 +116,8 @@ public class PostTask extends LocationActivity implements LocationActivity.Locat
                         Float.parseFloat(reward),
                         category,
                         deadline,
-                        lat,
-                        lon,
+                        location.getLatitude(),
+                        location.getLongitude(),
                         tags,
                         mustHaves,
                         false);

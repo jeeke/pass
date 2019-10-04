@@ -42,19 +42,18 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     int startRadius;
     int endRadius;
     View fabExpanded;
-    Fragment[] fragments = new Fragment[]{null, null, null, null};
+    //    Fragment[] fragments = new Fragment[]{null, null, null, null};
     FloatingActionButton fab;
 
     private void loadFragment(Fragment fragment) {
         if (fabActivated) circularReveal(fab);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
     //TODO check for play services android for notification handling
-    public void loadNextFrag(View view) {
-    }
 
     @Override
     public void onBackPressed() {
@@ -141,19 +140,23 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        starterIntent = getIntent();
-        setToken(this);
-        setContentView(R.layout.activity_dashboard);
-        init();
-        initFab();
-        fragments[0] = new HomeFragment();
-        loadFragment(fragments[0]);
-        prevbselection = bhome;
+    protected void onStart() {
+        super.onStart();
+        if (findViewById(R.id.fragment_container) != null) {
+            starterIntent = getIntent();
+            setToken(this);
+            init();
+            initFab();
+            loadFragment(new HomeFragment());
+            prevbselection = bhome;
+        }
     }
 
-    //    TODO
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dashboard);
+    }
 
 
     public void postTask(View v) {
@@ -186,20 +189,16 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     private int toggleImage(int id, boolean selected) {
         switch (id) {
             case R.id.home:
-                fragments[0] = fragments[0] == null ? new HomeFragment() : fragments[0];
-                loadFragment(fragments[0]);
+                loadFragment(new HomeFragment());
                 return selected ? R.mipmap.home_fill : R.mipmap.home;
             case R.id.feed:
-                fragments[2] = fragments[2] == null ? new FeedFragment() : fragments[2];
-                loadFragment(fragments[2]);
+                loadFragment(new FeedFragment());
                 return selected ? R.mipmap.scroll_fill : R.mipmap.scroll;
             case R.id.qna:
-                fragments[1] = fragments[1] == null ? new QuestionFragment() : fragments[1];
-                loadFragment(fragments[1]);
+                loadFragment(new QuestionFragment());
                 return selected ? R.mipmap.qna_fill : R.mipmap.qna;
             case R.id.profile:
-                fragments[3] = fragments[3] == null ? new ProfileFragment() : fragments[3];
-                loadFragment(fragments[3]);
+                loadFragment(new ProfileFragment());
                 return selected ? R.mipmap.profile_fill : R.mipmap.profile;
         }
         return 0;

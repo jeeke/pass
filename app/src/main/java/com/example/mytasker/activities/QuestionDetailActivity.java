@@ -29,6 +29,7 @@ import com.example.mytasker.util.Tools;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
@@ -37,6 +38,7 @@ import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
 import static com.example.mytasker.util.Cache.getToken;
 import static com.example.mytasker.util.Cache.getUser;
+import static com.example.mytasker.util.Contracts.getPushKey;
 import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class QuestionDetailActivity extends BaseActivity {
@@ -171,8 +173,9 @@ public class QuestionDetailActivity extends BaseActivity {
         FirebaseUser user = getUser(this);
         if (user != null) {
             Answer ans = new Answer(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), current.getPoster_id(), answer.getText().toString());
-            FirebaseDatabase.getInstance().getReference().child("Answers")
-                    .child(current.getId()).push().setValue(ans).addOnCompleteListener(task -> {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Answers")
+                    .child(current.getId());
+            ref.child(getPushKey(ref)).setValue(ans).addOnCompleteListener(task -> {
                 prevCallResolved = true;
                 showProgressBar(false);
                 if (task.isSuccessful()) {

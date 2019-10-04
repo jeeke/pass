@@ -27,11 +27,6 @@ public class DialogsActivity extends DemoDialogsActivity {
 
     private DatabaseReference mConvDatabase;
 
-
-//    public static void open(Context context) {
-//        context.startActivity(new Intent(context, DialogsActivity.class));
-//    }
-
     private DialogsList dialogsList;
     private ProgressBar bar;
 
@@ -56,6 +51,33 @@ public class DialogsActivity extends DemoDialogsActivity {
         queryFireBase();
     }
 
+//    public void showMascot(){
+//        LottieAnimationView lottieAnimationView = findViewById(R.id.mascot);
+//        lottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
+//            @Override
+//            public void onAnimationStart(Animator animation) {
+//                Log.e("Animation:", "start");
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                Log.e("Animation:", "end");
+//                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//                finish();
+//            }
+//
+//            @Override
+//            public void onAnimationCancel(Animator animation) {
+//                Log.e("Animation:", "cancel");
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animator animation) {
+//                Log.e("Animation:", "repeat");
+//            }
+//        });
+//    }
+
     private void queryFireBase() {
         Query conversationQuery = mConvDatabase.orderByChild("lastActivity");
         conversationQuery.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -67,7 +89,7 @@ public class DialogsActivity extends DemoDialogsActivity {
                                                                  }
                                                                  bar.setVisibility(View.GONE);
                                                                  if (dialogs.isEmpty()) {
-                                                                     findViewById(R.id.sugga).setVisibility(View.VISIBLE);
+                                                                     findViewById(R.id.anim).setVisibility(View.VISIBLE);
                                                                  } else initAdapter(dialogs);
                                                              }
 
@@ -76,35 +98,6 @@ public class DialogsActivity extends DemoDialogsActivity {
 
                                                              }
                                                          }
-
-//                new ValueEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                Dialog dialog = dataSnapshot.getValue(DialogHelper.class).toDialog();
-//                onNewDialog(dialog);
-//                bar.setVisibility(View.GONE);
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        }
         );
     }
 

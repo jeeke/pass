@@ -2,6 +2,7 @@ package com.example.mytasker.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ public class Feed {
     public int likeCount;
     public Map<String, Boolean> likes = new HashMap<>();
     private String text;
+    private Long sort_id;
 
     public String getId() {
         return id;
@@ -81,6 +83,7 @@ public class Feed {
         this.poster_avatar = poster_avatar;
         this.image = image;
         this.text = text;
+        sort_id = -new Date().getTime();
     }
 
     public int getLikeCount() {

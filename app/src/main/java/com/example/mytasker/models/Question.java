@@ -3,6 +3,7 @@ package com.example.mytasker.models;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Question extends Message implements Serializable {
     @SerializedName("poster_image")
@@ -19,6 +20,9 @@ public class Question extends Message implements Serializable {
 
     @SerializedName("c_date")
     private long c_date;
+
+    @SerializedName("sort_id")
+    private Long sort_id;
 
     @SerializedName("dis")
     private String dis;
@@ -48,6 +52,7 @@ public class Question extends Message implements Serializable {
         this.lat = lat;
         this.poster_image = poster_image;
         this.ques = ques;
+        sort_id = -new Date().getTime();
     }
 
     public String getPoster_image() {

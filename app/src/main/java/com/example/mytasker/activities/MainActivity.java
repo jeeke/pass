@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity implements
     private static final int RC_SIGN_IN = 9001;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
-
+    ProgressDialog dialog;
     SharedPreferences sp;
 
     @Override
@@ -42,6 +42,7 @@ public class MainActivity extends BaseActivity implements
         // Make sure this is before calling super.onCreate
         setTheme(R.style.LightMode);
         super.onCreate(savedInstanceState);
+        dialog = new ProgressDialog(this);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -74,6 +75,7 @@ public class MainActivity extends BaseActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
+            dialog.dismiss();
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
@@ -87,7 +89,6 @@ public class MainActivity extends BaseActivity implements
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        ProgressDialog dialog = new ProgressDialog(this);
         dialog.setTitle("Logging You In, Please Wait....");
         dialog.show();
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -108,6 +109,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void signIn() {
+        dialog.show();
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }

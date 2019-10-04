@@ -13,7 +13,7 @@ public class RetrofitParser {
     @SerializedName("tasks")
     private ArrayList<String> taskStrings;
 
-    public void toTaskList(TaskListAdapter adapter, int price0, int price1, boolean remote) {
+    public void toTaskList(TaskListAdapter adapter, int price0, int price1, String uid) {
         Cache.tasks = new ArrayList<>();
         adapter.update(Cache.tasks);
         if (taskStrings.size() == 0) return;
@@ -21,31 +21,31 @@ public class RetrofitParser {
         Gson g = new Gson();
         int cost = 0;
         int i = 0;
-        if (false) {
+//        if (false) {
             for (String s : taskStrings) {
                 if (i % 2 == 0) {
                     task = g.fromJson(s, Task.class);
                     cost = (int) task.getCost();
-                    if ((cost <= price1) && (cost >= price0)) {
+                    if ((cost <= price1) && (cost >= price0) && !task.getPoster_id().equals(uid)) {
                         adapter.addItem(task);
                         Cache.tasks.add(task);
                     }
                 }
                 i++;
             }
-        } else {
-            for (String s : taskStrings) {
-                if (i % 2 == 0) {
-                    task = g.fromJson(s, Task.class);
-                    cost = (int) task.getCost();
-                } else if ((cost <= price1) && (cost >= price0)) {
-                    task.setDis(s);
-                    adapter.addItem(task);
-                    Cache.tasks.add(task);
-                }
-                i++;
-            }
-        }
+//        } else {
+//            for (String s : taskStrings) {
+//                if (i % 2 == 0) {
+//                    task = g.fromJson(s, Task.class);
+//                    cost = (int) task.getCost();
+//                } else if ((cost <= price1) && (cost >= price0)) {
+//                    task.setDis(s);
+//                    adapter.addItem(task);
+//                    Cache.tasks.add(task);
+//                }
+//                i++;
+//            }
+//        }
     }
 
     public ArrayList<Question> toQuesList() {

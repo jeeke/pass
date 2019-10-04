@@ -93,22 +93,15 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
-
     private boolean prevCallResolved = true;
 
     private void verifyNCall() {
         LocationActivity activity = (LocationActivity) getActivity();
-        activity.setLocationListener((success, lon, lat) -> {
-            if (success) {
-                listView.animate().alpha(0.0f).setDuration(0).start();
-                shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
-                getToken(token -> callRetrofit(token, lon, lat), getActivity());
-            } else {
-                swipeContainer.setRefreshing(false);
-//                verifyNCall();
-            }
-        });
-        activity.getLocation();
+        listView.animate().alpha(0.0f).setDuration(0).start();
+        shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
+        activity.startLocationUpdates(location -> getToken(
+                token -> callRetrofit(token, location.getLongitude(),
+                        location.getLatitude()), getActivity()));
     }
 
     private void callRetrofit(String token, double lon, double lat) {
@@ -138,7 +131,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
                 }
                 RetrofitParser details = response.body();
                 if (details != null) {
-                    details.toTaskList(adapter, filterHelper.price[0], filterHelper.price[1], filterHelper.remote);
+                    details.toTaskList(adapter, filterHelper.price[0], filterHelper.price[1], Cache.getUser(getActivity()).getUid());
                 }
             }
 

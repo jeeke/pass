@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.RatingBar;
 
 import com.example.mytasker.R;
+import com.example.mytasker.Server;
 import com.example.mytasker.util.Tools;
 
 import java.util.HashMap;
@@ -42,6 +43,15 @@ public class FeedbackByTaskerActivity extends BaseActivity {
         map.put("user_id", getIntent().getStringExtra("poster_id"));
         map.put("task_id", getIntent().getStringExtra("task_id"));
         server.rate(map);
+    }
+
+
+    @Override
+    public void onServerCallSuccess(int methodId, String title) {
+        super.onServerCallSuccess(methodId, title);
+        if (methodId == Server.SERVER_RATE) {
+            finish();
+        }
     }
 
     private void checkFields() {

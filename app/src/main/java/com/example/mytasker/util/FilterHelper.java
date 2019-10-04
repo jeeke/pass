@@ -1,7 +1,5 @@
 package com.example.mytasker.util;
 
-import android.widget.Switch;
-
 import androidx.constraintlayout.motion.widget.MotionLayout;
 
 import com.appyvet.materialrangebar.RangeBar;
@@ -24,7 +22,7 @@ public class FilterHelper {
     private MotionLayout filter;
     private boolean open;
     private RangeBar radiusBar, priceBar;
-    private Switch remoteTask;
+    //    private Switch remoteTask;
     private ChipAdapter adapter;
 
     public FilterHelper(FilterListener listener, MotionLayout v) {
@@ -37,7 +35,7 @@ public class FilterHelper {
         ChipGroup chipGroup = v.findViewById(R.id.chipGroup1);
         radiusBar = v.findViewById(R.id.radius_bar);
         priceBar = v.findViewById(R.id.price_bar);
-        remoteTask = v.findViewById(R.id.remote_task);
+//        remoteTask = v.findViewById(R.id.remote_task);
         tags = new ArrayList<>(Arrays.asList(chipTitle));
         adapter = new ChipAdapter(chipGroup, tags, true);
     }
@@ -49,7 +47,7 @@ public class FilterHelper {
             radius = radiusBar.getRightIndex() * (int) radiusBar.getTickInterval();
             price[0] = priceBar.getLeftIndex() * (int) priceBar.getTickInterval() * 1000;
             price[1] = priceBar.getRightIndex() * (int) priceBar.getTickInterval() * 1000;
-            remote = remoteTask.isChecked();
+//            remote = remoteTask.isChecked();
             listener.closedMenu();
             //Log.e("tags",tags.toString() + "\n" + radius + " "  + price[0] + " " + price[1]);
         } else {

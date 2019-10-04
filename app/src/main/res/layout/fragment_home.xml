@@ -63,7 +63,7 @@
 
             <include
                 android:id="@+id/cat_menu"
-                layout="@layout/cat_expanded"
+                layout="@layout/filter_expanded"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="48dp"

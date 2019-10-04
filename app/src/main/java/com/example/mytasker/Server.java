@@ -1,27 +1,38 @@
 package com.example.mytasker;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
+import com.example.mytasker.activities.LocationActivity;
 import com.example.mytasker.models.Feed;
 import com.example.mytasker.models.Message;
 import com.example.mytasker.models.Question;
 import com.example.mytasker.models.Task;
 import com.example.mytasker.retrofit.JsonPlaceHolder;
 import com.example.mytasker.util.Contracts;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,6 +56,7 @@ import retrofit2.Retrofit;
 
 import static com.example.mytasker.util.Cache.getDatabase;
 import static com.example.mytasker.util.Contracts.avatars;
+import static com.example.mytasker.util.Contracts.getPushKey;
 import static com.example.mytasker.util.Tools.getRetrofit;
 
 public class Server extends Service {
@@ -260,29 +272,7 @@ public class Server extends Service {
                 });
     }
 
-    private void postFeedHelper(FirebaseUser user, boolean onPortfolio, String url, String text, OnRetryListener retry) {
-        Date date = new Date();
-        Feed feed = new Feed(
-                date.getTime(),
-                user.getUid(),
-                user.getDisplayName(),
-                user.getPhotoUrl().toString(),
-                url,
-                text
-        );
-        DatabaseReference push = getDatabase();
-        String key = push.child("Feeds").push().getKey();
-        feed.setId(key);
-        Map updateMap = new HashMap();
-        updateMap.put("Feeds/" + key, feed);
-        if (onPortfolio)
-            updateMap.put("Portfolios/" + user.getUid() + "/" + key, feed);
-        updateMap.put("PrevFeeds/" + user.getUid() + "/" + key, feed);
-        push.updateChildren(updateMap).addOnCompleteListener(task -> {
-            notifyListener(task.isSuccessful(), SERVER_POST_FEED,
-                    "Feed Posted", "Couldn't Post Feed", retry);
-        });
-    }
+    public static Location location;
 
     //Method 7
     public void postFeed(FirebaseUser user, boolean onPortfolio, String text, ImageView image, Uri uri, String url) {
@@ -294,6 +284,75 @@ public class Server extends Service {
             uploadImage((success, imageUrl) -> postFeedHelper(user, onPortfolio, imageUrl, text, retry), uri, image);
         }
 
+    }
+
+    private LocationCallback mLocationCallback;
+    private LocationRequest mLocationRequest;
+    private LocationActivity.LocationListener mLocationListener;
+
+    private void postFeedHelper(FirebaseUser user, boolean onPortfolio, String url, String text, OnRetryListener retry) {
+        Date date = new Date();
+        Feed feed = new Feed(
+                date.getTime(),
+                user.getUid(),
+                user.getDisplayName(),
+                user.getPhotoUrl().toString(),
+                url,
+                text
+        );
+        DatabaseReference push = getDatabase();
+        String key = getPushKey(push.child("Feeds"));
+        feed.setId(key);
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("Feeds/" + key, feed);
+        if (onPortfolio)
+            updateMap.put("Portfolios/" + user.getUid() + "/" + key, feed);
+        updateMap.put("PrevFeeds/" + user.getUid() + "/" + key, feed);
+        push.updateChildren(updateMap).addOnCompleteListener(task -> {
+            notifyListener(task.isSuccessful(), SERVER_POST_FEED,
+                    "Feed Posted", "Couldn't Post Feed", retry);
+        });
+    }
+
+    public void getLocation(LocationActivity.LocationListener locationListener) {
+        if (location != null) locationListener.onLocationFetched(location);
+        mLocationListener = locationListener;
+    }
+
+    public void fetchLocation() {
+        if (location == null) {
+            FusedLocationProviderClient fusedLocationClient;
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            mLocationRequest = LocationRequest.create()
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                    .setInterval(10000)
+                    .setFastestInterval(5000)
+                    .setExpirationDuration(120 * 1000); // 2 minutes, in milliseconds
+            mLocationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    if (locationResult == null) {
+                        return;
+                    }
+                    for (Location location : locationResult.getLocations()) {
+                        if (location != null) {
+                            Server.location = location;
+                            if (mLocationListener != null)
+                                mLocationListener.onLocationFetched(location);
+                            fusedLocationClient.removeLocationUpdates(this);
+                        }
+                    }
+                }
+            };
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            fusedLocationClient.
+                    requestLocationUpdates(mLocationRequest,
+                            mLocationCallback,
+                            Looper.getMainLooper());
+        }
     }
 
     //Method 8
@@ -382,7 +441,7 @@ public class Server extends Service {
         });
     }
 
-    public void assignTsk(String token, String tasker_id, Task task) {
+    public void assignTask(String token, String tasker_id, Task task) {
         showProgressBar();
         Retrofit retrofit = getRetrofit(token);
         JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
@@ -396,7 +455,7 @@ public class Server extends Service {
             public void onResponse(Call<Message> call, Response<Message> response) {
                 notifyListener(response.isSuccessful(), SERVER_ASSIGN_TASK,
                         "Task Assigned", "Couldn't Assign Task",
-                        () -> assignTsk(token, tasker_id, task));
+                        () -> assignTask(token, tasker_id, task));
             }
 
             @Override
@@ -406,8 +465,8 @@ public class Server extends Service {
                         SERVER_ASSIGN_TASK,
                         "Task Assigned",
                         "Couldn't Assign Task", () -> {
-                    assignTsk(token, tasker_id, task);
-                });
+                            assignTask(token, tasker_id, task);
+                        });
             }
         });
     }

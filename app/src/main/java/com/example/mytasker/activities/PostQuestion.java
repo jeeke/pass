@@ -1,5 +1,6 @@
 package com.example.mytasker.activities;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,16 +31,15 @@ public class PostQuestion extends LocationActivity implements LocationActivity.L
                 showSnackBar(this, "Please enter your question");
                 return;
             }
-            setLocationListener(this);
-            getLocation();
+            server.getLocation(this);
         });
         ques = findViewById(R.id.question);
     }
 
     @Override
-    public void onLocationFetched(boolean success, double lon, double lat) {
-        if (success && prevCallResolved && server != null) {
-            getToken(token -> server.postQuestion(getUser(this), token, q, lon, lat), this);
+    public void onLocationFetched(Location location) {
+        if (prevCallResolved && server != null) {
+            getToken(token -> server.postQuestion(getUser(this), token, q, location.getLongitude(), location.getLatitude()), this);
             prevCallResolved = false;
         }
     }

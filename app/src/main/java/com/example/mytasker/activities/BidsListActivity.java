@@ -26,6 +26,7 @@ import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
 import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
 import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
+import static com.example.mytasker.Server.SERVER_ASSIGN_TASK;
 import static com.example.mytasker.util.Cache.getDatabase;
 import static com.example.mytasker.util.Cache.getToken;
 
@@ -156,12 +157,19 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
 
     private void verifyNCall(String tasker_id) {
         if (prevCallResolved && server != null) {
-            getToken(token -> server.assignTsk(token, tasker_id, task), this);
+            getToken(token -> server.assignTask(token, tasker_id, task), this);
         }
     }
 
+    @Override
+    public void onServerCallSuccess(int methodId, String title) {
+        super.onServerCallSuccess(methodId, title);
+        if (methodId == SERVER_ASSIGN_TASK) {
+            finish();
+        }
+    }
 
-//    TODO why we save tasks separately if we are saving in prev tasks
+    //    TODO why we save tasks separately if we are saving in prev tasks
 
     @Override
     public void onClick(View v, String tasker_id, String tasker_name, String tasker_avatar) {

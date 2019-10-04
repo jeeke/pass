@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:scrollbars="none">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="96dp">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="32dp"
+            app:chipSpacingHorizontal="16dp"
+            app:chipSpacingVertical="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:singleSelection="false" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:text="Categories"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/chipGroup1"
+            app:layout_constraintStart_toStartOf="@+id/imageView14"
+            app:layout_constraintTop_toBottomOf="@+id/radius_bar" />
+
+        <ImageView
+            android:id="@+id/imageView14"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_rupee2" />
+
+        <TextView
+            android:id="@+id/textView33"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Price (k)"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView14"
+            app:layout_constraintStart_toEndOf="@+id/imageView14"
+            app:layout_constraintTop_toTopOf="@+id/imageView14" />
+
+        <com.appyvet.materialrangebar.RangeBar
+            android:id="@+id/price_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/imageView14"
+            app:layout_constraintTop_toBottomOf="@+id/imageView14"
+            app:mrb_barWeight="8dp"
+            app:mrb_connectingLineColor="#2196f3"
+            app:mrb_connectingLineWeight="10dp"
+            app:mrb_leftSelectorColor="#2196f3"
+            app:mrb_pinColor="#6c3f6a"
+            app:mrb_pinMaxFont="15sp"
+            app:mrb_pinMinFont="12sp"
+            app:mrb_pinRadius="14dp"
+            app:mrb_pinTextColor="@color/white"
+            app:mrb_rangeBar="true"
+            app:mrb_rangeBarPaddingBottom="30dp"
+            app:mrb_rangeBar_rounded="true"
+            app:mrb_rightSelectorColor="#2196f3"
+            app:mrb_selectorBoundaryColor="?colorAccent"
+            app:mrb_selectorBoundarySize="2dp"
+            app:mrb_selectorSize="10dp"
+            app:mrb_temporaryPins="true"
+            app:mrb_tickDefaultLabel="label"
+            app:mrb_tickEnd="10"
+            app:mrb_tickHeight="0dp"
+            app:mrb_tickInterval="1"
+            app:mrb_tickLabelSize="4sp"
+            app:mrb_tickStart="0" />
+
+        <ImageView
+            android:id="@+id/imageView15"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintStart_toStartOf="@+id/price_bar"
+            app:layout_constraintTop_toBottomOf="@+id/price_bar"
+            app:srcCompat="@drawable/ic_loc1" />
+
+        <TextView
+            android:id="@+id/textView35"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Radius (km)"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView15"
+            app:layout_constraintStart_toEndOf="@+id/imageView15"
+            app:layout_constraintTop_toTopOf="@+id/imageView15" />
+
+        <com.appyvet.materialrangebar.RangeBar
+            android:id="@+id/radius_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/imageView15"
+            app:layout_constraintTop_toBottomOf="@+id/imageView15"
+            app:mrb_barWeight="8dp"
+            app:mrb_connectingLineColor="#2196f3"
+            app:mrb_connectingLineWeight="10dp"
+            app:mrb_leftSelectorColor="#2196f3"
+            app:mrb_pinColor="#6c3f6a"
+            app:mrb_pinMaxFont="15sp"
+            app:mrb_pinMinFont="12sp"
+            app:mrb_pinRadius="14dp"
+            app:mrb_pinTextColor="@color/white"
+            app:mrb_rangeBar="false"
+            app:mrb_rangeBarPaddingBottom="30dp"
+            app:mrb_rangeBar_rounded="true"
+            app:mrb_rightSelectorColor="#2196f3"
+            app:mrb_selectorBoundarySize="2dp"
+            app:mrb_selectorSize="10dp"
+            app:mrb_tickEnd="100"
+            app:mrb_tickHeight="0dp"
+            app:mrb_tickInterval="10"
+            app:mrb_tickLabelSize="4sp"
+            app:mrb_tickStart="0" />
+
+        <!--<Switch-->
+        <!--android:id="@+id/remote_task"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:switchPadding="16dp"-->
+        <!--android:fontFamily="@font/din"-->
+        <!--android:text="Remote Task"-->
+        <!--android:paddingEnd="8dp"-->
+        <!--android:textSize="18sp"-->
+        <!--android:textColor="?colorAccent"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/price_bar"-->
+        <!--app:layout_constraintEnd_toEndOf="@+id/price_bar" />-->
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

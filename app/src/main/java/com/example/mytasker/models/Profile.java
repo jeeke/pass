@@ -54,21 +54,21 @@ public class Profile extends Message {
 
     public int getR1() {
         if (byPoster.task_rated != 0) {
-            return (int) (byTasker.r1 * 20 / byPoster.task_rated);
+            return (int) (byPoster.r1 * 20 / byPoster.task_rated);
         }
         return 0;
     }
 
     public int getR3() {
         if (byPoster.task_rated != 0) {
-            return (int) (byTasker.r3 * 20 / byPoster.task_rated);
+            return (int) (byPoster.r3 * 20 / byPoster.task_rated);
         }
         return 0;
     }
 
     public int getR2() {
         if (byPoster.task_rated != 0) {
-            return (int) (byTasker.r2 * 20 / byPoster.task_rated);
+            return (int) (byPoster.r2 * 20 / byPoster.task_rated);
         }
         return 0;
     }

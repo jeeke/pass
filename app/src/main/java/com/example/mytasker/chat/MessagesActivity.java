@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.mytasker.util.Contracts.getPushKey;
+
 public class MessagesActivity extends DemoMessagesActivity
         implements MessageInput.InputListener,
         MessageInput.TypingListener {
@@ -77,17 +79,18 @@ public class MessagesActivity extends DemoMessagesActivity
         avatar = mCurrentUser.getPhotoUrl().toString();
         String current_user_ref = "Messages/" + uid + "/" + mChatUId;
         String chat_user_ref = "Messages/" + mChatUId + "/" + uid;
-        Map messageUserMap = new HashMap();
+        Map<String, Object> messageUserMap = new HashMap<>();
 
         if (messagesAdapter.getItemCount() == 0) {
             MessageHelper messageHelper1 = new MessageHelper(mCurrentUser, "Welcome to Pass!");
             messageUserMap.put(current_user_ref + "/" +
-                    mRootRef.child(current_user_ref).push().getKey(), messageHelper1.toMap());
+                    getPushKey(mRootRef.child(current_user_ref)), messageHelper1.toMap());
             messageUserMap.put(chat_user_ref + "/" +
-                    mRootRef.child(current_user_ref).push().getKey(), messageHelper1.toMap());
+                    getPushKey(mRootRef.child(current_user_ref)), messageHelper1.toMap());
         }
         MessageHelper messageHelper = new MessageHelper(mCurrentUser, input.toString());
-        DatabaseReference user_message_push = mRootRef.child(current_user_ref).push();
+        DatabaseReference user_message_push = mRootRef.child(current_user_ref);
+        user_message_push = user_message_push.child(getPushKey(user_message_push));
         String push_id = user_message_push.getKey();
         DialogHelper dialogHelperMe = new DialogHelper(mChatUId, mChatUName, mChatAvatar, 0, null, input.toString());
         DialogHelper dialogHelperHim = new DialogHelper(uid, name, avatar, 0, null, input.toString());

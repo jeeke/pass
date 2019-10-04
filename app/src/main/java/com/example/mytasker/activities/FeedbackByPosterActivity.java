@@ -6,6 +6,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.mytasker.R;
+import com.example.mytasker.Server;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +52,14 @@ public class FeedbackByPosterActivity extends BaseActivity {
         map.put("task_id", taskId);
         map.put("user_id", taskerId);
         server.rate(map);
+    }
+
+    @Override
+    public void onServerCallSuccess(int methodId, String title) {
+        super.onServerCallSuccess(methodId, title);
+        if (methodId == Server.SERVER_RATE) {
+            finish();
+        }
     }
 
     private void initView() {

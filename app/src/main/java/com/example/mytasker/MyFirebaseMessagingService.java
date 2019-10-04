@@ -18,6 +18,7 @@ import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.mytasker.models.Notification;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 import static com.example.mytasker.util.Contracts.dpToPx;
+import static com.example.mytasker.util.Contracts.getPushKey;
 
 public class MyFirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
@@ -110,10 +112,11 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
     private void notificationHandler(Map<String, String> map) {
         Notification notification = new Notification(map);
         if (!(notification.getType() == 4)) {
-            FirebaseDatabase.getInstance()
-                    .getReference()
-                    .child("/Notifications/" + FirebaseAuth.getInstance().getCurrentUser().getUid())
-                    .push().setValue(notification.toMap()).addOnCompleteListener(task -> getImage(notification));
+            DatabaseReference ref =
+                    FirebaseDatabase.getInstance()
+                            .getReference()
+                            .child("/Notifications/" + FirebaseAuth.getInstance().getCurrentUser().getUid());
+            ref.child(getPushKey(ref)).setValue(notification.toMap()).addOnCompleteListener(task -> getImage(notification));
         } else getImage(notification);
 //        TODO handle default case notification
 

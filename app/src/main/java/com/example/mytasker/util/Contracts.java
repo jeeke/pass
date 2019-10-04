@@ -4,8 +4,11 @@ import android.content.res.Resources;
 
 import com.example.mytasker.R;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.functions.FirebaseFunctions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -16,6 +19,25 @@ public class Contracts {
     public static final String[] TASK_DETAIL_BUTTONS = {"SHOW ALL BIDS", "ASSIGNED TO ", "DONE BY ",
             "ALREADY BID", "ASSIGNED", "COMPLETED"
     };
+
+    //        static String BASE_POST_URL = "https://e3df903c.ngrok.io";
+    static String BASE_POST_URL = "https://sheltered-escarpment-49063.herokuapp.com/";
+    private static Map<Character, Character> charMap = new HashMap<>();
+
+    static {
+        ArrayList<Character> chars = new ArrayList<>();
+        chars.add('-');
+        for (Character c = '0'; c <= '9'; c++) chars.add(c);
+        for (Character c = 'A'; c <= 'Z'; c++) chars.add(c);
+        chars.add('_');
+        for (Character c = 'a'; c <= 'z'; c++) chars.add(c);
+        for (int i = 0; i < chars.size(); i++) {
+            char a = chars.get(i), b = chars.get(chars.size() - i - 1);
+            charMap.put(a, b);
+            charMap.put(b, a);
+        }
+    }
+
     public static final int[] TASK_STAGE_COLORS = {R.color.orange, R.color.blue_400, R.color.green_400};
     public static final int[] QUES_STAGE_COLORS = {R.color.orange, R.color.green_400};
     public static final String[] TASK_STAGE_TEXT = {"NEW", "ONGOING", "COMPLETED"};
@@ -44,8 +66,15 @@ public class Contracts {
         return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
-    //    static String BASE_POST_URL = "https://bae70d07.ngrok.io";
-    static String BASE_POST_URL = "https://sheltered-escarpment-49063.herokuapp.com/";
+    public static String getPushKey(DatabaseReference reference) {
+        String s = reference.push().getKey();
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            str.append(charMap.get(s.charAt(i)));
+        }
+//        Log.e("Key: "+s," Encoded Key: "+str.toString());
+        return str.toString();
+    }
 
     private Contracts() {
     }

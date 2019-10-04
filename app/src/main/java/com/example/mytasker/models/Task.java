@@ -5,12 +5,15 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Task extends Message implements Serializable {
     @SerializedName("dis")
     String dis;
+    @SerializedName("sort_id")
+    private Long sort_id;
     @SerializedName("id")
     String id;
     @SerializedName("c_date")
@@ -60,11 +63,12 @@ public class Task extends Message implements Serializable {
         this.tags = tags;
         this.remote = remote;
         this.musthaves = musthaves;
+        sort_id = -new Date().getTime();
     }
 
 
     Map toMap() {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("id", id);
         map.put("stage", stage);
         map.put("c_date", c_date);
@@ -81,6 +85,7 @@ public class Task extends Message implements Serializable {
         map.put("tags", tags);
         map.put("remote", remote);
         map.put("must_haves", musthaves);
+        map.put("sort_id", -new Date().getTime());
         return map;
     }
 

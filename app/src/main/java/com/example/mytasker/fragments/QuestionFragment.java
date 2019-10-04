@@ -82,15 +82,12 @@ public class QuestionFragment extends Fragment {
     private void verifyNCall() {
         if (!prevCallResolved) return;
         LocationActivity activity = (LocationActivity) getActivity();
-        activity.setLocationListener((success, lon, lat) -> {
-            if (success) {
-                listView.animate().alpha(0.0f).setDuration(0).start();
-                shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
-                getToken(token -> callRetrofit(token, lon, lat), getActivity());
-
-            } else swipeContainer.setRefreshing(false);
+        activity.startLocationUpdates(location -> {
+            listView.animate().alpha(0.0f).setDuration(0).start();
+            shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
+            getToken(token -> callRetrofit(token, location.getLongitude(),
+                    location.getLatitude()), getActivity());
         });
-        activity.getLocation();
     }
 
 
