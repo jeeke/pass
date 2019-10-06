@@ -237,7 +237,7 @@ public class Server extends Service {
                 createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        initProfile(name);
+                        sendEmailVerificationLink(name);
                     } else notifyListener(false, SERVER_SIGNUP, "",
                             "SignUp Unsuccessful", () -> signUp(name, email, password));
                 });
@@ -248,7 +248,7 @@ public class Server extends Service {
         if (user != null) {
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
-                    .setPhotoUri(Uri.parse(avatars[(new Random().nextInt() % 5)]))
+                    .setPhotoUri(Uri.parse(avatars[(int) (new Date().getTime() % 5)]))
                     .build();
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(task ->
@@ -257,6 +257,22 @@ public class Server extends Service {
         } else {
             notifyListener(false, SERVER_SIGNUP, "",
                     "SignUp Unsuccessful", () -> initProfile(name));
+        }
+    }
+
+    private void sendEmailVerificationLink(String name) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            user.sendEmailVerification()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            initProfile(name);
+                        } else notifyListener(false, SERVER_SIGNUP, "",
+                                "SignUp Unsuccessful", () -> sendEmailVerificationLink(name));
+                    });
+        } else {
+            notifyListener(false, SERVER_SIGNUP, "",
+                    "SignUp Unsuccessful", () -> sendEmailVerificationLink(name));
         }
     }
 

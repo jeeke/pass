@@ -10,18 +10,19 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.mytasker.R;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import static com.example.mytasker.Server.SERVER_LOGIN;
+import static com.example.mytasker.Server.SERVER_SIGNUP;
 import static com.example.mytasker.util.Tools.showSnackBar;
 
 public class LoginActivity extends BaseActivity {
 
     private static final String TAG = "LOGIN_ACTIVITY";
-    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     EditText first, second, third;
     Button action;
-    private String name, email, password;
 
     ProgressDialog dialog;
 
@@ -53,17 +54,39 @@ public class LoginActivity extends BaseActivity {
     public void onServerCallSuccess(int methodId, String title) {
         super.onServerCallSuccess(methodId, title);
         if (methodId == SERVER_LOGIN) {
-            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            updateUI();
+        } else if (methodId == SERVER_SIGNUP) {
+            new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+                    .setTitle("Sign Up successful")
+                    .setMessage("Follow the link sent to your email to verify it")
+                    .setPositiveButton("OK", null)
+                    .show();
+        }
+    }
+
+    private void updateUI() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            if (user.isEmailVerified()) {
+                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            } else {
+                new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+                        .setTitle("Please Verify Your Email")
+                        .setMessage("Follow the link sent to your email to verify it")
+                        .setPositiveButton("OK", null)
+                        .show();
+            }
+
         }
     }
 
     private void checkFields(boolean from) {
         dialog = new ProgressDialog(this);
-        email = second.getText().toString();
-        password = third.getText().toString();
-        name = first.getText().toString();
+        String email = second.getText().toString();
+        String password = third.getText().toString();
+        String name = first.getText().toString();
 
         if (!prevCallResolved || server == null)
             showSnackBar(this, "Error, Please try later");
@@ -79,4 +102,5 @@ public class LoginActivity extends BaseActivity {
             server.login(email, password);
         }
     }
+
 }

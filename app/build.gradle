@@ -90,6 +90,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.0.0'
     implementation 'androidx.paging:paging-runtime:2.1.0'
     implementation 'com.google.firebase:firebase-functions:19.0.1'
+    implementation 'com.google.firebase:firebase-config:19.0.2'
 }
 repositories {
     mavenCentral()

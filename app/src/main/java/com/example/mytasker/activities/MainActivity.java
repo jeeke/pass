@@ -37,11 +37,13 @@ public class MainActivity extends BaseActivity implements
     ProgressDialog dialog;
     SharedPreferences sp;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Make sure this is before calling super.onCreate
         setTheme(R.style.LightMode);
         super.onCreate(savedInstanceState);
+//        setUpdate();
         dialog = new ProgressDialog(this);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -149,14 +151,8 @@ public class MainActivity extends BaseActivity implements
 
     private void updateUI() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
+        if (user != null && user.isEmailVerified()) {
 //            TODO handle pending feedbacks
-//            int pending_feedbacks = sp.getInt("pending_feedbacks", 0);
-//            if (pending_feedbacks > 0) {
-//                finish();
-//                launchActivity(this, FeedbackByPosterActivity.class);
-//                return;
-//            }
             launchActivity(this, DashboardActivity.class);
             finish();
         }
