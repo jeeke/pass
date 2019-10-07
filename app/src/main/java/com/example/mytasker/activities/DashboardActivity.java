@@ -30,10 +30,11 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 
 import static com.example.mytasker.util.Cache.getUser;
-import static com.example.mytasker.util.Contracts.CODE_SETTINGS_ACTIVITY;
 import static com.example.mytasker.util.Tools.launchActivity;
 import static com.example.mytasker.util.Tools.setOnline;
 import static com.example.mytasker.util.Tools.setToken;
@@ -41,8 +42,10 @@ import static com.example.mytasker.util.Tools.setToken;
 public class DashboardActivity extends LocationActivity implements ProfileFragment.ActivityListener {
 
     public static final String VERSION_CODE_KEY = "latest_app_version";
+    private static final String FRAGMENT_TAG = "m-fragment";
     ImageView bhome, bqna, bfeed, bprofile;
     ImageView prevbselection;
+    int btnSelected;
     View bottomAppBar;
     boolean fabActivated;
     Intent starterIntent;
@@ -52,35 +55,34 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     int startRadius;
     int endRadius;
     View fabExpanded;
-    //    Fragment[] fragments = new Fragment[]{null, null, null, null};
+    Fragment mFragment;
     FloatingActionButton fab;
     private static final String TAG = "DashboardActivity";
     private FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-    private HashMap<String, Object> firebaseDefaultMap;
 
-    private void loadFragment(Fragment fragment) {
+    private void loadFragment() {
         if (fabActivated) circularReveal(fab);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.fragment_container, mFragment, FRAGMENT_TAG);
         transaction.commit();
     }
 
     private void checkForUpdate() {
+        Toast.makeText(server, mFirebaseRemoteConfig.getDouble(VERSION_CODE_KEY) + "", Toast.LENGTH_SHORT).show();
         int latestAppVersion = (int) mFirebaseRemoteConfig.getDouble(VERSION_CODE_KEY);
         if (latestAppVersion > getCurrentVersionCode()) {
             new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
                     .setTitle("Please Update the App")
-                    .setMessage("A new version of PASS is available. Please update it")
-                    .setPositiveButton("OK", null)
+                    .setMessage("A new version of PASS is available. Please update from PlayStore")
+                    .setPositiveButton("OK", (dialog, which) -> finish())
                     .setCancelable(false)
                     .show();
         }
     }
 
-    private long getCurrentVersionCode() {
+    private int getCurrentVersionCode() {
         try {
-            return getPackageManager().getPackageInfo(getPackageName(), 0).getLongVersionCode();
+            return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -88,16 +90,15 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     }
 
     public void setUpdate() {
-        firebaseDefaultMap = new HashMap<>();
+        HashMap<String, Object> firebaseDefaultMap = new HashMap<>();
         firebaseDefaultMap.put(VERSION_CODE_KEY, getCurrentVersionCode());
-        mFirebaseRemoteConfig.setDefaults(firebaseDefaultMap);
-        mFirebaseRemoteConfig.setConfigSettings(
+        mFirebaseRemoteConfig.setDefaultsAsync(firebaseDefaultMap);
+        mFirebaseRemoteConfig.setConfigSettingsAsync(
                 new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(BuildConfig.DEBUG)
                         .build());
         //Fetching the values here
-        mFirebaseRemoteConfig.fetch().addOnCompleteListener(task -> {
+        mFirebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                mFirebaseRemoteConfig.activateFetched();
                 Log.d(TAG, "Fetched value: " + mFirebaseRemoteConfig.getString(VERSION_CODE_KEY));
                 //calling function to check if new version is available or not
                 checkForUpdate();
@@ -169,13 +170,10 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CODE_SETTINGS_ACTIVITY) {
-//            if (resultCode == RESULT_OK) {
-//            }
-            finish();
-//            starterIntent.putExtra("theme", getThemeToLaunch());
-            startActivity(starterIntent);
-        }
+//        if (requestCode == CODE_SETTINGS_ACTIVITY) {
+//            finish();
+//            startActivity(starterIntent);
+//        }
     }
 
     private void init() {
@@ -198,21 +196,36 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     protected void onStart() {
         super.onStart();
         if (findViewById(R.id.fragment_container) != null) {
+            mFragment = mFragment == null ? new HomeFragment() : mFragment;
             starterIntent = getIntent();
             setToken(this);
             init();
             initFab();
-            loadFragment(new HomeFragment());
-            prevbselection = bhome;
+            loadFragment();
+            prevbselection = prevbselection == null ? bhome : findViewById(btnSelected);
         }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mFragment = getSupportFragmentManager()
+                    .findFragmentByTag(FRAGMENT_TAG);
+            btnSelected = savedInstanceState.getInt("selectedButton");
+
+        }
         setUpdate();
         setContentView(R.layout.activity_dashboard);
     }
+
+    @Override
+    public void onSaveInstanceState(@NotNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        btnSelected = prevbselection.getId();
+        savedInstanceState.putInt("selectedButton", btnSelected);
+    }
+
 
 
     public void postTask(View v) {
@@ -245,17 +258,21 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     private int toggleImage(int id, boolean selected) {
         switch (id) {
             case R.id.home:
-                loadFragment(new HomeFragment());
-                return selected ? R.mipmap.home_fill : R.mipmap.home;
+                mFragment = new HomeFragment();
+                loadFragment();
+                return selected ? R.drawable.ic_home_fill : R.drawable.ic_home;
             case R.id.feed:
-                loadFragment(new FeedFragment());
-                return selected ? R.mipmap.scroll_fill : R.mipmap.scroll;
+                mFragment = new FeedFragment();
+                loadFragment();
+                return selected ? R.drawable.ic_scroll_fill : R.drawable.ic_scroll;
             case R.id.qna:
-                loadFragment(new QuestionFragment());
-                return selected ? R.mipmap.qna_fill : R.mipmap.qna;
+                mFragment = new QuestionFragment();
+                loadFragment();
+                return selected ? R.drawable.ic_qna_fill : R.drawable.ic_qna;
             case R.id.profile:
-                loadFragment(new ProfileFragment());
-                return selected ? R.mipmap.profile_fill : R.mipmap.profile;
+                mFragment = new ProfileFragment();
+                loadFragment();
+                return selected ? R.drawable.ic_profile_fill : R.drawable.ic_profile;
         }
         return 0;
     }

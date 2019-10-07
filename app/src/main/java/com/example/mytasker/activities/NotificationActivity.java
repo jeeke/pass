@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.mytasker.R;
 import com.example.mytasker.holders.NotificationHolder;
 import com.example.mytasker.models.Notification;
@@ -76,7 +78,7 @@ public class NotificationActivity extends BaseActivity {
         //Initialize Adapter
         mAdapter = new FirebaseRecyclerPagingAdapter<Notification, NotificationHolder>(options) {
 
-            private int retryCount = 4;
+//            private int retryCount = 4;
 
             @NonNull
             @Override
@@ -119,13 +121,17 @@ public class NotificationActivity extends BaseActivity {
                         break;
 
                     case ERROR:
-                        if (--retryCount > 0)
-                            retry();
-                        else {
-                            shimmerContainer.stopShimmer();
-                            shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
-                            mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
-                        }
+//                        if (--retryCount > 0)
+//                            retry();
+//                        else {
+                        LottieAnimationView anim = findViewById(R.id.lottie_anim);
+                        anim.setAnimation(R.raw.bell);
+                        anim.setSpeed(2.0f);
+                        findViewById(R.id.anim).setVisibility(View.VISIBLE);
+                        shimmerContainer.stopShimmer();
+                        shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                        mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
+//                        }
                 }
             }
 

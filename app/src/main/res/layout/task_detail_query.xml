@@ -34,7 +34,7 @@
         android:id="@+id/poster_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:drawableStart="@mipmap/profile_fill"
+        android:drawableStart="@drawable/ic_profile_fill"
         android:drawablePadding="8dp"
         android:drawableTint="?colorAccent"
         android:gravity="center_vertical"

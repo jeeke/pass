@@ -100,7 +100,7 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    private ImageView imageView, sugga;
+    private ImageView imageView, lottieAnim;
 
     public ProfileFragment() {
     }
@@ -213,7 +213,7 @@ public class ProfileFragment extends Fragment {
             chipGroup = v.findViewById(R.id.skillschip);
             imageView = v.findViewById(R.id.addskill);
             constraintLayout = v.findViewById(R.id.layoutstats);
-            sugga = v.findViewById(R.id.sugga);
+            lottieAnim = v.findViewById(R.id.lottie_anim);
             layout = v.findViewById(R.id.layoutrating);
             divider = v.findViewById(R.id.divider11);
             toolbar = v.findViewById(R.id.toolbar);
@@ -314,14 +314,14 @@ public class ProfileFragment extends Fragment {
         float rating2 = p.getTaskerRating();
         if (rating + rating2 == 0) {
             constraintLayout.setVisibility(View.GONE);
-            sugga.setVisibility(View.VISIBLE);
+            lottieAnim.setVisibility(View.VISIBLE);
             layout.setVisibility(View.GONE);
             divider.setVisibility(View.GONE);
         } else {
             divider.setVisibility(View.VISIBLE);
             constraintLayout.setVisibility(View.VISIBLE);
             layout.setVisibility(View.VISIBLE);
-            sugga.setVisibility(View.GONE);
+            lottieAnim.setVisibility(View.GONE);
             posterrating.setRating(rating);
             taskerrating.setRating(rating2);
             int r1 = p.getR1(), r2 = p.getR2(), r3 = p.getR3();

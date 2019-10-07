@@ -7,12 +7,10 @@
     android:visibility="gone">
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/mascot"
+        android:id="@+id/lottie_anim"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:layout_gravity="center"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,8 +25,8 @@
         android:layout_height="wrap_content"
         android:text="No Chats Yet"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/mascot"
-        app:layout_constraintStart_toStartOf="@+id/mascot"
-        app:layout_constraintTop_toBottomOf="@+id/mascot" />
+        app:layout_constraintEnd_toEndOf="@+id/lottie_anim"
+        app:layout_constraintStart_toStartOf="@+id/lottie_anim"
+        app:layout_constraintTop_toBottomOf="@+id/lottie_anim" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
