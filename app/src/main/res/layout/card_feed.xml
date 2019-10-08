@@ -2,9 +2,9 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="8dp"
     android:orientation="vertical"
     app:cardCornerRadius="12dp">
 
@@ -18,6 +18,7 @@
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
             app:layout_constraintBottom_toTopOf="@+id/divider19"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,19 +46,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <!--<androidx.cardview.widget.CardView-->
-            <!--android:id="@+id/cardView"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginBottom="16dp"-->
-            <!--app:cardCornerRadius="12dp"-->
-            <!--android:layout_marginStart="16dp"-->
-            <!--android:layout_marginTop="16dp"-->
-            <!--app:cardElevation="0dp"-->
-            <!--app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintTop_toTopOf="parent">-->
-
             <ImageView
                 android:id="@+id/action_delete"
                 android:layout_width="wrap_content"
@@ -71,15 +59,15 @@
                 app:srcCompat="@drawable/ic_action_delete" />
 
             <ImageView
+                android:id="@+id/poster_image"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/poster_image"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
                 app:srcCompat="@drawable/person" />
             <!--</androidx.cardview.widget.CardView>-->
 
@@ -104,16 +92,6 @@
                 app:layout_constraintStart_toStartOf="@+id/poster_name"
                 app:layout_constraintTop_toBottomOf="@+id/poster_name" />
 
-            <!--<ImageView-->
-            <!--android:id="@+id/imageView13"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="8dp"-->
-            <!--android:layout_marginEnd="16dp"-->
-            <!--app:layout_constraintEnd_toEndOf="parent"-->
-            <!--app:layout_constraintTop_toTopOf="@+id/cardView"-->
-            <!--app:srcCompat="@drawable/ic_more_horiz" />-->
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
@@ -137,6 +115,9 @@
 
                 <com.like.LikeButton
                     android:id="@+id/likeView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="6dp"
                     android:layout_marginBottom="6dp"
                     app:anim_scale_factor="2"
@@ -144,23 +125,8 @@
                     app:icon_size="28dp"
                     app:icon_type="heart"
                     app:is_enabled="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     app:like_drawable="@drawable/ic_hot_checked"
                     app:unlike_drawable="@drawable/ic_hot" />
-
-                <!--<CheckBox-->
-                <!--android:button="@null"-->
-                <!--android:checked="false"-->
-                <!--android:id="@+id/likeView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:layout_marginTop="16dp"-->
-                <!--android:layout_marginBottom="16dp"-->
-                <!--android:stateListAnimator="@animator/scale"-->
-                <!--android:background="@drawable/ic_hot_selector" />-->
 
                 <TextView
                     android:id="@+id/numLikes"
@@ -177,9 +143,9 @@
 
         <LinearLayout
             android:id="@+id/loading"
-            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="250dp"
+            android:gravity="center"
             app:layout_constraintBottom_toTopOf="@+id/divider19"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

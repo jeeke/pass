@@ -46,37 +46,18 @@ public class FeedHolder extends RecyclerView.ViewHolder {
 
     public void setItem(Feed feed, View.OnClickListener listener, String uid, boolean mine) {
         if (!mine) itemView.findViewById(R.id.action_delete).setVisibility(View.GONE);
-        numLikes.setText(formatCount(feed.getLikeCount()));
-        name.setText(feed.getPoster_name());
-        date.setText(elapsedTime(feed.getC_date()));
-        itemView.findViewById(R.id.action_profile).setOnClickListener(listener);
-        itemView.findViewById(R.id.action_delete).setOnClickListener(listener);
-        likeView.setLiked(feed.likes.containsKey(uid));
-        likeView.setOnLikeListener(new OnLikeListener() {
-            @Override
-            public void liked(LikeButton likeButton) {
-                feed.setLikeCount(feed.getLikeCount() + 1);
-                numLikes.setText(formatCount(feed.getLikeCount()));
-                listener.onClick(likeButton);
-            }
-
-            @Override
-            public void unLiked(LikeButton likeButton) {
-                feed.setLikeCount(feed.getLikeCount() - 1);
-                numLikes.setText(formatCount(feed.getLikeCount()));
-                listener.onClick(likeButton);
-            }
-        });
-        itemView.findViewById(R.id.likeButton).setOnClickListener(v -> {
-            likeView.onClick(likeView);
-        });
-
         if (feed.getText().equals("")) {
             title.setVisibility(View.GONE);
         } else {
+            title.setVisibility(View.VISIBLE);
             title.setText(feed.getText());
         }
         if (feed.getImage() != null) {
+            image.setVisibility(View.VISIBLE);
+            itemView.findViewById(R.id.loading).setVisibility(View.VISIBLE);
+            title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            title.setPadding(0, 0, 0, 0);
+            title.setGravity(Gravity.START);
             Glide.with(image.getContext()).load(feed.getImage())
                     .listener(new RequestListener<Drawable>() {
                         @Override
@@ -103,5 +84,29 @@ public class FeedHolder extends RecyclerView.ViewHolder {
                 .load(feed.getPoster_avatar())
                 .apply(RequestOptions.circleCropTransform())
                 .into(avatar);
+        numLikes.setText(formatCount(feed.getLikeCount()));
+        name.setText(feed.getPoster_name());
+        date.setText(elapsedTime(feed.getC_date()));
+        itemView.findViewById(R.id.action_profile).setOnClickListener(listener);
+        itemView.findViewById(R.id.action_delete).setOnClickListener(listener);
+        likeView.setLiked(feed.likes.containsKey(uid));
+        likeView.setOnLikeListener(new OnLikeListener() {
+            @Override
+            public void liked(LikeButton likeButton) {
+                feed.setLikeCount(feed.getLikeCount() + 1);
+                numLikes.setText(formatCount(feed.getLikeCount()));
+                listener.onClick(likeButton);
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+                feed.setLikeCount(feed.getLikeCount() - 1);
+                numLikes.setText(formatCount(feed.getLikeCount()));
+                listener.onClick(likeButton);
+            }
+        });
+        itemView.findViewById(R.id.likeButton).setOnClickListener(v -> {
+            likeView.onClick(likeView);
+        });
     }
 }

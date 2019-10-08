@@ -41,7 +41,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Make sure this is before calling super.onCreate
-        setTheme(R.style.LightMode);
+        setTheme(R.style.MainActivity);
         super.onCreate(savedInstanceState);
 //        setUpdate();
         dialog = new ProgressDialog(this);

@@ -31,7 +31,7 @@
 
         <ImageView
             android:id="@+id/home"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:gravity="center"
@@ -44,7 +44,7 @@
 
         <ImageView
             android:id="@+id/qna"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="44dp"
             android:gravity="center"
@@ -58,7 +58,7 @@
 
         <ImageView
             android:id="@+id/feed"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="44dp"
             android:gravity="center"
@@ -86,7 +86,7 @@
 
         <ImageView
             android:id="@+id/profile"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:gravity="center"

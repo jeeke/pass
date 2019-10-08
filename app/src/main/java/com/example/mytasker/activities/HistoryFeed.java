@@ -18,9 +18,10 @@ public class HistoryFeed extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
         from = getIntent().getBooleanExtra("from", false);
         mine = getIntent().getBooleanExtra("mine", false);
+        if (from) setContentView(R.layout.activity_portfolio);
+        else setContentView(R.layout.activity_list);
         String uid = getIntent().getStringExtra("uid");
         feedActNFrag = new FeedActNFrag();
         initViews();
