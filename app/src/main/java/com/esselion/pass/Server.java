@@ -249,7 +249,7 @@ public class Server extends Service {
         if (user != null) {
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
-                    .setPhotoUri(Uri.parse(avatars[(int) (new Date().getTime() % 5)]))
+                    .setPhotoUri(Uri.parse(avatars[(int) (new Date().getTime() % 3)]))
                     .build();
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(task ->

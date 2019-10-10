@@ -159,10 +159,6 @@
                 android:value="com.esselion.pass.activities.DashboardActivity" />
         </activity>
         <activity
-            android:name=".activities.dummy.TempPostActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.esselion.pass.activities.DashboardActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
@@ -180,7 +176,6 @@
             android:name="com.esselion.pass.activities.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
-            <!--android:theme="@style/SplashTheme"-->
 
         </activity>
 
