@@ -95,18 +95,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/pick_image"
                 tools:srcCompat="@tools:sample/avatars" />
 
-            <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="48dp"
-                android:text="Add post to my portfolio"
-                android:textColor="?colorAccent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/text"
-                app:layout_constraintTop_toBottomOf="@id/text" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

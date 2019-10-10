@@ -15,9 +15,9 @@
         <item name="ratingBarStyleSmall">@style/RatingBar</item>
     </style>
 
-    <style name="MainActivity" parent="LightMode">
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
+    <!--<style name="MainActivity" parent="LightMode">-->
+    <!--<item name="android:windowTranslucentStatus">true</item>-->
+    <!--</style>-->
 
 
     <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">

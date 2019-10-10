@@ -16,15 +16,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.airbnb.lottie.LottieAnimationView
+        <ImageView
+            android:id="@+id/portfolio_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="56dp"
-            app:lottie_autoPlay="true"
-            app:lottie_enableMergePathsForKitKatAndAbove="true"
-            app:lottie_progress="90"
-            app:lottie_rawRes="@raw/port"
-            app:lottie_speed="0.6" />
+            android:src="@drawable/portfolio_anim" />
+
+        <!--<com.airbnb.lottie.LottieAnimationView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginEnd="56dp"-->
+        <!--app:lottie_autoPlay="true"-->
+        <!--app:lottie_enableMergePathsForKitKatAndAbove="true"-->
+        <!--app:lottie_progress="90"-->
+        <!--app:lottie_rawRes="@raw/port"-->
+        <!--app:lottie_speed="0.6" />-->
+
     </androidx.appcompat.widget.Toolbar>
 
     <ProgressBar
