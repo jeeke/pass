@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.esselion.pass.R;
-import com.esselion.pass.util.FeedActNFrag;
+import com.esselion.pass.util.FeedNPortAdapter;
 
 public class HistoryFeed extends BaseActivity {
-    private FeedActNFrag feedActNFrag;
+    private FeedNPortAdapter feedNPortAdapter;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     boolean from = false;
@@ -32,11 +32,11 @@ public class HistoryFeed extends BaseActivity {
 
         } else setContentView(R.layout.activity_list);
         String uid = getIntent().getStringExtra("uid");
-        feedActNFrag = new FeedActNFrag();
+        feedNPortAdapter = new FeedNPortAdapter();
         initViews();
-        feedActNFrag.callFireBase(uid, mine, this,
+        feedNPortAdapter.callFireBase(uid, mine, this,
                 findViewById(R.id.shimmer_container), from, mSwipeRefreshLayout,
-                mRecyclerView, 2, null);
+                mRecyclerView);
     }
 
     private void addPortItem() {
@@ -54,13 +54,19 @@ public class HistoryFeed extends BaseActivity {
     @Override
     public void onStart() {
         super.onStart();
-        feedActNFrag.mAdapter.startListening();
+        feedNPortAdapter.mAdapter.startListening();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        feedNPortAdapter.mAdapter.refresh();
     }
 
     //Stop Listening Adapter
     @Override
     public void onStop() {
         super.onStop();
-        feedActNFrag.mAdapter.stopListening();
+        feedNPortAdapter.mAdapter.stopListening();
     }
 }

@@ -1,5 +1,7 @@
 package com.esselion.pass.models;
 
+import android.location.Location;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -131,11 +133,7 @@ public class Task extends Message implements Serializable {
         tags = new ArrayList<>();
     }
 
-    public String getDis() {
-        return dis;
-    }
-
-    public void setDis(String dis) {
+    public String parseDistance(String dis) {
         DecimalFormat value = new DecimalFormat("#.#");
         float d = Float.parseFloat(dis);
         if (d < 1.0) {
@@ -144,6 +142,10 @@ public class Task extends Message implements Serializable {
         } else {
             dis = value.format(d) + "km";
         }
+        return dis;
+    }
+
+    public void setDis(String dis) {
         this.dis = dis;
     }
 
@@ -255,5 +257,13 @@ public class Task extends Message implements Serializable {
 
     public void setTags(ArrayList<String> tags) {
         this.tags = tags;
+    }
+
+    public String getDistance(Location l) {
+        if (dis != null) return dis;
+        Location locationA = new Location("point A");
+        locationA.setLatitude(lat);
+        locationA.setLongitude(lon);
+        return parseDistance((l.distanceTo(locationA) / 1000.0) + "");
     }
 }

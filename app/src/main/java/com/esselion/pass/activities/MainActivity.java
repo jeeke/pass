@@ -1,7 +1,7 @@
 package com.esselion.pass.activities;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity implements
     private static final int RC_SIGN_IN = 9001;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
-    ProgressDialog dialog;
+    Dialog dialog;
     SharedPreferences sp;
 
 
@@ -44,7 +44,7 @@ public class MainActivity extends BaseActivity implements
         setTheme(R.style.LightMode);
         super.onCreate(savedInstanceState);
 //        setUpdate();
-        dialog = new ProgressDialog(this);
+        dialog = Tools.getLoadingAnim(this);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -91,7 +91,6 @@ public class MainActivity extends BaseActivity implements
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        dialog.setTitle("Logging You In, Please Wait....");
         dialog.show();
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)

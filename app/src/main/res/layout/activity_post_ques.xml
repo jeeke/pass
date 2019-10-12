@@ -30,7 +30,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/fab"
-        style="@style/ButtonStyle"
+        style="@style/ButtonRound"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"

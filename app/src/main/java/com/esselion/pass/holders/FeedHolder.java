@@ -1,6 +1,7 @@
 package com.esselion.pass.holders;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -19,6 +20,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.esselion.pass.R;
 import com.esselion.pass.models.Feed;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
@@ -34,7 +40,7 @@ public class FeedHolder extends RecyclerView.ViewHolder {
     public FeedHolder(@NonNull View itemView, int type) {
         super(itemView);
         if (type > 0) itemView.findViewById(R.id.likeButton).setVisibility(View.GONE);
-        if (type != 2) itemView.findViewById(R.id.action_delete).setVisibility(View.GONE);
+        else itemView.findViewById(R.id.action_delete).setVisibility(View.GONE);
         title = itemView.findViewById(R.id.title);
         numLikes = itemView.findViewById(R.id.numLikes);
         likeView = itemView.findViewById(R.id.likeView);
@@ -42,6 +48,37 @@ public class FeedHolder extends RecyclerView.ViewHolder {
         date = itemView.findViewById(R.id.createdAt);
         avatar = itemView.findViewById(R.id.poster_image);
         image = itemView.findViewById(R.id.image);
+    }
+
+    public static void onlikeClicked(DatabaseReference FeedRef, String uid) {
+        FeedRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Feed p = mutableData.getValue(Feed.class);
+                if (p == null) {
+                    return Transaction.success(mutableData);
+                }
+                if (p.likes.containsKey(uid)) {
+                    // Unlike the Feed and remove self from likes
+                    p.likeCount = p.likeCount - 1;
+                    p.likes.remove(uid);
+                } else {
+                    // like the Feed and add self to likes
+                    p.likeCount = p.likeCount + 1;
+                    p.likes.put(uid, true);
+                }
+                // Set value and report transaction success
+                mutableData.setValue(p);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                // Transaction completed
+                Log.d("FeedActNFragment", "FeedTransaction:onComplete:" + databaseError);
+            }
+        });
     }
 
     public void setItem(Feed feed, View.OnClickListener listener, String uid, boolean mine) {
@@ -105,8 +142,6 @@ public class FeedHolder extends RecyclerView.ViewHolder {
                 listener.onClick(likeButton);
             }
         });
-        itemView.findViewById(R.id.likeButton).setOnClickListener(v -> {
-            likeView.onClick(likeView);
-        });
+        itemView.findViewById(R.id.likeButton).setOnClickListener(v -> likeView.onClick(likeView));
     }
 }

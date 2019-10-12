@@ -24,7 +24,8 @@ public class RetrofitParser {
             Task task = g.fromJson(s, Task.class);
             int cost = (int) task.getCost();
             if ((cost <= price1) && (cost >= price0) && !task.getPoster_id().equals(uid)) {
-                task.setDis(taskStrings.get(i + 1));
+                String d = task.parseDistance(taskStrings.get(i + 1));
+                task.setDis(d);
                 Cache.tasks.add(task);
                 adapter.addItem(task);
             }

@@ -4,6 +4,7 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -24,6 +25,7 @@ import java.util.Objects;
 
 import static com.esselion.pass.util.Cache.getToken;
 import static com.esselion.pass.util.Cache.getUser;
+import static com.esselion.pass.util.Tools.launchActivity;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
 
@@ -129,7 +131,11 @@ public class PostTask extends LocationActivity implements LocationActivity.Locat
 
     @Override
     public void onServerCallSuccess(int methodId, String title) {
-        super.onServerCallSuccess(methodId, title);
-        if (methodId == Server.SERVER_POST_TASK) finish();
+//        super.onServerCallSuccess(methodId, title);
+        Toast.makeText(this, "Task Posted", Toast.LENGTH_SHORT).show();
+        if (methodId == Server.SERVER_POST_TASK) {
+            launchActivity(this, HistoryTask.class);
+            finish();
+        }
     }
 }

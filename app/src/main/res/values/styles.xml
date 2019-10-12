@@ -37,14 +37,26 @@
         <item name="android:progressTint">@color/green_A700</item>
     </style>
 
-    <style name="ButtonStyle">
+    <style name="ButtonGradRound">
         <!--<item name="android:padding">16dp</item>-->
         <item name="android:paddingStart">32dp</item>
         <item name="android:paddingEnd">32dp</item>
         <item name="android:paddingTop">16dp</item>
         <item name="android:paddingBottom">16dp</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:background">@drawable/button_login</item>
+        <item name="android:background">@drawable/btn_grad_round</item>
+        <!--<item name="backgroundTint">?colorSecondary</item>-->
+        <item name="android:textColor">?colorPrimary</item>
+    </style>
+
+    <style name="ButtonRound">
+        <!--<item name="android:padding">16dp</item>-->
+        <item name="android:paddingStart">32dp</item>
+        <item name="android:paddingEnd">32dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">@drawable/btn_round_orange</item>
         <!--<item name="backgroundTint">?colorSecondary</item>-->
         <item name="android:textColor">?colorPrimary</item>
     </style>

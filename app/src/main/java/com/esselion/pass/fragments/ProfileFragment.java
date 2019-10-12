@@ -234,6 +234,12 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateProfileImage();
+    }
+
     private void updateProfileImage() {
         if (mListener.getMine()) {
             Cache.mUser = null;
@@ -253,7 +259,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 try {
-                    r.removeEventListener(this);
                     progressBar.setVisibility(View.GONE);
                     swipeRefreshLayout.setRefreshing(false);
                     Profile profile = snapshot.getValue(Profile.class);
@@ -277,9 +282,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 r.removeEventListener(this);
-//                progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
-                showSnackBar(getActivity(), "Something went wrong, Try later ");
                 Log.e("error", databaseError.toString());
             }
         });

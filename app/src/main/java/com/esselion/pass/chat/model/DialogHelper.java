@@ -15,18 +15,19 @@ public class DialogHelper {
     private String avatar;
 
     private int unreadCount;
+
     private Long lastActivity;
 
     private String text;
 
     public DialogHelper(String uid, String name, String avatar, int unreadCount, Long lastActivity, String text) {
+        init();
         this.uid = uid;
         this.name = name;
         this.avatar = avatar;
         this.unreadCount = unreadCount;
         this.lastActivity = lastActivity;
         this.text = text;
-        init();
     }
 
     public DialogHelper() {
@@ -42,6 +43,14 @@ public class DialogHelper {
         map.put("unreadCount", 1);
         map.put("lastActivity", ServerValue.TIMESTAMP);
         return map;
+    }
+
+    public Long getLastActivity() {
+        return lastActivity;
+    }
+
+    public void setLastActivity(Long lastActivity) {
+        this.lastActivity = lastActivity;
     }
 
     public String getUid() {
@@ -94,7 +103,6 @@ public class DialogHelper {
         User user = new User(uid, name, "default");
         users.add(user);
         dialog.setUsers(users);
-
         Message message = new Message();
         message.setText(text);
         message.setUser(user);

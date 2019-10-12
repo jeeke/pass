@@ -1,6 +1,7 @@
 package com.esselion.pass.activities;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -21,9 +22,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import static com.esselion.pass.Server.SERVER_TASK_DONE;
 import static com.esselion.pass.util.Cache.getToken;
 
-public class TaskDetailActivity extends BaseActivity {
+public class TaskDetailActivity extends LocationActivity {
     ChipAdapter tagAdapter, mustAdapter;
     public int FROM = 0;
+    public static Location location;
 
     Task current;
 
@@ -74,9 +76,7 @@ public class TaskDetailActivity extends BaseActivity {
                     intent.putExtra("name", current.getPoster_name());
                     intent.putExtra("avatar", current.getPoster_avatar());
                     startActivity(intent);
-//                            finish();
                 });
-//                        .setOnClickListener(v -> launchActivity(this, ProfileActivity.class));
                 break;
 //          Tasker Stages
             case 4:
@@ -97,15 +97,13 @@ public class TaskDetailActivity extends BaseActivity {
                         .setPositiveButton("Mark As Done", (dialog, which) -> {
                             if (prevCallResolved && server != null) server.taskDone(current);
                         })
-//                (dialog, which) -> launchActivity(this,FeedbackByTaskerActivity.class))
-//                        .setNegativeButton("Resign Task",null)
                         .show());
 
                 break;
             case 6:
                 break;
         }
-        action.setBackgroundColor(getResources().getColor(Contracts.TASK_STAGE_COLORS[stage]));
+        action.setBackgroundResource(Contracts.TASK_STAGE_BTNS[stage]);
         action.setText(title);
     }
 
@@ -128,7 +126,7 @@ public class TaskDetailActivity extends BaseActivity {
     }
 
     private void verifyNCall() {
-        if (!prevCallResolved || server == null) ;
+        if (!prevCallResolved || server == null) return;
         getToken(token -> server.deleteTask(token, current.getC_date(), current.getId(), current.getCategory()), this);
         prevCallResolved = false;
     }
@@ -158,16 +156,14 @@ public class TaskDetailActivity extends BaseActivity {
             intent.putExtra("name", current.getPoster_name());
             intent.putExtra("avatar", current.getPoster_avatar());
             startActivity(intent);
-            finish();
         });
 
         ((TextView) findViewById(R.id.taskTitle)).setText(current.getTitle());
         ((TextView) findViewById(R.id.taskDesc)).setText(current.getJob_des());
         ((TextView) findViewById(R.id.rewardValue)).setText(current.getCost() + "");
-        ((TextView) findViewById(R.id.taskDis)).setText(current.getDis() + "");
         if (current.getDeadline() != null)
             ((TextView) findViewById(R.id.deadline)).setText(current.getDeadline());
-//
+        ((TextView) findViewById(R.id.taskDis)).setText(current.getDistance(location));
         ChipGroup chipGroup = findViewById(R.id.tagGroup);
         ChipGroup mustGroup = findViewById(R.id.mustGroup);
         tagAdapter = new ChipAdapter(chipGroup, current.getTags());
@@ -178,6 +174,7 @@ public class TaskDetailActivity extends BaseActivity {
             findViewById(R.id.mustDivider).setVisibility(View.GONE);
         }
     }
+
 
     boolean prevCallResolved = true;
 

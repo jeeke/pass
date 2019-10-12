@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 
@@ -34,13 +33,12 @@ import static com.esselion.pass.MyFirebaseMessagingService.MY_PREFS_NAME;
 
 public class Tools {
 
-    public static Dialog showLoadingAnim(Context context) {
+    public static Dialog getLoadingAnim(Context context) {
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
         dialog.setContentView(R.layout.dialog_loading);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCancelable(true);
-        dialog.show();
+        dialog.setCancelable(false);
         return dialog;
     }
 
@@ -67,7 +65,6 @@ public class Tools {
 
 
     public static String elapsedTime(long cDate) {
-        Log.e("Elapsed Time", new Date().getTime() + "\n\n " + cDate);
         long different = new Date().getTime() - cDate;
 
         long secondsInMilli = 1000;

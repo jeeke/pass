@@ -14,7 +14,7 @@ import java.util.Map;
 public class Contracts {
 
     public static final String[] TASK_DETAIL_BUTTONS = {"SHOW ALL BIDS", "ASSIGNED TO ", "DONE BY ",
-            "ALREADY BID", "ASSIGNED", "COMPLETED"
+            "STATUS: ALREADY BID", "STATUS: ASSIGNED", "STATUS: COMPLETED"
     };
 
     public static String[] avatars = {
@@ -39,6 +39,7 @@ public class Contracts {
     }
 
     public static final int[] TASK_STAGE_COLORS = {R.color.orange, R.color.blue_400, R.color.green_400};
+    public static final int[] TASK_STAGE_BTNS = {R.drawable.btn_round_orange, R.drawable.btn_round_blue, R.drawable.btn_round_green};
     public static final int[] QUES_STAGE_COLORS = {R.color.orange, R.color.green_400};
     public static final String[] TASK_STAGE_TEXT = {"NEW", "ONGOING", "COMPLETED"};
     public static final String[] QUES_STAGE_TEXT = {"POSTED", "REPLIED"};

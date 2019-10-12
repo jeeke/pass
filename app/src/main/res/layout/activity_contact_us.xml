@@ -133,7 +133,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button7"
-        style="@style/ButtonStyle"
+        style="@style/ButtonRound"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_width="0dp"

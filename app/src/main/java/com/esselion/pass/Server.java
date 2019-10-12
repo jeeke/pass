@@ -94,7 +94,8 @@ public class Server extends Service {
             ProgressBar progressBar = activity.findViewById(R.id.progress_bar);
             if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
             else {
-                dialog = Tools.showLoadingAnim(activity);
+                dialog = Tools.getLoadingAnim(activity);
+                dialog.show();
             }
         }
     }
@@ -136,7 +137,7 @@ public class Server extends Service {
 
         image.setDrawingCacheEnabled(true);
         image.buildDrawingCache();
-        ((BitmapDrawable) image.getDrawable()).getBitmap().compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        ((BitmapDrawable) image.getDrawable()).getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
         uploadTask = imageRef.putBytes(data);
         uploadTask.addOnProgressListener(taskSnapshot -> {
@@ -329,13 +330,14 @@ public class Server extends Service {
         );
         DatabaseReference push = getDatabase();
         if (portfolio) {
-            push.child("Portfolios/" + user.getUid())
-                    .push().setValue(feed).addOnCompleteListener(task -> {
+            push = push.child("Portfolios/" + user.getUid());
+            String key = getPushKey(push);
+            feed.setId(key);
+            push.child(key).setValue(feed).addOnCompleteListener(task -> {
                 notifyListener(task.isSuccessful(), SERVER_POST_FEED,
                         "Portfolio item added", "Couldn't add portfolio item", retry);
             });
         } else {
-
             String key = getPushKey(push.child("Feeds"));
             feed.setId(key);
             Map<String, Object> updateMap = new HashMap<>();

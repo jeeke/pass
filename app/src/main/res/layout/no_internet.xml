@@ -13,7 +13,7 @@
         app:lottie_rawRes="@raw/no_internet" />
 
     <androidx.appcompat.widget.AppCompatButton
-        style="@style/ButtonStyle"
+        style="@style/ButtonRound"
         android:id="@+id/retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

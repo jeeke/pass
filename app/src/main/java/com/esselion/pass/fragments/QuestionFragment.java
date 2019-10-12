@@ -19,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.esselion.pass.R;
 import com.esselion.pass.activities.HistoryQues;
 import com.esselion.pass.activities.LocationActivity;
+import com.esselion.pass.activities.TaskDetailActivity;
 import com.esselion.pass.adapters.QuestionAdapter;
 import com.esselion.pass.retrofit.JsonPlaceHolder;
 import com.esselion.pass.retrofit.RetrofitParser;
@@ -83,6 +84,7 @@ public class QuestionFragment extends Fragment {
         if (!prevCallResolved) return;
         LocationActivity activity = (LocationActivity) getActivity();
         activity.startLocationUpdates(location -> {
+            TaskDetailActivity.location = location;
             listView.animate().alpha(0.0f).setDuration(0).start();
             shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
             getToken(token -> callRetrofit(token, location.getLongitude(),

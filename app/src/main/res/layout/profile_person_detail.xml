@@ -37,24 +37,24 @@
         android:id="@+id/taskposted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
         android:layout_marginTop="16dp"
         android:text="--"
         android:textColor="?colorSecondary"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textView41"
+        app:layout_constraintStart_toStartOf="@+id/textView41"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/taskdone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="48dp"
         android:text="--"
         android:textColor="?colorSecondary"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/bucksearned"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textView43"
+        app:layout_constraintStart_toStartOf="@+id/textView43"
         app:layout_constraintTop_toTopOf="@+id/bucksearned" />
 
     <TextView
@@ -64,43 +64,45 @@
         android:text="--"
         android:textColor="?colorSecondary"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/taskdone"
-        app:layout_constraintStart_toEndOf="@+id/taskposted"
+        app:layout_constraintEnd_toEndOf="@+id/textView42"
+        app:layout_constraintStart_toStartOf="@+id/textView42"
         app:layout_constraintTop_toTopOf="@+id/taskposted" />
 
     <TextView
         android:id="@+id/textView41"
         android:layout_width="wrap_content"
         android:layout_height="19dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="Task Posted"
         android:textColor="?colorPrimary"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/taskposted"
-        app:layout_constraintStart_toStartOf="@+id/taskposted"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/taskposted" />
 
     <TextView
         android:id="@+id/textView42"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="Cash Earned"
         android:textColor="?colorPrimary"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView41"
-        app:layout_constraintEnd_toEndOf="@+id/bucksearned"
-        app:layout_constraintStart_toStartOf="@+id/bucksearned"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textView41" />
 
     <TextView
         android:id="@+id/textView43"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Task Done"
+        android:layout_marginEnd="16dp"
+        android:text="Task Completed"
         android:textColor="?colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/textView42"
-        app:layout_constraintEnd_toEndOf="@+id/taskdone"
-        app:layout_constraintStart_toStartOf="@+id/taskdone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textView42" />
 
     <!--<TextView-->

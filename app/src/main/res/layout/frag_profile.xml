@@ -35,10 +35,10 @@
                     android:id="@+id/detail"
                     layout="@layout/profile_person_detail" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp"
-                    android:background="?android:attr/listDivider" />
+                <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="8dp"-->
+                <!--android:background="?android:attr/listDivider" />-->
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,7 +64,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="24dp"
                         android:text="About"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -85,7 +85,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="8dp"
+                    android:layout_height="2dp"
                     android:background="?android:attr/listDivider" />
 
 
@@ -96,7 +96,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="8dp"
+                    android:layout_height="2dp"
                     android:background="?android:attr/listDivider" />
 
 

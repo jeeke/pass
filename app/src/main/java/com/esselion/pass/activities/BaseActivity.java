@@ -37,8 +37,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     private static final int REQUEST_PERMISSIONS = 177;
 
     public Server server;
-
-
     boolean prevCallResolved = true;
 
     public static void checkPermission(Activity context) {
@@ -136,24 +134,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         startService(intent);
         bindService(intent, connection, 0);
     }
-    //    @Override
-//    public void finish() {
-//        super.finish();
-//        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
-//
-//    }
-//
-//    @Override
-//    public void startActivity(Intent intent) {
-//        super.startActivity(intent);
-//        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-//    }
-//
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

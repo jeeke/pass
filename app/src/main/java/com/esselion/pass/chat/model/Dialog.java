@@ -12,6 +12,7 @@ public class Dialog implements IDialog<Message> {
     private ArrayList<User> users;
     private Message lastMessage;
     private int unreadCount;
+    private boolean isSelected = false;
 
     Dialog() {
     }
@@ -21,6 +22,18 @@ public class Dialog implements IDialog<Message> {
         this.dialogPhoto = dialogPhoto;
         this.dialogName = dialogName;
         this.unreadCount = unreadCount;
+    }
+
+    public boolean getSelection() {
+        return isSelected;
+    }
+
+    public void select() {
+        isSelected = true;
+    }
+
+    public void unSelect() {
+        isSelected = false;
     }
 
     @Override

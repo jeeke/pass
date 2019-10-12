@@ -99,9 +99,12 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         LocationActivity activity = (LocationActivity) getActivity();
         listView.animate().alpha(0.0f).setDuration(0).start();
         shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
-        activity.startLocationUpdates(location -> getToken(
-                token -> callRetrofit(token, location.getLongitude(),
-                        location.getLatitude()), getActivity()));
+        activity.startLocationUpdates(location -> {
+            TaskDetailActivity.location = location;
+            getToken(token -> callRetrofit(token, location.getLongitude(),
+                    location.getLatitude()), getActivity());
+        });
+
     }
 
     private void callRetrofit(String token, double lon, double lat) {

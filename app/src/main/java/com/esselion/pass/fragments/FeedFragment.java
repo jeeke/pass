@@ -9,23 +9,37 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.esselion.pass.R;
 import com.esselion.pass.activities.HistoryFeed;
-import com.esselion.pass.util.FeedActNFrag;
+import com.esselion.pass.activities.ProfileActivity;
+import com.esselion.pass.holders.FeedHolder;
+import com.esselion.pass.models.Feed;
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
+import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
+import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
+import static com.esselion.pass.holders.FeedHolder.onlikeClicked;
 import static com.esselion.pass.util.Cache.getDatabase;
 import static com.esselion.pass.util.Cache.getUser;
 
 public class FeedFragment extends Fragment {
     public FeedFragment() {
     }
+
+    public FirebaseRecyclerPagingAdapter<Feed, FeedHolder> mAdapter;
 
     private void initToolbar(View v) {
         Toolbar toolbar = v.findViewById(R.id.toolbar);
@@ -34,8 +48,6 @@ public class FeedFragment extends Fragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 //        Tools.setSystemBarColor(getActivity(), R.color.green_800);
     }
-
-    private FeedActNFrag feedActNFrag;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +71,7 @@ public class FeedFragment extends Fragment {
         }
         return false;
     }
+
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -68,25 +81,138 @@ public class FeedFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_feed, container, false);
         initToolbar(v);
         initViews(v);
-        Query mQuery = getDatabase().child("Feeds");
-        feedActNFrag = new FeedActNFrag();
-        feedActNFrag.callFireBase(getUser(getActivity()).getUid(), false, getActivity(), v.findViewById(R.id.shimmer_container), false, mSwipeRefreshLayout, mRecyclerView, 0, mQuery);
-        mRecyclerView.setHasFixedSize(true);
+        initRecyclerAdapter(v);
+//        mRecyclerView.setHasFixedSize(true);
         return v;
+    }
+
+
+    private void initRecyclerAdapter(View v) {
+
+        String uid = getUser(getActivity()).getUid();
+        Query mQuery = getDatabase().child("Feeds");
+        ShimmerFrameLayout shimmerContainer = v.findViewById(R.id.shimmer_container);
+        mSwipeRefreshLayout.setColorSchemeResources(
+
+                android.R.color.holo_blue_bright,
+
+                android.R.color.holo_green_light);
+
+        //Initialize RecyclerView
+
+        LinearLayoutManager mManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mManager);
+        //Initialize PagedList Configuration
+        PagedList.Config config = new PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setPrefetchDistance(5)
+                .setPageSize(10)
+                .build();
+
+        //Initialize FirebasePagingOptions
+        DatabasePagingOptions<Feed> options = new DatabasePagingOptions.Builder<Feed>()
+                .setLifecycleOwner(getActivity())
+                .setQuery(mQuery, config, Feed.class)
+                .build();
+
+        //Initialize Adapter
+        mAdapter = new FirebaseRecyclerPagingAdapter<Feed, FeedHolder>(options) {
+
+
+            private int count = 4;
+
+            @NonNull
+            @Override
+            public FeedHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                return new FeedHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_feed, parent, false), 0);
+            }
+
+            @Override
+            protected void onBindViewHolder(@NonNull FeedHolder holder,
+                                            int position,
+                                            @NonNull Feed model) {
+                holder.setItem(model, v -> {
+                    if (v.getId() == R.id.action_profile) {
+                        Intent intent = new Intent(getContext(), ProfileActivity.class);
+                        intent.putExtra("id", model.getPoster_id());
+                        intent.putExtra("name", model.getPoster_name());
+                        intent.putExtra("avatar", model.getPoster_avatar());
+                        getActivity().startActivity(intent);
+                    } else if (v.getId() == R.id.likeButton) {
+                        final DatabaseReference postRef = getRef(position);
+                        DatabaseReference globalFeedRef = getDatabase().child("Feeds").child(postRef.getKey());
+                        DatabaseReference userFeedRef = getDatabase().child("PrevFeeds").child(model.getPoster_id()).child(postRef.getKey());
+                        // Run two transactions
+                        onlikeClicked(globalFeedRef, uid);
+                        onlikeClicked(userFeedRef, uid);
+                    }
+                }, uid, false);
+            }
+
+            @Override
+            protected void onLoadingStateChanged(@NonNull LoadingState state) {
+                switch (state) {
+                    case LOADING_INITIAL:
+                        mRecyclerView.animate().alpha(0.0f).setDuration(0).start();
+                        shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
+                        shimmerContainer.startShimmer();
+                        break;
+                    case LOADING_MORE:
+                        // Do your loadingPng animation
+                        mSwipeRefreshLayout.setRefreshing(true);
+                        break;
+
+                    case LOADED:
+                        // Stop Animation
+                        shimmerContainer.stopShimmer();
+                        shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+                        mRecyclerView.animate().alpha(1.0f).setDuration(100).start();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        break;
+
+                    case FINISHED:
+                        //Reached end of Data set
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        break;
+
+                    case ERROR:
+                        if (--count > 0) {
+                            retry();
+                        } else {
+                            mSwipeRefreshLayout.setRefreshing(false);
+                            shimmerContainer.stopShimmer();
+                            shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+                            mRecyclerView.animate().alpha(1.0f).setDuration(100).start();
+                        }
+                }
+            }
+
+            @Override
+            protected void onError(@NonNull DatabaseError databaseError) {
+                super.onError(databaseError);
+                mSwipeRefreshLayout.setRefreshing(false);
+                databaseError.toException().printStackTrace();
+            }
+        };
+
+        //Set Adapter to RecyclerView
+        mRecyclerView.setAdapter(mAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener(mAdapter::refresh);
+
     }
 
     //Start Listening Adapter
     @Override
     public void onStart() {
         super.onStart();
-        feedActNFrag.mAdapter.startListening();
+        mAdapter.startListening();
     }
 
     //Stop Listening Adapter
     @Override
     public void onStop() {
         super.onStop();
-        feedActNFrag.mAdapter.stopListening();
+        mAdapter.stopListening();
     }
 
     private void initViews(View v) {
