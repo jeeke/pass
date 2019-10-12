@@ -166,6 +166,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     }
 
     public void showProgressBar(boolean visibility) {
+        progressBar = findViewById(R.id.progress_bar);
         if (progressBar != null)
             if (visibility) progressBar.setVisibility(View.VISIBLE);
             else progressBar.setVisibility(View.GONE);

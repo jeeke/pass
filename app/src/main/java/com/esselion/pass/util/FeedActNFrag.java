@@ -3,7 +3,9 @@ package com.esselion.pass.util;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.esselion.pass.R;
 import com.esselion.pass.activities.ProfileActivity;
 import com.esselion.pass.holders.FeedHolder;
@@ -42,7 +45,7 @@ public class FeedActNFrag {
     }
 
     public void callFireBase(String uid, boolean mine, FragmentActivity context, ShimmerFrameLayout shimmerContainer,
-                             boolean from, SwipeRefreshLayout mSwipeRefreshLayout,
+                             boolean fromPortfolio, SwipeRefreshLayout mSwipeRefreshLayout,
                              RecyclerView mRecyclerView, int type, Query mQuery) {
 //        uid = getUser(context).getUid();
         mSwipeRefreshLayout.setColorSchemeResources(
@@ -54,7 +57,7 @@ public class FeedActNFrag {
         //Initialize RecyclerView
         mRecyclerView.setHasFixedSize(true);
         if (mQuery == null)
-            if (from) {
+            if (fromPortfolio) {
                 Tools.initMinToolbar((AppCompatActivity) context, "Portfolio");
                 mQuery = getDatabase().child("Portfolios").child(uid);
             } else {
@@ -101,7 +104,7 @@ public class FeedActNFrag {
                     } else if (v.getId() == R.id.action_delete) {
                         Map<String, Object> map = new HashMap<>();
                         map.put("Portfolios/" + uid + '/' + model.getId(), null);
-                        if (!from) {
+                        if (!fromPortfolio) {
                             map.put("Feeds/" + model.getId(), null);
                             map.put("PrevFeeds/" + uid + '/' + model.getId(), null);
                         }
@@ -153,6 +156,14 @@ public class FeedActNFrag {
                         if (--count > 0) {
                             retry();
                         } else {
+                            if (fromPortfolio) {
+                                LottieAnimationView emptyAnim = context.findViewById(R.id.lottie_anim);
+                                emptyAnim.setAnimation(R.raw.empty_port);
+                                TextView emptyText = context.findViewById(R.id.empty_text);
+                                if (mine) emptyText.setText("Add items to your portfolio");
+                                else emptyText.setText("Empty portfolio");
+                                context.findViewById(R.id.anim).setVisibility(View.VISIBLE);
+                            }
                             mSwipeRefreshLayout.setRefreshing(false);
                             shimmerContainer.stopShimmer();
                             shimmerContainer.animate().alpha(0.0f).setDuration(0).start();

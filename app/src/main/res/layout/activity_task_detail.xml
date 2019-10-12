@@ -35,17 +35,18 @@
                 android:id="@+id/constraintLayout13"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:background="?colorAccent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider9">
+                app:layout_constraintTop_toBottomOf="@+id/tagGroup">
 
                 <TextView
                     android:id="@+id/rewardValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="48dp"
+                    android:layout_marginStart="80dp"
                     android:layout_marginTop="16dp"
                     android:text="₹2500"
                     android:textColor="?colorSecondary"
@@ -65,37 +66,13 @@
                     app:layout_constraintStart_toStartOf="@+id/rewardValue"
                     app:layout_constraintTop_toBottomOf="@+id/rewardValue" />
 
-                <TextView
-                    android:id="@+id/textView105"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="100"
-                    android:textColor="?colorSecondary"
-                    app:layout_constraintEnd_toStartOf="@+id/taskDis"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/rewardValue"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView106"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:text="Bids"
-                    android:textColor="?colorPrimary"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/textView105"
-                    app:layout_constraintStart_toStartOf="@+id/textView105"
-                    app:layout_constraintTop_toBottomOf="@+id/textView105" />
 
                 <TextView
                     android:id="@+id/taskDis"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="48dp"
+                    android:layout_marginEnd="80dp"
                     android:text=" 4.5 km"
                     android:textColor="?colorSecondary"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -168,17 +145,6 @@
                 app:layout_constraintEnd_toEndOf="@+id/taskTitle"
                 app:layout_constraintStart_toStartOf="@+id/taskTitle"
                 app:layout_constraintTop_toBottomOf="@+id/taskTitle" />
-
-            <View
-                android:id="@+id/divider9"
-                android:layout_width="0dp"
-                android:layout_height="8dp"
-                android:layout_marginTop="32dp"
-                android:background="?android:attr/listDivider"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tagGroup" />
 
             <View
                 android:id="@+id/divider12"

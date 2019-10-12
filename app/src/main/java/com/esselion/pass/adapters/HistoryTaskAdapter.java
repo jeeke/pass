@@ -10,7 +10,7 @@ import com.esselion.pass.fragments.HistoryTaskFrag;
 
 public class HistoryTaskAdapter extends FragmentPagerAdapter {
     //    @StringRes
-    private static final String[] TAB_TITLES = new String[]{"Tasks Posted", "Tasks Doing"};
+    private static final String[] TAB_TITLES = new String[]{"Tasks Posted", "Tasks Taken"};
 
     public HistoryTaskAdapter(FragmentManager fm) {
         super(fm);

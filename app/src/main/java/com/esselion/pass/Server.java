@@ -2,7 +2,7 @@ package com.esselion.pass;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,6 +28,7 @@ import com.esselion.pass.models.Question;
 import com.esselion.pass.models.Task;
 import com.esselion.pass.retrofit.JsonPlaceHolder;
 import com.esselion.pass.util.Contracts;
+import com.esselion.pass.util.Tools;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -80,7 +81,7 @@ public class Server extends Service {
     public static int SERVER_ADD_SKILL = 1124;
     public static int SERVER_REMOVE_SKILL = 1125;
 
-    static ProgressDialog dialog;
+    static Dialog dialog;
 
     public static void setServerCallCompleteListener(ServerCallCompleteListener listener) {
         if (listener == null) dialog = null;
@@ -93,8 +94,7 @@ public class Server extends Service {
             ProgressBar progressBar = activity.findViewById(R.id.progress_bar);
             if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
             else {
-                dialog = new ProgressDialog(activity);
-                dialog.show();
+                dialog = Tools.showLoadingAnim(activity);
             }
         }
     }
@@ -108,7 +108,10 @@ public class Server extends Service {
                     mListener.onServerCallSuccess(methodId, null);
                 } else mListener.onServerCallSuccess(methodId, titlePos);
             } else {
-                if (dialog != null) dialog.dismiss();
+                if (dialog != null) {
+                    dialog.dismiss();
+                    dialog = null;
+                }
                 mListener.onServerCallFailure(methodId, titleNeg, retryListener);
             }
         //TODO send notification

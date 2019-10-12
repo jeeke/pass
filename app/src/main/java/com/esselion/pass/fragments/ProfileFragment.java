@@ -256,12 +256,11 @@ public class ProfileFragment extends Fragment {
                     r.removeEventListener(this);
                     progressBar.setVisibility(View.GONE);
                     swipeRefreshLayout.setRefreshing(false);
-//                if (mine) imageView.setVisibility(View.VISIBLE);
                     Profile profile = snapshot.getValue(Profile.class);
-//                Log.e("\nP\nr\no\nf\ni\nl\ne\n",snapshot.toString());
                     if (profile != null) {
                         profile.setByTasker(snapshot.child("Ratings/ByTasker").getValue(Rating.class));
                         profile.setByPoster(snapshot.child("Ratings/ByPoster").getValue(Rating.class));
+                        chipGroup.removeAllViews();
                         for (DataSnapshot skill : snapshot.child("Skills").getChildren()) {
                             profile.addSkill(skill.getKey());
                         }

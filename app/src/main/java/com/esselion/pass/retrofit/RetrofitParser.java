@@ -15,55 +15,31 @@ public class RetrofitParser {
 
     public void toTaskList(TaskListAdapter adapter, int price0, int price1, String uid) {
         Cache.tasks = new ArrayList<>();
+        //for emptying previous listings
         adapter.update(Cache.tasks);
         if (taskStrings.size() == 0) return;
-        Task task = null;
         Gson g = new Gson();
-        int cost = 0;
-        int i = 0;
-//        if (false) {
-            for (String s : taskStrings) {
-                if (i % 2 == 0) {
-                    task = g.fromJson(s, Task.class);
-                    cost = (int) task.getCost();
-                    if ((cost <= price1) && (cost >= price0) && !task.getPoster_id().equals(uid)) {
-                        adapter.addItem(task);
-                        Cache.tasks.add(task);
-                    }
-                }
-                i++;
+        for (int i = 0; i < taskStrings.size(); i += 2) {
+            String s = taskStrings.get(i);
+            Task task = g.fromJson(s, Task.class);
+            int cost = (int) task.getCost();
+            if ((cost <= price1) && (cost >= price0) && !task.getPoster_id().equals(uid)) {
+                task.setDis(taskStrings.get(i + 1));
+                Cache.tasks.add(task);
+                adapter.addItem(task);
             }
-//        } else {
-//            for (String s : taskStrings) {
-//                if (i % 2 == 0) {
-//                    task = g.fromJson(s, Task.class);
-//                    cost = (int) task.getCost();
-//                } else if ((cost <= price1) && (cost >= price0)) {
-//                    task.setDis(s);
-//                    adapter.addItem(task);
-//                    Cache.tasks.add(task);
-//                }
-//                i++;
-//            }
-//        }
+        }
     }
 
     public ArrayList<Question> toQuesList() {
         if (taskStrings.size() == 0) return new ArrayList<>();
-        ArrayList<Question> tasks = new ArrayList<>();
-        Question task = null;
-        int i = 0;
-        for (String s : taskStrings) {
-            if (i % 2 == 0) {
-                Gson g = new Gson();
-                task = g.fromJson(s, Question.class);
-            } else {
-                task.setDis(s);
-                tasks.add(task);
-            }
-            i++;
+        ArrayList<Question> ques = new ArrayList<>();
+        Gson g = new Gson();
+        for (int i = 0; i < taskStrings.size(); i += 2) {
+            Question q = g.fromJson(taskStrings.get(i), Question.class);
+            ques.add(q);
         }
-        return tasks;
+        return ques;
     }
 
     public void setTaskStrings(ArrayList<String> taskStrings) {

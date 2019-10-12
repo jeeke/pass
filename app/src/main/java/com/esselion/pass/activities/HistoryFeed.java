@@ -2,11 +2,10 @@ package com.esselion.pass.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageView;
+import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import com.esselion.pass.R;
 import com.esselion.pass.util.FeedActNFrag;
@@ -25,14 +24,13 @@ public class HistoryFeed extends BaseActivity {
         mine = getIntent().getBooleanExtra("mine", false);
         if (from) {
             setContentView(R.layout.activity_portfolio);
-            ImageView imageView = findViewById(R.id.portfolio_toolbar);
-            AnimatedVectorDrawableCompat animatedVectorDrawableCompat = AnimatedVectorDrawableCompat.create(this, R.drawable.portfolio_anim);
-            imageView.setImageDrawable(animatedVectorDrawableCompat);
-            animatedVectorDrawableCompat.start();
-            findViewById(R.id.add_portfolio).setOnClickListener(v -> addPortItem());
+            if (mine) {
+                View fab = findViewById(R.id.add_portfolio);
+                fab.setOnClickListener(v -> addPortItem());
+                fab.setVisibility(View.VISIBLE);
+            }
 
-        }
-        else setContentView(R.layout.activity_list);
+        } else setContentView(R.layout.activity_list);
         String uid = getIntent().getStringExtra("uid");
         feedActNFrag = new FeedActNFrag();
         initViews();

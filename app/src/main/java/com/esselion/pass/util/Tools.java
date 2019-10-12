@@ -1,10 +1,14 @@
 package com.esselion.pass.util;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -29,19 +33,16 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.esselion.pass.MyFirebaseMessagingService.MY_PREFS_NAME;
 
 public class Tools {
-//    public static void displayImageRound(pass_splash Context ctx, pass_splash ImageView img, @DrawableRes int drawable) {
-//        try {
-//            Glide.with(ctx).asBitmap().load(drawable).apply(RequestOptions.centerCropTransform()).into(new BitmapImageViewTarget(img) {
-//                @Override
-//                protected void setResource(Bitmap resource) {
-//                    RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(ctx.getResources(), resource);
-//                    circularBitmapDrawable.setCircular(true);
-//                    img.setImageDrawable(circularBitmapDrawable);
-//                }
-//            });
-//        } catch (Exception e) {
-//        }
-//    }
+
+    public static Dialog showLoadingAnim(Context context) {
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_loading);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCancelable(true);
+        dialog.show();
+        return dialog;
+    }
 
     public static String formatDate(Date date) {
         SimpleDateFormat formatter =
