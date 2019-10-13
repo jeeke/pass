@@ -59,7 +59,7 @@ public class PostFeed extends BaseActivity {
         else if (text.getText().toString().equals("") && mUri == null)
             showSnackBar(this, "Both Fields can not be empty");
         else
-            server.postFeed(getUser(this), fromPortfolio, text.getText().toString(), mImage, mUri, null);
+            server.postFeed(getUser(), fromPortfolio, text.getText().toString(), mImage, mUri, null);
     }
 
 

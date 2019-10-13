@@ -271,16 +271,16 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
 
     @Override
     public String getUId() {
-        return getUser(this).getUid();
+        return getUser().getUid();
     }
 
     @Override
     public String getUName() {
-        return getUser(this).getDisplayName();
+        return getUser().getDisplayName();
     }
 
     @Override
     public String getImageUrl() {
-        return getUser(this).getPhotoUrl().toString();
+        return getUser().getPhotoUrl().toString();
     }
 }

@@ -170,7 +170,7 @@ public class QuestionDetailActivity extends BaseActivity {
 
     private void submitAnswer() {
         if (!prevCallResolved) return;
-        FirebaseUser user = getUser(this);
+        FirebaseUser user = getUser();
         if (user != null) {
             Answer ans = new Answer(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), current.getPoster_id(), answer.getText().toString());
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Answers")
@@ -219,7 +219,7 @@ public class QuestionDetailActivity extends BaseActivity {
 
     private void verifyNCall() {
         if (!prevCallResolved || server == null) ;
-        getToken(token -> server.deleteQuestion(token, current.getC_date(), current.getId()), this);
+        getToken(token -> server.deleteQuestion(token, current.getC_date(), current.getId()));
         prevCallResolved = false;
     }
 

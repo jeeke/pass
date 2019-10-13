@@ -39,7 +39,7 @@ public class PostQuestion extends LocationActivity implements LocationActivity.L
     @Override
     public void onLocationFetched(Location location) {
         if (prevCallResolved && server != null) {
-            getToken(token -> server.postQuestion(getUser(this), token, q, location.getLongitude(), location.getLatitude()), this);
+            getToken(token -> server.postQuestion(getUser(), token, q, location.getLongitude(), location.getLatitude()));
             prevCallResolved = false;
         }
     }

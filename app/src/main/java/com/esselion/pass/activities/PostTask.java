@@ -107,7 +107,7 @@ public class PostTask extends LocationActivity implements LocationActivity.Locat
         if (prevCallResolved && server != null) {
             getToken(token -> {
                 Date date = new Date();
-                FirebaseUser user = getUser(PostTask.this);
+                FirebaseUser user = getUser();
                 Task task = new Task(
                         user.getUid(),
                         user.getDisplayName(),
@@ -124,7 +124,7 @@ public class PostTask extends LocationActivity implements LocationActivity.Locat
                         mustHaves,
                         false);
                 server.postTask(token, task);
-            }, this);
+            });
             prevCallResolved = false;
         }
     }

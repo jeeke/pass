@@ -86,8 +86,8 @@ public abstract class DemoDialogsActivity extends BaseActivity
     private void deleteSelectedItems() {
         if (selectedDialogs.size() > 0) {
             Map<String, Object> u = new HashMap<>();
-            String rootRef1 = "Chats/" + getUser(this).getUid() + "/";
-            String rootRef2 = "Messages/" + getUser(this).getUid() + "/";
+            String rootRef1 = "Chats/" + getUser().getUid() + "/";
+            String rootRef2 = "Messages/" + getUser().getUid() + "/";
             for (Dialog d : selectedDialogs) {
                 u.put(rootRef1 + d.getId(), null);
                 u.put(rootRef2 + d.getId(), null);

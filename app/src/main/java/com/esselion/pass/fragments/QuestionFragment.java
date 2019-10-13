@@ -88,7 +88,7 @@ public class QuestionFragment extends Fragment {
             listView.animate().alpha(0.0f).setDuration(0).start();
             shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
             getToken(token -> callRetrofit(token, location.getLongitude(),
-                    location.getLatitude()), getActivity());
+                    location.getLatitude()));
         });
     }
 

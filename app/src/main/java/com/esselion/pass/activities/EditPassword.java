@@ -41,7 +41,7 @@ public class EditPassword extends BaseActivity {
         } else if (newPassword.length() < 8) {
             showSnackBar(this, "Password less than 8 characters!");
         } else {
-            server.editPassword(getUser(this), password, newPassword);
+            server.editPassword(getUser(), password, newPassword);
             prevCallResolved = false;
         }
     }

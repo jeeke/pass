@@ -128,7 +128,7 @@ public class TaskDetailActivity extends LocationActivity {
 
     private void verifyNCall() {
         if (!prevCallResolved || server == null) return;
-        getToken(token -> server.deleteTask(token, current.getC_date(), current.getId(), current.getCategory()), this);
+        getToken(token -> server.deleteTask(token, current.getC_date(), current.getId(), current.getCategory()));
         prevCallResolved = false;
     }
 

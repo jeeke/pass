@@ -134,7 +134,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
                 }
                 RetrofitParser details = response.body();
                 if (details != null) {
-                    details.toTaskList(adapter, filterHelper.price[0], filterHelper.price[1], Cache.getUser();
+                    details.toTaskList(adapter, filterHelper.price[0], filterHelper.price[1], Cache.getUser().getUid());
                 }
             }
 

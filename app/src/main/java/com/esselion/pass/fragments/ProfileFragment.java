@@ -239,7 +239,7 @@ public class ProfileFragment extends Fragment {
     private void updateProfileImage() {
         if (mListener.getMine()) {
             Cache.mUser = null;
-            Cache.getUser(getActivity()).getPhotoUrl();
+            Cache.getUser().getPhotoUrl();
             Glide.with(Objects.requireNonNull(getContext())).load(mListener.getImageUrl())
                     .apply(RequestOptions.circleCropTransform()).into(profileImage);
         } else {

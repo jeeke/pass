@@ -161,7 +161,7 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
             task.setTasker_avatar(taskerAvatar);
             task.setTasker_id(taskerId);
             task.setTasker_name(taskerName);
-            getToken(token -> server.assignTask(token, task), this);
+            getToken(token -> server.assignTask(token, task));
         }
     }
 

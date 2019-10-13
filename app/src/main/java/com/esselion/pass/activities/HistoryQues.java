@@ -64,7 +64,7 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
 
         //Initialize Database
         //TODO remodel table to increase efficiency
-        Query mQuery = getDatabase().child("PrevQues").child(getUser(this).getUid());
+        Query mQuery = getDatabase().child("PrevQues").child(getUser().getUid());
         //Initialize PagedList Configuration
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)

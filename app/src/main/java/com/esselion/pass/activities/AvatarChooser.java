@@ -58,10 +58,10 @@ public class AvatarChooser extends BaseActivity implements AvatarAdapter.Recycle
             else if (pickedPosition == -1)
                 showSnackBar(this, "Please pick an image");
             else if (pickedPosition != 0) {
-                server.updateImage(getUser(this), Contracts.avatars[pickedPosition - 1], null, null);
+                server.updateImage(getUser(), Contracts.avatars[pickedPosition - 1], null, null);
                 prevCallResolved = false;
             } else {
-                server.updateImage(getUser(this), null, mUri, mImage);
+                server.updateImage(getUser(), null, mUri, mImage);
                 prevCallResolved = false;
             }
         });

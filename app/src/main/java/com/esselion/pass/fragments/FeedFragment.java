@@ -66,7 +66,7 @@ public class FeedFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_history) {
             Intent intent = new Intent(getContext(), HistoryFeed.class);
-            intent.putExtra("uid", getUser(getActivity()).getUid());
+            intent.putExtra("uid", getUser().getUid());
             intent.putExtra("mine", true);
             launchActivity(getActivity(), intent);
             return true;
@@ -91,7 +91,7 @@ public class FeedFragment extends Fragment {
 
     private void initRecyclerAdapter(View v) {
 
-        String uid = getUser(getActivity()).getUid();
+        String uid = getUser().getUid();
         Query mQuery = getDatabase().child("Feeds");
         ShimmerFrameLayout shimmerContainer = v.findViewById(R.id.shimmer_container);
         mSwipeRefreshLayout.setColorSchemeResources(
