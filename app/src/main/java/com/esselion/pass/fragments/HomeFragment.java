@@ -1,6 +1,8 @@
 package com.esselion.pass.fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +18,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
+import com.esselion.pass.MyFirebaseMessagingService;
 import com.esselion.pass.R;
 import com.esselion.pass.activities.HistoryTask;
 import com.esselion.pass.activities.LocationActivity;
@@ -29,6 +34,7 @@ import com.esselion.pass.retrofit.JsonPlaceHolder;
 import com.esselion.pass.retrofit.RetrofitParser;
 import com.esselion.pass.util.Cache;
 import com.esselion.pass.util.FilterHelper;
+import com.esselion.pass.util.SharedPrefAdapter;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import org.jetbrains.annotations.NotNull;
@@ -58,18 +64,53 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         setHasOptionsMenu(true);
     }
 
+    private static int[] notificationAVDs = {R.drawable.ic_chat_avd, R.drawable.ic_history_avd};
+    private Menu menu;
+
+    private void initMenu(Menu menu) {
+        SharedPrefAdapter sp = SharedPrefAdapter.getInstance();
+        boolean[] hasUnseen = {sp.hasUnseenChats(), sp.hasUnseenTaskHistory()};
+        for (int i = 0; i < 2 && hasUnseen[i]; i++) {
+            Drawable menuItem = menu.getItem(i).setIcon(notificationAVDs[i]).getIcon();
+            Animatable animatable = (Animatable) menuItem;
+            animatable.start();
+            AnimatedVectorDrawableCompat.registerAnimationCallback
+                    (menuItem, new Animatable2Compat.AnimationCallback() {
+                        @Override
+                        public void onAnimationEnd(Drawable drawable) {
+                            super.onAnimationEnd(drawable);
+                            animatable.start();
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        MyFirebaseMessagingService.unregisterNotificationListener();
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_home, menu);
+        initMenu(menu);
+        this.menu = menu;
         super.onCreateOptionsMenu(menu, inflater);
+        MyFirebaseMessagingService.registerNotificationListener(() -> initMenu(menu));
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        SharedPrefAdapter sp = SharedPrefAdapter.getInstance();
         if (id == R.id.action_history) {
+            sp.setHasTaskHistory(true);
+            initMenu(menu);
             launchActivity(getActivity(), HistoryTask.class);
         } else if (id == R.id.action_chats) {
+            sp.setHasChats(false);
+            initMenu(menu);
             launchActivity(getActivity(), DialogsActivity.class);
         }
         return false;

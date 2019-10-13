@@ -44,6 +44,7 @@ public class Contracts {
     public static final String[] TASK_STAGE_TEXT = {"NEW", "ONGOING", "COMPLETED"};
     public static final String[] QUES_STAGE_TEXT = {"POSTED", "REPLIED"};
     static String BASE_POST_URL = "https://esselion-pass.herokuapp.com/";
+    //    static String BASE_POST_URL = "https://a27190e4.ngrok.io";
     public static int CODE_SETTINGS_ACTIVITY = 100;
     public static int CODE_NOTIFICATION_ACTIVITY = 101;
 

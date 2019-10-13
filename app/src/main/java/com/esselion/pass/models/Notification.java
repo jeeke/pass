@@ -34,7 +34,7 @@ public class Notification {
     private String taskId;
     private String taskerId;
     private String taskTitle;
-    private Long sort_id;
+    public Long sort_id;
 
     Notification() {
     }
@@ -49,9 +49,6 @@ public class Notification {
         taskerId = data.get("tasker_id");
         taskTitle = data.get("task_title");
         taskId = data.get("task_id");
-        sort_id = Long.valueOf(data.get("sort_id"));
-
-
         String task = data.get("task");
         if (task != null)
             this.task = new Gson().fromJson(task, Task.class);

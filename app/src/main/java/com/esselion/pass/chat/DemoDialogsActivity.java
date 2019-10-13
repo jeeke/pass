@@ -13,7 +13,6 @@ import com.esselion.pass.R;
 import com.esselion.pass.activities.BaseActivity;
 import com.esselion.pass.chat.model.Dialog;
 import com.esselion.pass.chat.model.DialogSelectionAdapter;
-import com.google.firebase.database.ServerValue;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
@@ -29,7 +28,6 @@ import java.util.Set;
 import static com.esselion.pass.util.Cache.getDatabase;
 import static com.esselion.pass.util.Cache.getUser;
 import static com.esselion.pass.util.Tools.launchActivity;
-import static com.esselion.pass.util.Tools.setOnline;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
 public abstract class DemoDialogsActivity extends BaseActivity
@@ -46,7 +44,6 @@ public abstract class DemoDialogsActivity extends BaseActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setOnline(this, "true");
         imageLoader = (imageView, url, payload) -> Glide.with(DemoDialogsActivity.this).load(url).apply(RequestOptions.circleCropTransform()).into(imageView);
         dialogsAdapter = new DialogSelectionAdapter(imageLoader);
     }
@@ -127,7 +124,6 @@ public abstract class DemoDialogsActivity extends BaseActivity
     @Override
     protected void onStop() {
         super.onStop();
-        setOnline(this, ServerValue.TIMESTAMP);
     }
 
     @Override

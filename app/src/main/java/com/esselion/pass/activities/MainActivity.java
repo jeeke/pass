@@ -2,15 +2,14 @@ package com.esselion.pass.activities;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import com.esselion.pass.R;
 import com.esselion.pass.util.Cache;
+import com.esselion.pass.util.SharedPrefAdapter;
 import com.esselion.pass.util.Tools;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -23,7 +22,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import static com.esselion.pass.MyFirebaseMessagingService.MY_PREFS_NAME;
 import static com.esselion.pass.util.Tools.launchActivity;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
@@ -35,7 +33,6 @@ public class MainActivity extends BaseActivity implements
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     Dialog dialog;
-    SharedPreferences sp;
 
 
     @Override
@@ -54,9 +51,6 @@ public class MainActivity extends BaseActivity implements
     }
 
     public static void signOut(Activity context) {
-        //remove token firebase
-        Tools.removeToken(context);
-
         // Firebase sign out
         FirebaseAuth.getInstance().signOut();
 
@@ -117,20 +111,17 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        sp = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPrefAdapter spAdapter = SharedPrefAdapter.getInstance();
         updateUI();
-        if (sp.getBoolean("showIntro", true)) {
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putBoolean("showIntro", false);
-            editor.apply();
-            launchActivity(this, IntroActivity.class);
-        } else {
+        if (spAdapter.isIntroShown()) {
             setContentView(R.layout.activity_main);
             findViewById(R.id.google).setOnClickListener(this);
             findViewById(R.id.login).setOnClickListener(this);
             findViewById(R.id.signup).setOnClickListener(this);
+        } else {
+            spAdapter.setIntroShown();
+            launchActivity(this, IntroActivity.class);
         }
-
     }
 
     private void signIn() {

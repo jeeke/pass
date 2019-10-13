@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.Window;
@@ -16,8 +15,6 @@ import com.esselion.pass.R;
 import com.esselion.pass.Server;
 import com.esselion.pass.retrofit.NullOnEmptyConverterFactory;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,9 +24,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static android.content.Context.MODE_PRIVATE;
-import static com.esselion.pass.MyFirebaseMessagingService.MY_PREFS_NAME;
 
 public class Tools {
 
@@ -162,35 +156,13 @@ public class Tools {
                 .build();
     }
 
-    public static void setToken(Activity context) {
-        SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        setOnline(context, "true");
-        boolean changed = prefs.getBoolean("token_changed", true);
-        if (changed) {
-            FirebaseUser currentUser = Cache.getUser();
-            String token = prefs.getString("token", "0");
-            DatabaseReference mUserRef = Cache.getDatabase().child("Users").child(currentUser.getUid()).child("device_token");
-            mUserRef.setValue(token).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    prefs.edit().putBoolean("token_changed", false).apply();
-                }
-            });
-        }
-    }
-
-    public static void removeToken(Activity context) {
-        SharedPreferences.Editor editor = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-        editor.putBoolean("token_changed", true).apply();
-        Cache.getDatabase().child("Users").child(Cache.getUser().getUid()).child("device_token").removeValue();
-    }
-
-    public static void setOnline(Activity activity, Object online) {
-        FirebaseUser currentUser = Cache.getUser();
-        if (currentUser != null) {
-            DatabaseReference mUserRef = Cache.getDatabase().child("Users").child(currentUser.getUid());
-            mUserRef.child("online").setValue(online);
-        }
-    }
+//    public static void setOnline(Object online) {
+//        FirebaseUser currentUser = Cache.getUser();
+//        if (currentUser != null) {
+//            DatabaseReference mUserRef = Cache.getDatabase().child("Users").child(currentUser.getUid());
+//            mUserRef.child("online").setValue(online);
+//        }
+//    }
 
     public static void showSnackBar(Activity activity, String mes) {
         Snackbar.make(activity.findViewById(android.R.id.content), mes, Snackbar.LENGTH_SHORT).show();

@@ -24,7 +24,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
@@ -34,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import static com.esselion.pass.util.Tools.launchActivity;
-import static com.esselion.pass.util.Tools.setOnline;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
 
@@ -68,7 +66,6 @@ public abstract class DemoMessagesActivity extends BaseActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setOnline(this, "true");
         initFireBase();
         imageLoader = (imageView, url, payload) -> Glide.with(DemoMessagesActivity.this).load(url).apply(RequestOptions.circleCropTransform()).into(imageView);
     }
@@ -100,13 +97,6 @@ public abstract class DemoMessagesActivity extends BaseActivity
 
 
     protected DatabaseReference mRootRef;
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        setOnline(this, ServerValue.TIMESTAMP);
-    }
-
     protected String mChatUId;
     protected String mChatAvatar;
     protected String mChatUName;

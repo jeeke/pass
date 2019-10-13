@@ -23,9 +23,12 @@ import com.esselion.pass.fragments.FeedFragment;
 import com.esselion.pass.fragments.HomeFragment;
 import com.esselion.pass.fragments.ProfileFragment;
 import com.esselion.pass.fragments.QuestionFragment;
+import com.esselion.pass.util.Cache;
+import com.esselion.pass.util.SharedPrefAdapter;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
@@ -35,8 +38,6 @@ import java.util.HashMap;
 
 import static com.esselion.pass.util.Cache.getUser;
 import static com.esselion.pass.util.Tools.launchActivity;
-import static com.esselion.pass.util.Tools.setOnline;
-import static com.esselion.pass.util.Tools.setToken;
 
 public class DashboardActivity extends LocationActivity implements ProfileFragment.ActivityListener {
 
@@ -45,6 +46,7 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     ImageView bhome, bqna, bfeed, bprofile;
     ImageView prevbselection;
     int btnSelected;
+    int fragmentPosition = 0;
     View bottomAppBar;
     boolean fabActivated;
     Intent starterIntent;
@@ -59,9 +61,10 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     private static final String TAG = "DashboardActivity";
     private FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
-    private void loadFragment() {
+    private void loadFragment(int entry, int exit) {
         if (fabActivated) circularReveal(fab);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (entry != -1 && exit != -1) transaction.setCustomAnimations(entry, exit);
         transaction.replace(R.id.fragment_container, mFragment, FRAGMENT_TAG);
         transaction.commit();
     }
@@ -176,7 +179,6 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     @Override
     protected void onStop() {
         super.onStop();
-        setOnline(this, ServerValue.TIMESTAMP);
     }
 
     @Override
@@ -185,22 +187,46 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
         if (findViewById(R.id.fragment_container) != null) {
             mFragment = mFragment == null ? new HomeFragment() : mFragment;
             starterIntent = getIntent();
-            setToken(this);
             init();
             initFab();
-            loadFragment();
+            loadFragment(R.anim.slide_from_right, R.anim.slide_to_left);
             prevbselection = prevbselection == null ? bhome : findViewById(btnSelected);
         }
+    }
+
+    public void setToken() {
+        SharedPrefAdapter sp = SharedPrefAdapter.getInstance();
+        String token = sp.getToken();
+        if (token == null) {
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(task -> {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
+                        String token1 = task.getResult().getToken();
+                        sp.setToken(token1);
+                        sendToken(token1);
+                    });
+        } else {
+            sendToken(token);
+        }
+    }
+
+    public void sendToken(String token) {
+        DatabaseReference mUserRef = Cache.getDatabase().child("Users").child(getUser().getUid()).child("device_token");
+        mUserRef.setValue(token);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setToken();
         if (savedInstanceState != null) {
             mFragment = getSupportFragmentManager()
                     .findFragmentByTag(FRAGMENT_TAG);
             btnSelected = savedInstanceState.getInt("selectedButton");
-
+            fragmentPosition = savedInstanceState.getInt("fragmentPosition");
         }
         setUpdate();
         setContentView(R.layout.activity_dashboard);
@@ -210,9 +236,9 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     public void onSaveInstanceState(@NotNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         btnSelected = prevbselection.getId();
+        savedInstanceState.putInt("fragmentPosition", fragmentPosition);
         savedInstanceState.putInt("selectedButton", btnSelected);
     }
-
 
 
     public void postTask(View v) {
@@ -235,33 +261,44 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
     public void bselected(View v) {
         ImageView current = (ImageView) v;
         if (v.getId() != prevbselection.getId()) {
-            prevbselection.setImageResource(toggleImage(prevbselection.getId(), false));
-            current.setImageResource(toggleImage(current.getId(), true));
+            prevbselection.setImageResource(toggleImage(prevbselection.getId(), false, false));
+            current.setImageResource(toggleImage(current.getId(), true, true));
             prevbselection = current;
         }
     }
 
 
-    private int toggleImage(int id, boolean selected) {
+    private int toggleImage(int id, boolean selected, boolean first) {
+        int imageId = 0;
+        int prevFragmentPos = fragmentPosition;
         switch (id) {
             case R.id.home:
                 mFragment = new HomeFragment();
-                loadFragment();
-                return selected ? R.drawable.ic_home_fill : R.drawable.ic_home;
+                fragmentPosition = 0;
+                imageId = selected ? R.drawable.ic_home_fill : R.drawable.ic_home;
+                break;
             case R.id.feed:
                 mFragment = new FeedFragment();
-                loadFragment();
-                return selected ? R.drawable.ic_scroll_fill : R.drawable.ic_scroll;
+                fragmentPosition = 2;
+                imageId = selected ? R.drawable.ic_scroll_fill : R.drawable.ic_scroll;
+                break;
             case R.id.qna:
                 mFragment = new QuestionFragment();
-                loadFragment();
-                return selected ? R.drawable.ic_qna_fill : R.drawable.ic_qna;
+                fragmentPosition = 1;
+                imageId = selected ? R.drawable.ic_qna_fill : R.drawable.ic_qna;
+                break;
             case R.id.profile:
                 mFragment = new ProfileFragment();
-                loadFragment();
-                return selected ? R.drawable.ic_profile_fill : R.drawable.ic_profile;
+                fragmentPosition = 3;
+                imageId = selected ? R.drawable.ic_profile_fill : R.drawable.ic_profile;
         }
-        return 0;
+        //Load fragment only once
+        if (first) {
+            if (prevFragmentPos < fragmentPosition)
+                loadFragment(R.anim.slide_from_right, R.anim.slide_to_left);
+            else loadFragment(R.anim.slide_from_left, R.anim.slide_to_right);
+        }
+        return imageId;
     }
 
     @Override
