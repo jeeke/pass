@@ -1,5 +1,6 @@
 package com.esselion.pass.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
@@ -65,25 +66,8 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     }
 
     private static int[] notificationAVDs = {R.drawable.ic_chat_avd, R.drawable.ic_history_avd};
-    private Menu menu;
 
-    private void initMenu(Menu menu) {
-        SharedPrefAdapter sp = SharedPrefAdapter.getInstance();
-        boolean[] hasUnseen = {sp.hasUnseenChats(), sp.hasUnseenTaskHistory()};
-        for (int i = 0; i < 2 && hasUnseen[i]; i++) {
-            Drawable menuItem = menu.getItem(i).setIcon(notificationAVDs[i]).getIcon();
-            Animatable animatable = (Animatable) menuItem;
-            animatable.start();
-            AnimatedVectorDrawableCompat.registerAnimationCallback
-                    (menuItem, new Animatable2Compat.AnimationCallback() {
-                        @Override
-                        public void onAnimationEnd(Drawable drawable) {
-                            super.onAnimationEnd(drawable);
-                            animatable.start();
-                        }
-                    });
-        }
-    }
+    private MenuItem[] items = new MenuItem[2];
 
     @Override
     public void onStop() {
@@ -91,13 +75,41 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         MyFirebaseMessagingService.unregisterNotificationListener();
     }
 
+    private void initMenu(MenuItem[] items) {
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    SharedPrefAdapter sp = SharedPrefAdapter.getInstance();
+                    boolean[] hasUnseen = {sp.hasUnseenChats(), sp.hasUnseenTaskHistory()};
+                    for (int i = 0; i < 2 && hasUnseen[i]; i++) {
+                        items[i].setIcon(notificationAVDs[i]);
+                        Drawable menuItem = items[i].getIcon();
+                        Animatable animatable = (Animatable) menuItem;
+                        animatable.start();
+                        AnimatedVectorDrawableCompat.registerAnimationCallback
+                                (menuItem, new Animatable2Compat.AnimationCallback() {
+                                    @Override
+                                    public void onAnimationEnd(Drawable drawable) {
+                                        super.onAnimationEnd(drawable);
+                                        animatable.start();
+                                    }
+                                });
+                    }
+                }
+            });
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_home, menu);
-        initMenu(menu);
-        this.menu = menu;
+        items[0] = menu.getItem(0);
+        items[1] = menu.getItem(1);
+        initMenu(items);
         super.onCreateOptionsMenu(menu, inflater);
-        MyFirebaseMessagingService.registerNotificationListener(() -> initMenu(menu));
+        MyFirebaseMessagingService.registerNotificationListener(() -> initMenu(items));
     }
 
     @Override
@@ -105,12 +117,14 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         int id = item.getItemId();
         SharedPrefAdapter sp = SharedPrefAdapter.getInstance();
         if (id == R.id.action_history) {
-            sp.setHasTaskHistory(true);
-            initMenu(menu);
+            sp.setHasTaskHistory(false);
+            item.setIcon(R.drawable.ic_history);
+            items[1] = item;
             launchActivity(getActivity(), HistoryTask.class);
         } else if (id == R.id.action_chats) {
             sp.setHasChats(false);
-            initMenu(menu);
+            item.setIcon(R.drawable.ic_chat);
+            items[0] = item;
             launchActivity(getActivity(), DialogsActivity.class);
         }
         return false;
