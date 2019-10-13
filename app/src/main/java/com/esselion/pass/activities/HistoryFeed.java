@@ -10,6 +10,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.esselion.pass.R;
 import com.esselion.pass.util.FeedNPortAdapter;
 
+import static com.esselion.pass.util.Tools.launchActivity;
+
 public class HistoryFeed extends BaseActivity {
     private FeedNPortAdapter feedNPortAdapter;
     private RecyclerView mRecyclerView;
@@ -42,7 +44,7 @@ public class HistoryFeed extends BaseActivity {
     private void addPortItem() {
         Intent intent = new Intent(HistoryFeed.this, PostFeed.class);
         intent.putExtra("fromPortfolio", true);
-        startActivity(intent);
+        launchActivity(this, intent);
     }
 
     private void initViews() {

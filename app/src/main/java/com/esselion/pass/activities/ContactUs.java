@@ -18,6 +18,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static com.esselion.pass.util.Tools.finishNLaunchActivity;
+import static com.esselion.pass.util.Tools.launchActivity;
+
 public class ContactUs extends BaseActivity {
 
     ArrayList<String> supportIds = new ArrayList<>();
@@ -48,8 +51,7 @@ public class ContactUs extends BaseActivity {
             Intent intent = new Intent(this, MessagesActivity.class);
             intent.putExtra("id", getSupportId());
             intent.putExtra("name", "Pass Support Team");
-            startActivity(intent);
-            finish();
+            finishNLaunchActivity(this, intent);
         });
     }
 
@@ -63,6 +65,6 @@ public class ContactUs extends BaseActivity {
     private void callUs(View view) {
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:+919679280831"));
-        startActivity(intent);
+        launchActivity(this, intent);
     }
 }

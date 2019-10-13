@@ -28,6 +28,7 @@ import java.util.Set;
 
 import static com.esselion.pass.util.Cache.getDatabase;
 import static com.esselion.pass.util.Cache.getUser;
+import static com.esselion.pass.util.Tools.launchActivity;
 import static com.esselion.pass.util.Tools.setOnline;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
@@ -144,7 +145,7 @@ public abstract class DemoDialogsActivity extends BaseActivity
             intent.putExtra("id", dialog.getId());
             intent.putExtra("name", dialog.getDialogName());
             intent.putExtra("avatar", dialog.getDialogPhoto());
-            startActivity(intent);
+            launchActivity(DemoDialogsActivity.this, intent);
         } else {
             if (selectedDialogs.contains(dialog)) {
                 view.setBackgroundColor(Color.parseColor("#ffffff"));

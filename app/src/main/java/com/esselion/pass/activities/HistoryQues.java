@@ -1,6 +1,5 @@
 package com.esselion.pass.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -29,6 +28,7 @@ import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
 import static com.esselion.pass.util.Cache.getDatabase;
 import static com.esselion.pass.util.Cache.getUser;
+import static com.esselion.pass.util.Tools.launchActivity;
 
 public class HistoryQues extends BaseActivity implements QuestionHolder.RecyclerViewClickListener {
 
@@ -37,7 +37,6 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ShimmerFrameLayout shimmerContainer;
-    ProgressDialog dlg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +156,6 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
         Intent intent = new Intent(this, QuestionDetailActivity.class);
         intent.putExtra("ques", question);
         intent.putExtra("from", true);
-        startActivity(intent);
+        launchActivity(this, intent);
     }
 }

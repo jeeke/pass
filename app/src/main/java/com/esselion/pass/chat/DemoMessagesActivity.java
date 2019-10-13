@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static com.esselion.pass.util.Tools.launchActivity;
 import static com.esselion.pass.util.Tools.setOnline;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
@@ -136,7 +137,7 @@ public abstract class DemoMessagesActivity extends BaseActivity
             intent.putExtra("id", mChatUId);
             intent.putExtra("name", mChatUName);
             intent.putExtra("avatar", mChatAvatar);
-            startActivity(intent);
+            launchActivity(DemoMessagesActivity.this, intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

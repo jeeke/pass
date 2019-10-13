@@ -14,6 +14,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.UploadTask;
 
 import static com.esselion.pass.util.Cache.getUser;
+import static com.esselion.pass.util.Tools.launchActivityForResult;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
 public class PostFeed extends BaseActivity {
@@ -72,7 +73,7 @@ public class PostFeed extends BaseActivity {
         Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
-        startActivityForResult(chooserIntent, PICK_IMAGE);
+        launchActivityForResult(this, chooserIntent, PICK_IMAGE);
     }
 
     public static final int PICK_IMAGE = 127;

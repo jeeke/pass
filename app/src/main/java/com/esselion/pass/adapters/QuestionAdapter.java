@@ -19,6 +19,8 @@ import com.esselion.pass.models.Question;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.esselion.pass.util.Tools.launchActivity;
+
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionHolder> implements QuestionHolder.RecyclerViewClickListener {
 
     private ArrayList<Question> list;
@@ -61,11 +63,11 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionHolder> implem
             intent.putExtra("id", question.getPoster_id());
             intent.putExtra("name", question.getPosterName());
             intent.putExtra("avatar", question.getPoster_image());
-            mActivity.startActivity(intent);
+            launchActivity(mActivity, intent);
         } else {
             Intent intent = new Intent(mActivity, QuestionDetailActivity.class);
             intent.putExtra("ques", question);
-            mActivity.startActivity(intent);
+            launchActivity(mActivity, intent);
         }
     }
 }

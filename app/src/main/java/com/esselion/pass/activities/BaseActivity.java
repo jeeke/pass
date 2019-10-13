@@ -27,6 +27,7 @@ import com.esselion.pass.MyApplication;
 import com.esselion.pass.R;
 import com.esselion.pass.Server;
 import com.esselion.pass.broadcastReceivers.ConnectionReceiver;
+import com.esselion.pass.util.Tools;
 
 import static com.esselion.pass.MyFirebaseMessagingService.CHANNEL_ID;
 import static com.esselion.pass.util.Tools.showSnackBar;
@@ -106,8 +107,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     private void checkConnection() {
         boolean isConnected = ConnectionReceiver.isConnected();
         if (isConnected) {
-            finish();
-            startActivity(getIntent());
+            Tools.finishNLaunchActivity(this, getIntent());
         }
     }
 
@@ -166,6 +166,31 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         showProgressBar(false);
         prevCallResolved = true;
         showSnackBar(findViewById(android.R.id.content), title, retryListener);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
 
 

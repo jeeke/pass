@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         activity.startLocationUpdates(location -> {
             TaskDetailActivity.location = location;
             getToken(token -> callRetrofit(token, location.getLongitude(),
-                    location.getLatitude()), getActivity());
+                    location.getLatitude()));
         });
 
     }
@@ -134,7 +134,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
                 }
                 RetrofitParser details = response.body();
                 if (details != null) {
-                    details.toTaskList(adapter, filterHelper.price[0], filterHelper.price[1], Cache.getUser(getActivity()).getUid());
+                    details.toTaskList(adapter, filterHelper.price[0], filterHelper.price[1], Cache.getUser();
                 }
             }
 
@@ -200,6 +200,6 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         Intent intent = new Intent(getActivity(), TaskDetailActivity.class);
         intent.putExtra("from", 0);
         intent.putExtra("task", task);
-        startActivity(intent);
+        launchActivity(getActivity(), intent);
     }
 }

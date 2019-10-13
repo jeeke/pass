@@ -21,6 +21,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import static com.esselion.pass.Server.SERVER_TASK_DONE;
 import static com.esselion.pass.util.Cache.getToken;
+import static com.esselion.pass.util.Tools.finishNLaunchActivity;
+import static com.esselion.pass.util.Tools.launchActivity;
 
 public class TaskDetailActivity extends LocationActivity {
     ChipAdapter tagAdapter, mustAdapter;
@@ -35,8 +37,7 @@ public class TaskDetailActivity extends LocationActivity {
             action.setOnClickListener(v -> {
                 Intent intent = new Intent(this, BidConfirm.class);
                 intent.putExtra("task", current);
-                startActivity(intent);
-                finish();
+                finishNLaunchActivity(this, intent);
             });
             return;
         }
@@ -51,7 +52,7 @@ public class TaskDetailActivity extends LocationActivity {
                 action.setOnClickListener(v -> {
                     Intent intent = new Intent(this, BidsListActivity.class);
                     intent.putExtra("task", current);
-                    startActivity(intent);
+                    launchActivity(this, intent);
                 });
                 break;
             case 2:
@@ -63,7 +64,7 @@ public class TaskDetailActivity extends LocationActivity {
                     intent.putExtra("id", current.getTasker_id());
                     intent.putExtra("name", current.getTasker_name());
                     intent.putExtra("avatar", current.getTasker_avatar());
-                    startActivity(intent);
+                    launchActivity(this, intent);
                 });
                 break;
             case 3:
@@ -75,7 +76,7 @@ public class TaskDetailActivity extends LocationActivity {
                     intent.putExtra("id", current.getPoster_id());
                     intent.putExtra("name", current.getPoster_name());
                     intent.putExtra("avatar", current.getPoster_avatar());
-                    startActivity(intent);
+                    launchActivity(this, intent);
                 });
                 break;
 //          Tasker Stages
@@ -146,7 +147,7 @@ public class TaskDetailActivity extends LocationActivity {
             intent.putExtra("id", current.getPoster_id());
             intent.putExtra("name", current.getPoster_name());
             intent.putExtra("avatar", current.getPoster_avatar());
-            startActivity(intent);
+            launchActivity(this, intent);
         });
         TextView name = findViewById(R.id.poster_name);
         name.setText(Html.fromHtml("Task By:  <b>" + current.getPoster_name().toUpperCase() + "</b>"));
@@ -155,7 +156,7 @@ public class TaskDetailActivity extends LocationActivity {
             intent.putExtra("id", current.getPoster_id());
             intent.putExtra("name", current.getPoster_name());
             intent.putExtra("avatar", current.getPoster_avatar());
-            startActivity(intent);
+            launchActivity(this, intent);
         });
 
         ((TextView) findViewById(R.id.taskTitle)).setText(current.getTitle());
@@ -186,8 +187,7 @@ public class TaskDetailActivity extends LocationActivity {
             intent.putExtra("task_id", current.getId());
             intent.putExtra("task_title", current.getTitle());
             intent.putExtra("poster_id", current.getPoster_id());
-            startActivity(intent);
-            finish();
+            finishNLaunchActivity(this, intent);
         }
     }
 }

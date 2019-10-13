@@ -162,14 +162,6 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
                 start();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == CODE_SETTINGS_ACTIVITY) {
-//            finish();
-//            startActivity(starterIntent);
-//        }
-    }
 
     private void init() {
         bottomAppBar = findViewById(R.id.bottom_app_bar);

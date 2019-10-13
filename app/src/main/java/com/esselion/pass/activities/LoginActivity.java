@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import static com.esselion.pass.Server.SERVER_LOGIN;
 import static com.esselion.pass.Server.SERVER_SIGNUP;
+import static com.esselion.pass.util.Tools.launchActivity;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
 public class LoginActivity extends BaseActivity {
@@ -75,7 +76,7 @@ public class LoginActivity extends BaseActivity {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
 //                intent.setData(Uri.parse("mailto:"));
-                startActivity(Intent.createChooser(intent, "Check mail"));
+                launchActivity(this, Intent.createChooser(intent, "Check mail"));
             } catch (ActivityNotFoundException e) {
                 e.printStackTrace();
             }
@@ -94,7 +95,7 @@ public class LoginActivity extends BaseActivity {
             if (user.isEmailVerified()) {
                 Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                launchActivity(this, intent);
             } else {
                 showMailVerifyDialog(true, user);
             }

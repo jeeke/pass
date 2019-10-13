@@ -34,6 +34,7 @@ import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 import static com.esselion.pass.holders.FeedHolder.onlikeClicked;
 import static com.esselion.pass.util.Cache.getDatabase;
 import static com.esselion.pass.util.Cache.getUser;
+import static com.esselion.pass.util.Tools.launchActivity;
 
 public class FeedFragment extends Fragment {
     public FeedFragment() {
@@ -67,7 +68,8 @@ public class FeedFragment extends Fragment {
             Intent intent = new Intent(getContext(), HistoryFeed.class);
             intent.putExtra("uid", getUser(getActivity()).getUid());
             intent.putExtra("mine", true);
-            startActivity(intent);
+            launchActivity(getActivity(), intent);
+            return true;
         }
         return false;
     }
@@ -137,7 +139,7 @@ public class FeedFragment extends Fragment {
                         intent.putExtra("id", model.getPoster_id());
                         intent.putExtra("name", model.getPoster_name());
                         intent.putExtra("avatar", model.getPoster_avatar());
-                        getActivity().startActivity(intent);
+                        launchActivity(getActivity(), intent);
                     } else if (v.getId() == R.id.likeButton) {
                         final DatabaseReference postRef = getRef(position);
                         DatabaseReference globalFeedRef = getDatabase().child("Feeds").child(postRef.getKey());

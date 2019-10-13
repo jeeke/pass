@@ -4,9 +4,7 @@ import android.animation.Animator
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-
 import androidx.appcompat.app.AppCompatActivity
-
 import com.airbnb.lottie.LottieAnimationView
 import com.esselion.pass.R
 
@@ -38,6 +36,11 @@ class SplashActivity : AppCompatActivity() {
                 Log.i(TAG, "Animation repeat")
             }
         })
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
     }
 
 }

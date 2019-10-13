@@ -53,24 +53,29 @@ public class MainActivity extends BaseActivity implements
         mAuth = FirebaseAuth.getInstance();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        sp = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
-        updateUI();
-        if (sp.getBoolean("showIntro", true)) {
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putBoolean("showIntro", false);
-            editor.apply();
-            Intent intent = new Intent(this, IntroActivity.class); // Call the AppIntro java class
-            startActivity(intent);
-        } else {
-            setContentView(R.layout.activity_main);
-            findViewById(R.id.google).setOnClickListener(this);
-            findViewById(R.id.login).setOnClickListener(this);
-            findViewById(R.id.signup).setOnClickListener(this);
-        }
+    public static void signOut(Activity context) {
+        //remove token firebase
+        Tools.removeToken(context);
 
+        // Firebase sign out
+        FirebaseAuth.getInstance().signOut();
+
+        // Google sign out
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(context.getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(context, gso);
+        mGoogleSignInClient.signOut();
+
+        //Empty cache
+        Cache.emptyCache();
+
+        //redirect to login screen
+        Intent intent = new Intent(context, MainActivity.class);
+//        intent.putExtra("from", false);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        launchActivity(context, intent);
     }
 
     @Override
@@ -109,35 +114,28 @@ public class MainActivity extends BaseActivity implements
                 });
     }
 
-    private void signIn() {
-        dialog.show();
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sp = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        updateUI();
+        if (sp.getBoolean("showIntro", true)) {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putBoolean("showIntro", false);
+            editor.apply();
+            launchActivity(this, IntroActivity.class);
+        } else {
+            setContentView(R.layout.activity_main);
+            findViewById(R.id.google).setOnClickListener(this);
+            findViewById(R.id.login).setOnClickListener(this);
+            findViewById(R.id.signup).setOnClickListener(this);
+        }
+
     }
 
-    public static void signOut(Activity context) {
-        //remove token firebase
-        Tools.removeToken(context);
-
-        // Firebase sign out
-        FirebaseAuth.getInstance().signOut();
-
-        // Google sign out
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(context.getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(context, gso);
-        mGoogleSignInClient.signOut();
-
-        //Empty cache
-        Cache.emptyCache();
-
-        //redirect to login screen
-        Intent intent = new Intent(context, MainActivity.class);
-//        intent.putExtra("from", false);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        context.startActivity(intent);
+    private void signIn() {
+        dialog.show();
+        startActivityForResult(mGoogleSignInClient.getSignInIntent(), RC_SIGN_IN);
     }
 
 //    private void revokeAccess() {
@@ -158,6 +156,13 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+
+    }
+
+    @Override
     public void onClick(View v) {
         int i = v.getId();
         Intent intent = new Intent(this, LoginActivity.class);
@@ -165,9 +170,9 @@ public class MainActivity extends BaseActivity implements
             signIn();
         } else if (i == R.id.login) {
             intent.putExtra("from", false);
-            startActivity(intent);
+            launchActivity(this, intent);
         } else if (i == R.id.signup) {
-            startActivity(intent);
+            launchActivity(this, intent);
         }
     }
 

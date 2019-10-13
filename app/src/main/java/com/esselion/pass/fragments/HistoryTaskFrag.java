@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 import static com.esselion.pass.util.Cache.getDatabase;
 import static com.esselion.pass.util.Cache.getUser;
+import static com.esselion.pass.util.Tools.launchActivity;
 
 
 public class HistoryTaskFrag extends Fragment implements TaskHolder.RecyclerViewClickListener {
@@ -170,6 +171,6 @@ public class HistoryTaskFrag extends Fragment implements TaskHolder.RecyclerView
         Intent intent = new Intent(getContext(), TaskDetailActivity.class);
         intent.putExtra("from", type);
         intent.putExtra("task", task);
-        startActivity(intent);
+        launchActivity(getActivity(), intent);
     }
 }

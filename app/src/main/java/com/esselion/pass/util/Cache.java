@@ -1,9 +1,10 @@
 package com.esselion.pass.util;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.esselion.pass.MyApplication;
 import com.esselion.pass.activities.MainActivity;
 import com.esselion.pass.models.Question;
 import com.esselion.pass.models.Task;
@@ -29,11 +30,11 @@ public class Cache {
         questions = null;
     }
 
-    public static void getToken(OnTokenReceivedListener listener, Activity activity) {
+    public static void getToken(OnTokenReceivedListener listener) {
         if (token == null) {
-            getUser(activity).getIdToken(true)
+            getUser().getIdToken(true)
                     .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful() && task.getResult() != null) {
                             token = task.getResult().getToken();
                         } else {
                             token = "null";
@@ -41,16 +42,17 @@ public class Cache {
                         }
                         listener.onTokenReceived(token);
                     });
-        } else
-            listener.onTokenReceived(token);
+        } else listener.onTokenReceived(token);
     }
 
-    public static FirebaseUser getUser(Activity context) {
+    public static FirebaseUser getUser() {
         if (mUser == null) {
             mUser = FirebaseAuth.getInstance().getCurrentUser();
             if (mUser == null) {
-                context.startActivity(new Intent(context, MainActivity.class));
-                context.finish();
+                Context context = MyApplication.getInstance().getApplicationContext();
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(intent);
             }
         }
         return mUser;

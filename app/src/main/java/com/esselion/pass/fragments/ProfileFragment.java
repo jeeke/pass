@@ -53,6 +53,7 @@ import static com.esselion.pass.util.Contracts.CODE_NOTIFICATION_ACTIVITY;
 import static com.esselion.pass.util.Contracts.CODE_SETTINGS_ACTIVITY;
 import static com.esselion.pass.util.Contracts.dpToPx;
 import static com.esselion.pass.util.Tools.launchActivity;
+import static com.esselion.pass.util.Tools.launchActivityForResult;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
 public class ProfileFragment extends Fragment {
@@ -108,16 +109,11 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Intent intent;
         if (item.getItemId() == R.id.setting) {
-            intent = new Intent(getContext(), SettingActivity.class);
-            getActivity().startActivityForResult(intent, CODE_SETTINGS_ACTIVITY);
-//            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+            launchActivityForResult(getActivity(), new Intent(getContext(), SettingActivity.class), CODE_SETTINGS_ACTIVITY);
             return true;
         } else {
-            intent = new Intent(getContext(), NotificationActivity.class);
-            getActivity().startActivityForResult(intent, CODE_NOTIFICATION_ACTIVITY);
-//            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+            launchActivityForResult(getActivity(), new Intent(getContext(), NotificationActivity.class), CODE_NOTIFICATION_ACTIVITY);
             return true;
         }
     }
@@ -129,11 +125,11 @@ public class ProfileFragment extends Fragment {
         View editAbout = v.findViewById(R.id.edit_about);
         toolbar.setTitle("PROFILE");
         v.findViewById(R.id.portfolio).setOnClickListener(v1 -> {
-            Intent intent = new Intent(getContext(), HistoryFeed.class);
+            Intent intent = new Intent(getActivity(), HistoryFeed.class);
             intent.putExtra("from", true);
             intent.putExtra("mine", mine);
             intent.putExtra("uid", mListener.getUId());
-            startActivity(intent);
+            launchActivity(getActivity(), intent);
         });
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);

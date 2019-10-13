@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.esselion.pass.util.Cache.getDatabase;
+import static com.esselion.pass.util.Tools.launchActivity;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
 public class FeedNPortAdapter {
@@ -96,7 +97,7 @@ public class FeedNPortAdapter {
                         intent.putExtra("id", model.getPoster_id());
                         intent.putExtra("name", model.getPoster_name());
                         intent.putExtra("avatar", model.getPoster_avatar());
-                        context.startActivity(intent);
+                        launchActivity(context, intent);
                     } else if (v.getId() == R.id.action_delete) {
                         Map<String, Object> map = new HashMap<>();
                         if (fromPortfolio) {

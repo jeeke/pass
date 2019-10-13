@@ -56,8 +56,7 @@ public class SettingActivity extends BaseActivity {
 
 
     private void openUri(String uri) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        startActivity(intent);
+        launchActivity(this, new Intent(Intent.ACTION_VIEW, Uri.parse(uri)));
     }
 
     private void invite(View v) {
@@ -66,6 +65,6 @@ public class SettingActivity extends BaseActivity {
         intent.putExtra(Intent.EXTRA_SUBJECT, "Esselion.com");
         intent.putExtra(Intent.EXTRA_TEXT, "Checkout this awesome app! \nhttps://esselion.com");
         intent.setType("text/plain");
-        startActivity(Intent.createChooser(intent, "Share MyTasker"));
+        launchActivity(this, Intent.createChooser(intent, "Share MyTasker"));
     }
 }

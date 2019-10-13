@@ -29,6 +29,7 @@ import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 import static com.esselion.pass.Server.SERVER_ASSIGN_TASK;
 import static com.esselion.pass.util.Cache.getDatabase;
 import static com.esselion.pass.util.Cache.getToken;
+import static com.esselion.pass.util.Tools.launchActivity;
 
 public class BidsListActivity extends BaseActivity implements BidHolder.Listener {
 
@@ -188,7 +189,7 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
             intent.putExtra("id", taskerId);
             intent.putExtra("name", tasker_name);
             intent.putExtra("avatar", tasker_avatar);
-            startActivity(intent);
+            launchActivity(this, intent);
         }
     }
 }

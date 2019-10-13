@@ -67,7 +67,7 @@ public class QuestionFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_history) {
-            launchActivity((AppCompatActivity) getActivity(), HistoryQues.class);
+            launchActivity(getActivity(), HistoryQues.class);
         }
         return false;
     }

@@ -23,6 +23,7 @@ import com.esselion.pass.util.Contracts;
 import com.esselion.pass.util.Tools;
 
 import static com.esselion.pass.util.Cache.getUser;
+import static com.esselion.pass.util.Tools.launchActivityForResult;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
 public class AvatarChooser extends BaseActivity implements AvatarAdapter.RecyclerViewClickListener {
@@ -87,7 +88,7 @@ public class AvatarChooser extends BaseActivity implements AvatarAdapter.Recycle
         pickIntent.setType("image/*");
         Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-        startActivityForResult(chooserIntent, PICK_IMAGE_AVATAR);
+        launchActivityForResult(this, chooserIntent, PICK_IMAGE_AVATAR);
     }
 
 

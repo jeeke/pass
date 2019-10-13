@@ -115,11 +115,32 @@ public class Tools {
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public static void launchActivity(Activity context, Class className) {
-        Intent intent = new Intent(context, className);
-        context.startActivity(intent);
-//        context.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    public static void launchActivity(Activity activity, Class className) {
+        if (activity != null) activity.startActivity(new Intent(activity, className));
     }
+
+    public static void launchActivity(Activity activity, Intent intent) {
+        if (activity != null) activity.startActivity(intent);
+    }
+
+    public static void launchActivityForResult(Activity activity, Intent intent, int requestCode) {
+        if (activity != null) activity.startActivityForResult(intent, requestCode);
+    }
+
+    public static void finishNLaunchActivity(Activity activity, Intent intent) {
+        if (activity != null) {
+            activity.startActivity(intent);
+            activity.finish();
+        }
+    }
+
+    public static void finishNLaunchActivity(Activity activity, Class className) {
+        if (activity != null) {
+            activity.startActivity(new Intent(activity, className));
+            activity.finish();
+        }
+    }
+
 
     public static Retrofit getRetrofit(String token) {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -146,7 +167,7 @@ public class Tools {
         setOnline(context, "true");
         boolean changed = prefs.getBoolean("token_changed", true);
         if (changed) {
-            FirebaseUser currentUser = Cache.getUser(context);
+            FirebaseUser currentUser = Cache.getUser();
             String token = prefs.getString("token", "0");
             DatabaseReference mUserRef = Cache.getDatabase().child("Users").child(currentUser.getUid()).child("device_token");
             mUserRef.setValue(token).addOnCompleteListener(task -> {
@@ -160,11 +181,11 @@ public class Tools {
     public static void removeToken(Activity context) {
         SharedPreferences.Editor editor = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         editor.putBoolean("token_changed", true).apply();
-        Cache.getDatabase().child("Users").child(Cache.getUser(context).getUid()).child("device_token").removeValue();
+        Cache.getDatabase().child("Users").child(Cache.getUser().getUid()).child("device_token").removeValue();
     }
 
     public static void setOnline(Activity activity, Object online) {
-        FirebaseUser currentUser = Cache.getUser(activity);
+        FirebaseUser currentUser = Cache.getUser();
         if (currentUser != null) {
             DatabaseReference mUserRef = Cache.getDatabase().child("Users").child(currentUser.getUid());
             mUserRef.child("online").setValue(online);
