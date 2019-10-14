@@ -61,8 +61,6 @@ import static com.esselion.pass.util.Contracts.getPushKey;
 import static com.esselion.pass.util.Tools.getRetrofit;
 
 public class Server extends Service {
-
-
     public static int SERVER_UPDATE_IMAGE = 1110;
     public static int SERVER_POST_BID = 1111;
     public static int SERVER_EDIT_PASSWORD = 1112;

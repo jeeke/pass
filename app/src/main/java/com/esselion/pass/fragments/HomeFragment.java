@@ -160,7 +160,6 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
             listView.animate().alpha(0.0f).setDuration(0).start();
             shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
             activity.startLocationUpdates(location -> {
-                TaskDetailActivity.location = location;
                 getToken(token -> callRetrofit(token, location.getLongitude(),
                         location.getLatitude()));
             });

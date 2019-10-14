@@ -1,7 +1,6 @@
 package com.esselion.pass.activities;
 
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -27,7 +26,6 @@ import static com.esselion.pass.util.Tools.launchActivity;
 public class TaskDetailActivity extends LocationActivity {
     ChipAdapter tagAdapter, mustAdapter;
     public int FROM = 0;
-    public static Location location;
 
     Task current;
 
@@ -158,13 +156,12 @@ public class TaskDetailActivity extends LocationActivity {
             intent.putExtra("avatar", current.getPoster_avatar());
             launchActivity(this, intent);
         });
-
+        setUpDistance();
         ((TextView) findViewById(R.id.taskTitle)).setText(current.getTitle());
         ((TextView) findViewById(R.id.taskDesc)).setText(current.getJob_des());
         ((TextView) findViewById(R.id.rewardValue)).setText(current.getCost() + "");
         if (current.getDeadline() != null)
             ((TextView) findViewById(R.id.deadline)).setText(current.getDeadline());
-        ((TextView) findViewById(R.id.taskDis)).setText(current.getDistance(location));
         ChipGroup chipGroup = findViewById(R.id.tagGroup);
         ChipGroup mustGroup = findViewById(R.id.mustGroup);
         tagAdapter = new ChipAdapter(chipGroup, current.getTags());
@@ -174,6 +171,11 @@ public class TaskDetailActivity extends LocationActivity {
             findViewById(R.id.mustText).setVisibility(View.GONE);
             findViewById(R.id.mustDivider).setVisibility(View.GONE);
         }
+    }
+
+    private void setUpDistance() {
+        TextView dis = findViewById(R.id.taskDis);
+        startLocationUpdates(location -> getToken(token -> dis.setText(current.getDistance(location))));
     }
 
 
