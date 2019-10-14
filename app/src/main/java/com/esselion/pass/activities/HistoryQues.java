@@ -40,6 +40,7 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
     }
 
     private void callFireBase() {
+        View anim = findViewById(R.id.anim);
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager mManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mManager);
@@ -53,6 +54,7 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
             @NonNull
             @Override
             public QuestionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                anim.setVisibility(View.GONE);
                 return new QuestionHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_question, parent, false), HistoryQues.this);
             }
 

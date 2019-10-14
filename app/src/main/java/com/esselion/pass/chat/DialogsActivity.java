@@ -34,6 +34,7 @@ public class DialogsActivity extends DemoDialogsActivity {
             setContentView(R.layout.activity_dialogs);
             Tools.initMinToolbar(this, "CHATS");
             bar = findViewById(R.id.progress_bar);
+            findViewById(R.id.anim).setVisibility(View.GONE);
             dialogsList = findViewById(R.id.dialogsList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,6 +57,7 @@ public class DialogsActivity extends DemoDialogsActivity {
 
     private void queryFireBase() {
         try {
+            View anim = findViewById(R.id.anim);
             Query conversationQuery = mConvDatabase.orderByChild("lastActivity");
             conversationQuery.
                     addValueEventListener(
@@ -72,7 +74,7 @@ public class DialogsActivity extends DemoDialogsActivity {
                                     bar.setVisibility(View.GONE);
                                     if (dialogs.isEmpty()) {
                                         dialogsList.setVisibility(View.GONE);
-                                        findViewById(R.id.anim).setVisibility(View.VISIBLE);
+                                        anim.setVisibility(View.VISIBLE);
                                     } else {
                                         dialogsList.setVisibility(View.VISIBLE);
                                         items = dialogs;

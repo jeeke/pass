@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.esselion.pass.R;
 import com.esselion.pass.holders.BidHolder;
 import com.esselion.pass.models.Bid;
@@ -37,12 +39,17 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
         task = (Task) getIntent().getSerializableExtra("task");
         if (task == null) finish();
         setContentView(R.layout.activity_list);
+        LottieAnimationView animationView = findViewById(R.id.lottie_anim);
+        animationView.setAnimation(R.raw.no_bids);
+        TextView textView = findViewById(R.id.empty_text);
+        textView.setText("No Bids Yet");
         Tools.initMinToolbar(this, "ALL BIDS");
         mRecyclerView = findViewById(R.id.recyclerView);
         callFireBase();
     }
 
     private void callFireBase() {
+        View anim = findViewById(R.id.anim);
         mRecyclerView.setHasFixedSize(true);
 
         LinearLayoutManager mManager = new LinearLayoutManager(this);
@@ -59,6 +66,7 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
             @NonNull
             @Override
             public BidHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                anim.setVisibility(View.GONE);
                 return new BidHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_bid_list, parent, false), BidsListActivity.this);
             }
 

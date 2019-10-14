@@ -2,13 +2,16 @@ package com.esselion.pass.util;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.esselion.pass.R;
 import com.esselion.pass.activities.ProfileActivity;
 import com.esselion.pass.holders.FeedHolder;
@@ -36,13 +39,19 @@ public class FeedNPortAdapter {
                              RecyclerView mRecyclerView) {
 //        uid = getUser(context).getUid();
         Query mQuery;
-
         //Initialize RecyclerView
         mRecyclerView.setHasFixedSize(true);
+        LottieAnimationView animationView = context.findViewById(R.id.lottie_anim);
+        TextView textView = context.findViewById(R.id.empty_text);
         if (fromPortfolio) {
+            animationView.setAnimation(R.raw.empty_port);
+            if (mine) textView.setText("Add items to your portfolio");
+            else textView.setText("Empty Portfolio");
             Tools.initMinToolbar(context, "Portfolio");
             mQuery = getDatabase().child("Portfolios").child(uid);
         } else {
+            animationView.setAnimation(R.raw.mascot);
+            textView.setText("No Posts Yet");
             Tools.initMinToolbar(context, "My Posts");
             mQuery = getDatabase().child("PrevFeeds").child(uid);
         }
@@ -52,10 +61,12 @@ public class FeedNPortAdapter {
         FirebaseRecyclerOptions<Feed> options =
                 new FirebaseRecyclerOptions.Builder<Feed>()
                         .setQuery(mQuery, Feed.class).build();
+        View anim = context.findViewById(R.id.anim);
         mAdapter = new FirebaseRecyclerAdapter<Feed, FeedHolder>(options) {
             @NonNull
             @Override
             public FeedHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                anim.setVisibility(View.GONE);
                 return new FeedHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_feed, parent, false), 1);
             }
 
