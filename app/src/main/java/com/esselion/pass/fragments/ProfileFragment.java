@@ -1,7 +1,10 @@
 package com.esselion.pass.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -24,9 +27,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.esselion.pass.MyFirebaseMessagingService;
 import com.esselion.pass.R;
 import com.esselion.pass.Server;
 import com.esselion.pass.activities.AvatarChooser;
@@ -38,6 +44,7 @@ import com.esselion.pass.models.Profile;
 import com.esselion.pass.models.Rating;
 import com.esselion.pass.util.Cache;
 import com.esselion.pass.util.ChipAdapter;
+import com.esselion.pass.util.SharedPrefAdapter;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DataSnapshot;
@@ -106,16 +113,61 @@ public class ProfileFragment extends Fragment {
     public ProfileFragment() {
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        MyFirebaseMessagingService.unregisterNotificationListener();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateProfileImage();
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.invalidateOptionsMenu();
+            MyFirebaseMessagingService.registerNotificationListener(activity::invalidateOptionsMenu);
+        }
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (SharedPrefAdapter.getInstance().hasUnseenNotification()) {
+            menu.getItem(0).setIcon(R.drawable.ic_bell_avd);
+            Drawable menuItem = menu.getItem(0).getIcon();
+            Animatable animatable = (Animatable) menuItem;
+            animatable.start();
+            AnimatedVectorDrawableCompat.registerAnimationCallback
+                    (menuItem, new Animatable2Compat.AnimationCallback() {
+                        @Override
+                        public void onAnimationEnd(Drawable drawable) {
+                            super.onAnimationEnd(drawable);
+                            animatable.start();
+                        }
+                    });
+        }
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.profile_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.setting) {
+        Activity activity = getActivity();
+        if (activity != null && item.getItemId() == R.id.notification) {
+            launchActivityForResult(activity, new Intent(getContext(), NotificationActivity.class), CODE_NOTIFICATION_ACTIVITY);
+            SharedPrefAdapter.getInstance().setHasNotification();
+            activity.invalidateOptionsMenu();
+        } else if (item.getItemId() == R.id.setting) {
             launchActivityForResult(getActivity(), new Intent(getContext(), SettingActivity.class), CODE_SETTINGS_ACTIVITY);
             return true;
-        } else {
-            launchActivityForResult(getActivity(), new Intent(getContext(), NotificationActivity.class), CODE_NOTIFICATION_ACTIVITY);
-            return true;
         }
+        return false;
     }
 
     private void forMe(View v, boolean mine) {
@@ -181,10 +233,6 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.profile_menu, menu);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -227,12 +275,6 @@ public class ProfileFragment extends Fragment {
         }
         return v;
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateProfileImage();
     }
 
     private void updateProfileImage() {

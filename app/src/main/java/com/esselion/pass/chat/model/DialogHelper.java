@@ -20,14 +20,12 @@ public class DialogHelper {
 
     private String text;
 
-    public DialogHelper(String uid, String name, String avatar, int unreadCount, Long lastActivity, String text) {
-        init();
+    public DialogHelper(String uid, String name, String avatar, String text) {
         this.uid = uid;
         this.name = name;
         this.avatar = avatar;
-        this.unreadCount = unreadCount;
-        this.lastActivity = lastActivity;
         this.text = text;
+        init();
     }
 
     public DialogHelper() {
@@ -103,6 +101,7 @@ public class DialogHelper {
         User user = new User(uid, name, "default");
         users.add(user);
         dialog.setUsers(users);
+
         Message message = new Message();
         message.setText(text);
         message.setUser(user);
@@ -112,3 +111,4 @@ public class DialogHelper {
     }
 
 }
+

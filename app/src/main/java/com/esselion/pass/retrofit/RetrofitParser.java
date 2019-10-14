@@ -15,6 +15,8 @@ public class RetrofitParser {
 
     public void toTaskList(TaskListAdapter adapter, int price0, int price1, String uid) {
         Cache.tasks = new ArrayList<>();
+        price0 = price0 * 1000;
+        price1 = price1 * 1000;
         //for emptying previous listings
         adapter.update(Cache.tasks);
         if (taskStrings.size() == 0) return;

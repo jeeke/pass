@@ -15,8 +15,7 @@ public class FilterHelper {
 
     public ArrayList<String> tags;
     public int radius;
-    public int[] price = {0, 100};
-    public boolean remote = false;
+    public int[] price = {0, 10};
 
 
     private MotionLayout filter;
@@ -28,7 +27,7 @@ public class FilterHelper {
     public FilterHelper(FilterListener listener, MotionLayout v) {
         this.listener = listener;
         open = false;
-        radius = 100;
+        radius = 10;
         filter = v;
         String[] chipTitle = v.getContext().getResources().getStringArray(R.array.categ_names);
         v.findViewById(R.id.list_head).setOnClickListener(view -> toggle());
@@ -45,8 +44,8 @@ public class FilterHelper {
             filter.transitionToStart();
             tags = adapter.getList();
             radius = radiusBar.getRightIndex() * (int) radiusBar.getTickInterval();
-            price[0] = priceBar.getLeftIndex() * (int) priceBar.getTickInterval() * 1000;
-            price[1] = priceBar.getRightIndex() * (int) priceBar.getTickInterval() * 1000;
+            price[0] = priceBar.getLeftIndex() * (int) priceBar.getTickInterval();
+            price[1] = priceBar.getRightIndex() * (int) priceBar.getTickInterval();
 //            remote = remoteTask.isChecked();
             listener.closedMenu();
             //Log.e("tags",tags.toString() + "\n" + radius + " "  + price[0] + " " + price[1]);

@@ -1,5 +1,8 @@
 package com.esselion.pass.fragments;
 
+import android.app.Activity;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,13 +12,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
+import com.esselion.pass.MyFirebaseMessagingService;
 import com.esselion.pass.R;
 import com.esselion.pass.activities.HistoryQues;
 import com.esselion.pass.activities.LocationActivity;
@@ -24,6 +31,7 @@ import com.esselion.pass.adapters.QuestionAdapter;
 import com.esselion.pass.retrofit.JsonPlaceHolder;
 import com.esselion.pass.retrofit.RetrofitParser;
 import com.esselion.pass.util.Cache;
+import com.esselion.pass.util.SharedPrefAdapter;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
@@ -59,6 +67,42 @@ public class QuestionFragment extends Fragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        MyFirebaseMessagingService.unregisterNotificationListener();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.invalidateOptionsMenu();
+            MyFirebaseMessagingService.registerNotificationListener(activity::invalidateOptionsMenu);
+        }
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (SharedPrefAdapter.getInstance().hasUnseenQuesHistory()) {
+            menu.getItem(0).setIcon(R.drawable.ic_history_avd);
+            Drawable menuItem = menu.getItem(0).getIcon();
+            Animatable animatable = (Animatable) menuItem;
+            animatable.start();
+            AnimatedVectorDrawableCompat.registerAnimationCallback
+                    (menuItem, new Animatable2Compat.AnimationCallback() {
+                        @Override
+                        public void onAnimationEnd(Drawable drawable) {
+                            super.onAnimationEnd(drawable);
+                            animatable.start();
+                        }
+                    });
+        }
+    }
+
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_history, menu);
         super.onCreateOptionsMenu(menu, inflater);
@@ -66,8 +110,11 @@ public class QuestionFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_history) {
-            launchActivity(getActivity(), HistoryQues.class);
+        Activity activity = getActivity();
+        if (activity != null && item.getItemId() == R.id.action_history) {
+            launchActivity(activity, HistoryQues.class);
+            SharedPrefAdapter.getInstance().setHasQuesHistory(false);
+            activity.invalidateOptionsMenu();
         }
         return false;
     }

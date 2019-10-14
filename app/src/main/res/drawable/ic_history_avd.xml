@@ -2,8 +2,8 @@
     xmlns:aapt="http://schemas.android.com/aapt">
     <aapt:attr name="android:drawable">
         <vector
-            android:width="80dp"
-            android:height="80dp"
+            android:width="27dp"
+            android:height="27dp"
             android:viewportWidth="80"
             android:viewportHeight="80">
             <group android:name="_R_G">
@@ -21,7 +21,7 @@
                         android:pathData=" M-1 -13 C-1,-13 -1,1 -1,1 "
                         android:strokeWidth="4"
                         android:strokeAlpha="1"
-                        android:strokeColor="#000000"
+                        android:strokeColor="?colorAccent"
                         android:strokeLineCap="round"
                         android:strokeLineJoin="round" />
                 </group>
@@ -39,7 +39,7 @@
                         android:pathData=" M-1 1 C-1,1 11,1 11,1 "
                         android:strokeWidth="4"
                         android:strokeAlpha="1"
-                        android:strokeColor="#000000"
+                        android:strokeColor="?colorAccent"
                         android:strokeLineCap="round"
                         android:strokeLineJoin="round" />
                 </group>
@@ -55,7 +55,7 @@
                         android:pathData=" M0 -22.5 C9.14,-22.56 22.5,-14.09 22.5,0 C22.5,12.43 12.43,22.5 0,22.5 C-12.43,22.5 -22.5,12.43 -22.5,0 C-22.5,-5.3 -20.56,-9.3 -19.83,-10.64 "
                         android:strokeWidth="4"
                         android:strokeAlpha="1"
-                        android:strokeColor="#000000"
+                        android:strokeColor="?colorAccent"
                         android:strokeLineCap="round"
                         android:strokeLineJoin="round" />
                     <path
@@ -63,7 +63,7 @@
                         android:pathData=" M-24 -13 C-24,-13 -16,-13 -16,-13 "
                         android:strokeWidth="4"
                         android:strokeAlpha="1"
-                        android:strokeColor="#000000"
+                        android:strokeColor="?colorAccent"
                         android:strokeLineCap="round"
                         android:strokeLineJoin="round" />
                     <path
@@ -71,7 +71,7 @@
                         android:pathData=" M-16 -13 C-16,-13 -16,-6 -16,-6 "
                         android:strokeWidth="4"
                         android:strokeAlpha="1"
-                        android:strokeColor="#000000"
+                        android:strokeColor="?colorAccent"
                         android:strokeLineCap="round"
                         android:strokeLineJoin="round" />
                 </group>

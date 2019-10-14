@@ -38,7 +38,18 @@ public class SharedPrefAdapter {
     }
 
     public boolean hasUnseenNotification() {
-        return prefs.getBoolean(UNSEEN_NOTIFICATION, false);
+        return
+//                prefs.getBoolean(UNSEEN_CHATS, false) ||
+                prefs.getBoolean(UNSEEN_QUES_HISTORY, false) ||
+                        prefs.getBoolean(UNSEEN_TASK_HISTORY, false);
+    }
+
+    public void setHasNotification() {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(UNSEEN_TASK_HISTORY, false);
+        editor.putBoolean(UNSEEN_QUES_HISTORY, false);
+//        editor.putBoolean(UNSEEN_CHATS, false);
+        editor.apply();
     }
 
     public void setHasChats(boolean has) {
@@ -51,10 +62,6 @@ public class SharedPrefAdapter {
 
     public void setHasQuesHistory(boolean has) {
         prefs.edit().putBoolean(UNSEEN_QUES_HISTORY, has).apply();
-    }
-
-    public void setHasNotification(boolean has) {
-        prefs.edit().putBoolean(UNSEEN_NOTIFICATION, has).apply();
     }
 
     public boolean isIntroShown() {

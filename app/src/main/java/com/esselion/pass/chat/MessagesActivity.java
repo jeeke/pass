@@ -89,8 +89,8 @@ public class MessagesActivity extends DemoMessagesActivity
         MessageHelper messageHelper = new MessageHelper(mCurrentUser, input.toString());
         DatabaseReference user_message_push = mRootRef.child(current_user_ref).push();
         String push_id = user_message_push.getKey();
-        DialogHelper dialogHelperMe = new DialogHelper(mChatUId, mChatUName, mChatAvatar, 0, null, input.toString());
-        DialogHelper dialogHelperHim = new DialogHelper(uid, name, avatar, 0, null, input.toString());
+        DialogHelper dialogHelperMe = new DialogHelper(mChatUId, mChatUName, mChatAvatar, input.toString());
+        DialogHelper dialogHelperHim = new DialogHelper(uid, name, avatar, input.toString());
         //TODO update and make all the queries in one by putting them in mUpdatemap
         messageUserMap.put(current_user_ref + "/" + push_id, messageHelper.toMap());
         messageUserMap.put(chat_user_ref + "/" + push_id, messageHelper.toMap());

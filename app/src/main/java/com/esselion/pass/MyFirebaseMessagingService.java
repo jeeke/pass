@@ -114,13 +114,15 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
     private void notificationHandler(Map<String, String> map) {
         Notification notification = new Notification(map);
         setSeenStatus(notification);
-        if (!(notification.getType() == 4)) {
+        if (notification.getType() == 4) getImage(notification);
+        else {
             DatabaseReference ref =
                     FirebaseDatabase.getInstance()
                             .getReference()
                             .child("/Notifications/" + getUser().getUid());
             ref.child(getPushKey(ref)).setValue(notification.toMap()).addOnCompleteListener(task -> getImage(notification));
-        } else getImage(notification);
+
+        }
     }
 
     private void setSeenStatus(Notification notification) {

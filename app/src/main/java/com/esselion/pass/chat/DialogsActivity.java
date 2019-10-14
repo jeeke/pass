@@ -55,7 +55,10 @@ public class DialogsActivity extends DemoDialogsActivity {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 ArrayList<Dialog> dialogs = new ArrayList<>();
                                 for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                    dialogs.add(data.getValue(DialogHelper.class).toDialog());
+                                    DialogHelper helper = data.getValue(DialogHelper.class);
+                                    if (helper != null) {
+                                        dialogs.add(helper.toDialog());
+                                    }
                                 }
                                 bar.setVisibility(View.GONE);
                                 if (dialogs.isEmpty()) {
@@ -75,7 +78,6 @@ public class DialogsActivity extends DemoDialogsActivity {
                         }
                 );
     }
-
 
     //for example
 //    private void onNewMessage(String dialogId, Message message) {

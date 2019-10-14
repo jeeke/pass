@@ -135,7 +135,7 @@
             app:mrb_rightSelectorColor="#2196f3"
             app:mrb_selectorBoundarySize="2dp"
             app:mrb_selectorSize="10dp"
-            app:mrb_tickEnd="100"
+            app:mrb_tickEnd="10"
             app:mrb_tickHeight="0dp"
             app:mrb_tickInterval="10"
             app:mrb_tickLabelSize="4sp"
