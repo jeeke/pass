@@ -32,76 +32,84 @@ public class MessagesActivity extends DemoMessagesActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_messages);
-        Tools.initMinToolbar(this, super.mChatUName);
-        this.messagesList = findViewById(R.id.messagesList);
-        initAdapter();
-        mRootRef.child("Messages").child(mCurrentUser.getUid()).
-                child(mChatUId).orderByChild("createdAt").startAt(new Date().getTime() + "").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Message message = dataSnapshot.getValue(MessageHelper.class).toMessage();
-                messagesAdapter.addToStart(message, true);
-            }
+        try {
+            setContentView(R.layout.activity_messages);
+            Tools.initMinToolbar(this, super.mChatUName);
+            this.messagesList = findViewById(R.id.messagesList);
+            initAdapter();
+            mRootRef.child("Messages").child(mCurrentUser.getUid()).
+                    child(mChatUId).orderByChild("createdAt").startAt(new Date().getTime() + "").addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    Message message = dataSnapshot.getValue(MessageHelper.class).toMessage();
+                    messagesAdapter.addToStart(message, true);
+                }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            }
+                }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-            }
+                }
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-        MessageInput input = findViewById(R.id.input);
-        input.setInputListener(this);
-        input.setTypingListener(this);
+                }
+            });
+            MessageInput input = findViewById(R.id.input);
+            input.setInputListener(this);
+            input.setTypingListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean onSubmit(CharSequence input) {
-        String uid, name, avatar;
-        uid = mCurrentUser.getUid();
-        name = mCurrentUser.getDisplayName();
-        avatar = mCurrentUser.getPhotoUrl().toString();
-        String current_user_ref = "Messages/" + uid + "/" + mChatUId;
-        String chat_user_ref = "Messages/" + mChatUId + "/" + uid;
-        Map<String, Object> messageUserMap = new HashMap<>();
+        try {
+            String uid, name, avatar;
+            uid = mCurrentUser.getUid();
+            name = mCurrentUser.getDisplayName();
+            avatar = mCurrentUser.getPhotoUrl().toString();
+            String current_user_ref = "Messages/" + uid + "/" + mChatUId;
+            String chat_user_ref = "Messages/" + mChatUId + "/" + uid;
+            Map<String, Object> messageUserMap = new HashMap<>();
 
-        if (messagesAdapter.getItemCount() == 0) {
-            MessageHelper messageHelper1 = new MessageHelper(mCurrentUser, "Welcome to Pass!");
-            messageUserMap.put(current_user_ref + "/" +
-                    mRootRef.child(current_user_ref).push().getKey(), messageHelper1.toMap());
-            messageUserMap.put(chat_user_ref + "/" +
-                    mRootRef.child(current_user_ref).push().getKey(), messageHelper1.toMap());
-        }
-        MessageHelper messageHelper = new MessageHelper(mCurrentUser, input.toString());
-        DatabaseReference user_message_push = mRootRef.child(current_user_ref).push();
-        String push_id = user_message_push.getKey();
-        DialogHelper dialogHelperMe = new DialogHelper(mChatUId, mChatUName, mChatAvatar, input.toString());
-        DialogHelper dialogHelperHim = new DialogHelper(uid, name, avatar, input.toString());
-        //TODO update and make all the queries in one by putting them in mUpdatemap
-        messageUserMap.put(current_user_ref + "/" + push_id, messageHelper.toMap());
-        messageUserMap.put(chat_user_ref + "/" + push_id, messageHelper.toMap());
-        messageUserMap.put("Chats/" + uid + "/" + mChatUId, dialogHelperMe.toMap());
-        messageUserMap.put("Chats/" + mChatUId + "/" + uid, dialogHelperHim.toMap());
-        mRootRef.updateChildren(messageUserMap, (databaseError, databaseReference) -> {
-            if (databaseError != null) {
-                Log.d("CHAT_LOG", databaseError.getMessage());
-//                messagesAdapter.addToStart(messageHelper.toMessage(),true);
+            if (messagesAdapter.getItemCount() == 0) {
+                MessageHelper messageHelper1 = new MessageHelper(mCurrentUser, "Welcome to Pass!");
+                messageUserMap.put(current_user_ref + "/" +
+                        mRootRef.child(current_user_ref).push().getKey(), messageHelper1.toMap());
+                messageUserMap.put(chat_user_ref + "/" +
+                        mRootRef.child(current_user_ref).push().getKey(), messageHelper1.toMap());
             }
-        });
+            MessageHelper messageHelper = new MessageHelper(mCurrentUser, input.toString());
+            DatabaseReference user_message_push = mRootRef.child(current_user_ref).push();
+            String push_id = user_message_push.getKey();
+            DialogHelper dialogHelperMe = new DialogHelper(mChatUId, mChatUName, mChatAvatar, input.toString());
+            DialogHelper dialogHelperHim = new DialogHelper(uid, name, avatar, input.toString());
+            //TODO update and make all the queries in one by putting them in mUpdatemap
+            messageUserMap.put(current_user_ref + "/" + push_id, messageHelper.toMap());
+            messageUserMap.put(chat_user_ref + "/" + push_id, messageHelper.toMap());
+            messageUserMap.put("Chats/" + uid + "/" + mChatUId, dialogHelperMe.toMap());
+            messageUserMap.put("Chats/" + mChatUId + "/" + uid, dialogHelperHim.toMap());
+            mRootRef.updateChildren(messageUserMap, (databaseError, databaseReference) -> {
+                if (databaseError != null) {
+                    Log.d("CHAT_LOG", databaseError.getMessage());
+//                messagesAdapter.addToStart(messageHelper.toMessage(),true);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return true;
     }
 

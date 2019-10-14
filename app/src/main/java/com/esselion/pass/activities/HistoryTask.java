@@ -15,13 +15,17 @@ public class HistoryTask extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history_task);
-        initToolbar();
-        HistoryTaskAdapter sectionsPagerAdapter = new HistoryTaskAdapter(getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
-        tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
+        try {
+            setContentView(R.layout.activity_history_task);
+            initToolbar();
+            HistoryTaskAdapter sectionsPagerAdapter = new HistoryTaskAdapter(getSupportFragmentManager());
+            ViewPager viewPager = findViewById(R.id.view_pager);
+            viewPager.setAdapter(sectionsPagerAdapter);
+            tabs = findViewById(R.id.tabs);
+            tabs.setupWithViewPager(viewPager);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initToolbar() {

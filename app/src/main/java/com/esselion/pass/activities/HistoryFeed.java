@@ -56,19 +56,22 @@ public class HistoryFeed extends BaseActivity {
     @Override
     public void onStart() {
         super.onStart();
-        feedNPortAdapter.mAdapter.startListening();
+        if (feedNPortAdapter != null && feedNPortAdapter.mAdapter != null)
+            feedNPortAdapter.mAdapter.startListening();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        feedNPortAdapter.mAdapter.refresh();
+        if (feedNPortAdapter != null && feedNPortAdapter.mAdapter != null)
+            feedNPortAdapter.mAdapter.refresh();
     }
 
     //Stop Listening Adapter
     @Override
     public void onStop() {
         super.onStop();
-        feedNPortAdapter.mAdapter.stopListening();
+        if (feedNPortAdapter != null && feedNPortAdapter.mAdapter != null)
+            feedNPortAdapter.mAdapter.stopListening();
     }
 }

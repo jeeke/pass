@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -24,11 +25,13 @@ import com.esselion.pass.fragments.HomeFragment;
 import com.esselion.pass.fragments.ProfileFragment;
 import com.esselion.pass.fragments.QuestionFragment;
 import com.esselion.pass.util.Cache;
+import com.esselion.pass.util.Contracts;
 import com.esselion.pass.util.SharedPrefAdapter;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
@@ -175,23 +178,22 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
 
     }
 
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
-        if (findViewById(R.id.fragment_container) != null) {
-            mFragment = mFragment == null ? new HomeFragment() : mFragment;
-            starterIntent = getIntent();
-            init();
-            initFab();
-            loadFragment(R.anim.slide_from_right, R.anim.slide_to_left);
-            prevbselection = prevbselection == null ? bhome : findViewById(btnSelected);
+        try {
+            if (findViewById(R.id.fragment_container) != null) {
+                mFragment = mFragment == null ? new HomeFragment() : mFragment;
+                starterIntent = getIntent();
+                init();
+                initFab();
+                loadFragment(R.anim.slide_from_right, R.anim.slide_to_left);
+                prevbselection = prevbselection == null ? bhome : findViewById(btnSelected);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     public void setToken() {
@@ -204,9 +206,12 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
                             Log.w(TAG, "getInstanceId failed", task.getException());
                             return;
                         }
-                        String token1 = task.getResult().getToken();
-                        sp.setToken(token1);
-                        sendToken(token1);
+                        InstanceIdResult r = task.getResult();
+                        if (r != null) {
+                            String t = r.getToken();
+                            sp.setToken(t);
+                            sendToken(t);
+                        }
                     });
         } else {
             sendToken(token);
@@ -318,6 +323,8 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
 
     @Override
     public String getImageUrl() {
+        Uri uri = getUser().getPhotoUrl();
+        if (uri == null) return Contracts.avatars[2];
         return getUser().getPhotoUrl().toString();
     }
 }

@@ -17,12 +17,10 @@ import com.esselion.pass.activities.BaseActivity;
 import com.esselion.pass.activities.ProfileActivity;
 import com.esselion.pass.chat.model.Message;
 import com.esselion.pass.chat.model.MessageHelper;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -32,6 +30,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static com.esselion.pass.util.Cache.getDatabase;
+import static com.esselion.pass.util.Cache.getUser;
 import static com.esselion.pass.util.Tools.launchActivity;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
@@ -79,20 +79,30 @@ public abstract class DemoMessagesActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        if (selectionCount == 0) {
-            super.onBackPressed();
-        } else {
-            messagesAdapter.unselectAllItems();
+        try {
+            if (selectionCount == 0) {
+                super.onBackPressed();
+            } else {
+                messagesAdapter.unselectAllItems();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
 
     @Override
     public void onLoadMore(int page, int totalItemsCount) {
-        if (!emptyData) {
-            bar.setVisibility(View.VISIBLE);
-            loadMessages();
+        try {
+            if (!emptyData) {
+                bar.setVisibility(View.VISIBLE);
+                loadMessages();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
 
@@ -103,69 +113,89 @@ public abstract class DemoMessagesActivity extends BaseActivity
 
     @Override
     public void onSelectionChanged(int count) {
-        this.selectionCount = count;
-        menu.findItem(R.id.action_profile).setVisible(mChatAvatar != null);
-        menu.findItem(R.id.action_copy).setVisible(count > 0);
+        try {
+
+            this.selectionCount = count;
+            menu.findItem(R.id.action_profile).setVisible(mChatAvatar != null);
+            menu.findItem(R.id.action_copy).setVisible(count > 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initFireBase() {
-        mRootRef = FirebaseDatabase.getInstance().getReference();
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        mChatUId = getIntent().getStringExtra("id");
-        mChatUName = getIntent().getStringExtra("name");
-        mChatAvatar = getIntent().getStringExtra("avatar");
+        try {
+
+            mRootRef = getDatabase();
+            mCurrentUser = getUser();
+            mChatUId = getIntent().getStringExtra("id");
+            mChatUName = getIntent().getStringExtra("name");
+            mChatAvatar = getIntent().getStringExtra("avatar");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_copy) {
-            messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
-            showSnackBar(this, getString(R.string.copied_message));
-            return true;
-        } else if (item.getItemId() == R.id.action_profile) {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra("id", mChatUId);
-            intent.putExtra("name", mChatUName);
-            intent.putExtra("avatar", mChatAvatar);
-            launchActivity(DemoMessagesActivity.this, intent);
-            return true;
+        try {
+
+            if (item.getItemId() == R.id.action_copy) {
+                messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
+                showSnackBar(this, getString(R.string.copied_message));
+                return true;
+            } else if (item.getItemId() == R.id.action_profile) {
+                Intent intent = new Intent(this, ProfileActivity.class);
+                intent.putExtra("id", mChatUId);
+                intent.putExtra("name", mChatUName);
+                intent.putExtra("avatar", mChatAvatar);
+                launchActivity(DemoMessagesActivity.this, intent);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void loadMessages() {
-        messageQuery = mRootRef.child("Messages").child(mCurrentUser.getUid()).
-                child(mChatUId).orderByKey().limitToLast(PAGE_COUNT);
-        if ((!firstLoad) && (!emptyData)) {
-            messageQuery = messageQuery.endAt(topKey);
-        }
-        messageQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) emptyData = true;
-                ArrayList<Message> messages = new ArrayList<>();
-                boolean firstElement = true;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (firstElement) {
-                        topKey = snapshot.getKey();
-                    } else {
-                        messages.add(0, snapshot.getValue(MessageHelper.class).toMessage());
+        try {
+            messageQuery = mRootRef.child("Messages").child(mCurrentUser.getUid()).
+                    child(mChatUId).orderByKey().limitToLast(PAGE_COUNT);
+            if ((!firstLoad) && (!emptyData)) {
+                messageQuery = messageQuery.endAt(topKey);
+            }
+            messageQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.exists()) emptyData = true;
+                    ArrayList<Message> messages = new ArrayList<>();
+                    boolean firstElement = true;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        MessageHelper helper = snapshot.getValue(MessageHelper.class);
+                        if (firstElement)
+                            topKey = snapshot.getKey();
+                        else if (helper != null)
+                            messages.add(0, helper.toMessage());
+                        firstElement = false;
+                        if (firstLoad) lastKey = snapshot.getKey();
                     }
-                    firstElement = false;
-                    if (firstLoad) lastKey = snapshot.getKey();
+                    messagesAdapter.addToEnd(messages, false);
+                    messageQuery.removeEventListener(this);
+                    bar.setVisibility(View.GONE);
                 }
-                messagesAdapter.addToEnd(messages, false);
-                messageQuery.removeEventListener(this);
-                bar.setVisibility(View.GONE);
-            }
 
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-        firstLoad = false;
+                }
+            });
+            firstLoad = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private MessagesListAdapter.Formatter<Message> getMessageStringFormatter() {

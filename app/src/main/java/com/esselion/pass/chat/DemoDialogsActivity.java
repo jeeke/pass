@@ -81,49 +81,63 @@ public abstract class DemoDialogsActivity extends BaseActivity
 
 
     private void deleteSelectedItems() {
-        if (selectedDialogs.size() > 0) {
-            Map<String, Object> u = new HashMap<>();
-            String rootRef1 = "Chats/" + getUser().getUid() + "/";
-            String rootRef2 = "Messages/" + getUser().getUid() + "/";
-            for (Dialog d : selectedDialogs) {
-                u.put(rootRef1 + d.getId(), null);
-                u.put(rootRef2 + d.getId(), null);
+        try {
+            if (selectedDialogs.size() > 0) {
+                Map<String, Object> u = new HashMap<>();
+                String rootRef1 = "Chats/" + getUser().getUid() + "/";
+                String rootRef2 = "Messages/" + getUser().getUid() + "/";
+                for (Dialog d : selectedDialogs) {
+                    u.put(rootRef1 + d.getId(), null);
+                    u.put(rootRef2 + d.getId(), null);
+                }
+                showProgressBar(true);
+                callFireBase(u);
+                unSelectAllItems();
+                onSelectionChanged();
             }
-            showProgressBar(true);
-            callFireBase(u);
-            unSelectAllItems();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void callFireBase(Map<String, Object> map) {
-        getDatabase().updateChildren(map).addOnCompleteListener(task -> {
-            showProgressBar(false);
-            if (task.isSuccessful())
-                showSnackBar(DemoDialogsActivity.this, "Chats Deleted Successfully");
-            else
-                showSnackBar(DemoDialogsActivity.this, "Couldn't be deleted", () -> callFireBase(map));
-        });
+        try {
+            getDatabase().updateChildren(map).addOnCompleteListener(task -> {
+                showProgressBar(false);
+                if (task.isSuccessful())
+                    showSnackBar(DemoDialogsActivity.this, "Chats Deleted Successfully");
+                else
+                    showSnackBar(DemoDialogsActivity.this, "Couldn't be deleted", () -> callFireBase(map));
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void unSelectAllItems() {
-        for (Dialog d : selectedDialogs) d.unSelect();
-        dialogsAdapter = new DialogSelectionAdapter(imageLoader);
-        initAdapter();
-        selectedDialogs.clear();
+        try {
+
+            for (Dialog d : selectedDialogs) d.unSelect();
+            dialogsAdapter = new DialogSelectionAdapter(imageLoader);
+            initAdapter();
+            selectedDialogs.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
     protected void initAdapter() {
-        dialogsAdapter.setItems(items);
-        dialogsAdapter.setOnDialogViewClickListener(this);
-        dialogsAdapter.setOnDialogViewLongClickListener(this);
-        dialogsList.setAdapter(dialogsAdapter);
-    }
+        try {
 
-
-    @Override
-    protected void onStop() {
-        super.onStop();
+            dialogsAdapter.setItems(items);
+            dialogsAdapter.setOnDialogViewClickListener(this);
+            dialogsAdapter.setOnDialogViewLongClickListener(this);
+            dialogsList.setAdapter(dialogsAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -136,23 +150,28 @@ public abstract class DemoDialogsActivity extends BaseActivity
 
     @Override
     public void onDialogViewClick(View view, Dialog dialog) {
-        if (selectedDialogs.size() == 0) {
-            Intent intent = new Intent(this, MessagesActivity.class);
-            intent.putExtra("id", dialog.getId());
-            intent.putExtra("name", dialog.getDialogName());
-            intent.putExtra("avatar", dialog.getDialogPhoto());
-            launchActivity(DemoDialogsActivity.this, intent);
-        } else {
-            if (selectedDialogs.contains(dialog)) {
-                view.setBackgroundColor(Color.parseColor("#ffffff"));
-                dialog.unSelect();
-                selectedDialogs.remove(dialog);
+        try {
+            if (selectedDialogs.size() == 0) {
+                Intent intent = new Intent(this, MessagesActivity.class);
+                intent.putExtra("id", dialog.getId());
+                intent.putExtra("name", dialog.getDialogName());
+                intent.putExtra("avatar", dialog.getDialogPhoto());
+                launchActivity(DemoDialogsActivity.this, intent);
             } else {
-                view.setBackgroundColor(getResources().getColor(R.color.blue_50));
-                dialog.select();
-                selectedDialogs.add(dialog);
+                if (selectedDialogs.contains(dialog)) {
+                    view.setBackgroundColor(Color.parseColor("#ffffff"));
+                    dialog.unSelect();
+                    selectedDialogs.remove(dialog);
+                } else {
+                    view.setBackgroundColor(getResources().getColor(R.color.blue_50));
+                    dialog.select();
+                    selectedDialogs.add(dialog);
+                }
+                onSelectionChanged();
             }
-            onSelectionChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 }
