@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.esselion.pass.R;
 import com.esselion.pass.chat.MessagesActivity;
 import com.esselion.pass.models.Task;
+import com.esselion.pass.util.Cache;
 import com.esselion.pass.util.ChipAdapter;
 import com.esselion.pass.util.Contracts;
 import com.esselion.pass.util.Tools;
@@ -23,7 +24,7 @@ import static com.esselion.pass.util.Cache.getToken;
 import static com.esselion.pass.util.Tools.finishNLaunchActivity;
 import static com.esselion.pass.util.Tools.launchActivity;
 
-public class TaskDetailActivity extends LocationActivity {
+public class TaskDetailActivity extends BaseActivity {
     ChipAdapter tagAdapter, mustAdapter;
     public int FROM = 0;
 
@@ -175,7 +176,7 @@ public class TaskDetailActivity extends LocationActivity {
 
     private void setUpDistance() {
         TextView dis = findViewById(R.id.taskDis);
-        startLocationUpdates(location -> getToken(token -> dis.setText(current.getDistance(location))));
+        Cache.getLocation(location -> getToken(token -> dis.setText(current.getDistance(location))));
     }
 
 

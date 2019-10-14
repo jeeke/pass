@@ -26,7 +26,6 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 import com.esselion.pass.MyFirebaseMessagingService;
 import com.esselion.pass.R;
 import com.esselion.pass.activities.HistoryTask;
-import com.esselion.pass.activities.LocationActivity;
 import com.esselion.pass.activities.TaskDetailActivity;
 import com.esselion.pass.adapters.TaskListAdapter;
 import com.esselion.pass.chat.DialogsActivity;
@@ -155,15 +154,11 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     private boolean prevCallResolved = true;
 
     private void verifyNCall() {
-        LocationActivity activity = (LocationActivity) getActivity();
-        if (activity != null) {
-            listView.animate().alpha(0.0f).setDuration(0).start();
-            shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
-            activity.startLocationUpdates(location -> {
-                getToken(token -> callRetrofit(token, location.getLongitude(),
-                        location.getLatitude()));
-            });
-        }
+        listView.animate().alpha(0.0f).setDuration(0).start();
+        shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
+        Cache.getLocation(location -> getToken(token -> callRetrofit(token, location.getLongitude(),
+                location.getLatitude())));
+
     }
 
     private void callRetrofit(String token, double lon, double lat) {

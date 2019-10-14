@@ -30,9 +30,7 @@ public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnCl
         image = itemView.findViewById(R.id.poster_image);
         name = itemView.findViewById(R.id.poster_name);
         createdAt = itemView.findViewById(R.id.createdAt);
-//        noAns = itemView.findViewById(R.id.noAnswers);
         ques = itemView.findViewById(R.id.question);
-//        bg = itemView.findViewById(R.id.lyt_parent);
         dotText = itemView.findViewById(R.id.dotText);
         dot = itemView.findViewById(R.id.dot);
     }

@@ -2,7 +2,6 @@ package com.esselion.pass.activities;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,28 +13,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.esselion.pass.R;
+import com.esselion.pass.Server;
 import com.esselion.pass.holders.AnswerHolder;
 import com.esselion.pass.models.Answer;
 import com.esselion.pass.models.Question;
-import com.esselion.pass.util.Contracts;
 import com.esselion.pass.util.Tools;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
-import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
-import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
 import static com.esselion.pass.util.Cache.getToken;
 import static com.esselion.pass.util.Cache.getUser;
@@ -45,22 +40,14 @@ import static com.esselion.pass.util.Tools.showSnackBar;
 public class QuestionDetailActivity extends BaseActivity {
 
     Question current;
-    private FirebaseRecyclerPagingAdapter mAdapter;
+    private FirebaseRecyclerAdapter mAdapter;
     private RecyclerView mRecyclerView;
     EditText answer;
     FloatingActionButton fab;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     boolean from = false;
 
     private void callFireBase() {
-        mSwipeRefreshLayout.setColorSchemeResources(
-
-                android.R.color.holo_blue_bright,
-
-                android.R.color.holo_green_light);
-
-        //Initialize RecyclerView
         mRecyclerView.setHasFixedSize(true);
 
         LinearLayoutManager mManager = new LinearLayoutManager(this);
@@ -69,21 +56,11 @@ public class QuestionDetailActivity extends BaseActivity {
         //Initialize Database
         //TODO remodel table to increase efficiency
         Query mQuery = FirebaseDatabase.getInstance().getReference().child("Answers").child(current.getId());
-        //Initialize PagedList Configuration
-        PagedList.Config config = new PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setPrefetchDistance(5)
-                .setPageSize(10)
-                .build();
-        //Initialize FirebasePagingOptions
-        DatabasePagingOptions<Answer> options = new DatabasePagingOptions.Builder<Answer>()
-                .setLifecycleOwner(this)
-                .setQuery(mQuery, config, Answer.class)
-                .build();
         //Initialize Adapter
-        mAdapter = new FirebaseRecyclerPagingAdapter<Answer, AnswerHolder>(options) {
-
-            private int RETRY_COUNT = Contracts.RETRY_COUNT;
+        FirebaseRecyclerOptions<Answer> options =
+                new FirebaseRecyclerOptions.Builder<Answer>()
+                        .setQuery(mQuery, Answer.class).build();
+        mAdapter = new FirebaseRecyclerAdapter<Answer, AnswerHolder>(options) {
 
             @NonNull
             @Override
@@ -98,41 +75,8 @@ public class QuestionDetailActivity extends BaseActivity {
                 holder.setItem(model);
             }
 
-            @Override
-            protected void onLoadingStateChanged(@NonNull LoadingState state) {
-                switch (state) {
-                    case LOADING_INITIAL:
-                    case LOADING_MORE:
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        break;
-
-                    case LOADED:
-                        // Stop Animation
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        break;
-
-                    case FINISHED:
-                        //Reached end of Data set
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        break;
-
-                    case ERROR:
-                        if (--RETRY_COUNT > 0)
-                            retry();
-                        break;
-                }
-            }
-
-            @Override
-            protected void onError(@NonNull DatabaseError databaseError) {
-                super.onError(databaseError);
-                mSwipeRefreshLayout.setRefreshing(false);
-                Log.e("Error", databaseError.toString());
-                databaseError.toException().printStackTrace();
-            }
         };
         mRecyclerView.setAdapter(mAdapter);
-        mSwipeRefreshLayout.setOnRefreshListener(() -> mAdapter.refresh());
     }
 
 
@@ -155,7 +99,6 @@ public class QuestionDetailActivity extends BaseActivity {
                         .placeholder(R.drawable.person)
                         .circleCrop()).into(image);
         Tools.initMinToolbar(this, "Answers");
-        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = findViewById(R.id.recyclerView);
         callFireBase();
         fab = findViewById(R.id.submit_answer);
@@ -181,9 +124,7 @@ public class QuestionDetailActivity extends BaseActivity {
                 showProgressBar(false);
                 if (task.isSuccessful()) {
                     answer.setText("");
-                    mAdapter.refresh();
                     closeKeyboard();
-                    showSnackBar(this, "Posted");
                 } else {
                     showSnackBar(this, "Posting error");
                 }
@@ -218,11 +159,27 @@ public class QuestionDetailActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mAdapter.stopListening();
+    }
+
     private void verifyNCall() {
-        if (!prevCallResolved || server == null) ;
+        if (!prevCallResolved || server == null) return;
         getToken(token -> server.deleteQuestion(token, current.getC_date(), current.getId()));
         prevCallResolved = false;
     }
 
-
+    @Override
+    public void onServerCallSuccess(int methodId, String title) {
+        super.onServerCallSuccess(methodId, title);
+        if (methodId == Server.SERVER_DELETE_QUESTION) finish();
+    }
 }

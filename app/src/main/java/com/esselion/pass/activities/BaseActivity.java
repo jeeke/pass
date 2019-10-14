@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -27,7 +28,17 @@ import com.esselion.pass.MyApplication;
 import com.esselion.pass.R;
 import com.esselion.pass.Server;
 import com.esselion.pass.broadcastReceivers.ConnectionReceiver;
+import com.esselion.pass.util.Cache;
 import com.esselion.pass.util.Tools;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.Task;
+
+import org.jetbrains.annotations.NotNull;
 
 import static com.esselion.pass.MyFirebaseMessagingService.CHANNEL_ID;
 import static com.esselion.pass.util.Tools.showSnackBar;
@@ -39,6 +50,78 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
 
     public Server server;
     boolean prevCallResolved = true;
+
+    public static int REQUEST_LOCATION = 176;
+    private static boolean locationOn = false;
+    private static boolean locationOnShown = false;
+
+    private boolean checkLocationOn() {
+        if (locationOn) return true;
+        else {
+            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                    .addLocationRequest(LocationRequest.create()
+                            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                            .setInterval(10000)
+                            .setFastestInterval(5000)
+                            .setExpirationDuration(120 * 1000)); // 2 minutes, in milliseconds);
+            SettingsClient client = LocationServices.getSettingsClient(this);
+            Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+            task.addOnSuccessListener(this, locationSettingsResponse -> {
+                locationOn = true;
+                startLocationUpdates();
+            });
+
+            task.addOnFailureListener(this, e -> {
+                if (e instanceof ResolvableApiException) {
+                    if (!locationOnShown)
+                        try {
+                            locationOnShown = true;
+                            ResolvableApiException resolvable = (ResolvableApiException) e;
+                            resolvable.startResolutionForResult(BaseActivity.this,
+                                    100);
+                        } catch (IntentSender.SendIntentException sendEx) {
+                            // Ignore the error.
+                        }
+                }
+            });
+        }
+        return false;
+    }
+
+    private boolean checkLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Check Permissions Now
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION);
+            return false;
+        }
+        return true;
+    }
+
+
+    public void startLocationUpdates() {
+        if (checkLocationPermission() && checkLocationOn()) {
+            if (server != null) Cache.getLocation(null);
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NotNull String[] permissions,
+                                           @NotNull int[] grantResults) {
+        if (requestCode == REQUEST_LOCATION) {
+            if (grantResults.length == 1
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startLocationUpdates();
+            } else {
+                showSnackBar(this, "Please give the location permission");
+            }
+        }
+    }
+
 
     public static void checkPermission(Activity context) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_NETWORK_STATE)
@@ -61,6 +144,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         super.onCreate(savedInstanceState);
         createNotificationChannel();
         checkPermission(this);
+        startLocationUpdates();
     }
 
     boolean mBound = false;
@@ -84,7 +168,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                                        IBinder service) {
             server = ((Server.ServerBinder) service).getService();
             mBound = true;
-            server.fetchLocation();
         }
 
         @Override

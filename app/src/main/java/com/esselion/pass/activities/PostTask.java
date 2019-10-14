@@ -16,6 +16,7 @@ import com.esselion.pass.fragments.PostTaskCat;
 import com.esselion.pass.fragments.PostTaskDetail;
 import com.esselion.pass.fragments.PostTaskExtra;
 import com.esselion.pass.models.Task;
+import com.esselion.pass.util.Cache;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -29,7 +30,7 @@ import static com.esselion.pass.util.Tools.launchActivity;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
 
-public class PostTask extends LocationActivity implements LocationActivity.LocationListener {
+public class PostTask extends BaseActivity implements Cache.LocationListener {
 
     StepperIndicator indicator;
     FloatingActionButton fab;
@@ -97,7 +98,7 @@ public class PostTask extends LocationActivity implements LocationActivity.Locat
             if (reward.equals("")) {
                 showSnackBar(this, "Please Enter Reward Value");
             } else {
-                server.getLocation(this);
+                Cache.getLocation(this);
             }
         }
     }

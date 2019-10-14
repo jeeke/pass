@@ -2,6 +2,7 @@ package com.esselion.pass.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.util.Log;
 
 import com.esselion.pass.MyApplication;
@@ -22,6 +23,26 @@ public class Cache {
     public static ArrayList<Question> questions;
     public static FirebaseUser mUser;
     private static String token;
+    private static Location location;
+
+    public static void getLocation(LocationListener locationListener) {
+        if (location != null) {
+            if (locationListener != null)
+                locationListener.onLocationFetched(location);
+        } else MyApplication.fetchLocation(locationListener);
+    }
+
+    public static Location getNullLocation() {
+        return location;
+    }
+
+    public static void initLocation(Location l) {
+        location = l;
+    }
+
+    public interface LocationListener {
+        void onLocationFetched(Location location);
+    }
 
     public static void emptyCache() {
         token = null;

@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.esselion.pass.BuildConfig;
 import com.esselion.pass.R;
+import com.esselion.pass.Server;
 import com.esselion.pass.fragments.FeedFragment;
 import com.esselion.pass.fragments.HomeFragment;
 import com.esselion.pass.fragments.ProfileFragment;
@@ -42,7 +43,7 @@ import java.util.HashMap;
 import static com.esselion.pass.util.Cache.getUser;
 import static com.esselion.pass.util.Tools.launchActivity;
 
-public class DashboardActivity extends LocationActivity implements ProfileFragment.ActivityListener {
+public class DashboardActivity extends BaseActivity implements ProfileFragment.ActivityListener {
 
     public static final String VERSION_CODE_KEY = "latest_app_version";
     private static final String FRAGMENT_TAG = "m-fragment";
@@ -326,5 +327,18 @@ public class DashboardActivity extends LocationActivity implements ProfileFragme
         Uri uri = getUser().getPhotoUrl();
         if (uri == null) return Contracts.avatars[2];
         return getUser().getPhotoUrl().toString();
+    }
+
+    @Override
+    public void onServerCallSuccess(int methodId, String title) {
+        super.onServerCallSuccess(methodId, title);
+        if (methodId == Server.SERVER_UPDATE_IMAGE && mFragment instanceof ProfileFragment) {
+            try {
+                ProfileFragment fragment = (ProfileFragment) mFragment;
+                fragment.updateProfileImage();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

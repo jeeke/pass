@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,13 +26,11 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 import com.esselion.pass.MyFirebaseMessagingService;
 import com.esselion.pass.R;
 import com.esselion.pass.activities.HistoryQues;
-import com.esselion.pass.activities.LocationActivity;
 import com.esselion.pass.adapters.QuestionAdapter;
 import com.esselion.pass.retrofit.JsonPlaceHolder;
 import com.esselion.pass.retrofit.RetrofitParser;
 import com.esselion.pass.util.Cache;
 import com.esselion.pass.util.SharedPrefAdapter;
-import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 
@@ -50,14 +49,15 @@ public class QuestionFragment extends Fragment {
     public QuestionFragment() {
     }
 
+    private ProgressBar bar;
     private void initToolbar(View v) {
         Toolbar toolbar = v.findViewById(R.id.toolbar);
+        bar = v.findViewById(R.id.progress_bar);
         toolbar.setTitle("Questions");
         toolbar.setTitleTextColor(getContext().getResources().getColor(R.color.blue_grey));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
-    private ShimmerFrameLayout shimmerContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,20 +118,13 @@ public class QuestionFragment extends Fragment {
         return false;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        shimmerContainer.stopShimmer();
-    }
-
     private boolean prevCallResolved = true;
 
     private void verifyNCall() {
         if (!prevCallResolved) return;
-        LocationActivity activity = (LocationActivity) getActivity();
-        activity.startLocationUpdates(location -> {
+        Cache.getLocation(location -> {
             listView.animate().alpha(0.0f).setDuration(0).start();
-            shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
+            bar.setVisibility(View.VISIBLE);
             getToken(token -> callRetrofit(token, location.getLongitude(),
                     location.getLatitude()));
         });
@@ -142,7 +135,7 @@ public class QuestionFragment extends Fragment {
         if (Cache.questions != null) {
             adapter.update(Cache.questions);
             listView.animate().alpha(1.0f).setDuration(100).start();
-            shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+            bar.setVisibility(View.GONE);
             swipeContainer.setRefreshing(false);
         } else verifyNCall();
     }
@@ -169,8 +162,7 @@ public class QuestionFragment extends Fragment {
                     Cache.questions = details.toQuesList();
                 }
                 adapter.update(Cache.questions);
-                shimmerContainer.stopShimmer();
-                shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+                bar.setVisibility(View.GONE);
                 listView.animate().alpha(1.0f).setDuration(100).start();
                 swipeContainer.setRefreshing(false);
             }
@@ -179,8 +171,7 @@ public class QuestionFragment extends Fragment {
             public void onFailure(Call<RetrofitParser> call, Throwable t) {
                 prevCallResolved = true;
                 Log.e("error ", t.getMessage());
-                shimmerContainer.stopShimmer();
-                shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+                bar.setVisibility(View.GONE);
                 listView.animate().alpha(1.0f).setDuration(100).start();
                 swipeContainer.setRefreshing(false);
             }
@@ -194,20 +185,12 @@ public class QuestionFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_feed, container, false);
         initToolbar(v);
         initViews(v);
-        shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
         adapter = new QuestionAdapter(getActivity(), new ArrayList<>());
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
-        swipeContainer.setColorSchemeResources(
-                android.R.color.holo_red_light,
-
-                android.R.color.holo_orange_light,
-
-                android.R.color.holo_blue_bright,
-
-                android.R.color.holo_green_light);
+        swipeContainer.setColorSchemeResources(android.R.color.holo_orange_light,
+                android.R.color.holo_blue_bright);
         swipeContainer.setOnRefreshListener(this::verifyNCall);
-        swipeContainer.setRefreshing(true);
         checkCache();
         return v;
     }
@@ -215,7 +198,6 @@ public class QuestionFragment extends Fragment {
     private void initViews(View v) {
         listView = v.findViewById(R.id.list);
         swipeContainer = v.findViewById(R.id.swipe_refresh_layout);
-        shimmerContainer = v.findViewById(R.id.shimmer_container);
     }
 
 }

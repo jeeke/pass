@@ -22,7 +22,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -183,7 +182,7 @@ public class ProfileFragment extends Fragment {
             intent.putExtra("uid", mListener.getUId());
             launchActivity(getActivity(), intent);
         });
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        BaseActivity activity = (BaseActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         if (mine) {
             setHasOptionsMenu(true);
@@ -230,7 +229,6 @@ public class ProfileFragment extends Fragment {
             editAbout.setVisibility(View.GONE);
             imageView.setVisibility(View.GONE);
         }
-
     }
 
 
@@ -277,7 +275,7 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    private void updateProfileImage() {
+    public void updateProfileImage() {
         if (mListener.getMine()) {
             Cache.mUser = null;
             Cache.getUser().getPhotoUrl();
@@ -357,20 +355,21 @@ public class ProfileFragment extends Fragment {
             layout.setVisibility(View.GONE);
             divider.setVisibility(View.GONE);
         } else {
-            divider.setVisibility(View.VISIBLE);
-            constraintLayout.setVisibility(View.VISIBLE);
             layout.setVisibility(View.VISIBLE);
             lottieAnim.setVisibility(View.GONE);
             posterrating.setRating(rating);
             taskerrating.setRating(rating2);
             int r1 = p.getR1(), r2 = p.getR2(), r3 = p.getR3();
-            ontime.setProgress(r1);
-            ontimet.setText(r1 + "%");
-            quality.setProgress(r2);
-            qualityt.setText(r2 + "%");
-            behaviour.setProgress(r3);
-            behaviourt.setText(r3 + "%");
+            if (r1 + r2 + r3 != 0) {
+                divider.setVisibility(View.VISIBLE);
+                constraintLayout.setVisibility(View.VISIBLE);
+                ontime.setProgress(r1);
+                ontimet.setText(r1 + "%");
+                quality.setProgress(r2);
+                qualityt.setText(r2 + "%");
+                behaviour.setProgress(r3);
+                behaviourt.setText(r3 + "%");
+            }
         }
     }
-
 }

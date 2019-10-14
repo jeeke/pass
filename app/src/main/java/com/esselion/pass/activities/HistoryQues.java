@@ -3,28 +3,22 @@ package com.esselion.pass.activities;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.esselion.pass.R;
 import com.esselion.pass.holders.QuestionHolder;
 import com.esselion.pass.models.Question;
 import com.esselion.pass.util.Contracts;
 import com.esselion.pass.util.Tools;
-import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.firebase.database.DatabaseError;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.Query;
-import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
-import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
-import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
 import static com.esselion.pass.util.Cache.getDatabase;
 import static com.esselion.pass.util.Cache.getUser;
@@ -33,54 +27,29 @@ import static com.esselion.pass.util.Tools.launchActivity;
 public class HistoryQues extends BaseActivity implements QuestionHolder.RecyclerViewClickListener {
 
 
-    private FirebaseRecyclerPagingAdapter mAdapter;
+    private FirebaseRecyclerAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ShimmerFrameLayout shimmerContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         Tools.initMinToolbar(this, "My Questions");
-        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = findViewById(R.id.recyclerView);
-        shimmerContainer = findViewById(R.id.shimmer_container);
         callFireBase();
     }
 
     private void callFireBase() {
-        mSwipeRefreshLayout.setColorSchemeResources(
-
-                android.R.color.holo_blue_bright,
-
-                android.R.color.holo_green_light);
-
-        //Initialize RecyclerView
         mRecyclerView.setHasFixedSize(true);
-
         LinearLayoutManager mManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mManager);
-
-        //Initialize Database
-        //TODO remodel table to increase efficiency
         Query mQuery = getDatabase().child("PrevQues").child(getUser().getUid());
-        //Initialize PagedList Configuration
-        PagedList.Config config = new PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setPrefetchDistance(5)
-                .setPageSize(10)
-                .build();
-        //Initialize FirebasePagingOptions
-        DatabasePagingOptions<Question> options = new DatabasePagingOptions.Builder<Question>()
-                .setLifecycleOwner(this)
-                .setQuery(mQuery, config, Question.class)
-                .build();
-        //Initialize Adapter
-        mAdapter = new FirebaseRecyclerPagingAdapter<Question, QuestionHolder>(options) {
+        //Initialize
 
-            private int RETRY_COUNT = Contracts.RETRY_COUNT;
-
+        FirebaseRecyclerOptions<Question> options =
+                new FirebaseRecyclerOptions.Builder<Question>()
+                        .setQuery(mQuery, Question.class).build();
+        mAdapter = new FirebaseRecyclerAdapter<Question, QuestionHolder>(options) {
             @NonNull
             @Override
             public QuestionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -95,59 +64,21 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
                 int c = getResources().getColor(Contracts.TASK_STAGE_COLORS[model.getStage()]);
                 holder.setItem(model, true, null, drawable2, c);
             }
-
-            @Override
-            protected void onLoadingStateChanged(@NonNull LoadingState state) {
-                switch (state) {
-                    case LOADING_INITIAL:
-                        mRecyclerView.animate().alpha(0.0f).start();
-                        shimmerContainer.animate().alpha(1.0f).start();
-                        shimmerContainer.startShimmer();
-                        break;
-                    case LOADING_MORE:
-                        // Do your loading animation
-                        mSwipeRefreshLayout.setRefreshing(true);
-                        break;
-
-                    case LOADED:
-                        // Stop Animation
-                        shimmerContainer.stopShimmer();
-                        shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
-                        mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        break;
-
-                    case FINISHED:
-                        //Reached end of Data set
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        break;
-
-                    case ERROR:
-                        if (--RETRY_COUNT > 0)
-                            retry();
-                        else {
-                            shimmerContainer.stopShimmer();
-                            shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
-                            mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
-                        }
-                }
-            }
-
-            @Override
-            protected void onError(@NonNull DatabaseError databaseError) {
-                super.onError(databaseError);
-                mSwipeRefreshLayout.setRefreshing(false);
-                Log.e("Error", databaseError.toString());
-                databaseError.toException().printStackTrace();
-            }
         };
-
-        //Set Adapter to RecyclerView
         mRecyclerView.setAdapter(mAdapter);
+    }
 
-        //Set listener to SwipeRefreshLayout for refresh action
-        mSwipeRefreshLayout.setOnRefreshListener(() -> mAdapter.refresh());
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mAdapter.stopListening();
     }
 
 
@@ -159,3 +90,4 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
         launchActivity(this, intent);
     }
 }
+

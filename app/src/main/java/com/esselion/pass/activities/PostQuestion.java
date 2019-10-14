@@ -6,13 +6,15 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.esselion.pass.R;
+import com.esselion.pass.Server;
+import com.esselion.pass.util.Cache;
 import com.esselion.pass.util.Tools;
 
 import static com.esselion.pass.util.Cache.getToken;
 import static com.esselion.pass.util.Cache.getUser;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
-public class PostQuestion extends LocationActivity implements LocationActivity.LocationListener {
+public class PostQuestion extends BaseActivity implements Cache.LocationListener {
 
     Button fab;
     EditText ques;
@@ -31,9 +33,15 @@ public class PostQuestion extends LocationActivity implements LocationActivity.L
                 showSnackBar(this, "Please enter your question");
                 return;
             }
-            server.getLocation(this);
+            Cache.getLocation(this);
         });
         ques = findViewById(R.id.question);
+    }
+
+    @Override
+    public void onServerCallSuccess(int methodId, String title) {
+        super.onServerCallSuccess(methodId, title);
+        if (methodId == Server.SERVER_POST_QUESTION) finish();
     }
 
     @Override

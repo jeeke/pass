@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +24,6 @@ import com.esselion.pass.activities.HistoryFeed;
 import com.esselion.pass.activities.ProfileActivity;
 import com.esselion.pass.holders.FeedHolder;
 import com.esselion.pass.models.Feed;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
@@ -41,13 +41,13 @@ public class FeedFragment extends Fragment {
     }
 
     public FirebaseRecyclerPagingAdapter<Feed, FeedHolder> mAdapter;
-
+    private ProgressBar bar;
     private void initToolbar(View v) {
         Toolbar toolbar = v.findViewById(R.id.toolbar);
+        bar = v.findViewById(R.id.progress_bar);
         toolbar.setTitle("Events");
         toolbar.setTitleTextColor(getContext().getResources().getColor(R.color.blue_grey));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-//        Tools.setSystemBarColor(getActivity(), R.color.green_800);
     }
 
     @Override
@@ -93,7 +93,6 @@ public class FeedFragment extends Fragment {
 
         String uid = getUser().getUid();
         Query mQuery = getDatabase().child("Feeds");
-        ShimmerFrameLayout shimmerContainer = v.findViewById(R.id.shimmer_container);
         mSwipeRefreshLayout.setColorSchemeResources(
 
                 android.R.color.holo_blue_bright,
@@ -156,18 +155,11 @@ public class FeedFragment extends Fragment {
                 switch (state) {
                     case LOADING_INITIAL:
                         mRecyclerView.animate().alpha(0.0f).setDuration(0).start();
-                        shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
-                        shimmerContainer.startShimmer();
+                        bar.setVisibility(View.VISIBLE);
                         break;
-                    case LOADING_MORE:
-                        // Do your loadingPng animation
-                        mSwipeRefreshLayout.setRefreshing(true);
-                        break;
-
                     case LOADED:
                         // Stop Animation
-                        shimmerContainer.stopShimmer();
-                        shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+                        bar.setVisibility(View.GONE);
                         mRecyclerView.animate().alpha(1.0f).setDuration(100).start();
                         mSwipeRefreshLayout.setRefreshing(false);
                         break;
@@ -182,8 +174,7 @@ public class FeedFragment extends Fragment {
                             retry();
                         } else {
                             mSwipeRefreshLayout.setRefreshing(false);
-                            shimmerContainer.stopShimmer();
-                            shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+                            bar.setVisibility(View.GONE);
                             mRecyclerView.animate().alpha(1.0f).setDuration(100).start();
                         }
                 }
