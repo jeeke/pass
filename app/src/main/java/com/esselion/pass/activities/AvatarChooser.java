@@ -1,6 +1,5 @@
 package com.esselion.pass.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -31,7 +30,6 @@ public class AvatarChooser extends BaseActivity implements AvatarAdapter.Recycle
     public static final int PICK_IMAGE_AVATAR = 128;
     RecyclerView mRecyclerView;
     boolean prevCallResolved = true;
-    ProgressDialog dlg;
     Uri mUri;
     ImageView mImage;
     AvatarAdapter adapter;
@@ -95,22 +93,27 @@ public class AvatarChooser extends BaseActivity implements AvatarAdapter.Recycle
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_AVATAR && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            mUri = data.getData();
-            Glide.with(this).load(mUri).apply(RequestOptions.circleCropTransform()).listener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    return false;
-                }
+        try {
+            if (requestCode == PICK_IMAGE_AVATAR && resultCode == RESULT_OK && data != null && data.getData() != null) {
+                mUri = data.getData();
+                Glide.with(this).load(mUri).apply(RequestOptions.circleCropTransform()).listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
 
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    adapter.setPickedDrawable(resource);
-                    return false;
-                }
-            }).into(mImage);
-            picked = true;
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        adapter.setPickedDrawable(resource);
+                        return false;
+                    }
+                }).into(mImage);
+                picked = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.esselion.pass.R;
 import com.esselion.pass.holders.NotificationHolder;
 import com.esselion.pass.models.Notification;
+import com.esselion.pass.util.Contracts;
 import com.esselion.pass.util.Tools;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.database.DatabaseError;
@@ -79,7 +80,7 @@ public class NotificationActivity extends BaseActivity {
         //Initialize Adapter
         mAdapter = new FirebaseRecyclerPagingAdapter<Notification, NotificationHolder>(options) {
 
-//            private int retryCount = 4;
+            private int RETRY_COUNT = Contracts.RETRY_COUNT;
 
             @NonNull
             @Override
@@ -122,17 +123,17 @@ public class NotificationActivity extends BaseActivity {
                         break;
 
                     case ERROR:
-//                        if (--retryCount > 0)
-//                            retry();
-//                        else {
-                        LottieAnimationView anim = findViewById(R.id.lottie_anim);
-                        anim.setAnimation(R.raw.bell);
-                        anim.setSpeed(2.0f);
-                        findViewById(R.id.anim).setVisibility(View.VISIBLE);
-                        shimmerContainer.stopShimmer();
-                        shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
-                        mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
-//                        }
+                        if (--RETRY_COUNT > 0)
+                            retry();
+                        else {
+                            LottieAnimationView anim = findViewById(R.id.lottie_anim);
+                            anim.setAnimation(R.raw.bell);
+                            anim.setSpeed(2.0f);
+                            findViewById(R.id.anim).setVisibility(View.VISIBLE);
+                            shimmerContainer.stopShimmer();
+                            shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
+                            mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
+                        }
                 }
             }
 

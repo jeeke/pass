@@ -79,7 +79,7 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
         //Initialize Adapter
         mAdapter = new FirebaseRecyclerPagingAdapter<Question, QuestionHolder>(options) {
 
-            private int retryCount = 4;
+            private int RETRY_COUNT = Contracts.RETRY_COUNT;
 
             @NonNull
             @Override
@@ -124,7 +124,7 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
                         break;
 
                     case ERROR:
-                        if (--retryCount > 0)
+                        if (--RETRY_COUNT > 0)
                             retry();
                         else {
                             shimmerContainer.stopShimmer();

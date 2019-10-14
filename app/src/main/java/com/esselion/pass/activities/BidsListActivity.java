@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.paging.PagedList;
@@ -13,10 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.esselion.pass.R;
 import com.esselion.pass.holders.BidHolder;
 import com.esselion.pass.models.Bid;
 import com.esselion.pass.models.Task;
+import com.esselion.pass.util.Contracts;
 import com.esselion.pass.util.Tools;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -87,7 +90,8 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
 
         //Initialize Adapter
         mAdapter = new FirebaseRecyclerPagingAdapter<Bid, BidHolder>(options) {
-            private int retryCount = 4;
+            private int RETRY_COUNT = Contracts.RETRY_COUNT;
+
 
             @NonNull
             @Override
@@ -130,13 +134,17 @@ public class BidsListActivity extends BaseActivity implements BidHolder.Listener
                         break;
 
                     case ERROR:
-                        if (--retryCount > 0) retry();
+                        if (--RETRY_COUNT > 0) retry();
                         else {
+                            LottieAnimationView emptyAnim = findViewById(R.id.lottie_anim);
+                            TextView emptyText = findViewById(R.id.empty_text);
+                            emptyAnim.setAnimation(R.raw.no_bids);
+                            emptyText.setText("No Bids Yet");
+                            findViewById(R.id.anim).setVisibility(View.VISIBLE);
                             shimmerContainer.stopShimmer();
                             shimmerContainer.animate().alpha(0.0f).setDuration(200).start();
                             mRecyclerView.animate().alpha(1.0f).setDuration(200).start();
                         }
-                        break;
                 }
             }
 

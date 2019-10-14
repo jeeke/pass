@@ -25,6 +25,7 @@ import com.esselion.pass.R;
 import com.esselion.pass.holders.AnswerHolder;
 import com.esselion.pass.models.Answer;
 import com.esselion.pass.models.Question;
+import com.esselion.pass.util.Contracts;
 import com.esselion.pass.util.Tools;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseUser;
@@ -82,7 +83,7 @@ public class QuestionDetailActivity extends BaseActivity {
         //Initialize Adapter
         mAdapter = new FirebaseRecyclerPagingAdapter<Answer, AnswerHolder>(options) {
 
-            private int retryCount = 3;
+            private int RETRY_COUNT = Contracts.RETRY_COUNT;
 
             @NonNull
             @Override
@@ -116,7 +117,7 @@ public class QuestionDetailActivity extends BaseActivity {
                         break;
 
                     case ERROR:
-                        if (--retryCount > 0)
+                        if (--RETRY_COUNT > 0)
                             retry();
                         break;
                 }

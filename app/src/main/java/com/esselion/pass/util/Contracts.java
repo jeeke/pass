@@ -17,6 +17,8 @@ public class Contracts {
             "STATUS: ALREADY BID", "STATUS: ASSIGNED", "STATUS: COMPLETED"
     };
 
+    public static final int RETRY_COUNT = 2;
+
     public static String[] avatars = {
             "https://firebasestorage.googleapis.com/v0/b/esselion-pass.appspot.com/o/avatar2.png?alt=media&token=768b9748-b959-409f-865a-af3ca195d53e",
             "https://firebasestorage.googleapis.com/v0/b/esselion-pass.appspot.com/o/avatar3.png?alt=media&token=1a488954-cd6d-454d-ac53-5e9bfc073145",

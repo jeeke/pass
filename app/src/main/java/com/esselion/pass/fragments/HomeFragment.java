@@ -89,19 +89,21 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         super.onPrepareOptionsMenu(menu);
         SharedPrefAdapter sp = SharedPrefAdapter.getInstance();
         boolean[] hasUnseen = {sp.hasUnseenChats(), sp.hasUnseenTaskHistory()};
-        for (int i = 0; i < 2 && hasUnseen[i]; i++) {
-            menu.getItem(0).setIcon(notificationAVDs[i]);
-            Drawable menuItem = menu.getItem(0).getIcon();
-            Animatable animatable = (Animatable) menuItem;
-            animatable.start();
-            AnimatedVectorDrawableCompat.registerAnimationCallback
-                    (menuItem, new Animatable2Compat.AnimationCallback() {
-                        @Override
-                        public void onAnimationEnd(Drawable drawable) {
-                            super.onAnimationEnd(drawable);
-                            animatable.start();
-                        }
-                    });
+        for (int i = 0; i < 2; i++) {
+            if (hasUnseen[i]) {
+                menu.getItem(i).setIcon(notificationAVDs[i]);
+                Drawable menuItem = menu.getItem(i).getIcon();
+                Animatable animatable = (Animatable) menuItem;
+                animatable.start();
+                AnimatedVectorDrawableCompat.registerAnimationCallback
+                        (menuItem, new Animatable2Compat.AnimationCallback() {
+                            @Override
+                            public void onAnimationEnd(Drawable drawable) {
+                                super.onAnimationEnd(drawable);
+                                animatable.start();
+                            }
+                        });
+            }
         }
     }
 
@@ -118,10 +120,10 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         if (activity != null) {
             SharedPrefAdapter sp = SharedPrefAdapter.getInstance();
             if (id == R.id.action_history) {
-                launchActivity(getActivity(), HistoryTask.class);
+                launchActivity(activity, HistoryTask.class);
                 sp.setHasTaskHistory(false);
             } else if (id == R.id.action_chats) {
-                launchActivity(getActivity(), DialogsActivity.class);
+                launchActivity(activity, DialogsActivity.class);
                 sp.setHasChats(false);
             }
             activity.invalidateOptionsMenu();
@@ -142,23 +144,27 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
 
 
     private void initToolbar(View v) {
-        Toolbar toolbar = v.findViewById(R.id.toolbar);
-        toolbar.setTitle("");
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            Toolbar toolbar = v.findViewById(R.id.toolbar);
+            toolbar.setTitle("");
+            activity.setSupportActionBar(toolbar);
+        }
     }
 
     private boolean prevCallResolved = true;
 
     private void verifyNCall() {
         LocationActivity activity = (LocationActivity) getActivity();
-        listView.animate().alpha(0.0f).setDuration(0).start();
-        shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
-        activity.startLocationUpdates(location -> {
-            TaskDetailActivity.location = location;
-            getToken(token -> callRetrofit(token, location.getLongitude(),
-                    location.getLatitude()));
-        });
-
+        if (activity != null) {
+            listView.animate().alpha(0.0f).setDuration(0).start();
+            shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
+            activity.startLocationUpdates(location -> {
+                TaskDetailActivity.location = location;
+                getToken(token -> callRetrofit(token, location.getLongitude(),
+                        location.getLatitude()));
+            });
+        }
     }
 
     private void callRetrofit(String token, double lon, double lat) {

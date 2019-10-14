@@ -93,7 +93,7 @@ public class HistoryTaskFrag extends Fragment implements TaskHolder.RecyclerView
         //Initialize Adapter
         mAdapter = new FirebaseRecyclerPagingAdapter<Task, TaskHolder>(options) {
 
-            private int retryCount = 4;
+            private int RETRY_COUNT = Contracts.RETRY_COUNT;
 
             @NonNull
             @Override
@@ -144,7 +144,7 @@ public class HistoryTaskFrag extends Fragment implements TaskHolder.RecyclerView
                         break;
 
                     case ERROR:
-                        if (--retryCount > 0)
+                        if (--RETRY_COUNT > 0)
                             retry();
                         break;
                 }
