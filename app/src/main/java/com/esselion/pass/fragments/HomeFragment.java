@@ -25,6 +25,7 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import com.esselion.pass.MyFirebaseMessagingService;
 import com.esselion.pass.R;
+import com.esselion.pass.activities.BaseActivity;
 import com.esselion.pass.activities.HistoryTask;
 import com.esselion.pass.activities.TaskDetailActivity;
 import com.esselion.pass.adapters.TaskListAdapter;
@@ -149,6 +150,12 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
             toolbar.setTitle("");
             activity.setSupportActionBar(toolbar);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == BaseActivity.REQUEST_TURN_ON_LOCATION) verifyNCall();
     }
 
     private boolean prevCallResolved = true;

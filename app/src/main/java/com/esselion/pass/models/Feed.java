@@ -10,16 +10,16 @@ import java.util.Map;
 public class Feed {
 
 
-    private String id;
-    private long c_date;
-    private String poster_id;
-    private String poster_name;
-    private String poster_avatar;
-    private String image;
-    public int likeCount;
+    public int likeCount = 0;
+    private String id = "";
+    private long c_date = new Date().getTime();
+    private String poster_id = "";
+    private String poster_name = "";
+    private String poster_avatar = "";
+    private String image = "";
     public Map<String, Boolean> likes = new HashMap<>();
-    private String text;
-    private Long sort_id;
+    private String text = "";
+    private Long sort_id = -new Date().getTime();
 
     public String getId() {
         return id;

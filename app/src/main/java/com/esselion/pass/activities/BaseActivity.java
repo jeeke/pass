@@ -54,6 +54,31 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     public static int REQUEST_LOCATION = 176;
     private static boolean locationOn = false;
     private static boolean locationOnShown = false;
+    public static final int REQUEST_TURN_ON_LOCATION = 4327;
+
+    public static void checkPermission(Activity context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_NETWORK_STATE)
+                != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.INTERNET)
+                        != PackageManager.PERMISSION_GRANTED) {
+            // Check Permissions Now
+            ActivityCompat.requestPermissions(context,
+                    new String[]{Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET},
+                    REQUEST_PERMISSIONS);
+        }
+    }
+
+    private boolean checkLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Check Permissions Now
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION);
+            return false;
+        }
+        return true;
+    }
 
     private boolean checkLocationOn() {
         if (locationOn) return true;
@@ -69,8 +94,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
             task.addOnSuccessListener(this, locationSettingsResponse -> {
                 locationOn = true;
                 startLocationUpdates();
+                onRequestPermissionsResult(REQUEST_TURN_ON_LOCATION, new String[0], new int[0]);
             });
-
             task.addOnFailureListener(this, e -> {
                 if (e instanceof ResolvableApiException) {
                     if (!locationOnShown)
@@ -88,25 +113,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         return false;
     }
 
-    private boolean checkLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Check Permissions Now
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_LOCATION);
-            return false;
-        }
-        return true;
-    }
-
-
-    public void startLocationUpdates() {
-        if (checkLocationPermission() && checkLocationOn()) {
-            if (server != null) Cache.getLocation(null);
-        }
-    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -122,20 +128,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         }
     }
 
-
-    public static void checkPermission(Activity context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_NETWORK_STATE)
-                != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.INTERNET)
-                        != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            // Check Permissions Now
-            ActivityCompat.requestPermissions(context,
-                    new String[]{Manifest.permission.ACCESS_NETWORK_STATE,
-                            Manifest.permission.INTERNET, Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_PERMISSIONS);
-        }
+    public void startLocationUpdates() {
+        if (!(this instanceof MainActivity) && !(this instanceof LoginActivity))
+            if (checkLocationPermission())
+                if (checkLocationOn()) Cache.getLocation(null);
     }
 
 
