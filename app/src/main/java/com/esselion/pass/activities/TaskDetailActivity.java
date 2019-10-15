@@ -149,7 +149,7 @@ public class TaskDetailActivity extends BaseActivity {
             launchActivity(this, intent);
         });
         TextView name = findViewById(R.id.poster_name);
-        name.setText(Html.fromHtml("Task By:  <b>" + current.getPoster_name().toUpperCase() + "</b>"));
+        name.setText(Html.fromHtml("Task By:  <b>" + (current.getPoster_name() + " ").toUpperCase() + "</b>"));
         name.setOnClickListener(v -> {
             Intent intent = new Intent(this, ProfileActivity.class);
             intent.putExtra("id", current.getPoster_id());

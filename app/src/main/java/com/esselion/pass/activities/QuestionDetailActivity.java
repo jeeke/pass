@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import static com.esselion.pass.util.Cache.getDatabase;
 import static com.esselion.pass.util.Cache.getToken;
 import static com.esselion.pass.util.Cache.getUser;
 import static com.esselion.pass.util.Contracts.getPushKey;
@@ -49,13 +50,10 @@ public class QuestionDetailActivity extends BaseActivity {
 
     private void callFireBase() {
         mRecyclerView.setHasFixedSize(true);
-
         LinearLayoutManager mManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mManager);
-
         //Initialize Database
-        //TODO remodel table to increase efficiency
-        Query mQuery = FirebaseDatabase.getInstance().getReference().child("Answers").child(current.getId());
+        Query mQuery = FirebaseDatabase.getInstance().getReference().child("Answers/" + current.getId());
         //Initialize Adapter
         FirebaseRecyclerOptions<Answer> options =
                 new FirebaseRecyclerOptions.Builder<Answer>()
@@ -84,7 +82,6 @@ public class QuestionDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_detail);
-
         current = (Question) getIntent().getSerializableExtra("ques");
         from = getIntent().getBooleanExtra("from", false);
         if (from) ((EditText) findViewById(R.id.editText)).setHint("Type Some Comment Here");
@@ -117,8 +114,7 @@ public class QuestionDetailActivity extends BaseActivity {
         FirebaseUser user = getUser();
         if (user != null) {
             Answer ans = new Answer(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), current.getPoster_id(), answer.getText().toString());
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Answers")
-                    .child(current.getId());
+            DatabaseReference ref = getDatabase().child("Answers/" + current.getId());
             ref.child(getPushKey(ref)).setValue(ans).addOnCompleteListener(task -> {
                 prevCallResolved = true;
                 showProgressBar(false);

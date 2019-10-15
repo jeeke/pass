@@ -72,7 +72,7 @@ public class Notification {
     }
 
     public Spanned fetchTitle() {
-        return Html.fromHtml(this.title);
+        return Html.fromHtml(this.title + "");
     }
 
     public PendingIntent getPendingIntent(Context context) {

@@ -156,12 +156,6 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     private boolean prevCallResolved = true;
 
     public void verifyNCall() {
-//        TODO integerate GEOFIRE
-//        DatabaseReference ref = getDatabase().child("GeoFire");
-//        GeoFire geoFire = new GeoFire(ref);
-//        geoFire.setLocation("firebase-hq", new GeoLocation(37.7853889, -122.4056973), (key, error) -> {
-//            if(error!=null) error.toException().printStackTrace();
-//        });
         listView.animate().alpha(0.0f).setDuration(0).start();
         shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
         Cache.getLocation(location -> getToken(token -> callRetrofit(token, location.getLongitude(),
