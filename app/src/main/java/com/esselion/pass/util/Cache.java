@@ -27,8 +27,7 @@ public class Cache {
 
     public static void getLocation(LocationListener locationListener) {
         if (location != null) {
-            if (locationListener != null)
-                locationListener.onLocationFetched(location);
+            if (locationListener != null) locationListener.onLocationFetched(location);
         } else MyApplication.fetchLocation(locationListener);
     }
 

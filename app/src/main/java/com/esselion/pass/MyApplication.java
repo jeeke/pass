@@ -44,7 +44,7 @@ public class MyApplication extends Application {
                     for (Location location : locationResult.getLocations()) {
                         if (location != null) {
                             Cache.initLocation(location);
-                            if (listener != null) listener.onLocationFetched(null);
+                            if (listener != null) listener.onLocationFetched(location);
                             fusedLocationClient.removeLocationUpdates(this);
                         }
                     }
