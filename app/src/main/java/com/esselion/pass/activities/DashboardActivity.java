@@ -14,6 +14,7 @@ import android.view.ViewAnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -92,6 +93,20 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
             e.printStackTrace();
         }
         return -1;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == BaseActivity.REQUEST_TURN_ON_LOCATION && mFragment != null) {
+            if (mFragment instanceof HomeFragment) {
+                HomeFragment fragment = (HomeFragment) mFragment;
+                fragment.verifyNCall();
+            } else if (mFragment instanceof QuestionFragment) {
+                QuestionFragment fragment = (QuestionFragment) mFragment;
+                fragment.verifyNCall();
+            }
+        }
     }
 
     public void setUpdate() {

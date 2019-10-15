@@ -120,7 +120,7 @@ public class QuestionFragment extends Fragment {
 
     private boolean prevCallResolved = true;
 
-    private void verifyNCall() {
+    public void verifyNCall() {
         if (!prevCallResolved) return;
         Cache.getLocation(location -> {
             listView.animate().alpha(0.0f).setDuration(0).start();

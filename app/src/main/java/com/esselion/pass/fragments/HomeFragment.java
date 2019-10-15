@@ -25,7 +25,6 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import com.esselion.pass.MyFirebaseMessagingService;
 import com.esselion.pass.R;
-import com.esselion.pass.activities.BaseActivity;
 import com.esselion.pass.activities.HistoryTask;
 import com.esselion.pass.activities.TaskDetailActivity;
 import com.esselion.pass.adapters.TaskListAdapter;
@@ -152,20 +151,21 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == BaseActivity.REQUEST_TURN_ON_LOCATION) verifyNCall();
-    }
+
 
     private boolean prevCallResolved = true;
 
-    private void verifyNCall() {
+    public void verifyNCall() {
+//        TODO integerate GEOFIRE
+//        DatabaseReference ref = getDatabase().child("GeoFire");
+//        GeoFire geoFire = new GeoFire(ref);
+//        geoFire.setLocation("firebase-hq", new GeoLocation(37.7853889, -122.4056973), (key, error) -> {
+//            if(error!=null) error.toException().printStackTrace();
+//        });
         listView.animate().alpha(0.0f).setDuration(0).start();
         shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
         Cache.getLocation(location -> getToken(token -> callRetrofit(token, location.getLongitude(),
                 location.getLatitude())));
-
     }
 
     private void callRetrofit(String token, double lon, double lat) {
