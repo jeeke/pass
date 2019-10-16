@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Keep
 public class DialogHelper {
 
     private String uid;
@@ -22,7 +23,6 @@ public class DialogHelper {
 
     private String text;
 
-    @Keep
     public DialogHelper(String uid, String name, String avatar, String text) {
         this.uid = uid;
         this.name = name;
