@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 
 import com.esselion.pass.MyApplication;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,10 @@ public class RemoteConfigHelper {
 
     private RemoteConfigHelper() {
         Map<String, Object> defaults = new HashMap<>();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(3600)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
         defaults.put(VERSION_CODE_KEY, getCurrentVersionCode(MyApplication.getInstance()));
         defaults.put(SUPPORT_IDS, "UOJktSpfyxPZ33Z1abvZLrJwkrq2");
         mFirebaseRemoteConfig.setDefaultsAsync(defaults);
