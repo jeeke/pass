@@ -24,12 +24,12 @@ import com.esselion.pass.activities.HistoryFeed;
 import com.esselion.pass.activities.ProfileActivity;
 import com.esselion.pass.holders.FeedHolder;
 import com.esselion.pass.models.Feed;
+import com.firebase.ui.database.paging.DatabasePagingOptions;
+import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
+import com.firebase.ui.database.paging.LoadingState;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
-import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
-import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
-import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
 import static com.esselion.pass.holders.FeedHolder.onlikeClicked;
 import static com.esselion.pass.util.Cache.getDatabase;

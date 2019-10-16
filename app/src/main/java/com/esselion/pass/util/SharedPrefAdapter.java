@@ -13,7 +13,7 @@ public class SharedPrefAdapter {
     private static final String UNSEEN_CHATS = "unseen_chats";
     private static final String UNSEEN_TASK_HISTORY = "unseen_task_history";
     private static final String UNSEEN_QUES_HISTORY = "unseen_ques_history";
-    private static final String UNSEEN_NOTIFICATION = "unseen_notification";
+    //    private static final String UNSEEN_NOTIFICATION = "unseen_notification";
     private final static SharedPrefAdapter sharedPrefAdapter = new SharedPrefAdapter();
     private SharedPreferences prefs;
 

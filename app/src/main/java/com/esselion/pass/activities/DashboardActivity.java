@@ -3,11 +3,9 @@ package com.esselion.pass.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -19,34 +17,25 @@ import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.esselion.pass.BuildConfig;
 import com.esselion.pass.R;
 import com.esselion.pass.Server;
 import com.esselion.pass.fragments.FeedFragment;
 import com.esselion.pass.fragments.HomeFragment;
 import com.esselion.pass.fragments.ProfileFragment;
 import com.esselion.pass.fragments.QuestionFragment;
-import com.esselion.pass.util.Cache;
 import com.esselion.pass.util.Contracts;
-import com.esselion.pass.util.SharedPrefAdapter;
+import com.esselion.pass.util.RemoteConfigHelper;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-
 import static com.esselion.pass.util.Cache.getUser;
 import static com.esselion.pass.util.Tools.launchActivity;
+import static com.esselion.pass.util.Tools.redirectToPlayStore;
 
 public class DashboardActivity extends BaseActivity implements ProfileFragment.ActivityListener {
 
-    public static final String VERSION_CODE_KEY = "latest_app_version";
     private static final String FRAGMENT_TAG = "m-fragment";
     ImageView bhome, bqna, bfeed, bprofile;
     ImageView prevbselection;
@@ -63,8 +52,6 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
     View fabExpanded;
     Fragment mFragment;
     FloatingActionButton fab;
-    private static final String TAG = "DashboardActivity";
-    private FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
     private void loadFragment(int entry, int exit) {
         if (fabActivated) circularReveal(fab);
@@ -74,26 +61,6 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
         transaction.commit();
     }
 
-    private void checkForUpdate() {
-        int latestAppVersion = (int) mFirebaseRemoteConfig.getDouble(VERSION_CODE_KEY);
-        if (latestAppVersion > getCurrentVersionCode()) {
-            new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
-                    .setTitle("Please Update the App")
-                    .setMessage("A new version of PASS is available. Please update from PlayStore")
-                    .setPositiveButton("OK", (dialog, which) -> finish())
-                    .setCancelable(false)
-                    .show();
-        }
-    }
-
-    private int getCurrentVersionCode() {
-        try {
-            return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -109,23 +76,16 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
         }
     }
 
-    public void setUpdate() {
-        HashMap<String, Object> firebaseDefaultMap = new HashMap<>();
-        firebaseDefaultMap.put(VERSION_CODE_KEY, getCurrentVersionCode());
-        mFirebaseRemoteConfig.setDefaultsAsync(firebaseDefaultMap);
-        mFirebaseRemoteConfig.setConfigSettingsAsync(
-                new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(BuildConfig.DEBUG)
-                        .build());
-        //Fetching the values here
-        mFirebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Log.d(TAG, "Fetched value: " + mFirebaseRemoteConfig.getString(VERSION_CODE_KEY));
-                //calling function to check if new version is available or not
-                checkForUpdate();
-            }
-        });
-        Log.d(TAG, "Default value: " + mFirebaseRemoteConfig.getString(VERSION_CODE_KEY));
+    private void showUpdateDialog() {
+        new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+                .setTitle("Please Update the App")
+                .setMessage("A new version of PASS is available. Please update from PlayStore")
+                .setPositiveButton("OK", (dialog, which) -> redirectToPlayStore(this))
+                .setCancelable(false)
+                .show();
     }
+
+
     //TODO check for play services android for notification handling
 
     @Override
@@ -212,44 +172,16 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
 
     }
 
-    public void setToken() {
-        SharedPrefAdapter sp = SharedPrefAdapter.getInstance();
-        String token = sp.getToken();
-        if (token == null) {
-            FirebaseInstanceId.getInstance().getInstanceId()
-                    .addOnCompleteListener(task -> {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "getInstanceId failed", task.getException());
-                            return;
-                        }
-                        InstanceIdResult r = task.getResult();
-                        if (r != null) {
-                            String t = r.getToken();
-                            sp.setToken(t);
-                            sendToken(t);
-                        }
-                    });
-        } else {
-            sendToken(token);
-        }
-    }
-
-    public void sendToken(String token) {
-        DatabaseReference mUserRef = Cache.getDatabase().child("Users").child(getUser().getUid()).child("device_token");
-        mUserRef.setValue(token);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setToken();
+        if (RemoteConfigHelper.getInstance().hasUpdate()) showUpdateDialog();
         if (savedInstanceState != null) {
             mFragment = getSupportFragmentManager()
                     .findFragmentByTag(FRAGMENT_TAG);
             btnSelected = savedInstanceState.getInt("selectedButton");
             fragmentPosition = savedInstanceState.getInt("fragmentPosition");
         }
-        setUpdate();
         setContentView(R.layout.activity_dashboard);
     }
 

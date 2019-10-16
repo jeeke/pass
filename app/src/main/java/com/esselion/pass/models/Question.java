@@ -1,10 +1,13 @@
 package com.esselion.pass.models;
 
+import androidx.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.Date;
 
+@Keep
 public class Question extends Message implements Serializable {
     @SerializedName("poster_image")
     private String poster_image;

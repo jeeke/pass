@@ -1,12 +1,12 @@
 package com.esselion.pass.models;
 
-import com.google.firebase.database.IgnoreExtraProperties;
+import androidx.annotation.Keep;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@IgnoreExtraProperties
+@Keep
 public class Feed {
 
 

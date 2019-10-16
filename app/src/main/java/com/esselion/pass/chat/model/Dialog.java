@@ -1,9 +1,12 @@
 package com.esselion.pass.chat.model;
 
+import androidx.annotation.Keep;
+
 import com.stfalcon.chatkit.commons.models.IDialog;
 
 import java.util.ArrayList;
 
+@Keep
 public class Dialog implements IDialog<Message> {
 
     private String id;

@@ -107,16 +107,15 @@ public abstract class DemoMessagesActivity extends BaseActivity
 
 
     protected DatabaseReference mRootRef;
-    protected String mChatUId;
-    protected String mChatAvatar;
-    protected String mChatUName;
+    protected String mChatUId = "";
+    protected String mChatAvatar = "";
+    protected String mChatUName = "";
 
     @Override
     public void onSelectionChanged(int count) {
         try {
-
             this.selectionCount = count;
-            menu.findItem(R.id.action_profile).setVisible(mChatAvatar != null);
+            menu.findItem(R.id.action_profile).setVisible(mChatUName.equals("Pass Support Team"));
             menu.findItem(R.id.action_copy).setVisible(count > 0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,7 +124,6 @@ public abstract class DemoMessagesActivity extends BaseActivity
 
     private void initFireBase() {
         try {
-
             mRootRef = getDatabase();
             mCurrentUser = getUser();
             mChatUId = getIntent().getStringExtra("id");

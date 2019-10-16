@@ -2,6 +2,8 @@ package com.esselion.pass.models;
 
 import android.location.Location;
 
+import androidx.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -11,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Keep
 public class Task extends Message implements Serializable {
     @SerializedName("dis")
     String dis;

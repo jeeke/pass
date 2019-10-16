@@ -1,7 +1,10 @@
 package com.esselion.pass.models;
 
+import androidx.annotation.Keep;
+
 import java.util.ArrayList;
 
+@Keep
 public class Profile extends Message {
 
 

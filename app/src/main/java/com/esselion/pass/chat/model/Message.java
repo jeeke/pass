@@ -1,9 +1,12 @@
 package com.esselion.pass.chat.model;
 
+import androidx.annotation.Keep;
+
 import com.stfalcon.chatkit.commons.models.IMessage;
 
 import java.util.Date;
 
+@Keep
 public class Message implements IMessage {
 
     private String id;

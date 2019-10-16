@@ -1,10 +1,13 @@
 package com.esselion.pass.chat.model;
 
+import androidx.annotation.Keep;
+
 import com.stfalcon.chatkit.commons.models.IUser;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Keep
 public class User implements IUser {
 
     private String id;

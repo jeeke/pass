@@ -1,9 +1,12 @@
 package com.esselion.pass.models;
 
+import androidx.annotation.Keep;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Keep
 public class Bid {
     //    TODO id is bidder id
     private String id;

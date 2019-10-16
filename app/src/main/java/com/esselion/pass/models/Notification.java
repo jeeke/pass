@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.Html;
 import android.text.Spanned;
 
+import androidx.annotation.Keep;
 import androidx.core.app.TaskStackBuilder;
 
 import com.esselion.pass.activities.BidsListActivity;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Keep
 public class Notification {
 
     public String content;

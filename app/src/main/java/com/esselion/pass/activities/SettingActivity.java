@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import static com.esselion.pass.util.Tools.launchActivity;
+import static com.esselion.pass.util.Tools.redirectToPlayStore;
 
 
 public class SettingActivity extends BaseActivity {
@@ -29,7 +30,7 @@ public class SettingActivity extends BaseActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         findViewById(R.id.textView84).setOnClickListener((View v) -> launchActivity(this, EditPassword.class));
         findViewById(R.id.textView92).setOnClickListener(this::invite);
-        findViewById(R.id.textView90).setOnClickListener((View v) -> openUri("https://google.com"));
+        findViewById(R.id.textView90).setOnClickListener((View v) -> redirectToPlayStore(this));
         findViewById(R.id.textView94).setOnClickListener((View v) -> openUri("https://facebook.com"));
         findViewById(R.id.textView93).setOnClickListener((View v) -> openUri("https://linkedin.com"));
         findViewById(R.id.textView91).setOnClickListener((View v) -> openUri("https://twitter.com"));
@@ -62,9 +63,9 @@ public class SettingActivity extends BaseActivity {
     private void invite(View v) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Esselion.com");
-        intent.putExtra(Intent.EXTRA_TEXT, "Checkout this awesome app! \nhttps://esselion.com");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "PASS");
+        intent.putExtra(Intent.EXTRA_TEXT, "Checkout this awesome app! \nhttps://play.google.com/store/apps/details?id=com.esselion.pass");
         intent.setType("text/plain");
-        launchActivity(this, Intent.createChooser(intent, "Share MyTasker"));
+        launchActivity(this, Intent.createChooser(intent, "Share PASS"));
     }
 }

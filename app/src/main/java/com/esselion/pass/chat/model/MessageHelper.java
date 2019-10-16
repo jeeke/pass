@@ -1,11 +1,14 @@
 package com.esselion.pass.chat.model;
 
+import androidx.annotation.Keep;
+
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Keep
 public class MessageHelper {
     public static final String MESSAGE_SEEN = "Seen";
     public static final String MESSAGE_SENT = "Sent";

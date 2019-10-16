@@ -79,7 +79,7 @@ public class MessagesActivity extends DemoMessagesActivity
             String uid, name, avatar;
             uid = mCurrentUser.getUid();
             name = mCurrentUser.getDisplayName();
-            avatar = mCurrentUser.getPhotoUrl().toString();
+            avatar = mCurrentUser.getPhotoUrl() == null ? "" : mCurrentUser.getPhotoUrl().toString();
             String current_user_ref = "Messages/" + uid + "/" + mChatUId;
             String chat_user_ref = "Messages/" + mChatUId + "/" + uid;
             Map<String, Object> messageUserMap = new HashMap<>();

@@ -1,5 +1,7 @@
 package com.esselion.pass.chat.model;
 
+import androidx.annotation.Keep;
+
 import com.google.firebase.database.ServerValue;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class DialogHelper {
 
     private String text;
 
+    @Keep
     public DialogHelper(String uid, String name, String avatar, String text) {
         this.uid = uid;
         this.name = name;

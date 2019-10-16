@@ -1,9 +1,12 @@
 package com.esselion.pass.models;
 
+import androidx.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
+@Keep
 public class Answer extends Message{
     @SerializedName("replier_name")
     private String replier_name;

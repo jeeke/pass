@@ -1,5 +1,8 @@
 package com.esselion.pass.models;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class Rating {
     public float r1;
     public float r2;
