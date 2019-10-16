@@ -170,7 +170,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         Call<RetrofitParser> call = jsonPlaceHolder.getTasks(
                 lat,
                 lon,
-                100,
+                filterHelper.radius,
                 filterHelper.tags
         );
 
@@ -189,7 +189,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
                 }
                 RetrofitParser details = response.body();
                 if (details != null) {
-                    details.toTaskList(adapter, filterHelper.price[0], filterHelper.price[1], Cache.getUser().getUid());
+                    details.toTaskList(adapter, filterHelper.price[0] * 1000, filterHelper.price[1] * 1000, Cache.getUser().getUid());
                 }
             }
 

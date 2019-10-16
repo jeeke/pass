@@ -14,7 +14,7 @@ public class FilterHelper {
     private FilterListener listener;
 
     public ArrayList<String> tags;
-    public int radius;
+    public int radius = 20;
     public int[] price = {0, 10};
 
 
@@ -27,7 +27,6 @@ public class FilterHelper {
     public FilterHelper(FilterListener listener, MotionLayout v) {
         this.listener = listener;
         open = false;
-        radius = 10;
         filter = v;
         String[] chipTitle = v.getContext().getResources().getStringArray(R.array.categ_names);
         v.findViewById(R.id.list_head).setOnClickListener(view -> toggle());
