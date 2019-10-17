@@ -100,7 +100,6 @@ public class FeedFragment extends Fragment {
                 android.R.color.holo_green_light);
 
         //Initialize RecyclerView
-
         LinearLayoutManager mManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mManager);
         //Initialize PagedList Configuration
@@ -139,10 +138,10 @@ public class FeedFragment extends Fragment {
                         intent.putExtra("name", model.getPoster_name());
                         intent.putExtra("avatar", model.getPoster_avatar());
                         launchActivity(getActivity(), intent);
-                    } else if (v.getId() == R.id.likeButton) {
+                    } else {
                         final DatabaseReference postRef = getRef(position);
-                        DatabaseReference globalFeedRef = getDatabase().child("Feeds").child(postRef.getKey());
-                        DatabaseReference userFeedRef = getDatabase().child("PrevFeeds").child(model.getPoster_id()).child(postRef.getKey());
+                        DatabaseReference globalFeedRef = getDatabase().child("Feeds").child(postRef.getKey() + "");
+                        DatabaseReference userFeedRef = getDatabase().child("PrevFeeds").child(model.getPoster_id()).child(postRef.getKey() + "");
                         // Run two transactions
                         onlikeClicked(globalFeedRef, uid);
                         onlikeClicked(userFeedRef, uid);
