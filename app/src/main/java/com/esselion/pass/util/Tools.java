@@ -183,15 +183,24 @@ public class Tools {
     }
 
     public static void showSnackBar(Activity activity, String mes, Server.OnRetryListener retryListener) {
-        Snackbar.make(activity.findViewById(android.R.id.content)
-                , mes, Snackbar.LENGTH_SHORT)
-                .setAction("RETRY", v -> retryListener.retryTask()).show();
+        if (retryListener != null) {
+            Snackbar.make(activity.findViewById(android.R.id.content)
+                    , mes, Snackbar.LENGTH_SHORT)
+                    .setAction("RETRY", v -> retryListener.retryTask()).show();
+        } else {
+            Snackbar.make(activity.findViewById(android.R.id.content)
+                    , mes, Snackbar.LENGTH_SHORT).show();
+        }
+
     }
 
     public static void showSnackBar(View view, String mes, Server.OnRetryListener retryListener) {
-        Snackbar.make(view, mes,
-                Snackbar.LENGTH_SHORT)
-                .setAction("RETRY", v -> retryListener.retryTask()).show();
+        if (retryListener != null) {
+            Snackbar.make(view, mes, Snackbar.LENGTH_SHORT)
+                    .setAction("RETRY", v -> retryListener.retryTask()).show();
+        } else {
+            Snackbar.make(view, mes, Snackbar.LENGTH_SHORT).show();
+        }
     }
 
 }

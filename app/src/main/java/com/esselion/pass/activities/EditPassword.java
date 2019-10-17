@@ -5,7 +5,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.esselion.pass.R;
+import com.esselion.pass.Server;
 import com.esselion.pass.util.Tools;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import static com.esselion.pass.util.Cache.getUser;
 import static com.esselion.pass.util.Tools.showSnackBar;
@@ -46,5 +48,14 @@ public class EditPassword extends BaseActivity {
         }
     }
 
-
+    @Override
+    public void onServerCallSuccess(int methodId, String title) {
+        super.onServerCallSuccess(methodId, title);
+        if (methodId == Server.SERVER_EDIT_PASSWORD) {
+            new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+                    .setTitle("Password Updated")
+                    .setPositiveButton("OK", (dialog, which) -> finish())
+                    .show();
+        }
+    }
 }

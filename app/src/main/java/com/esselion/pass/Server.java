@@ -26,6 +26,9 @@ import com.esselion.pass.util.Tools;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
@@ -67,6 +70,7 @@ public class Server extends Service {
     public static int SERVER_SAVE_ABOUT = 1123;
     public static int SERVER_ADD_SKILL = 1124;
     public static int SERVER_REMOVE_SKILL = 1125;
+    public static int SERVER_RESET_PASSWORD = 1154;
 
     static Dialog dialog;
 
@@ -211,19 +215,24 @@ public class Server extends Service {
     //method 3
     public void editPassword(FirebaseUser user, String password, String newPassword) {
         showProgressBar();
-        final OnRetryListener retry = () -> editPassword(user, password, newPassword);
-        AuthCredential credential = EmailAuthProvider
-                .getCredential(user.getEmail(), password);
-        user.reauthenticate(credential)
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful())
-                        notifyListener(false, SERVER_EDIT_PASSWORD,
-                                "", "Authentication Error", retry);
-                    else user.updatePassword(newPassword)
-                            .addOnCompleteListener(task1 -> notifyListener(task1.isSuccessful(),
-                                    SERVER_EDIT_PASSWORD, "Password Updated",
-                                    "Password Updating Unsuccessful", retry));
-                });
+        if (user != null) {
+            final OnRetryListener retry = () -> editPassword(user, password, newPassword);
+            AuthCredential credential = EmailAuthProvider
+                    .getCredential(user.getEmail(), password);
+            user.reauthenticate(credential)
+                    .addOnCompleteListener(task -> {
+                        if (!task.isSuccessful())
+                            notifyListener(false, SERVER_EDIT_PASSWORD,
+                                    "", "Wrong Password!", null);
+                        else user.updatePassword(newPassword)
+                                .addOnCompleteListener(task1 -> notifyListener(task1.isSuccessful(),
+                                        SERVER_EDIT_PASSWORD, "Password Updated",
+                                        "Password Updating Unsuccessful", retry));
+                    });
+        } else notifyListener(false,
+                SERVER_EDIT_PASSWORD, "",
+                "Password Updating Unsuccessful", null);
+
     }
 
     //Method 4
@@ -244,6 +253,9 @@ public class Server extends Service {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         sendEmailVerificationLink(name);
+                    } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                        notifyListener(false, SERVER_SIGNUP, "",
+                                "Email already in use!, SIGN IN", null);
                     } else notifyListener(false, SERVER_SIGNUP, "",
                             "SignUp Unsuccessful", () -> signUp(name, email, password));
                 });
@@ -289,15 +301,49 @@ public class Server extends Service {
         }
     }
 
+    public void sendPasswordResetMail(String emailAddress) {
+        showProgressBar();
+        FirebaseAuth.getInstance().sendPasswordResetEmail(emailAddress)
+                .addOnCompleteListener(task -> {
+                    Exception e = task.getException();
+                    if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                        notifyListener(
+                                false, SERVER_RESET_PASSWORD,
+                                "", "Invalid Email",
+                                null);
+                    } else if (e instanceof FirebaseAuthInvalidUserException) {
+                        notifyListener(
+                                false, SERVER_RESET_PASSWORD,
+                                "", "Email Not Registered",
+                                null);
+                    } else notifyListener(task.isSuccessful(), SERVER_RESET_PASSWORD,
+                            "Password reset email sent", "Some error occurred",
+                            () -> sendPasswordResetMail(emailAddress));
+                });
+    }
+
     // Method 6
     public void login(String email, String password) {
         showProgressBar();
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
-                    notifyListener(task.isSuccessful(),
+                    Exception e = task.getException();
+                    if (e == null) notifyListener(task.isSuccessful(),
                             SERVER_LOGIN,
                             "Login Successful",
                             "Login Unsuccessful", () -> login(email, password));
+                    else if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                        notifyListener(false,
+                                SERVER_LOGIN,
+                                "",
+                                "Invalid Email or Password", null);
+                    } else if (e instanceof FirebaseAuthInvalidUserException) {
+                        notifyListener(false,
+                                SERVER_LOGIN,
+                                "",
+                                "Email not registered!, SIGN UP", null);
+                    }
+
                 });
     }
 
