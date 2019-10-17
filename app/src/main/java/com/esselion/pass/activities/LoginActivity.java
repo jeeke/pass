@@ -22,6 +22,7 @@ import static com.esselion.pass.Server.SERVER_RESET_PASSWORD;
 import static com.esselion.pass.Server.SERVER_SIGNUP;
 import static com.esselion.pass.util.Contracts.dpToPx;
 import static com.esselion.pass.util.Tools.finishNLaunchActivity;
+import static com.esselion.pass.util.Tools.isValidEmail;
 import static com.esselion.pass.util.Tools.launchActivity;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
@@ -62,7 +63,11 @@ public class LoginActivity extends BaseActivity {
                 int p = dpToPx(16);
                 input.setPadding(pad, pad, pad, p);
                 new MaterialAlertDialogBuilder(LoginActivity.this, R.style.AlertDialogTheme).setTitle("Enter Email").setView(input)
-                        .setPositiveButton("RESET PASSWORD", (dialog, which) -> server.sendPasswordResetMail(input.getText().toString()))
+                        .setPositiveButton("RESET PASSWORD", (dialog, which) -> {
+                            String s = input.getText().toString();
+                            if (isValidEmail(s)) server.sendPasswordResetMail(s);
+                            else showSnackBar(this, "Please Enter Valid Email");
+                        })
                         .show();
                 input.requestFocus();
             });
@@ -131,7 +136,7 @@ public class LoginActivity extends BaseActivity {
             showSnackBar(this, "Error, Please try later");
         else if (from && name.equals("")) {
             showSnackBar(this, "Please Enter Your Name");
-        } else if (email.equals("") || !email.contains("@") || !email.contains("."))
+        } else if (isValidEmail(email))
             showSnackBar(this, "Please Enter Valid Email");
         else if (password.length() < 8)
             showSnackBar(this, "Password can not be less than 8 characters");
