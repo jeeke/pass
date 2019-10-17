@@ -152,7 +152,6 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     }
 
 
-
     private boolean prevCallResolved = true;
 
     public void verifyNCall() {
@@ -177,20 +176,25 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         call.enqueue(new Callback<RetrofitParser>() {
             @Override
             public void onResponse(Call<RetrofitParser> call, Response<RetrofitParser> response) {
-                prevCallResolved = true;
-                shimmerContainer.stopShimmer();
-                shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
-                listView.animate().alpha(1.0f).setDuration(100).start();
-                swipeContainer.setRefreshing(false);
-                if (!response.isSuccessful()) {
-                    Log.v("Code: ", String.valueOf(response.code()));
+                try {
+                    prevCallResolved = true;
+                    shimmerContainer.stopShimmer();
+                    shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
+                    listView.animate().alpha(1.0f).setDuration(100).start();
                     swipeContainer.setRefreshing(false);
-                    return;
+                    if (!response.isSuccessful()) {
+                        Log.v("Code: ", response.code() + "");
+                        swipeContainer.setRefreshing(false);
+                        return;
+                    }
+                    RetrofitParser details = response.body();
+                    if (details != null) {
+                        details.toTaskList(adapter, filterHelper.price[0] * 1000, filterHelper.price[1] * 1000, Cache.getUser().getUid());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                RetrofitParser details = response.body();
-                if (details != null) {
-                    details.toTaskList(adapter, filterHelper.price[0] * 1000, filterHelper.price[1] * 1000, Cache.getUser().getUid());
-                }
+
             }
 
             @Override
