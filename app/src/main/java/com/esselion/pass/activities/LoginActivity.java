@@ -136,7 +136,7 @@ public class LoginActivity extends BaseActivity {
             showSnackBar(this, "Error, Please try later");
         else if (from && name.equals("")) {
             showSnackBar(this, "Please Enter Your Name");
-        } else if (isValidEmail(email))
+        } else if (!isValidEmail(email))
             showSnackBar(this, "Please Enter Valid Email");
         else if (password.length() < 8)
             showSnackBar(this, "Password can not be less than 8 characters");
