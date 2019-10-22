@@ -69,12 +69,12 @@ public class TaskDetailActivity extends BaseActivity {
             case 3:
                 findViewById(R.id.mustDivider).setVisibility(View.GONE);
                 findViewById(R.id.query).setVisibility(View.GONE);
-                title += current.getPoster_name().split("(?!.* )")[0];
+                title += current.getTasker_name().split("(?!.* )")[0];
                 action.setOnClickListener(v -> {
                     Intent intent = new Intent(this, ProfileActivity.class);
-                    intent.putExtra("id", current.getPoster_id());
-                    intent.putExtra("name", current.getPoster_name());
-                    intent.putExtra("avatar", current.getPoster_avatar());
+                    intent.putExtra("id", current.getTasker_id());
+                    intent.putExtra("name", current.getTasker_name());
+                    intent.putExtra("avatar", current.getTasker_avatar());
                     launchActivity(this, intent);
                 });
                 break;
