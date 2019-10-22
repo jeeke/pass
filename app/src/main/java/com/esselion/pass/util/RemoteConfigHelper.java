@@ -1,14 +1,12 @@
 package com.esselion.pass.util;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
-
-import com.esselion.pass.MyApplication;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.esselion.pass.util.Tools.getCurrentVersionCode;
 
 public class RemoteConfigHelper {
 
@@ -23,7 +21,7 @@ public class RemoteConfigHelper {
                 .setMinimumFetchIntervalInSeconds(3600)
                 .build();
         mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
-        defaults.put(VERSION_CODE_KEY, getCurrentVersionCode(MyApplication.getInstance()));
+        defaults.put(VERSION_CODE_KEY, getCurrentVersionCode());
         defaults.put(SUPPORT_IDS, "UOJktSpfyxPZ33Z1abvZLrJwkrq2");
         mFirebaseRemoteConfig.setDefaultsAsync(defaults);
         mFirebaseRemoteConfig.fetchAndActivate();
@@ -35,19 +33,12 @@ public class RemoteConfigHelper {
 
     public boolean hasUpdate() {
         int latestAppVersion = (int) mFirebaseRemoteConfig.getDouble(VERSION_CODE_KEY);
-        return latestAppVersion > getCurrentVersionCode(MyApplication.getInstance());
+        return latestAppVersion > getCurrentVersionCode();
     }
 
     public String[] getSupportIds() {
         return mFirebaseRemoteConfig.getString(SUPPORT_IDS).split(" ");
     }
 
-    private int getCurrentVersionCode(Context context) {
-        try {
-            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
+
 }

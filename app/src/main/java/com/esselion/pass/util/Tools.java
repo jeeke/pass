@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.esselion.pass.BuildConfig;
 import com.esselion.pass.R;
 import com.esselion.pass.Server;
 import com.esselion.pass.retrofit.NullOnEmptyConverterFactory;
@@ -167,6 +168,14 @@ public class Tools {
                 .addConverterFactory(new NullOnEmptyConverterFactory())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+    }
+
+    public static String getVersionName() {
+        return BuildConfig.VERSION_NAME;
+    }
+
+    public static int getCurrentVersionCode() {
+        return BuildConfig.VERSION_CODE;
     }
 
 //    public static void setOnline(Object online) {

@@ -41,7 +41,9 @@ public class SettingActivity extends BaseActivity {
             MainActivity.signOut(this);
             finish();
         });
-        TextView name, contact, contactHead;
+        TextView name, contact, contactHead, version;
+        version = findViewById(R.id.versionName);
+        version.setText("Version " + Tools.getVersionName());
         name = findViewById(R.id.textView85);
         contact = findViewById(R.id.textView87);
         contactHead = findViewById(R.id.textView79);
