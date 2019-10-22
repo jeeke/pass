@@ -211,6 +211,7 @@ public class ProfileFragment extends Fragment {
 //            input.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
                 input.setGravity(Gravity.START);
                 input.setHeight(dpToPx(200));
+                input.setText(aboutText.getText());
                 int pad = dpToPx(24);
                 int p = dpToPx(16);
                 input.setPadding(pad, pad, pad, p);

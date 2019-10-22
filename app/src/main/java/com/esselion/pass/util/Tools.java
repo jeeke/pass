@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -178,6 +179,14 @@ public class Tools {
 
     public static void showSnackBar(Activity activity, String mes) {
         Snackbar.make(activity.findViewById(android.R.id.content), mes, Snackbar.LENGTH_SHORT).show();
+    }
+
+    public static void closeKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     public static void showSnackBar(View view, String mes) {

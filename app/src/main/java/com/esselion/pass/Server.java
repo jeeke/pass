@@ -71,6 +71,7 @@ public class Server extends Service {
     public static int SERVER_ADD_SKILL = 1124;
     public static int SERVER_REMOVE_SKILL = 1125;
     public static int SERVER_RESET_PASSWORD = 1154;
+    public static int SERVER_SEND_FEEDBACK = 1157;
 
     static Dialog dialog;
 
@@ -510,7 +511,6 @@ public class Server extends Service {
         Map<String, Object> map = new HashMap<>();
         map.put("task", task);
         Call<Message> call = jsonPlaceHolder.assignTask(map);
-
         call.enqueue(new Callback<Message>() {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
@@ -564,6 +564,18 @@ public class Server extends Service {
                             SERVER_SAVE_ABOUT,
                             "Updated About",
                             "Couldn't Update About", () -> saveAbout(about, uid));
+                });
+    }
+
+    public void sendFeedback(String text, String uid) {
+        showProgressBar();
+        getDatabase()
+                .child("/Feedback/" + uid).push().setValue(text)
+                .addOnCompleteListener(task -> {
+                    notifyListener(task.isSuccessful(),
+                            SERVER_SEND_FEEDBACK,
+                            "Feedback Sent",
+                            "Couldn't Send Feedback", () -> sendFeedback(text, uid));
                 });
     }
 
