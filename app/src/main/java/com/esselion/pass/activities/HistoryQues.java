@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +36,8 @@ public class HistoryQues extends BaseActivity implements QuestionHolder.Recycler
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         Tools.initMinToolbar(this, "My Questions");
+        TextView textView = findViewById(R.id.empty_text);
+        textView.setText("No Questions Yet");
         mRecyclerView = findViewById(R.id.recyclerView);
         callFireBase();
     }

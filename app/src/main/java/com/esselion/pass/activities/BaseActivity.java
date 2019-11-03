@@ -107,6 +107,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                         } catch (IntentSender.SendIntentException sendEx) {
                             // Ignore the error.
                         }
+                    else {
+                        finish();
+                        System.exit(0);
+                    }
+                } else {
+                    finish();
+                    System.exit(0);
                 }
             });
         }
@@ -205,13 +212,17 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     @Override
     protected void onStart() {
         super.onStart();
-        progressBar = findViewById(R.id.progress_bar);
-        registerReceiver(MyReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        MyApplication.getInstance().setConnectionListener(this);
-        Server.setServerCallCompleteListener(this);
-        Intent intent = new Intent(this, Server.class);
-        startService(intent);
-        bindService(intent, connection, 0);
+        try {
+            progressBar = findViewById(R.id.progress_bar);
+            registerReceiver(MyReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            MyApplication.getInstance().setConnectionListener(this);
+            Server.setServerCallCompleteListener(this);
+            Intent intent = new Intent(this, Server.class);
+            startService(intent);
+            bindService(intent, connection, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
