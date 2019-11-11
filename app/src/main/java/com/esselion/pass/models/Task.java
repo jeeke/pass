@@ -262,11 +262,14 @@ public class Task extends Message implements Serializable {
         this.tags = tags;
     }
 
-    public String getDistance(Location l) {
+    public String getDistance(com.esselion.pass.models.Location l) {
         if (dis != null) return dis;
+        Location locationB = new Location("point B");
+        locationB.setLatitude(l.getLatitude());
+        locationB.setLongitude(l.getLongitude());
         Location locationA = new Location("point A");
         locationA.setLatitude(lat);
         locationA.setLongitude(lon);
-        return parseDistance((l.distanceTo(locationA) / 1000.0) + "");
+        return parseDistance((locationB.distanceTo(locationA) / 1000.0) + "");
     }
 }

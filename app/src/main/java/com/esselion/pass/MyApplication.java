@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.esselion.pass.broadcastReceivers.ConnectionReceiver;
 import com.esselion.pass.util.Cache;
+import com.esselion.pass.util.SharedPrefAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -21,6 +22,12 @@ public class MyApplication extends Application {
     private static MyApplication mInstance;
 
     public static void fetchLocation(Cache.LocationListener listener) {
+        com.esselion.pass.models.Location l = SharedPrefAdapter.getInstance().getLocation();
+        if (l != null) {
+            Cache.initLocation(l);
+            if (listener != null) listener.onLocationFetched(l);
+            return;
+        }
         if (Cache.getNullLocation() == null) {
             if (ActivityCompat.checkSelfPermission(MyApplication.getInstance()
                     .getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -43,8 +50,11 @@ public class MyApplication extends Application {
                     }
                     for (Location location : locationResult.getLocations()) {
                         if (location != null) {
-                            Cache.initLocation(location);
-                            if (listener != null) listener.onLocationFetched(location);
+                            com.esselion.pass.models.Location targetLocation = new com.esselion.pass.models.Location();
+                            targetLocation.lon = location.getLongitude();
+                            targetLocation.lat = location.getLatitude();
+                            Cache.initLocation(targetLocation);
+                            if (listener != null) listener.onLocationFetched(targetLocation);
                             fusedLocationClient.removeLocationUpdates(this);
                         }
                     }

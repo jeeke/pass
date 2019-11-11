@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import androidx.annotation.Nullable;
 
 import com.esselion.pass.models.Feed;
+import com.esselion.pass.models.Location;
 import com.esselion.pass.models.Message;
 import com.esselion.pass.models.Question;
 import com.esselion.pass.models.Task;
@@ -53,10 +54,11 @@ import static com.esselion.pass.util.Contracts.getPushKey;
 import static com.esselion.pass.util.Tools.getRetrofit;
 
 public class Server extends Service {
-    public static int SERVER_UPDATE_IMAGE = 1110;
-    public static int SERVER_POST_BID = 1111;
-    public static int SERVER_EDIT_PASSWORD = 1112;
-    public static int SERVER_RATE = 1113;
+    public static final int SERVER_DELETE_LOCATION = 1159;
+    public static final int SERVER_UPDATE_IMAGE = 1110;
+    public static final int SERVER_POST_BID = 1111;
+    public static final int SERVER_EDIT_PASSWORD = 1112;
+    public static final int SERVER_RATE = 1113;
     public static int SERVER_SIGNUP = 1114;
     public static int SERVER_RESEND_MAIL = 1126;
     public static int SERVER_LOGIN = 1115;
@@ -72,6 +74,7 @@ public class Server extends Service {
     public static int SERVER_REMOVE_SKILL = 1125;
     public static int SERVER_RESET_PASSWORD = 1154;
     public static int SERVER_SEND_FEEDBACK = 1157;
+    public static int SERVER_SAVE_LOCATION = 1158;
 
     static Dialog dialog;
 
@@ -577,6 +580,32 @@ public class Server extends Service {
                             "Feedback Sent",
                             "Couldn't Send Feedback", () -> sendFeedback(text, uid));
                 });
+    }
+
+    public void saveLocation(String uid, Location loc) {
+        showProgressBar();
+        DatabaseReference r = getDatabase()
+                .child("/Locations/" + uid);
+        loc.id = getPushKey(r);
+        r.child(loc.id).setValue(loc)
+                .addOnCompleteListener(task -> {
+                    notifyListener(task.isSuccessful(),
+                            SERVER_SAVE_LOCATION,
+                            "Location Added",
+                            "Couldn't add location", () -> saveLocation(uid, loc));
+                });
+
+    }
+
+    public void deleteLocation(String uid, String id) {
+        showProgressBar();
+        getDatabase()
+                .child("/Locations/" + uid).child(id).removeValue()
+                .addOnCompleteListener(task -> notifyListener(task.isSuccessful(),
+                        SERVER_DELETE_LOCATION,
+                        "Location Deleted",
+                        "Couldn't delete location", () -> deleteLocation(uid, id)));
+
     }
 
     public void addSkill(String skill, String uid) {

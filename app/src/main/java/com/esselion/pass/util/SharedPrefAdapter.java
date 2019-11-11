@@ -3,6 +3,8 @@ package com.esselion.pass.util;
 import android.content.SharedPreferences;
 
 import com.esselion.pass.MyApplication;
+import com.esselion.pass.models.Location;
+import com.google.gson.Gson;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -13,6 +15,7 @@ public class SharedPrefAdapter {
     private static final String UNSEEN_CHATS = "unseen_chats";
     private static final String UNSEEN_TASK_HISTORY = "unseen_task_history";
     private static final String UNSEEN_QUES_HISTORY = "unseen_ques_history";
+    private static final String CURRENT_LOCATION = "current_location";
     //    private static final String UNSEEN_NOTIFICATION = "unseen_notification";
     private final static SharedPrefAdapter sharedPrefAdapter = new SharedPrefAdapter();
     private SharedPreferences prefs;
@@ -49,6 +52,27 @@ public class SharedPrefAdapter {
         editor.putBoolean(UNSEEN_TASK_HISTORY, false);
         editor.putBoolean(UNSEEN_QUES_HISTORY, false);
 //        editor.putBoolean(UNSEEN_CHATS, false);
+        editor.apply();
+    }
+
+    void clearLocation() {
+        prefs.edit().remove(CURRENT_LOCATION).apply();
+    }
+
+    public Location getLocation() {
+        String l = prefs.getString(CURRENT_LOCATION, "");
+        if (l == null || l.equals("")) return null;
+        else {
+            Gson gson = new Gson();
+            return gson.fromJson(l, Location.class);
+        }
+    }
+
+    public void setLocation(Location location) {
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(location);
+        editor.putString(CURRENT_LOCATION, json);
         editor.apply();
     }
 

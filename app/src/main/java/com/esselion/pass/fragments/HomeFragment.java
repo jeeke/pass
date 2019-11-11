@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -136,12 +137,15 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     private SwipeRefreshLayout swipeContainer;
     private TaskListAdapter adapter;
 
+    private TextView locationTag;
+
     private void initViews(View v) {
         listView = v.findViewById(R.id.list);
         shimmerContainer = v.findViewById(R.id.shimmer_container);
         swipeContainer = v.findViewById(R.id.swipe_refresh_layout);
-    }
+        locationTag = v.findViewById(R.id.location_tag);
 
+    }
 
     private void initToolbar(View v) {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -158,8 +162,11 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     public void verifyNCall() {
         listView.animate().alpha(0.0f).setDuration(0).start();
         shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
-        Cache.getLocation(location -> getToken(token -> callRetrofit(token, location.getLongitude(),
-                location.getLatitude())));
+        Cache.getLocation(location -> {
+            if (locationTag != null) locationTag.setText(location.tag);
+            getToken(token -> callRetrofit(token, location.getLongitude(),
+                    location.getLatitude()));
+        });
     }
 
     private void callRetrofit(String token, double lon, double lat) {

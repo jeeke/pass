@@ -1,7 +1,6 @@
 package com.esselion.pass.activities;
 
 import android.graphics.drawable.AnimatedVectorDrawable;
-import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -15,6 +14,7 @@ import com.esselion.pass.Server;
 import com.esselion.pass.fragments.PostTaskCat;
 import com.esselion.pass.fragments.PostTaskDetail;
 import com.esselion.pass.fragments.PostTaskExtra;
+import com.esselion.pass.models.Location;
 import com.esselion.pass.models.Task;
 import com.esselion.pass.util.Cache;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

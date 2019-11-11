@@ -1,12 +1,12 @@
 package com.esselion.pass.activities;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.esselion.pass.R;
 import com.esselion.pass.Server;
+import com.esselion.pass.models.Location;
 import com.esselion.pass.util.Cache;
 import com.esselion.pass.util.Tools;
 

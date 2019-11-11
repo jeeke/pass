@@ -2,11 +2,11 @@ package com.esselion.pass.util;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.util.Log;
 
 import com.esselion.pass.MyApplication;
 import com.esselion.pass.activities.MainActivity;
+import com.esselion.pass.models.Location;
 import com.esselion.pass.models.Question;
 import com.esselion.pass.models.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +29,16 @@ public class Cache {
         if (location != null) {
             if (locationListener != null) locationListener.onLocationFetched(location);
         } else MyApplication.fetchLocation(locationListener);
+    }
+
+    public static void clearLocationPreferences() {
+        SharedPrefAdapter.getInstance().clearLocation();
+        clearLocationCache();
+    }
+
+    public static void clearLocationCache() {
+        location = null;
+        MyApplication.fetchLocation(null);
     }
 
     public static Location getNullLocation() {
