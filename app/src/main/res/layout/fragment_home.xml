@@ -15,7 +15,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
         <ImageView
             android:id="@+id/logo"
             android:layout_width="wrap_content"
@@ -23,6 +22,27 @@
             android:adjustViewBounds="true"
             android:src="@drawable/ic_pass_logo"
             android:tint="?colorAccent" />
+
+        <LinearLayout
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:text="My Location" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_drop2" />
+        </LinearLayout>
+
+
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.constraintlayout.motion.widget.MotionLayout

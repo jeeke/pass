@@ -26,6 +26,7 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 import com.esselion.pass.MyFirebaseMessagingService;
 import com.esselion.pass.R;
 import com.esselion.pass.activities.HistoryTask;
+import com.esselion.pass.activities.LocationActivity;
 import com.esselion.pass.activities.TaskDetailActivity;
 import com.esselion.pass.adapters.TaskListAdapter;
 import com.esselion.pass.chat.DialogsActivity;
@@ -148,9 +149,9 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
             Toolbar toolbar = v.findViewById(R.id.toolbar);
             toolbar.setTitle("");
             activity.setSupportActionBar(toolbar);
+            v.findViewById(R.id.location).setOnClickListener(v1 -> launchActivity(getActivity(), LocationActivity.class));
         }
     }
-
 
     private boolean prevCallResolved = true;
 

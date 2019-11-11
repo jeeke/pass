@@ -10,27 +10,28 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.esselion.pass.MyApplication"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/LightMode">
-        <activity android:name="com.esselion.pass.activities.SplashActivity">
+        <activity android:name=".activities.LocationActivity"></activity>
+        <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name="com.esselion.pass.activities.AvatarChooser">
+        <activity android:name=".activities.AvatarChooser">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.esselion.pass.activities.DashboardActivity" />
         </activity>
-        <activity android:name="com.esselion.pass.activities.IntroActivity" />
-        <activity android:name="com.esselion.pass.activities.LoginActivity" />
+        <activity android:name=".activities.IntroActivity" />
+        <activity android:name=".activities.LoginActivity" />
         <!--
      Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.
@@ -47,43 +48,43 @@
             android:resource="@color/colorAccent" />
 
         <activity
-            android:name="com.esselion.pass.chat.DialogsActivity"
+            android:name=".chat.DialogsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.esselion.pass.chat.MessagesActivity"
+            android:name=".chat.MessagesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.esselion.pass.activities.FeedbackByPosterActivity"
+            android:name=".activities.FeedbackByPosterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.esselion.pass.activities.FeedbackByTaskerActivity"
+            android:name=".activities.FeedbackByTaskerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.esselion.pass.activities.ProfileActivity"
+            android:name=".activities.ProfileActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.esselion.pass.activities.BidConfirm"
+            android:name=".activities.BidConfirm"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.esselion.pass.activities.HistoryQues"
+            android:name=".activities.HistoryQues"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.esselion.pass.activities.HistoryFeed"
+            android:name=".activities.HistoryFeed"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.esselion.pass.activities.BidsListActivity"
+            android:name=".activities.BidsListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.esselion.pass.activities.PostFeed"
+            android:name=".activities.PostFeed"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
             <meta-data
@@ -91,7 +92,7 @@
                 android:value="com.esselion.pass.activities.DashboardActivity" />
         </activity>
         <activity
-            android:name="com.esselion.pass.activities.HistoryTask"
+            android:name=".activities.HistoryTask"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_prev_posts"
             android:screenOrientation="portrait">
@@ -100,15 +101,15 @@
                 android:value="com.esselion.pass.activities.DashboardActivity" />
         </activity>
         <activity
-            android:name="com.esselion.pass.activities.ContactUs"
+            android:name=".activities.ContactUs"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.esselion.pass.activities.TandC"
+            android:name=".activities.TandC"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.esselion.pass.activities.PrivacyPolicy"
+            android:name=".activities.PrivacyPolicy"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
             <meta-data
@@ -116,42 +117,30 @@
                 android:value="com.esselion.pass.activities.SettingActivity" />
         </activity>
         <activity
-            android:name="com.esselion.pass.activities.EditPassword"
+            android:name=".activities.EditPassword"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName="com.esselion.pass.activities.SettingActivity"
+            android:parentActivityName=".activities.SettingActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.esselion.pass.activities.SettingActivity" />
         </activity>
         <activity
-            android:name="com.esselion.pass.activities.NotificationActivity"
+            android:name=".activities.NotificationActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_notification"
-            android:parentActivityName="com.esselion.pass.activities.DashboardActivity"
+            android:parentActivityName=".activities.DashboardActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.esselion.pass.activities.DashboardActivity" />
         </activity>
         <activity
-            android:name="com.esselion.pass.activities.QuestionDetailActivity"
+            android:name=".activities.QuestionDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.esselion.pass.activities.PostQuestion"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.esselion.pass.activities.DashboardActivity" />
-        </activity>
-        <activity
-            android:name="com.esselion.pass.activities.TaskDetailActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.esselion.pass.activities.PostTask"
+            android:name=".activities.PostQuestion"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
             <meta-data
@@ -159,11 +148,23 @@
                 android:value="com.esselion.pass.activities.DashboardActivity" />
         </activity>
         <activity
-            android:name="com.esselion.pass.activities.DashboardActivity"
+            android:name=".activities.TaskDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.esselion.pass.activities.SettingActivity"
+            android:name=".activities.PostTask"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.esselion.pass.activities.DashboardActivity" />
+        </activity>
+        <activity
+            android:name=".activities.DashboardActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.SettingActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
             <meta-data
@@ -173,20 +174,18 @@
                 android:value="com.esselion.pass.activities.DashboardActivity" />
         </activity>
         <activity
-            android:name="com.esselion.pass.activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <service
-            android:name="com.esselion.pass.MyFirebaseMessagingService"
+            android:name=".MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="com.esselion.pass.Server" />
+        <service android:name=".Server" />
     </application>
 
 </manifest>
