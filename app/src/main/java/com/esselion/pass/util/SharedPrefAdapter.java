@@ -56,7 +56,7 @@ public class SharedPrefAdapter {
     }
 
     void clearLocation() {
-        prefs.edit().remove(CURRENT_LOCATION).apply();
+        prefs.edit().putString(CURRENT_LOCATION, "").apply();
     }
 
     public Location getLocation() {

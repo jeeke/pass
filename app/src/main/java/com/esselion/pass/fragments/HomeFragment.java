@@ -82,6 +82,8 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         if (activity != null) {
             activity.invalidateOptionsMenu();
             MyFirebaseMessagingService.registerNotificationListener(activity::invalidateOptionsMenu);
+            if (locationTag != null)
+                Cache.getLocation(location -> locationTag.setText(location.tag));
         }
     }
 
@@ -163,11 +165,11 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         listView.animate().alpha(0.0f).setDuration(0).start();
         shimmerContainer.animate().alpha(1.0f).setDuration(0).start();
         Cache.getLocation(location -> {
-            if (locationTag != null) locationTag.setText(location.tag);
             getToken(token -> callRetrofit(token, location.getLongitude(),
                     location.getLatitude()));
         });
     }
+
 
     private void callRetrofit(String token, double lon, double lat) {
         if (!prevCallResolved) return;

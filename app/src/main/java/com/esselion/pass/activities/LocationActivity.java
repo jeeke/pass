@@ -29,6 +29,9 @@ import static com.esselion.pass.util.Tools.launchActivity;
 public class LocationActivity extends BaseActivity implements LocationHolder.RecyclerViewClickListener {
 
     private RecyclerView mRecyclerView;
+    RecyclerView.Adapter<LocationHolder> mAdapter;
+    ArrayList<Location> mLocations = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,46 +44,52 @@ public class LocationActivity extends BaseActivity implements LocationHolder.Rec
         });
         findViewById(R.id.save_location).setOnClickListener(v -> launchActivity(this, AddLocationActivity.class));
         mRecyclerView = findViewById(R.id.recyclerView);
+        mAdapter = new RecyclerView.Adapter<LocationHolder>() {
+            @NonNull
+            @Override
+            public LocationHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                return new LocationHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_location, parent, false), LocationActivity.this);
+            }
+
+            @Override
+            public void onBindViewHolder(@NonNull LocationHolder holder, int position) {
+                holder.setItem(mLocations.get(position));
+            }
+
+            @Override
+            public int getItemCount() {
+                return mLocations.size();
+            }
+        };
+        mRecyclerView.setAdapter(mAdapter);
         callFireBase();
     }
 
-    //TODO change to recycler adater
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
+    }
+//TODO change to recycler adater
 
     private void callFireBase() {
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager mManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mManager);
         //Initialize Database
-        ArrayList<Location> locations = new ArrayList<>();
         Query mQuery = FirebaseDatabase.getInstance().getReference().child("Locations/" + Cache.getUser().getUid());
         mQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mLocations.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     try {
-                        locations.add(d.getValue(Location.class));
+                        mLocations.add(d.getValue(Location.class));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                RecyclerView.Adapter<LocationHolder> adapter = new RecyclerView.Adapter<LocationHolder>() {
-                    @NonNull
-                    @Override
-                    public LocationHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        return new LocationHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_location, parent, false), LocationActivity.this);
-                    }
-
-                    @Override
-                    public void onBindViewHolder(@NonNull LocationHolder holder, int position) {
-                        holder.setItem(locations.get(position));
-                    }
-
-                    @Override
-                    public int getItemCount() {
-                        return locations.size();
-                    }
-                };
-                mRecyclerView.setAdapter(adapter);
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -97,8 +106,7 @@ public class LocationActivity extends BaseActivity implements LocationHolder.Rec
         if (view.getId() == R.id.action_delete) {
             server.deleteLocation(Cache.getUser().getUid(), location.id);
         } else {
-            SharedPrefAdapter adapter = SharedPrefAdapter.getInstance();
-            adapter.setLocation(location);
+            SharedPrefAdapter.getInstance().setLocation(location);
             Cache.clearLocationCache();
             finish();
         }
