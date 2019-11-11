@@ -73,6 +73,7 @@ public class LocationActivity extends BaseActivity implements LocationHolder.Rec
 //TODO change to recycler adater
 
     private void callFireBase() {
+        showProgressBar(true);
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager mManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mManager);
@@ -90,6 +91,7 @@ public class LocationActivity extends BaseActivity implements LocationHolder.Rec
                     }
                 }
                 mAdapter.notifyDataSetChanged();
+                showProgressBar(false);
             }
 
             @Override
@@ -105,6 +107,9 @@ public class LocationActivity extends BaseActivity implements LocationHolder.Rec
     public void onClick(View view, Location location) {
         if (view.getId() == R.id.action_delete) {
             server.deleteLocation(Cache.getUser().getUid(), location.id);
+            Cache.getLocation(l -> {
+                if (location.id.equals(l.id)) Cache.clearLocationPreferences();
+            });
         } else {
             SharedPrefAdapter.getInstance().setLocation(location);
             Cache.clearLocationCache();
@@ -115,6 +120,8 @@ public class LocationActivity extends BaseActivity implements LocationHolder.Rec
     @Override
     public void onServerCallSuccess(int methodId, String title) {
         super.onServerCallSuccess(methodId, title);
-        if (methodId == Server.SERVER_DELETE_LOCATION) callFireBase();
+        if (methodId == Server.SERVER_DELETE_LOCATION) {
+            callFireBase();
+        }
     }
 }
