@@ -52,6 +52,7 @@ public class MainActivity extends BaseActivity implements
 
     public static void signOut(Activity context) {
         // Firebase sign out
+        Cache.getDatabase().child("Users/" + Cache.getUser().getUid() + "/device_token").removeValue();
         FirebaseAuth.getInstance().signOut();
 
         // Google sign out
@@ -61,7 +62,6 @@ public class MainActivity extends BaseActivity implements
                 .build();
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(context, gso);
         mGoogleSignInClient.signOut();
-
         //Empty cache
         Cache.emptyCache();
 
