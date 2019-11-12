@@ -179,7 +179,6 @@ public class TaskDetailActivity extends BaseActivity {
         Cache.getLocation(location -> getToken(token -> dis.setText(current.getDistance(location))));
     }
 
-
     boolean prevCallResolved = true;
 
     @Override

@@ -115,7 +115,7 @@ public abstract class DemoMessagesActivity extends BaseActivity
     public void onSelectionChanged(int count) {
         try {
             this.selectionCount = count;
-            menu.findItem(R.id.action_profile).setVisible(mChatUName.equals("Pass Support Team"));
+            menu.findItem(R.id.action_profile).setVisible(!mChatUName.equals("Pass Support Team"));
             menu.findItem(R.id.action_copy).setVisible(count > 0);
         } catch (Exception e) {
             e.printStackTrace();

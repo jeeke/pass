@@ -50,6 +50,7 @@ public class Task extends Message implements Serializable {
     String category;
     @SerializedName("deadline")
     String deadline;
+
     @SerializedName("lon")
     Double lon;
     @SerializedName("lat")
@@ -196,6 +197,14 @@ public class Task extends Message implements Serializable {
         this.musthaves = musthaves;
     }
 
+    public void setLon(Double lon) {
+        this.lon = lon;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
 
     public String getPoster_name() {
         return poster_name;
@@ -263,13 +272,18 @@ public class Task extends Message implements Serializable {
     }
 
     public String getDistance(com.esselion.pass.models.Location l) {
-        if (dis != null) return dis;
-        Location locationB = new Location("point B");
-        locationB.setLatitude(l.getLatitude());
-        locationB.setLongitude(l.getLongitude());
-        Location locationA = new Location("point A");
-        locationA.setLatitude(lat);
-        locationA.setLongitude(lon);
-        return parseDistance((locationB.distanceTo(locationA) / 1000.0) + "");
+        try {
+            if (dis != null) return dis;
+            Location locationB = new Location("point B");
+            locationB.setLatitude(l.getLatitude());
+            locationB.setLongitude(l.getLongitude());
+            Location locationA = new Location("point A");
+            locationA.setLatitude(lat);
+            locationA.setLongitude(lon);
+            return parseDistance((locationB.distanceTo(locationA) / 1000.0) + "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }
