@@ -23,8 +23,10 @@ import com.esselion.pass.fragments.FeedFragment;
 import com.esselion.pass.fragments.HomeFragment;
 import com.esselion.pass.fragments.ProfileFragment;
 import com.esselion.pass.fragments.QuestionFragment;
+import com.esselion.pass.util.Cache;
 import com.esselion.pass.util.Contracts;
 import com.esselion.pass.util.RemoteConfigHelper;
+import com.esselion.pass.util.SharedPrefAdapter;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -175,14 +177,20 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (RemoteConfigHelper.getInstance().hasUpdate()) showUpdateDialog();
-        if (savedInstanceState != null) {
-            mFragment = getSupportFragmentManager()
-                    .findFragmentByTag(FRAGMENT_TAG);
-            btnSelected = savedInstanceState.getInt("selectedButton");
-            fragmentPosition = savedInstanceState.getInt("fragmentPosition");
+        try {
+            String deviceToken = SharedPrefAdapter.getInstance().getToken();
+            Cache.getDatabase().child("Users/" + Cache.getUser().getUid() + "/device_token").setValue(deviceToken);
+            if (RemoteConfigHelper.getInstance().hasUpdate()) showUpdateDialog();
+            if (savedInstanceState != null) {
+                mFragment = getSupportFragmentManager()
+                        .findFragmentByTag(FRAGMENT_TAG);
+                btnSelected = savedInstanceState.getInt("selectedButton");
+                fragmentPosition = savedInstanceState.getInt("fragmentPosition");
+            }
+            setContentView(R.layout.activity_dashboard);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        setContentView(R.layout.activity_dashboard);
     }
 
     @Override
