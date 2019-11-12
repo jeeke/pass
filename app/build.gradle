@@ -14,8 +14,8 @@ android {
         applicationId "com.esselion.pass"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 13
-        versionName "0.1.3"
+        versionCode 14
+        versionName "0.1.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resConfigs "en"
     }
