@@ -24,7 +24,7 @@ public class AddLocationActivity extends BaseActivity {
 
     EditText tag, desc;
     Location locationData;
-    TextView selectedAdd;
+    TextView selectedLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,8 @@ public class AddLocationActivity extends BaseActivity {
         tag = findViewById(R.id.tag);
         desc = findViewById(R.id.desc);
         findViewById(R.id.save_location).setOnClickListener(v -> checkNSaveLoc());
-        findViewById(R.id.editLocation).setOnClickListener(v -> {
+        selectedLocation = findViewById(R.id.selected_location);
+        selectedLocation.setOnClickListener(v -> {
             Cache.getLocation(location -> {
                 Intent intent = new PlacePicker.IntentBuilder()
                         .setLatLong(location.lat, location.lon)  // Initial Latitude and Longitude the Map will load into
@@ -55,7 +56,6 @@ public class AddLocationActivity extends BaseActivity {
             });
 
         });
-        selectedAdd = findViewById(R.id.selected_location);
     }
 
     private void populateAddressData(AddressData addressData) {
@@ -65,7 +65,7 @@ public class AddLocationActivity extends BaseActivity {
             locationData.lat = addressData.getLatitude();
             locationData.lon = addressData.getLongitude();
             desc.setText(locationData.desc);
-            selectedAdd.setText("Dropped Pin");
+            selectedLocation.setText("Dropped Pin");
         } catch (Exception e) {
             e.printStackTrace();
         }
