@@ -40,7 +40,7 @@ import com.google.android.gms.tasks.Task;
 
 import org.jetbrains.annotations.NotNull;
 
-import static com.esselion.pass.MyFirebaseMessagingService.CHANNEL_ID;
+import static com.esselion.pass.FBMsgService.CHANNEL_ID;
 import static com.esselion.pass.util.Tools.showSnackBar;
 
 public abstract class BaseActivity extends AppCompatActivity implements ConnectionReceiver.ConnectionReceiverListener, Server.ServerCallCompleteListener {
@@ -202,9 +202,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(MyReceiver);
-        unbindService(connection);
-        mBound = false;
+        try {
+            unregisterReceiver(MyReceiver);
+            unbindService(connection);
+            mBound = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //TODO resolve this issue
 //        Server.setServerCallCompleteListener(null);
     }

@@ -28,9 +28,10 @@ import java.util.Map;
 import static com.esselion.pass.util.Cache.getUser;
 import static com.esselion.pass.util.Contracts.dpToPx;
 import static com.esselion.pass.util.Contracts.getPushKey;
-public class MyFirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
-    private static final String TAG = "FireBaseMsgService";
+public class FBMsgService extends com.google.firebase.messaging.FirebaseMessagingService {
+
+    private static final String TAG = "FBMsgService";
     public static final String CHANNEL_ID = "7312";
 
     @Override

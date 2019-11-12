@@ -31,7 +31,7 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.esselion.pass.MyFirebaseMessagingService;
+import com.esselion.pass.FBMsgService;
 import com.esselion.pass.R;
 import com.esselion.pass.Server;
 import com.esselion.pass.activities.AvatarChooser;
@@ -115,7 +115,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        MyFirebaseMessagingService.unregisterNotificationListener();
+        FBMsgService.unregisterNotificationListener();
     }
 
     @Override
@@ -125,7 +125,7 @@ public class ProfileFragment extends Fragment {
         Activity activity = getActivity();
         if (activity != null) {
             activity.invalidateOptionsMenu();
-            MyFirebaseMessagingService.registerNotificationListener(activity::invalidateOptionsMenu);
+            FBMsgService.registerNotificationListener(activity::invalidateOptionsMenu);
         }
     }
 

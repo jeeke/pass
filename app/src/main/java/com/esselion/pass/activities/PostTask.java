@@ -42,7 +42,11 @@ public class PostTask extends BaseActivity implements Cache.LocationListener {
     @Override
     protected void onResume() {
         super.onResume();
-        fab.setImageDrawable(getDrawable(R.drawable.post_done_anim));
+        try {
+            fab.setImageDrawable(getDrawable(R.drawable.post_done_anim));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

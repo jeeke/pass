@@ -84,14 +84,18 @@ public class Server extends Service {
     }
 
     private void showProgressBar() {
-        Activity activity = ((Activity) mListener);
-        if (mListener != null) {
-            ProgressBar progressBar = activity.findViewById(R.id.progress_bar);
-            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
-            else {
-                dialog = Tools.getLoadingAnim(activity);
-                dialog.show();
+        try {
+            Activity activity = ((Activity) mListener);
+            if (mListener != null) {
+                ProgressBar progressBar = activity.findViewById(R.id.progress_bar);
+                if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+                else {
+                    dialog = Tools.getLoadingAnim(activity);
+                    dialog.show();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

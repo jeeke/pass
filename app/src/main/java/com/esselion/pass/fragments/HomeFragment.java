@@ -24,7 +24,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
-import com.esselion.pass.MyFirebaseMessagingService;
+import com.esselion.pass.FBMsgService;
 import com.esselion.pass.R;
 import com.esselion.pass.activities.HistoryTask;
 import com.esselion.pass.activities.LocationActivity;
@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
     @Override
     public void onStop() {
         super.onStop();
-        MyFirebaseMessagingService.unregisterNotificationListener();
+        FBMsgService.unregisterNotificationListener();
     }
 
     @Override
@@ -81,7 +81,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         Activity activity = getActivity();
         if (activity != null) {
             activity.invalidateOptionsMenu();
-            MyFirebaseMessagingService.registerNotificationListener(activity::invalidateOptionsMenu);
+            FBMsgService.registerNotificationListener(activity::invalidateOptionsMenu);
             if (locationTag != null)
                 Cache.getLocation(location -> locationTag.setText(location.tag));
         }
