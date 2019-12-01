@@ -39,6 +39,7 @@ import com.esselion.pass.activities.BaseActivity;
 import com.esselion.pass.activities.HistoryFeed;
 import com.esselion.pass.activities.NotificationActivity;
 import com.esselion.pass.activities.SettingActivity;
+import com.esselion.pass.chat.MessagesActivity;
 import com.esselion.pass.models.Profile;
 import com.esselion.pass.models.Rating;
 import com.esselion.pass.util.Cache;
@@ -224,8 +225,16 @@ public class ProfileFragment extends Fragment {
                         .show();
                 input.requestFocus();
             });
+            v.findViewById(R.id.profile_chat).setVisibility(View.GONE);
         } else {
             activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            v.findViewById(R.id.profile_chat).setOnClickListener(view -> {
+                Intent intent = new Intent(getContext(), MessagesActivity.class);
+                intent.putExtra("id", mListener.getUId());
+                intent.putExtra("name", mListener.getUName());
+                intent.putExtra("avatar", mListener.getImageUrl());
+                launchActivity(getActivity(), intent);
+            });
             editAvatar.setVisibility(View.GONE);
             editAbout.setVisibility(View.GONE);
             imageView.setVisibility(View.GONE);

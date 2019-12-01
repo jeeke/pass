@@ -2,7 +2,6 @@ package com.esselion.pass;
 
 import android.graphics.Bitmap;
 import android.os.Handler;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,12 +30,11 @@ import static com.esselion.pass.util.Contracts.getPushKey;
 
 public class FBMsgService extends com.google.firebase.messaging.FirebaseMessagingService {
 
-    private static final String TAG = "FBMsgService";
+    //    private static final String TAG = "FBMsgService";
     public static final String CHANNEL_ID = "7312";
 
     @Override
     public void onNewToken(@NotNull String token) {
-        Log.d(TAG, "Refreshed token: " + token);
         sendRegistrationToServer(token);
     }
 
@@ -69,7 +67,6 @@ public class FBMsgService extends com.google.firebase.messaging.FirebaseMessagin
 
                     @Override
                     public void getSize(@NotNull SizeReadyCallback cb) {
-//                        cb.onSizeReady(SIZE_ORIGINAL, SIZE_ORIGINAL);
                         cb.onSizeReady(display_size, display_size);
                     }
 
@@ -83,7 +80,6 @@ public class FBMsgService extends com.google.firebase.messaging.FirebaseMessagin
     public void onMessageReceived(@NotNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         notificationHandler(remoteMessage.getData());
-//        Log.e(TAG, "\n\n" + remoteMessage.getData().toString() + "\n\n");
     }
 
     private void sendRegistrationToServer(String token) {
@@ -91,24 +87,20 @@ public class FBMsgService extends com.google.firebase.messaging.FirebaseMessagin
     }
 
     private void sendNotification(Bitmap bitmap, Notification notification) {
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+        android.app.Notification n = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setGroup(GROUP_KEY_NOTIFICATION)
+                .setGroupSummary(true)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle(notification.fetchTitle())
                 .setContentText(notification.content)
                 .setContentIntent(notification.getPendingIntent(this))
                 .setLargeIcon(bitmap)
-                .setGroupSummary(true)
-                .setStyle(inboxStyle)
-                .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
-                .setGroup(GROUP_KEY_NOTIFICATION)
-                .setStyle(new NotificationCompat.BigTextStyle())
                 .setColor(ContextCompat.getColor(this, R.color.orange))
-                .setAutoCancel(true);
-//                        .bigText("Much longer text that cannot fit one line..."))
-        //GROUPING will not work if auto cancel of
-        notificationManager.notify("PASS", id++, builder.build());
+                .build();
+//                .setStyle(new NotificationCompat.InboxStyle())
+//                .setStyle(new NotificationCompat.BigTextStyle())
+        notificationManager.notify(id++, n);
 
     }
 
@@ -146,9 +138,4 @@ public class FBMsgService extends com.google.firebase.messaging.FirebaseMessagin
     public interface OnNewNotificationListener {
         void onNewNotification();
     }
-
-
 }
-//    Because you must create the notification channel before posting any notifications on Android 8.0 and higher,
-//    you should execute this code as soon as your app starts. It's safe to call this repeatedly because creating an
-//    existing notification channel performs no operation.
