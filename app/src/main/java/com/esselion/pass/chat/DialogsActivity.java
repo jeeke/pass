@@ -31,7 +31,7 @@ public class DialogsActivity extends DemoDialogsActivity {
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_dialogs);
+            setContentView(R.layout.fragment_chats);
             Tools.initMinToolbar(this, "CHATS");
             bar = findViewById(R.id.progress_bar);
             findViewById(R.id.anim).setVisibility(View.GONE);

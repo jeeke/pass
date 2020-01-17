@@ -19,7 +19,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.esselion.pass.R;
 import com.esselion.pass.Server;
-import com.esselion.pass.fragments.FeedFragment;
+import com.esselion.pass.fragments.ChatFragment;
+import com.esselion.pass.fragments.HistoryFragment;
 import com.esselion.pass.fragments.HomeFragment;
 import com.esselion.pass.fragments.ProfileFragment;
 import com.esselion.pass.fragments.QuestionFragment;
@@ -239,14 +240,14 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
                 imageId = selected ? R.drawable.ic_home_fill : R.drawable.ic_home;
                 break;
             case R.id.feed:
-                mFragment = new FeedFragment();
+                mFragment = new ChatFragment();
                 fragmentPosition = 2;
-                imageId = selected ? R.drawable.ic_scroll_fill : R.drawable.ic_scroll;
+                imageId = selected ? R.drawable.ic_chat : R.drawable.ic_chat;
                 break;
             case R.id.qna:
-                mFragment = new QuestionFragment();
+                mFragment = new HistoryFragment();
                 fragmentPosition = 1;
-                imageId = selected ? R.drawable.ic_qna_fill : R.drawable.ic_qna;
+                imageId = selected ? R.drawable.ic_history : R.drawable.ic_history;
                 break;
             case R.id.profile:
                 mFragment = new ProfileFragment();

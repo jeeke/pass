@@ -29,7 +29,6 @@ public class HistoryTaskAdapter extends FragmentPagerAdapter {
     }
 
 
-
     @Override
     public int getCount() {
         return 2;

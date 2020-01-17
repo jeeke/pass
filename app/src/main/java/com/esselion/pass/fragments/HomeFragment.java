@@ -26,11 +26,10 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import com.esselion.pass.FBMsgService;
 import com.esselion.pass.R;
-import com.esselion.pass.activities.HistoryTask;
 import com.esselion.pass.activities.LocationActivity;
+import com.esselion.pass.activities.NotificationActivity;
 import com.esselion.pass.activities.TaskDetailActivity;
 import com.esselion.pass.adapters.TaskListAdapter;
-import com.esselion.pass.chat.DialogsActivity;
 import com.esselion.pass.holders.TaskHolder;
 import com.esselion.pass.models.Task;
 import com.esselion.pass.retrofit.JsonPlaceHolder;
@@ -92,7 +91,7 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         super.onPrepareOptionsMenu(menu);
         SharedPrefAdapter sp = SharedPrefAdapter.getInstance();
         boolean[] hasUnseen = {sp.hasUnseenChats(), sp.hasUnseenTaskHistory()};
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 1; i++) {
             if (hasUnseen[i]) {
                 menu.getItem(i).setIcon(notificationAVDs[i]);
                 Drawable menuItem = menu.getItem(i).getIcon();
@@ -121,17 +120,14 @@ public class HomeFragment extends Fragment implements FilterHelper.FilterListene
         int id = item.getItemId();
         Activity activity = getActivity();
         if (activity != null) {
-            SharedPrefAdapter sp = SharedPrefAdapter.getInstance();
-            if (id == R.id.action_history) {
-                launchActivity(activity, HistoryTask.class);
-                sp.setHasTaskHistory(false);
-            } else if (id == R.id.action_chats) {
-                launchActivity(activity, DialogsActivity.class);
-                sp.setHasChats(false);
+//            SharedPrefAdapter sp = SharedPrefAdapter.getInstance();
+            if (id == R.id.action_notification) {
+                launchActivity(activity, NotificationActivity.class);
+                activity.invalidateOptionsMenu();
             }
-            activity.invalidateOptionsMenu();
+            return false;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     private ShimmerFrameLayout shimmerContainer;

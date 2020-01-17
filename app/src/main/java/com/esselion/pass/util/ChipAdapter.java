@@ -105,13 +105,13 @@ public class ChipAdapter {
         return (!list.contains(title)) && (!title.equals(""));
     }
 
-    public void addChild(String title) {
-        String[] values = title.split("[\\s,]+");
-        for (String x : values) {
+    public void addChild(String x) {
+//        String[] values = title.split("[\\s,]+");
+//        for (String x : title) {
             if (isSafe(x)) {
                 list.add(x);
                 parent.addView(createChip(parent.getContext(), x));
-            }
+//            }
         }
     }
 }
