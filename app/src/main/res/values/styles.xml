@@ -32,6 +32,11 @@
         <item name="android:progressTint">@color/green_A700</item>
     </style>
 
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="ButtonGradRound">
         <!--<item name="android:padding">16dp</item>-->
         <item name="android:paddingStart">32dp</item>

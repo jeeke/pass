@@ -6,30 +6,63 @@
     android:orientation="vertical">
 
 
+    <Button
+        android:id="@+id/applaud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/profile_chat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/profile_image"
+        app:srcCompat="@drawable/ic_eye" />
+
+    <Button
+        android:id="@+id/profile_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/avatar_edit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/applaud"
+        app:srcCompat="@drawable/ic_chat_bubble" />
+
     <ImageView
         android:id="@+id/profile_image"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
         android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/person" />
 
-    <TextView
-        android:id="@+id/poster_name"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="24dp"
-        android:text="Rakesh Pandey"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/profile_image"
-        app:layout_constraintStart_toStartOf="@+id/profile_image"
-        app:layout_constraintTop_toBottomOf="@+id/avatar_edit" />
+        android:layout_marginStart="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+        app:layout_constraintStart_toEndOf="@+id/profile_image"
+        app:layout_constraintTop_toTopOf="@+id/profile_image">
+
+        <TextView
+            android:id="@+id/poster_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rakesh Pandey"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#rakesh" />
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/avatar_edit"
@@ -42,29 +75,53 @@
         app:layout_constraintStart_toStartOf="@+id/profile_image"
         app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
-    <ImageView
-        android:id="@+id/portfolio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="8dp"
-        android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/avatar_edit"
-        app:layout_constraintEnd_toStartOf="@+id/profile_image"
-        app:layout_constraintTop_toTopOf="@+id/profile_image"
-        app:srcCompat="@drawable/ic_eye" />
 
-    <ImageView
-        android:id="@+id/profile_chat"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/avatar_edit"
-        app:layout_constraintStart_toEndOf="@+id/profile_image"
-        app:layout_constraintTop_toTopOf="@+id/profile_image"
-        app:srcCompat="@drawable/ic_chat_bubble" />
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/avatar_edit">
+
+        <ImageView
+            android:id="@+id/edit_about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView9"
+            app:srcCompat="@drawable/ic_edit" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:text="About"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/about"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            android:text="A Hobbyist"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
