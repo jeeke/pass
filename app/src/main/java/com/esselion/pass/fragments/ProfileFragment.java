@@ -18,6 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -62,6 +64,7 @@ public class ProfileFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mListener = (ActivityListener) getActivity();
+        mListener.getMine();
     }
 
 
@@ -150,8 +153,15 @@ public class ProfileFragment extends Fragment {
 //        swipeRefreshLayout = v.findViewById(R.id.swipe_refresh_layout);
 //        swipeRefreshLayout.setOnRefreshListener(this::myapi);
         myapi();
+        setHasOptionsMenu(mListener.getMine());
         return v;
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        AppCompatActivity a = (AppCompatActivity) getActivity();
+        a.setSupportActionBar(toolbar);
     }
 
     public void updateProfileImage() {

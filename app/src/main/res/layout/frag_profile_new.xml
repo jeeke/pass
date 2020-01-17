@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/creme"
-    android:fitsSystemWindows="true">
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
@@ -12,8 +12,6 @@
         android:layout_height="wrap_content"
         android:background="@color/creme"
         android:elevation="0dp"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -31,14 +29,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_collapseMode="parallax" />
+                app:layout_collapseMode="none" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:theme="@style/AppTheme.PopupOverlay"
-                app:layout_collapseMode="pin" />
+                android:background="@color/creme"
+                app:layout_collapseMode="pin"
+                app:title="Profile"
+                app:titleTextColor="@color/colorAccent" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -46,23 +46,24 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/list_head_light"
-            android:elevation="2dp" />
+            android:elevation="2dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            app:tabIndicatorColor="?colorAccent"
+            app:tabSelectedTextColor="?colorAccent"
+            app:tabTextColor="#80546e7a" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scroll_view"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </androidx.core.widget.NestedScrollView>
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

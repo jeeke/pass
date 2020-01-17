@@ -6,45 +6,67 @@
     android:orientation="vertical">
 
 
-    <Button
-        android:id="@+id/applaud"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/profile_chat"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/profile_image"
-        app:srcCompat="@drawable/ic_eye" />
+        app:layout_constraintTop_toTopOf="@+id/profile_image">
 
-    <Button
-        android:id="@+id/profile_chat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/avatar_edit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/applaud"
-        app:srcCompat="@drawable/ic_chat_bubble" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/applaud"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/btn_grey_profile"
+            android:padding="4dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="Applaud"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:srcCompat="@drawable/ic_eye" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/profile_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/btn_grey_profile"
+            android:padding="4dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="Message"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:srcCompat="@drawable/ic_chat_bubble" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/profile_image"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
         android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider4"
         app:srcCompat="@drawable/person" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toTopOf="@+id/profile_image">
 
@@ -53,8 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Rakesh Pandey"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="19sp" />
 
         <TextView
             android:id="@+id/textView3"
@@ -80,8 +101,10 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar_edit">
 
@@ -91,37 +114,33 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
             android:padding="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/textView9"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView9"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_edit" />
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="24dp"
-            android:text="About"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/about"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="24dp"
             android:text="A Hobbyist"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/edit_about"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+            app:layout_constraintTop_toTopOf="@+id/edit_about" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="56dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

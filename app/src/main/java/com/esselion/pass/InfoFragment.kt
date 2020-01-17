@@ -119,7 +119,7 @@ class InfoFragment : Fragment() {
                         .setPositiveButton("ADD") { _: DialogInterface?, _: Int ->
                             val skill = input.text.toString()
                             if (adapter?.isSafe(skill) == false) {
-                                Tools.showSnackBar(getActivity(), "Skill Already Exist or Empty")
+                                Tools.showSnackBar(activity, "Skill Already Exist or Empty")
                                 return@setPositiveButton
                             }
                             val server: Server? = getServer()
