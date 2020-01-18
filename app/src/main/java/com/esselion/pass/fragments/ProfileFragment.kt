@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
-import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.esselion.pass.FBMsgService
@@ -25,7 +24,6 @@ import com.esselion.pass.util.Cache
 import com.esselion.pass.util.Contracts
 import com.esselion.pass.util.SharedPrefAdapter
 import com.esselion.pass.util.Tools
-import com.google.android.material.tabs.TabLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -41,30 +39,16 @@ class ProfileFragment : Fragment() {
         val imageUrl: String
     }
 
-    fun visibilityValue(visibility: Boolean): Int {
+    private fun visibilityValue(visibility: Boolean): Int {
         return if (visibility) View.VISIBLE else View.GONE
     }
-
-    val vMap = arrayOf(View.VISIBLE, View.GONE, View.INVISIBLE)
 
     private var mListener: ActivityListener? = null
     private var mDatabase: DatabaseReference? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        mDatabase = Cache.getDatabase()
-        val v = inflater.inflate(R.layout.frag_profile_new, container, false)
-        val tabs: TabLayout = v.findViewById(R.id.tab_layout)
-        val viewPager: ViewPager = v.findViewById(R.id.view_pager)
-        viewPager.adapter = ProfileTabAdapter(childFragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
-        tabs.setupWithViewPager(v.findViewById(R.id.view_pager))
-
-        val mine = mListener?.mine == true
-        setHasOptionsMenu(mine)
-        updateProfileImage(mine)
-        edit_details.visibility = visibilityValue(mine)
-        profile_action_btns.visibility = visibilityValue(!mine)
-        return v
+        return inflater.inflate(R.layout.frag_profile_new, container, false)
     }
 
     private fun callFirebase() {
@@ -82,7 +66,8 @@ class ProfileFragment : Fragment() {
         })
     }
 
-    private fun updateProfileImage(mine: Boolean) {
+    fun updateProfileImage() {
+        val mine = mListener?.mine == true
         if (mine) {
             Cache.mUser = null
             Cache.getUser().photoUrl
@@ -97,7 +82,15 @@ class ProfileFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        mDatabase = Cache.getDatabase()
         (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
+        val mine = mListener?.mine == true
+        setHasOptionsMenu(mine)
+        updateProfileImage()
+        view_pager.adapter = ProfileTabAdapter(childFragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
+        tab_layout.setupWithViewPager(view_pager)
+        edit_details.visibility = visibilityValue(mine)
+//        profile_action_btns.visibility = visibilityValue(!mine)
         callFirebase()
     }
 

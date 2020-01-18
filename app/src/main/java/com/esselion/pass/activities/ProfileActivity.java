@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.esselion.pass.R;
+import com.esselion.pass.fragments.ProfileFragment;
 
 public class ProfileActivity extends BaseActivity implements ProfileFragment.ActivityListener {
 

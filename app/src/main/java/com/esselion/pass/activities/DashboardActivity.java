@@ -22,6 +22,7 @@ import com.esselion.pass.Server;
 import com.esselion.pass.fragments.ChatFragment;
 import com.esselion.pass.fragments.HistoryFragment;
 import com.esselion.pass.fragments.HomeFragment;
+import com.esselion.pass.fragments.ProfileFragment;
 import com.esselion.pass.fragments.QuestionFragment;
 import com.esselion.pass.util.Cache;
 import com.esselion.pass.util.Contracts;
