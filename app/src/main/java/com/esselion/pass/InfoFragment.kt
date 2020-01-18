@@ -83,14 +83,7 @@ class InfoFragment : Fragment() {
         val rating2 = p.taskerRating
         if (rating + rating2 == 0f) {
             layoutstats?.visibility = View.GONE
-            lottie_anim?.visibility = View.VISIBLE
-            layoutrating?.visibility = View.GONE
-            divider11?.visibility = View.GONE
         } else {
-            layoutrating?.visibility = View.VISIBLE
-            lottie_anim?.visibility = View.GONE
-            posterating?.rating = rating
-            taskerrating?.rating = rating2
             val r1 = p.r1
             val r2 = p.r2
             val r3 = p.r3

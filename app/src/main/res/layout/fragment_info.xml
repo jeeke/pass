@@ -22,9 +22,9 @@
             layout="@layout/profile_skills" />
 
 
-        <!--        <include-->
-        <!--            android:id="@+id/stats"-->
-        <!--            layout="@layout/profile_stats" />-->
+        <include
+            android:id="@+id/stats"
+            layout="@layout/profile_stats" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

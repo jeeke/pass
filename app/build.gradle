@@ -80,6 +80,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-functions:19.0.1'
     implementation 'com.google.firebase:firebase-config:19.0.3'
 
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
     //Places API
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.sucho:placepicker:1.0.0'

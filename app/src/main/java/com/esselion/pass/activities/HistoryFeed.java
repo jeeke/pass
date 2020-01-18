@@ -2,7 +2,6 @@ package com.esselion.pass.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import com.esselion.pass.R;
 import com.esselion.pass.util.FeedNPortAdapter;
@@ -22,9 +21,9 @@ public class HistoryFeed extends BaseActivity {
         if (from) {
             setContentView(R.layout.activity_portfolio);
             if (mine) {
-                View fab = findViewById(R.id.add_portfolio);
-                fab.setOnClickListener(v -> addPortItem());
-                fab.setVisibility(View.VISIBLE);
+//                View fab = findViewById(R.id.add_portfolio);
+//                fab.setOnClickListener(v -> addPortItem());
+//                fab.setVisibility(View.VISIBLE);
             }
 
         } else setContentView(R.layout.activity_list);

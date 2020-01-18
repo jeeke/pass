@@ -18,6 +18,8 @@ import com.esselion.pass.FBMsgService
 import com.esselion.pass.R
 import com.esselion.pass.activities.NotificationActivity
 import com.esselion.pass.activities.SettingActivity
+import com.esselion.pass.adapters.Link
+import com.esselion.pass.adapters.LinksAdapter
 import com.esselion.pass.adapters.ProfileTabAdapter
 import com.esselion.pass.models.Profile
 import com.esselion.pass.util.Cache
@@ -91,6 +93,22 @@ class ProfileFragment : Fragment() {
         tab_layout.setupWithViewPager(view_pager)
         edit_details.visibility = visibilityValue(mine)
         profile_action_btns.visibility = visibilityValue(!mine)
+        val list = arrayListOf(
+                Link("Google", R.drawable.bg_main, "https://www.google.com"),
+                Link("Facebook", R.drawable.bg_main, "https://www.facebook.com"),
+                Link("Google", R.drawable.bg_main, "https://www.google.com"),
+                Link("Google", R.drawable.bg_main, "https://www.google.com"),
+                Link("Google", R.drawable.bg_main, "https://www.google.com"),
+                Link("Google", R.drawable.bg_main, "https://www.google.com"),
+                Link("Google", R.drawable.bg_main, "https://www.google.com"),
+                Link("Google", R.drawable.bg_main, "https://www.google.com"),
+                Link("Google", R.drawable.bg_main, "https://www.google.com"),
+                Link("Google", R.drawable.bg_main, "https://www.google.com"),
+                Link("Google", R.drawable.bg_main, "https://www.google.com"),
+                Link("Google", R.drawable.bg_main, "https://www.google.com"),
+                Link("Google", R.drawable.bg_main, "https://www.google.com")
+        )
+        recyclerViewLinks.adapter = LinksAdapter(context, list)
         callFirebase()
     }
 
