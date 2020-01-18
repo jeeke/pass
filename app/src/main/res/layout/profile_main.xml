@@ -18,57 +18,54 @@
         app:layout_constraintTop_toBottomOf="@+id/divider4"
         app:srcCompat="@drawable/person" />
 
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/profile_action_btns"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginStart="8dp"-->
-    <!--        android:layout_marginTop="16dp"-->
-    <!--        android:layout_marginEnd="8dp"-->
-    <!--        android:layout_marginBottom="16dp"-->
-    <!--        android:orientation="horizontal"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/about">-->
+    <LinearLayout
+        android:id="@+id/profile_action_btns"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/profile_image">
 
-    <!--        <androidx.appcompat.widget.AppCompatButton-->
-    <!--            android:id="@+id/applaud"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="32dp"-->
-    <!--            android:layout_margin="8dp"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:background="@drawable/btn_grey_profile"-->
-    <!--            android:paddingStart="8dp"-->
-    <!--            android:paddingEnd="8dp"-->
-    <!--            android:text="Applaud"-->
-    <!--            android:textAllCaps="false"-->
-    <!--            android:textColor="@color/white"-->
-    <!--            android:textSize="12sp"-->
-    <!--            app:srcCompat="@drawable/ic_eye" />-->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/applaud"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/btn_grey_profile"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="Applaud"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:srcCompat="@drawable/ic_eye" />
 
-    <!--        <androidx.appcompat.widget.AppCompatButton-->
-    <!--            android:id="@+id/profile_chat"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="32dp"-->
-    <!--            android:layout_margin="8dp"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:background="@drawable/btn_grey_profile"-->
-    <!--            android:paddingStart="8dp"-->
-    <!--            android:paddingEnd="8dp"-->
-    <!--            android:text="Message"-->
-    <!--            android:textAllCaps="false"-->
-    <!--            android:textColor="@color/white"-->
-    <!--            android:textSize="12sp"-->
-    <!--            app:srcCompat="@drawable/ic_chat_bubble" />-->
-    <!--    </LinearLayout>-->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/profile_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/btn_grey_profile"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="Message"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:srcCompat="@drawable/ic_chat_bubble" />
+    </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+        app:layout_constraintEnd_toStartOf="@+id/profile_action_btns"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toTopOf="@+id/profile_image">
 
@@ -90,9 +87,10 @@
         android:id="@+id/about"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
         android:text="This is your bio"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/profile_image"
         app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
@@ -106,21 +104,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.button.MaterialButton
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/edit_details"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/btn_grey_profile"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:text="Edit Details"
+        android:textAllCaps="false"
         android:textColor="@color/white"
-        app:backgroundTint="?colorAccent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/about" />
+        app:layout_constraintTop_toTopOf="@+id/profile_image"
+        app:srcCompat="@drawable/ic_eye" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

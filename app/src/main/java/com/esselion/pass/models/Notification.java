@@ -12,11 +12,11 @@ import androidx.core.app.TaskStackBuilder;
 import com.esselion.pass.activities.BidsListActivity;
 import com.esselion.pass.activities.DashboardActivity;
 import com.esselion.pass.activities.FeedbackByPosterActivity;
-import com.esselion.pass.activities.HistoryTask;
 import com.esselion.pass.activities.QuestionDetailActivity;
 import com.esselion.pass.activities.TaskDetailActivity;
 import com.esselion.pass.chat.DialogsActivity;
 import com.esselion.pass.chat.MessagesActivity;
+import com.esselion.pass.fragments.HistoryContainer;
 import com.google.gson.Gson;
 
 import java.util.Date;
@@ -83,7 +83,7 @@ public class Notification {
         stackBuilder.addNextIntent(intent);
         switch (type) {
             case 0: {
-                stackBuilder.addNextIntent(new Intent(context, HistoryTask.class));
+                stackBuilder.addNextIntent(new Intent(context, HistoryContainer.class));
                 Intent intent1 = new Intent(context, TaskDetailActivity.class);
                 intent1.putExtra("task", task);
                 stackBuilder.addNextIntent(intent1);
@@ -93,7 +93,7 @@ public class Notification {
                 break;
             }
             case 1: {
-                stackBuilder.addNextIntent(new Intent(context, HistoryTask.class));
+                stackBuilder.addNextIntent(new Intent(context, HistoryContainer.class));
                 Intent intent1 = new Intent(context, TaskDetailActivity.class);
                 intent1.putExtra("task", task);
                 intent1.putExtra("from", 2);

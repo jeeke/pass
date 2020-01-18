@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.esselion.pass.R;
 import com.esselion.pass.Server;
+import com.esselion.pass.fragments.HistoryContainer;
 import com.esselion.pass.fragments.PostTaskCat;
 import com.esselion.pass.fragments.PostTaskDetail;
 import com.esselion.pass.fragments.PostTaskExtra;
@@ -139,7 +140,7 @@ public class PostTask extends BaseActivity implements Cache.LocationListener {
 //        super.onServerCallSuccess(methodId, title);
         Toast.makeText(this, "Task Posted", Toast.LENGTH_SHORT).show();
         if (methodId == Server.SERVER_POST_TASK) {
-            launchActivity(this, HistoryTask.class);
+            launchActivity(this, HistoryContainer.class);
             finish();
         }
     }

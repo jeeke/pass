@@ -97,7 +97,7 @@
                 android:value="com.esselion.pass.activities.DashboardActivity" />
         </activity>
         <activity
-            android:name=".activities.HistoryTask"
+            android:name=".fragments.HistoryContainer"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_prev_posts"
             android:screenOrientation="portrait">

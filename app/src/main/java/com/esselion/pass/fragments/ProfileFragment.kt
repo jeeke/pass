@@ -90,7 +90,7 @@ class ProfileFragment : Fragment() {
         view_pager.adapter = ProfileTabAdapter(childFragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
         tab_layout.setupWithViewPager(view_pager)
         edit_details.visibility = visibilityValue(mine)
-//        profile_action_btns.visibility = visibilityValue(!mine)
+        profile_action_btns.visibility = visibilityValue(!mine)
         callFirebase()
     }
 

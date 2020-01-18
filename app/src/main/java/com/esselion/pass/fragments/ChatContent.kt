@@ -22,11 +22,10 @@ import com.stfalcon.chatkit.commons.ImageLoader
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter
 import kotlinx.android.synthetic.main.empty.*
 import kotlinx.android.synthetic.main.fragment_chats.*
-import kotlinx.android.synthetic.main.toolbar.*
 import java.util.*
 import kotlin.collections.HashSet
 
-class ChatFragment : Fragment(), DialogsListAdapter.OnDialogViewClickListener<Dialog>,
+class ChatContent : Fragment(), DialogsListAdapter.OnDialogViewClickListener<Dialog>,
         DialogsListAdapter.OnDialogViewLongClickListener<Dialog> {
 
     var imageLoader: ImageLoader? = null
@@ -39,9 +38,8 @@ class ChatFragment : Fragment(), DialogsListAdapter.OnDialogViewClickListener<Di
 
     override fun onStart() {
         super.onStart()
-        progress_bar.visibility = View.VISIBLE
-        val mCurrent_user_id = Cache.getUser().uid
-        mConvDatabase = FirebaseDatabase.getInstance().reference.child("Chats").child(mCurrent_user_id)
+        val uid = Cache.getUser().uid
+        mConvDatabase = FirebaseDatabase.getInstance().reference.child("Chats").child(uid)
         queryFireBase()
     }
 
@@ -64,7 +62,6 @@ class ChatFragment : Fragment(), DialogsListAdapter.OnDialogViewClickListener<Di
                                     dialogs.add(helper.toDialog())
                                 }
                             }
-                            progress_bar?.visibility = View.GONE
                             if (dialogs.isEmpty()) {
                                 dialogsList?.visibility = View.GONE
                                 lottie_anim?.visibility = View.VISIBLE

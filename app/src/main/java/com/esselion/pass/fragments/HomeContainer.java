@@ -53,10 +53,10 @@ import static com.esselion.pass.util.Tools.getRetrofit;
 import static com.esselion.pass.util.Tools.launchActivity;
 
 
-public class HomeFragment extends Fragment implements FilterHelper.FilterListener, TaskHolder.RecyclerViewClickListener {
+public class HomeContainer extends Fragment implements FilterHelper.FilterListener, TaskHolder.RecyclerViewClickListener {
 
 
-    public HomeFragment() {
+    public HomeContainer() {
         // Required empty public constructor
     }
 

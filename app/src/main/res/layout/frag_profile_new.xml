@@ -6,12 +6,18 @@
     android:background="@color/creme"
     android:orientation="vertical">
 
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/creme"
-        android:elevation="0dp"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -22,13 +28,11 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
 
-
             <include
                 android:id="@+id/toolbar_content"
                 layout="@layout/profile_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 app:layout_collapseMode="none" />
 
             <androidx.appcompat.widget.Toolbar
@@ -39,6 +43,7 @@
                 app:layout_collapseMode="pin"
                 app:title="Profile"
                 app:titleTextColor="@color/colorAccent" />
+
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -51,19 +56,11 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/list_head_light"
             android:elevation="2dp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
             app:tabIndicatorColor="?colorAccent"
+            app:tabIndicatorFullWidth="false"
             app:tabSelectedTextColor="?colorAccent"
             app:tabTextColor="#80546e7a" />
 
     </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

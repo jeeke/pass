@@ -19,9 +19,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.esselion.pass.R;
 import com.esselion.pass.Server;
-import com.esselion.pass.fragments.ChatFragment;
-import com.esselion.pass.fragments.HistoryFragment;
-import com.esselion.pass.fragments.HomeFragment;
+import com.esselion.pass.fragments.ChatContainer;
+import com.esselion.pass.fragments.HistoryContainer;
+import com.esselion.pass.fragments.HomeContainer;
 import com.esselion.pass.fragments.ProfileFragment;
 import com.esselion.pass.fragments.QuestionFragment;
 import com.esselion.pass.util.Cache;
@@ -69,8 +69,8 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == BaseActivity.REQUEST_TURN_ON_LOCATION && mFragment != null) {
-            if (mFragment instanceof HomeFragment) {
-                HomeFragment fragment = (HomeFragment) mFragment;
+            if (mFragment instanceof HomeContainer) {
+                HomeContainer fragment = (HomeContainer) mFragment;
                 fragment.verifyNCall();
             } else if (mFragment instanceof QuestionFragment) {
                 QuestionFragment fragment = (QuestionFragment) mFragment;
@@ -162,7 +162,7 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
         super.onStart();
         try {
             if (findViewById(R.id.fragment_container) != null) {
-                mFragment = mFragment == null ? new HomeFragment() : mFragment;
+                mFragment = mFragment == null ? new HomeContainer() : mFragment;
                 starterIntent = getIntent();
                 init();
                 initFab();
@@ -235,17 +235,17 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
         int prevFragmentPos = fragmentPosition;
         switch (id) {
             case R.id.home:
-                mFragment = new HomeFragment();
+                mFragment = new HomeContainer();
                 fragmentPosition = 0;
                 imageId = selected ? R.drawable.ic_home_fill : R.drawable.ic_home;
                 break;
             case R.id.feed:
-                mFragment = new ChatFragment();
+                mFragment = new ChatContainer();
                 fragmentPosition = 2;
                 imageId = selected ? R.drawable.ic_chat : R.drawable.ic_chat;
                 break;
             case R.id.qna:
-                mFragment = new HistoryFragment();
+                mFragment = new HistoryContainer();
                 fragmentPosition = 1;
                 imageId = selected ? R.drawable.ic_history : R.drawable.ic_history;
                 break;
