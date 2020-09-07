@@ -6,4 +6,10 @@
         android:title="Delete"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_notification"
+        android:icon="@drawable/ic_notification"
+        android:title="Notification"
+        app:showAsAction="always" />
+
 </menu>

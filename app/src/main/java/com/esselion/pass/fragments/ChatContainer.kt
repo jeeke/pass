@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_dash_container.*
 class ChatContainer : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_dash_container, container, false)
+        return inflater.inflate(R.layout.fragment_chats, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

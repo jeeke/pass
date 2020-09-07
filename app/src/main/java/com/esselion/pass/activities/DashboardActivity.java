@@ -19,7 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.esselion.pass.R;
 import com.esselion.pass.Server;
-import com.esselion.pass.fragments.ChatContainer;
+import com.esselion.pass.fragments.ChatContent;
 import com.esselion.pass.fragments.HistoryContainer;
 import com.esselion.pass.fragments.HomeContainer;
 import com.esselion.pass.fragments.ProfileFragment;
@@ -240,7 +240,7 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
                 imageId = selected ? R.drawable.ic_home_fill : R.drawable.ic_home;
                 break;
             case R.id.feed:
-                mFragment = new ChatContainer();
+                mFragment = new ChatContent();
                 fragmentPosition = 2;
                 imageId = selected ? R.drawable.ic_chat : R.drawable.ic_chat;
                 break;

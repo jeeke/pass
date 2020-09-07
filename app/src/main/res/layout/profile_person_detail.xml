@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/btn_grey_profile"
     android:orientation="vertical"
+    android:layout_margin="4dp"
     android:padding="8dp">
 
     <TextView
