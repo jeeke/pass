@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ import com.esselion.pass.FBMsgService;
 import com.esselion.pass.R;
 import com.esselion.pass.activities.LocationActivity;
 import com.esselion.pass.activities.NotificationActivity;
+import com.esselion.pass.activities.PostTask;
 import com.esselion.pass.activities.TaskDetailActivity;
 import com.esselion.pass.adapters.TaskListAdapter;
 import com.esselion.pass.holders.TaskHolder;
@@ -38,6 +40,7 @@ import com.esselion.pass.util.Cache;
 import com.esselion.pass.util.FilterHelper;
 import com.esselion.pass.util.SharedPrefAdapter;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -241,6 +244,7 @@ public class HomeContainer extends Fragment implements FilterHelper.FilterListen
         filterHelper = new FilterHelper(this, v.findViewById(R.id.scrollable));
         initToolbar(v);
         initViews(v);
+        initLandingButtons(v);
         shimmerContainer.animate().alpha(0.0f).setDuration(0).start();
         adapter = new TaskListAdapter(getContext(), this, new ArrayList<>(), false);
         listView.setAdapter(adapter);
@@ -251,6 +255,21 @@ public class HomeContainer extends Fragment implements FilterHelper.FilterListen
                 R.color.orange,
                 R.color.green_A400);
         return v;
+    }
+
+    public void initLandingButtons(View v) {
+        Button doTask = v.findViewById(R.id.buttonDoTasks);
+        Button helpWithTask = v.findViewById(R.id.buttonHelpTask);
+        doTask.setOnClickListener(v1 -> v.findViewById(R.id.home_landing).setVisibility(View.GONE));
+        helpWithTask.setOnClickListener(v12 -> launchActivity(requireActivity(), PostTask.class));
+        TextView welcome = v.findViewById(R.id.welcomeMe);
+        String[] firstNameSplit = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().split(" ");
+        String firstName = "";
+        if (firstNameSplit.length > 0) {
+            firstName = firstNameSplit[0];
+        }
+        welcome.setText("Welcome " + firstName + "!");
+
     }
 
     @Override

@@ -50,7 +50,7 @@
             android:gravity="center"
             android:onClick="bselected"
             android:padding="16dp"
-            app:srcCompat="@drawable/ic_history"
+            app:srcCompat="@drawable/ic_tasks"
             app:layout_constraintBottom_toBottomOf="@+id/home"
             app:layout_constraintEnd_toStartOf="@+id/textView34"
             app:layout_constraintStart_toEndOf="@+id/home"

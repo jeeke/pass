@@ -53,13 +53,13 @@ class HistoryContent(var type: Int = 0) : Fragment(), TaskHolder.RecyclerViewCli
 
             override fun onBindViewHolder(taskHolder: TaskHolder, position: Int, model: Task) {
                 val drawable: Drawable = when (position % 4) {
-                    0 -> context!!.getDrawable(R.drawable.bg_soft_orange)
-                    1 -> context!!.getDrawable(R.drawable.bg_orange)
-                    2 -> context!!.getDrawable(R.drawable.bg_green)
-                    else -> context!!.getDrawable(R.drawable.bg_blue)
+                    0 -> requireContext().resources.getDrawable(R.drawable.bg_soft_orange)
+                    1 -> requireContext().resources.getDrawable(R.drawable.bg_orange)
+                    2 -> requireContext().resources.getDrawable(R.drawable.bg_green)
+                    else -> requireContext().resources.getDrawable(R.drawable.bg_blue)
                 }
-                val drawable2 = context!!.getDrawable(R.drawable.notification_dot_indicator)
-                val c = context!!.resources.getColor(Contracts.TASK_STAGE_COLORS[model.stage])
+                val drawable2 = requireContext().resources.getDrawable(R.drawable.notification_dot_indicator)
+                val c = requireContext().resources.getColor(Contracts.TASK_STAGE_COLORS[model.stage])
                 taskHolder.setItem(model, true, drawable, drawable2, c)
             }
         }

@@ -108,7 +108,7 @@ class InfoFragment : Fragment() {
                 val pad = Contracts.dpToPx(24)
                 val p = Contracts.dpToPx(16)
                 input.setPadding(pad, pad, pad, p)
-                MaterialAlertDialogBuilder(Objects.requireNonNull(context), R.style.AlertDialogTheme).setTitle("ADD TAG").setView(input)
+                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme).setTitle("ADD TAG").setView(input)
                         .setPositiveButton("ADD") { _: DialogInterface?, _: Int ->
                             val skill = input.text.toString()
                             if (adapter?.isSafe(skill) == false) {

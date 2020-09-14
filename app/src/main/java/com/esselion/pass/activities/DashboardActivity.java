@@ -1,19 +1,12 @@
 package com.esselion.pass.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -45,19 +38,19 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
     int btnSelected;
     int fragmentPosition = 0;
     View bottomAppBar;
-    boolean fabActivated;
+    //    boolean fabActivated;
     Intent starterIntent;
 
-    int centerX;
-    int centerY;
-    int startRadius;
-    int endRadius;
-    View fabExpanded;
+    //    int centerX;
+//    int centerY;
+//    int startRadius;
+//    int endRadius;
+//    View fabExpanded;
     Fragment mFragment;
     FloatingActionButton fab;
 
     private void loadFragment(int entry, int exit) {
-        if (fabActivated) circularReveal(fab);
+//        if (fabActivated) circularReveal(fab);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (entry != -1 && exit != -1) transaction.setCustomAnimations(entry, exit);
         transaction.replace(R.id.fragment_container, mFragment, FRAGMENT_TAG);
@@ -91,61 +84,63 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
 
     //TODO check for play services android for notification handling
 
-    @Override
-    public void onBackPressed() {
-        if (fabActivated) {
-            circularReveal(fab);
-            return;
-        }
-        super.onBackPressed();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        if (fabActivated) {
+//            circularReveal(fab);
+//            return;
+//        }
+//        super.onBackPressed();
+//    }
 
     private void initFab() {
-        fabActivated = false;
+//        fabActivated = false;
         fab = findViewById(R.id.fab);
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        centerX = size.x / 2;
-        centerY = size.y;
-        startRadius = 0;
-        endRadius = size.y;
-        fabExpanded = findViewById(R.id.fab_expanded);
+        fab.setOnClickListener(this::postTask);
+
+//        Display display = getWindowManager().getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        centerX = size.x / 2;
+//        centerY = size.y;
+//        startRadius = 0;
+//        endRadius = size.y;
+//        fabExpanded = findViewById(R.id.fab_expanded);
     }
 
 
-    public void circularReveal(View v) {
-        float angle;
-        if (fabActivated) {
-            angle = 0f;
-            Animator anim = ViewAnimationUtils.createCircularReveal(fabExpanded, centerX, centerY, endRadius, startRadius);
-            anim.setDuration(100);
-            anim.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    fabExpanded.setVisibility(View.GONE);
-                }
-            });
-            anim.start();
-            fabActivated = false;
-        } else {
-            angle = 45f;
-            fabExpanded.setVisibility(View.VISIBLE);
-            Animator anim = ViewAnimationUtils.createCircularReveal(fabExpanded, centerX, centerY, startRadius, endRadius);
-            anim.setDuration(300);
-            anim.start();
-            fabActivated = true;
-        }
-
-        final OvershootInterpolator interpolator = new OvershootInterpolator();
-        ViewCompat.animate(v).
-                rotation(angle).
-                withLayer().
-                setDuration(300).
-                setInterpolator(interpolator).
-                start();
-    }
+//    public void circularReveal(View v) {
+//        float angle;
+//        if (fabActivated) {
+//            angle = 0f;
+//            Animator anim = ViewAnimationUtils.createCircularReveal(fabExpanded, centerX, centerY, endRadius, startRadius);
+//            anim.setDuration(100);
+//            anim.addListener(new AnimatorListenerAdapter() {
+//                @Override
+//                public void onAnimationEnd(Animator animation) {
+//                    super.onAnimationEnd(animation);
+//                    fabExpanded.setVisibility(View.GONE);
+//                }
+//            });
+//            anim.start();
+//            fabActivated = false;
+//        } else {
+//            angle = 45f;
+//            fabExpanded.setVisibility(View.VISIBLE);
+//            Animator anim = ViewAnimationUtils.createCircularReveal(fabExpanded, centerX, centerY, startRadius, endRadius);
+//            anim.setDuration(300);
+//            anim.start();
+//            fabActivated = true;
+//        }
+//
+//        final OvershootInterpolator interpolator = new OvershootInterpolator();
+//        ViewCompat.animate(v).
+//                rotation(angle).
+//                withLayer().
+//                setDuration(300).
+//                setInterpolator(interpolator).
+//                start();
+//    }
 
 
     private void init() {
@@ -204,21 +199,21 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
 
 
     public void postTask(View v) {
-        circularReveal(fab);
+//        circularReveal(fab);
         launchActivity(this, PostTask.class);
     }
 
-    public void postQues(View v) {
-        circularReveal(fab);
-        launchActivity(this, PostQuestion.class);
-
-    }
-
-    public void postFeed(View v) {
-        circularReveal(fab);
-        launchActivity(this, PostFeed.class);
-
-    }
+//    public void postQues(View v) {
+//        circularReveal(fab);
+//        launchActivity(this, PostQuestion.class);
+//
+//    }
+//
+//    public void postFeed(View v) {
+//        circularReveal(fab);
+//        launchActivity(this, PostFeed.class);
+//
+//    }
 
     public void bselected(View v) {
         ImageView current = (ImageView) v;
@@ -242,12 +237,12 @@ public class DashboardActivity extends BaseActivity implements ProfileFragment.A
             case R.id.feed:
                 mFragment = new ChatContent();
                 fragmentPosition = 2;
-                imageId = selected ? R.drawable.ic_chat : R.drawable.ic_chat;
+                imageId = selected ? R.drawable.ic_fill_chats : R.drawable.ic_chat;
                 break;
             case R.id.qna:
                 mFragment = new HistoryContainer();
                 fragmentPosition = 1;
-                imageId = selected ? R.drawable.ic_history : R.drawable.ic_history;
+                imageId = selected ? R.drawable.ic_fill_tasks : R.drawable.ic_tasks;
                 break;
             case R.id.profile:
                 mFragment = new ProfileFragment();
